@@ -1,0 +1,18 @@
+.mix-inner (@var) {
+  border-width: @var;
+}
+
+.mix (@a: 10) {
+  .inner {
+    height: @a * 10;
+
+    .innest {
+      width: @a;  
+      .mix-inner(@a * 2);
+    }  
+  }
+}
+
+.class {
+  .mix(30);
+}

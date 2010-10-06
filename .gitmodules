@@ -1,3 +1,0 @@
-[submodule "deps/vows"]
-	path = deps/vows
-	url = http://github.com/cloudhead/vows.git
