@@ -7,18 +7,18 @@ Introduction
 ------------
 
 node-config lets you apply a consistent pattern to module development
-making it easy to work with configuration parameters.
+making it easy to work with deployment configuration parameters.
 
 As a module developer, node-config lets you define your parameters,
 then gets out of your way.
 
 When running applications following this pattern, node-config lets you
-easily discover and set configuration parameters.
+easily discover and set deployment-specific configuration parameters.
 
 Synopsis
 --------
 
-Configurations are defined at the top of a module. The following example
+Configurations are defined at the top of your module. The following example
 is for a *Customers* module:
 
     // Configuration parameters and default values
@@ -110,7 +110,7 @@ parameters at the same time:
 
     $ node billing.js -config smokeTest.js -Customers.dbPort 5985
 
-This results in a *config* object in the *Customer* module with these values:
+This results in a *config* object in the *Customers* module with these values:
 
     {
       dbHost: 'smokin-db',
@@ -148,6 +148,13 @@ the command line can be strings, objects, or arrays.
     $ node billing.js -Customers.mailingsSent [3,4,6]
     $ node billing.js -Customers.homeOffice '{street:"4778 S. Main"}'
     
+
+See Also
+--------
+
+The node-monitor project is a good example of a module that makes use of
+the node-config module.  It's also a pretty good way to monitor your running
+node.js application.
 
 License
 -------
