@@ -55,7 +55,10 @@ running the application.
 Installation & Testing
 ----------------------
 
-Use *npm* to install and test node-config:
+Node-config installs with *npm* and comes with an extensive suite of tests to 
+make sure it performs well in your deployment environment.
+
+To install and test node-config:
  
     $ npm install config
     $ npm test config

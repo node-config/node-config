@@ -6,6 +6,7 @@
 // Dependencies
 var ext = require('../lib/extensions');
 var deps = require('../deps');
+var _ = deps._;
 var vows = deps.vows;
 var assert = deps.assert;
 

@@ -3,11 +3,8 @@
 ********************************************************************************
 */
 
-// Tested with these dependencies
-// Make sure to keep these versions in sync with the package.json file
 module.exports = {
-  underscore: require('underscore'),
-  config: require('config'),
+  '_': require('underscore'),
   vows: require('vows'),
   eyes: require('eyes'),
   sys: require('sys'),

@@ -1,14 +1,14 @@
 {
   "name": "config",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "./lib/config.js",
   "description": "Runtime configuration for node.js modules",
   "modules" : { "test" : "./test" },
   "author": "Loren West<open_source@lorenwest.com>",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
   "dependencies": {
-    "underscore" : ">=1.1.1",
-    "vows" : ">=0.5.1",
+    "underscore" : ">=1.1.3",
+    "vows" : ">=0.5.2",
     "eyes" : ">=0.1.6"
   },
   "engines": {"node": ">=0.2.4"},
