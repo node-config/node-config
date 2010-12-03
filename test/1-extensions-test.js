@@ -16,7 +16,7 @@ var assert = deps.assert;
 */
 exports.ExtensionsTest = vows.describe('Underscore.js Extensions').addBatch({
   'Library initialization': {
-    'Underscore library is globally available': function() {
+    'Underscore library is available': function() {
       assert.isFunction(_);
     }
   },
