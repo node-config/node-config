@@ -1,7 +1,7 @@
 node-config
 ===========
 
-Runtime configuration for node.js modules
+Runtime configuration for node.js deployment
 
 Introduction
 ------------
