@@ -2,7 +2,7 @@
   "name": "config",
   "version": "0.2.4",
   "main": "./lib/config.js",
-  "description": "Runtime configuration for node.js modules",
+  "description": "Runtime configuration for node.js deployment",
   "modules" : { "test" : "./test" },
   "author": "Loren West<open_source@lorenwest.com>",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
