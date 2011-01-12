@@ -62,7 +62,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Alpha configuration was mixed in': function() {
-      process.argv = ['arg1', '-config', '../config/alpha.js'];
+      process.argv = ['arg1', '-config', './config/alpha.js'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
 	    dbHost:"alpha",
@@ -72,8 +72,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Multiple configurations can be mixed in': function() {
-      process.argv = ['-config', '../config/base.js', 'arg1', 
-        '-config', '../config/alpha.js', 'arg2'];
+      process.argv = ['-config', './config/base.js', 'arg1', 
+        '-config', './config/alpha.js', 'arg2'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
 	    dbName:'base_customers',
@@ -95,7 +95,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Command line configurations override file configurations': function() {
-      process.argv = ['-config', '../config/base.js', 'arg1', 
+      process.argv = ['-config', './config/base.js', 'arg1', 
         '-Customers.dbName', 'cmdLineName'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
@@ -106,7 +106,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Configurations can be programmatically extended': function() {
-      process.argv = ['arg1', '-config', '../config/production'];
+      process.argv = ['arg1', '-config', './config/production'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
 	    dbHost:'production',
@@ -118,7 +118,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Configurations can be programmatically extended': function() {
-      process.argv = ['arg1', '-config', '../config/production'];
+      process.argv = ['arg1', '-config', './config/production'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
 	    dbHost:'production',
@@ -164,15 +164,30 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.deepEqual(conf, shouldBe);
     },
 
-    /*
-    'Configuration can be retrieved later': function() {
-      assert.deepEqual(config('test'), module.shouldBe);
+    'JSON configuration files can be loaded': function() {
+      process.argv = ['-config', './config/base.json', 'arg1', 
+        '-config', './config/alpha.js', 'arg2'];
+      var conf = config('Customers', defaultParms);
+      var shouldBe = _.extendDeep({}, defaultParms, {
+	    dbName:'base_customers',
+	    dbHost:"alpha",
+	    dbPort:5999
+      });
+      assert.deepEqual(conf, shouldBe);
     },
-    'All configurations can be retrieved': function() {
-      assert.isObject(config());
+
+    'YAML configuration files can be loaded': function() {
+      process.argv = ['-config', './config/base.yaml', 'arg1', 
+        '-config', './config/alpha.js', 'arg2'];
+      var conf = config('Customers', defaultParms);
+      var shouldBe = _.extendDeep({}, defaultParms, {
+	    dbName:'base_customers',
+	    dbHost:"alpha",
+	    dbPort:5999
+      });
+      assert.deepEqual(conf, shouldBe);
     },
-    */
-    
+
     'Resetting command line args': function(orig) {
       process.argv = orig.argv;
       assert.deepEqual(process.argv, orig.argv);
