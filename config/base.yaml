@@ -1,0 +1,12 @@
+# Example of the baseline configuration in YAML
+
+Customers:
+  dbHost: base
+  dbName: base_customers
+
+AnotherModule:
+  parm1: value1
+
+AnotherModule2:
+  parm1: value2
+
