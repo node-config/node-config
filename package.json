@@ -1,6 +1,6 @@
 {
   "name": "config",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "main": "./lib/config.js",
   "description": "Runtime configuration for node.js deployment",
   "modules" : { "test" : "./test" },
@@ -8,9 +8,9 @@
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
   "dependencies": {
     "underscore" : "1.1.4",
-    "vows" : "0.5.3",
-    "eyes" : "0.1.6",
-    "yaml" : "0.1.1"
+    "vows" : ">=0.5.3",
+    "eyes" : ">=0.1.6",
+    "yaml" : ">=0.1.1"
   },
   "engines": {"node": ">=0.2.4"},
   "scripts": {
