@@ -1,10 +1,10 @@
 {
   "name": "config",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "main": "./lib/config.js",
   "description": "Runtime configuration for node.js deployment",
   "modules" : { "test" : "./test" },
-  "author": "Loren West<open_source@lorenwest.com>",
+  "author": "Loren West <open_source@lorenwest.com>",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
   "dependencies": {
     "underscore" : "1.1.4",
