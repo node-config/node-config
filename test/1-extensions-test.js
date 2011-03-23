@@ -5,10 +5,9 @@
 
 // Dependencies
 var ext = require('../lib/extensions');
-var deps = require('../deps');
-var _ = deps._;
-var vows = deps.vows;
-var assert = deps.assert;
+var _ = require('underscore');
+var vows = require('vows');
+var assert = require('assert');
 
 /*******************************************************************************
 * ExtensionsTest

@@ -4,10 +4,9 @@
 */
 
 // Dependencies
-var deps = require('../deps');
-var _ = deps._;
-var vows = deps.vows;
-var assert = deps.assert;
+var _ = require('underscore');
+var vows = require('vows');
+var assert = require('assert');
 var config = require('../lib/config');
 
 // Module default parameters
@@ -65,8 +64,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       process.argv = ['arg1', '-config', './config/alpha.js'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbHost:"alpha",
-	    dbPort:5999
+        dbHost:"alpha",
+        dbPort:5999
       });
       assert.deepEqual(conf, shouldBe);
     },
@@ -76,9 +75,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         '-config', './config/alpha.js', 'arg2'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbName:'base_customers',
-	    dbHost:"alpha",
-	    dbPort:5999
+        dbName:'base_customers',
+        dbHost:"alpha",
+        dbPort:5999
       });
       assert.deepEqual(conf, shouldBe);
     },
@@ -88,8 +87,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         "-Customers.newArg", "Beth's"];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbName:'cmdLineName',
-	    newArg:"Beth's"
+        dbName:'cmdLineName',
+        newArg:"Beth's"
       });
       assert.deepEqual(conf, shouldBe);
     },
@@ -99,32 +98,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         '-Customers.dbName', 'cmdLineName'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbHost:'base',
-	    dbName:'cmdLineName'
-      });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'Configurations can be programmatically extended': function() {
-      process.argv = ['arg1', '-config', './config/production'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbHost:'production',
-	    dbName:'base_customers',
-	    dbPort:4456,
-	    custTemplate:{region:"North"}
-      });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'Configurations can be programmatically extended': function() {
-      process.argv = ['arg1', '-config', './config/production'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbHost:'production',
-	    dbName:'base_customers',
-	    dbPort:4456,
-	    custTemplate:{region:"North"}
+        dbHost:'base',
+        dbName:'cmdLineName'
       });
       assert.deepEqual(conf, shouldBe);
     },
@@ -133,7 +108,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       process.argv = ['-Customers.custTemplate["region"]', 'Northeast'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
-	    custTemplate:{region:"Northeast"}
+        custTemplate:{region:"Northeast"}
       });
       assert.deepEqual(conf, shouldBe);
     },
@@ -169,9 +144,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         '-config', './config/alpha.js', 'arg2'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbName:'base_customers',
-	    dbHost:"alpha",
-	    dbPort:5999
+        dbName:'base_customers',
+        dbHost:"alpha",
+        dbPort:5999
       });
       assert.deepEqual(conf, shouldBe);
     },
@@ -181,9 +156,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         '-config', './config/alpha.js', 'arg2'];
       var conf = config('Customers', defaultParms);
       var shouldBe = _.extendDeep({}, defaultParms, {
-	    dbName:'base_customers',
-	    dbHost:"alpha",
-	    dbPort:5999
+        dbName:'base_customers',
+        dbHost:"alpha",
+        dbPort:5999
       });
       assert.deepEqual(conf, shouldBe);
     },

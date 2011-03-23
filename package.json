@@ -1,6 +1,6 @@
 {
   "name": "config",
-  "version": "0.2.9",
+  "version": "0.4.0",
   "main": "./lib/config.js",
   "description": "Runtime configuration for node.js deployment",
   "modules" : { "test" : "./test" },
