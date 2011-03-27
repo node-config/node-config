@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Config   config.js </title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301065588.41" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301065588.41" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1301065588.41"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1301065588.41"></script>
+</head>
+
+<body id="node-monitor">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
+        <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
+            &gt; <a href="./module_config.html" title="Config">Config</a>
+                
+                 &gt; config.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Runtime configuration for Node.js deployments&lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * @module Config</span>
+<span class="cm"> */</span>
+
+<span class="c1">// Dependencies</span>
+<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">ext</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./extensions&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">File</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">);</span>
+
+<span class="c1">// Saved configurations key=moduleName, value=configObj</span>
+<span class="kd">var</span> <span class="nx">savedConfigs</span> <span class="o">=</span> <span class="p">{};</span>
+
+<span class="c1">// Saved configuration files.  key=filename, value=configObj</span>
+<span class="kd">var</span> <span class="nx">savedConfigFiles</span> <span class="o">=</span> <span class="p">{};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Main configuration class&lt;/p&gt;</span>
+<span class="cm"> * This takes a default configuration object for a module, and folds in values</span>
+<span class="cm"> * from configuration files and values passed in from the command line.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @class Config</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> * @param config {object} Configuration object (see Configuration attributes)</span>
+<span class="cm"> * @return config {object} the requested configuration object</span>
+<span class="cm"> */</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">modName</span><span class="p">,</span> <span class="nx">origConfig</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Initialize</span>
+  <span class="kd">var</span> <span class="nx">mixedConfig</span> <span class="o">=</span><span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">origConfig</span> <span class="o">||</span> <span class="p">{});</span>
+
+  <span class="c1">// If no origConfig is given, return an existing config or all configs</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">origConfig</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">modName</span> <span class="o">?</span> <span class="nx">savedConfigs</span><span class="p">[</span><span class="nx">modName</span><span class="p">]</span> <span class="o">:</span> <span class="nx">savedConfigs</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Mixin configuration files</span>
+  <span class="kd">var</span> <span class="nx">argName</span> <span class="o">=</span> <span class="s1">&#39;-config&#39;</span><span class="p">;</span>
+  <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">pos</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">argName</span> <span class="o">==</span> <span class="nx">arg</span> <span class="o">&amp;&amp;</span> <span class="o">++</span><span class="nx">pos</span> <span class="o">&lt;</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="c1">// If the filename is relative, make it relative to the process cwd</span>
+      <span class="kd">var</span> <span class="nx">configFile</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="nx">pos</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">configFile</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">configFile</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">configFile</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">configFile</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Get the configuration object from the file</span>
+      <span class="kd">var</span> <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">savedConfigFiles</span><span class="p">[</span><span class="nx">configFile</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">configObject</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// Determine the file type</span>
+        <span class="kd">var</span> <span class="nx">fileParts</span> <span class="o">=</span> <span class="nx">configFile</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+        <span class="nx">lastPart</span> <span class="o">=</span> <span class="nx">fileParts</span><span class="p">[</span><span class="nx">fileParts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">isYAML</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lastPart</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">isJSON</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lastPart</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">isJS</span> <span class="o">=</span> <span class="p">(</span><span class="o">!</span><span class="nx">isYAML</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">isJSON</span><span class="p">);</span>
+
+        <span class="c1">// Load and parse the file into a javascript object</span>
+        <span class="k">try</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">isYAML</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">File</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">configFile</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+            <span class="c1">//  Yaml library doesn&#39;t like strings that have newlines but don&#39;t end in</span>
+            <span class="c1">//  a newline: https://github.com/visionmedia/js-yaml/issues/issue/13</span>
+            <span class="nx">text</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+            <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isJSON</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">File</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">configFile</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+            <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">configFile</span><span class="p">);</span>
+          <span class="p">}</span>
+          
+          <span class="c1">// Remember the object so the file doesn&#39;t have to be parsed</span>
+          <span class="c1">// again for the next module.</span>
+          <span class="nx">savedConfigFiles</span><span class="p">[</span><span class="nx">configFile</span><span class="p">]</span> <span class="o">=</span> <span class="nx">configObject</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+        <span class="p">{</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;\nError parsing config file: &quot;</span> <span class="o">+</span> <span class="nx">configFile</span><span class="p">);</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+          <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Mixin the module from the configuration file object</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">(</span><span class="nx">mixedConfig</span><span class="p">,</span> <span class="nx">configObject</span><span class="p">[</span><span class="nx">modName</span><span class="p">]);</span>
+
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Remember the configuration, and return it</span>
+  <span class="k">return</span> <span class="nx">savedConfigs</span><span class="p">[</span><span class="nx">modName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">mixedConfig</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_Config.html" title="Config">Config</a></li>
+                                <li class=""><a href="module_Test.html" title="Test">Test</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="Config.html" title="Config">Config</a></li>
+                                <li class=""><a href="UnderscoreExtensions.html" title="UnderscoreExtensions">UnderscoreExtensions</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class="selected"><a href="config.js.html" title="config.js">config.js</a></li>
+                                <li class=""><a href="extensions.js.html" title="extensions.js">extensions.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+        <span class="subtitle">version 0.4.0</span>
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "UnderscoreExtensions.html#method__.cloneDeep", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.cloneDeep"}, {"url": "UnderscoreExtensions.html#method__.extendDeep", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.extendDeep"}, {"url": "UnderscoreExtensions.html#method__.isObject", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.isObject"}, {"url": "UnderscoreExtensions.html#method__.out", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.out"}, {"url": "UnderscoreExtensions.html#method__.outStr", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.outStr"}];
+</script>
+</body>
+</html>

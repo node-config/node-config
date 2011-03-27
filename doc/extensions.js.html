@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Config   extensions.js </title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301065588.41" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301065588.41" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1301065588.41"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1301065588.41"></script>
+</head>
+
+<body id="node-monitor">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
+        <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
+            &gt; <a href="./module_config.html" title="Config">Config</a>
+                
+                 &gt; extensions.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Public extensions to the underscore library&lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * These extensions were written to assist development of the node-config</span>
+<span class="cm"> * library.  They have been made public for other modules to use.</span>
+<span class="cm"> * </span>
+<span class="cm"> * To use these extensions, simply include the underscore library and</span>
+<span class="cm"> * call them as if they were a part of the library.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Example:</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> * var _ = require(&#39;underscore&#39;);</span>
+<span class="cm"> * _.extendDeep(extendInto, extendFrom, {some:&quot;defaults&quot;});</span>
+<span class="cm"> * &lt;/pre&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * @class UnderscoreExtensions</span>
+<span class="cm"> * @static</span>
+<span class="cm"> */</span>
+
+<span class="c1">// Dependencies</span>
+<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">sys</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;sys&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">eyes</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;eyes&#39;</span><span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Is the specified argument an object?</span>
+<span class="cm"> * </span>
+<span class="cm"> * The argument is an object if it&#39;s a JS object, but not an array and</span>
+<span class="cm"> * not a function.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @method _.isObject</span>
+<span class="cm"> * @param arg {MIXED} An argument of any type.</span>
+<span class="cm"> * @return {boolean} TRUE if the arg is an object, FALSE if not</span>
+<span class="cm"> */</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">))</span> <span class="p">{</span>
+  <span class="nx">_</span><span class="p">.</span><span class="nx">mixin</span><span class="p">({</span><span class="nx">isObject</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+	  <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">))</span> <span class="p">{</span><span class="k">return</span> <span class="kc">false</span><span class="p">;}</span>
+      <span class="k">return</span> <span class="k">typeof</span> <span class="nx">obj</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Return a deep copy of the specified object.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This returns a new object with all elements copied from the specified</span>
+<span class="cm"> * object.  Deep copies are made of objects and arrays so you can do anything</span>
+<span class="cm"> * with the returned object without affecting the input object.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @method _.cloneDeep</span>
+<span class="cm"> * @param copyFrom {object} The original object to copy from</span>
+<span class="cm"> * @param depth {integer} An optional depth to prevent recursion.  Default: 20.</span>
+<span class="cm"> * @return {object} A new object with the elements copied from the copyFrom object</span>
+<span class="cm"> */</span>
+<span class="kd">var</span> <span class="nx">DEFAULT_DEPTH</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">mixin</span><span class="p">({</span><span class="nx">cloneDeep</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Recursion detection</span>
+  <span class="nx">depth</span> <span class="o">=</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">DEFAULT_DEPTH</span> <span class="o">:</span> <span class="nx">depth</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="p">{};}</span>
+
+  <span class="c1">// Create the copy of the correct type</span>
+  <span class="kd">var</span> <span class="nx">copy</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">?</span> <span class="p">[]</span> <span class="o">:</span> <span class="p">{};</span>
+
+  <span class="c1">// Cycle through each element</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Call recursively if an object or array</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">||</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">]))</span> <span class="p">{</span>
+  	  <span class="nx">copy</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span><span class="o">--</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  	  <span class="nx">copy</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Return the copied object</span>
+  <span class="k">return</span> <span class="nx">copy</span><span class="p">;</span>
+
+<span class="p">}});</span> <span class="c1">// cloneDeep()</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Extend an object, and any object it contains.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This does not replace deep objects like _.extend(), but dives into them </span>
+<span class="cm"> * replacing individual elements instead.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @method _.extendDeep</span>
+<span class="cm"> * @param mergeInto {object} The object to merge into</span>
+<span class="cm"> * @param mergeFrom... {object...} - Any number of objects to merge from</span>
+<span class="cm"> * @param depth {integer} An optional depth to prevent recursion.  Default: 20.</span>
+<span class="cm"> * @return {object} The altered mergeInto object is returned</span>
+<span class="cm"> */</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">mixin</span><span class="p">({</span><span class="nx">extendDeep</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mergeInto</span><span class="p">)</span> <span class="p">{</span>
+	
+  <span class="c1">// Initialize</span>
+  <span class="kd">var</span> <span class="nx">vargs</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">depth</span> <span class="o">=</span> <span class="nx">vargs</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">depth</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">vargs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">depth</span><span class="p">);</span>
+    <span class="nx">depth</span> <span class="o">=</span> <span class="nx">DEFAULT_DEPTH</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Recursion detection</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">mergeInto</span><span class="p">;}</span>
+	
+  <span class="c1">// Cycle through each object to extend</span>
+  <span class="nx">vargs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">mergeFrom</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Cycle through each element of the object to merge from</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">mergeFrom</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="c1">// Extend recursively if both elements are objects</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">mergeInto</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">mergeFrom</span><span class="p">[</span><span class="nx">prop</span><span class="p">]))</span> <span class="p">{</span>
+    	<span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">(</span><span class="nx">mergeInto</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">mergeFrom</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span><span class="o">--</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Copy recursively if the mergeFrom element is an object (or array or fn)</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">mergeFrom</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">mergeFrom</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">mergeInto</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">mergeFrom</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span><span class="o">--</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Simple assignment otherwise</span>
+      <span class="k">else</span> <span class="p">{</span>
+    	<span class="nx">mergeInto</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">mergeFrom</span><span class="p">[</span><span class="nx">prop</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="c1">// Chain</span>
+  <span class="k">return</span> <span class="nx">mergeInto</span><span class="p">;</span>
+
+<span class="p">}});</span> <span class="c1">// extendDeep()</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Print to the output stream</span>
+<span class="cm"> * </span>
+<span class="cm"> * This is a handy method for printing stuff to the output stream.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @method _.out</span>
+<span class="cm"> * @param name {string} (optional) The object name</span>
+<span class="cm"> * @param obj {object} The object to print</span>
+<span class="cm"> * @param deep {boolean or integer} Print deep?  Default: 2k output. TRUE prints up to 32k, or specify a size for the output.</span>
+<span class="cm"> * @param eyesConfig {object} An optional eyes configuration object (see the eyes module)</span>
+<span class="cm"> * @return {eyes.inspect} Whatever eyes.inspect() returns</span>
+<span class="cm"> */</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">mixin</span><span class="p">({</span><span class="nx">out</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="nx">deep</span><span class="p">,</span> <span class="nx">eyesConfig</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Set the maxLength </span>
+  <span class="c1">// Default 2048, but if TRUE then set big, otherwise set to specified depth)</span>
+  <span class="kd">var</span> <span class="nx">maxLength</span> <span class="o">=</span> <span class="p">(</span><span class="nx">deep</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="mi">2048</span> <span class="o">:</span> <span class="p">(</span><span class="nx">deep</span> <span class="o">===</span> <span class="kc">true</span> <span class="o">?</span> <span class="mi">32727</span> <span class="o">:</span> <span class="nx">deep</span><span class="p">));</span>
+
+  <span class="c1">// Build the eyes config object</span>
+  <span class="nx">eyesConfig</span> <span class="o">=</span> <span class="nx">eyesConfig</span> <span class="o">?</span> <span class="nx">eyesConfig</span> <span class="o">:</span> <span class="p">{};</span>
+  <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({</span><span class="nx">styles</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nx">maxLength</span><span class="o">:</span><span class="nx">maxLength</span><span class="p">},</span> <span class="nx">eyesConfig</span><span class="p">);</span>
+
+  <span class="c1">// Single arg (and it&#39;s a string)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">stream</span><span class="p">)</span> <span class="p">{</span>
+	  <span class="nx">sys</span><span class="p">.</span><span class="nx">puts</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+	  <span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">return</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Single arg (object)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">obj</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;object&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Output using the eyes library</span>
+  <span class="k">return</span> <span class="nx">eyes</span><span class="p">.</span><span class="nx">inspect</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
+
+<span class="p">}});</span> <span class="c1">// out()</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Return a string representation of an object</span>
+<span class="cm"> * </span>
+<span class="cm"> * This does the same thing as _.out(), except instead of sending the output to</span>
+<span class="cm"> * the standard output, the output is returned as a string.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @method _.outStr</span>
+<span class="cm"> * @param name {string} (optional) The object name</span>
+<span class="cm"> * @param obj {object} The object to print</span>
+<span class="cm"> * @param deep {boolean or integer} Print deep?  Default: 2k output. TRUE prints up to 32k, or specify a size for the output.</span>
+<span class="cm"> * @param eyesConfig {object} An optional eyes configuration object (see the eyes module)</span>
+<span class="cm"> * @return {string} The formatted object as a string</span>
+<span class="cm"> */</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">mixin</span><span class="p">({</span><span class="nx">outStr</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="nx">deep</span><span class="p">,</span> <span class="nx">eyesConfig</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Pass onto out(), with a null stream.  This returns the string.</span>
+  <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span><span class="nx">eyesConfig</span> <span class="o">?</span> <span class="nx">eyesConfig</span> <span class="o">:</span> <span class="p">{},{</span><span class="nx">stream</span><span class="o">:</span><span class="kc">null</span><span class="p">});</span>
+  <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">out</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">obj</span><span class="p">,</span> <span class="nx">deep</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
+
+<span class="p">}});</span> <span class="c1">// outStr()</span>
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_Config.html" title="Config">Config</a></li>
+                                <li class=""><a href="module_Test.html" title="Test">Test</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="Config.html" title="Config">Config</a></li>
+                                <li class=""><a href="UnderscoreExtensions.html" title="UnderscoreExtensions">UnderscoreExtensions</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="config.js.html" title="config.js">config.js</a></li>
+                                <li class="selected"><a href="extensions.js.html" title="extensions.js">extensions.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+        <span class="subtitle">version 0.4.0</span>
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "UnderscoreExtensions.html#method__.cloneDeep", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.cloneDeep"}, {"url": "UnderscoreExtensions.html#method__.extendDeep", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.extendDeep"}, {"url": "UnderscoreExtensions.html#method__.isObject", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.isObject"}, {"url": "UnderscoreExtensions.html#method__.out", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.out"}, {"url": "UnderscoreExtensions.html#method__.outStr", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.outStr"}];
+</script>
+</body>
+</html>

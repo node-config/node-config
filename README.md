@@ -4,11 +4,12 @@ node-config
 Runtime configuration for node.js deployment
 
 Development order:
-o - Directory structure change w/tools, doc templates, src, deploy
-o - Remove deps.js dependency
+x - Addition of tools directory
+x - Remove deps.js dependency
 o - YUI Documentation setup
 o - Underscore cleanup
 o - Config directory discovery
+o - Metadata object - one for each element
 o - Remembering original loaded files & configuration path
 o - Config change events (after initial load)
 o - Runtime config changes (exposure & persistence)

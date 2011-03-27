@@ -1,7 +1,8 @@
-/*******************************************************************************
-* extensions-test.js - Test for the extensions functionality
-********************************************************************************
-*/
+/**
+ * <p>Unit tests</p>
+ * 
+ * @module Test
+ */
 
 // Dependencies
 var ext = require('../lib/extensions');
@@ -9,10 +10,12 @@ var _ = require('underscore');
 var vows = require('vows');
 var assert = require('assert');
 
-/*******************************************************************************
-* ExtensionsTest
-********************************************************************************
-*/
+/**
+ * <p>Tests for the extensions functionality</p>
+ *
+ * @class ExtensionsTest
+ * @constructor
+ */
 exports.ExtensionsTest = vows.describe('Underscore.js Extensions').addBatch({
   'Library initialization': {
     'Underscore library is available': function() {

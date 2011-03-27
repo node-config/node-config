@@ -1,8 +1,3 @@
-/*******************************************************************************
-* config-test.js - Test for the node-config library
-********************************************************************************
-*/
-
 // Dependencies
 var _ = require('underscore');
 var vows = require('vows');
@@ -21,10 +16,12 @@ var defaultParms = {
   }
 };
 
-/*******************************************************************************
-* ConfigTest
-********************************************************************************
-*/
+/**
+ * <p>Unit tests for the node-config library</p>
+ *
+ * @class ConfigTest
+ * @constructor
+ */
 exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   'Library initialization': {
     'Config library is available': function() {
@@ -40,7 +37,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   'Configuration Tests': {
     topic: function() {
       // Remember the original command line argument values
-      orig = {argv:process.argv};
+      var orig = {argv:process.argv};
       return orig;
     },
 
@@ -79,45 +76,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         dbHost:"alpha",
         dbPort:5999
       });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'Command line configurations can specified': function() {
-      process.argv = ['-Customers.dbName', 'cmdLineName',
-        "-Customers.newArg", "Beth's"];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-        dbName:'cmdLineName',
-        newArg:"Beth's"
-      });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'Command line configurations override file configurations': function() {
-      process.argv = ['-config', './config/base.js', 'arg1', 
-        '-Customers.dbName', 'cmdLineName'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-        dbHost:'base',
-        dbName:'cmdLineName'
-      });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'Command line variable names can be complex': function() {
-      process.argv = ['-Customers.custTemplate["region"]', 'Northeast'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-        custTemplate:{region:"Northeast"}
-      });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'Command line values can be complex': function() {
-      process.argv = ['-Customers.custTemplate["mailings"][1]', '{name:"intro",mailed:"Y"}'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.cloneDeep(defaultParms);
-      shouldBe.custTemplate.mailings[1] = {name:"intro", mailed:"Y"};
       assert.deepEqual(conf, shouldBe);
     },
 

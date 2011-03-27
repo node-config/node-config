@@ -1,0 +1,497 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>MonitorUI-Client  eExtensions   (Node-Monitor)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1300926997.14" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1300926997.14" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1300926997.14"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1300926997.14"></script>
+</head>
+
+<body id="node-monitor">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
+        <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
+            &gt; <a href="./module_monitorui-client.html" title="MonitorUI-Client">MonitorUI-Client</a>
+                 &gt; eExtensions 
+                
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <h2>
+                        
+
+                        <code>static</code>
+                        
+                            Class: <b property="yui:name">eExtensions</b>
+                        <span class="extends">
+                        </span>
+
+                    </h2>
+                    <!-- class tree goes here -->
+                    
+                
+  
+
+                    <div class="summary description" property="yui:description">
+                        <p>Extensions to the underscore library</p>
+                    </div>
+
+                    
+                    <div rel="yui:properties" resource="#properties">
+
+                    </div>
+
+                    <div rel="yui:methods" resource="#methods">
+                        <div class="section method details">
+                            <h3 id="methods">Methods</h3>
+                            <div class="content">
+                                    <div class="" rel="yui:method" resource="#method__.cloneDeep">
+                                    <h4>
+                                        <a name="method__.cloneDeep">_.cloneDeep</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        object
+                                            <strong property="yui:name">_.cloneDeep</strong>
+                                           (
+                                                
+                                                        
+                                                         copyFrom
+                                                    
+                                                
+                                                        , 
+                                                         depth
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Return a deep copy of the specified object.
+This returns a new object with all elements copied from the specified
+object.  Deep copies are made of objects and arrays so you can do anything
+with the returned object without affecting the input object.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">copyFrom</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The original object to copy from</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">depth</span>
+                                                        &lt;<span property="yui:type">integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An optional depth to prevent recursion.  Default: 20.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        object
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">A new object with the elements copied from the copyFrom object</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method__.extendDeep">
+                                    <h4>
+                                        <a name="method__.extendDeep">_.extendDeep</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        object
+                                            <strong property="yui:name">_.extendDeep</strong>
+                                           (
+                                                
+                                                        
+                                                         mergeInto
+                                                    
+                                                
+                                                        , 
+                                                         mergeFrom...
+                                                    
+                                                
+                                                        , 
+                                                         depth
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Extend an object, and any object it contains.
+This does not replace deep objects like _.extend(), but dives into them 
+replacing individual elements instead.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">mergeInto</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The object to merge into</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">mergeFrom...</span>
+                                                        &lt;<span property="yui:type">object...</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - Any number of objects to merge from</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">depth</span>
+                                                        &lt;<span property="yui:type">integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An optional depth to prevent recursion.  Default: 20.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        object
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">The altered mergeInto object is returned</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method__.isObject">
+                                    <h4>
+                                        <a name="method__.isObject">_.isObject</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        boolean
+                                            <strong property="yui:name">_.isObject</strong>
+                                           (
+                                                
+                                                        
+                                                         arg
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Is the specified argument an object?
+The argument is an object if it's a JS object, but not an array and
+not a function.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">arg</span>
+                                                        &lt;<span property="yui:type">MIXED</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An argument of any type.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        boolean
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">TRUE if the arg is an object, FALSE if not</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method__.out">
+                                    <h4>
+                                        <a name="method__.out">_.out</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        eyes.inspect
+                                            <strong property="yui:name">_.out</strong>
+                                           (
+                                                
+                                                        
+                                                         name
+                                                    
+                                                
+                                                        , 
+                                                         obj
+                                                    
+                                                
+                                                        , 
+                                                         deep
+                                                    
+                                                
+                                                        , 
+                                                         eyesConfig
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Print to the output stream
+This is a handy method for printing stuff to the output stream.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">name</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  (optional) The object name</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">obj</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The object to print</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">deep</span>
+                                                        &lt;<span property="yui:type">boolean or integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  Print deep?  Default: 2k output. TRUE prints up to 32k, or specify a size for the output.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">eyesConfig</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An optional eyes configuration object (see the eyes module)</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        eyes.inspect
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">Whatever eyes.inspect() returns</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method__.outStr">
+                                    <h4>
+                                        <a name="method__.outStr">_.outStr</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        string
+                                            <strong property="yui:name">_.outStr</strong>
+                                           (
+                                                
+                                                        
+                                                         name
+                                                    
+                                                
+                                                        , 
+                                                         obj
+                                                    
+                                                
+                                                        , 
+                                                         deep
+                                                    
+                                                
+                                                        , 
+                                                         eyesConfig
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Return a string representation of an object
+This does the same thing as _.out(), except instead of sending the output to
+the standard output, the output is returned as a string.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">name</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  (optional) The object name</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">obj</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The object to print</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">deep</span>
+                                                        &lt;<span property="yui:type">boolean or integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  Print deep?  Default: 2k output. TRUE prints up to 32k, or specify a size for the output.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">eyesConfig</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An optional eyes configuration object (see the eyes module)</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        string
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">The formatted object as a string</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div rel="yui:events" resource="#events">
+
+
+                    </div>
+
+                    <div rel="yui:attributes" resource="#configattributes">
+
+                    </div>
+
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_MonitorUI-Client.html" title="MonitorUI-Client">MonitorUI-Client</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="eExtensions.html" title="eExtensions">eExtensions</a></li>
+                                <li class=""><a href="MonitorApp.html" title="MonitorApp">MonitorApp</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="config.js.html" title="config.js">config.js</a></li>
+                                <li class=""><a href="extensions.js.html" title="extensions.js">extensions.js</a></li>
+                        </ul>
+                    </div>
+
+
+                    <div id="methodsList" class="module">
+                        <h4>Methods</h4>
+                        <ul class="content">        
+                                <li class=""><a href="#method__.cloneDeep" title="_.cloneDeep">_.cloneDeep</a></li>
+                                <li class=""><a href="#method__.extendDeep" title="_.extendDeep">_.extendDeep</a></li>
+                                <li class=""><a href="#method__.isObject" title="_.isObject">_.isObject</a></li>
+                                <li class=""><a href="#method__.out" title="_.out">_.out</a></li>
+                                <li class=""><a href="#method__.outStr" title="_.outStr">_.outStr</a></li>
+                        </ul>
+                    </div>
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+        <span class="subtitle">version 0.4.0</span>
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "eExtensions.html#method__.cloneDeep", "access": "", "host": "eExtensions", "type": "method", "name": "_.cloneDeep"}, {"url": "MonitorApp.html#method_exports", "access": "", "host": "MonitorApp", "type": "method", "name": "exports"}, {"url": "eExtensions.html#method__.extendDeep", "access": "", "host": "eExtensions", "type": "method", "name": "_.extendDeep"}, {"url": "eExtensions.html#method__.isObject", "access": "", "host": "eExtensions", "type": "method", "name": "_.isObject"}, {"url": "eExtensions.html#method__.out", "access": "", "host": "eExtensions", "type": "method", "name": "_.out"}, {"url": "eExtensions.html#method__.outStr", "access": "", "host": "eExtensions", "type": "method", "name": "_.outStr"}];
+</script>
+</body>
+</html>

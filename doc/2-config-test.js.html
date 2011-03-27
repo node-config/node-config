@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Test   2-config-test.js </title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301065588.36" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301065588.36" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1301065588.36"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1301065588.36"></script>
+</head>
+
+<body id="node-monitor">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
+        <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
+            &gt; <a href="./module_test.html" title="Test">Test</a>
+                
+                 &gt; 2-config-test.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre><span class="c1">// Dependencies</span>
+<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;vows&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;assert&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/config&#39;</span><span class="p">);</span>
+
+<span class="c1">// Module default parameters</span>
+<span class="kd">var</span> <span class="nx">defaultParms</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">dbHost</span><span class="o">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+  <span class="nx">dbPort</span><span class="o">:</span> <span class="mi">5984</span><span class="p">,</span>
+  <span class="nx">dbName</span><span class="o">:</span> <span class="s1">&#39;customers&#39;</span><span class="p">,</span>
+  <span class="nx">custTemplate</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">credit</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nx">region</span><span class="o">:</span> <span class="s1">&#39;Central&#39;</span><span class="p">,</span>
+    <span class="nx">mailings</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;intro&#39;</span><span class="p">,</span> <span class="s1">&#39;month1&#39;</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Unit tests for the node-config library&lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @class ConfigTest</span>
+<span class="cm"> * @constructor</span>
+<span class="cm"> */</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">ConfigTest</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Test suite for node-config&#39;</span><span class="p">).</span><span class="nx">addBatch</span><span class="p">({</span>
+  <span class="s1">&#39;Library initialization&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s1">&#39;Config library is available&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Config utils are included with the library&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Normal underscore + config extensions</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s1">&#39;Configuration Tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Remember the original command line argument values</span>
+      <span class="nx">orig</span> <span class="o">=</span> <span class="p">{</span><span class="nx">argv</span><span class="o">:</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">};</span>
+      <span class="k">return</span> <span class="nx">orig</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Default configuration is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">dbHost</span><span class="o">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="nx">dbPort</span><span class="o">:</span> <span class="mi">5984</span><span class="p">,</span>
+        <span class="nx">dbName</span><span class="o">:</span> <span class="s1">&#39;customers&#39;</span><span class="p">,</span>
+        <span class="nx">custTemplate</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">credit</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
+          <span class="nx">region</span><span class="o">:</span> <span class="s1">&#39;Central&#39;</span><span class="p">,</span>
+          <span class="nx">mailings</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;intro&#39;</span><span class="p">,</span> <span class="s1">&#39;month1&#39;</span><span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Alpha configuration was mixed in&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;arg1&#39;</span><span class="p">,</span> <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">];</span>
+      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
+      <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Multiple configurations can be mixed in&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/base.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg1&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">];</span>
+      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">dbName</span><span class="o">:</span><span class="s1">&#39;base_customers&#39;</span><span class="p">,</span>
+        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
+      <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Specific configurations are discoverable&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Read the current Customers parameters</span>
+      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">defaultParms</span><span class="p">);</span>
+      <span class="nx">shouldBe</span><span class="p">.</span><span class="nx">custTemplate</span><span class="p">.</span><span class="nx">mailings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="nx">mailed</span><span class="o">:</span><span class="s2">&quot;Y&quot;</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;All configurations are discoverable&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">allConfs</span> <span class="o">=</span> <span class="nx">config</span><span class="p">();</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">allConfs</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">allConfs</span><span class="p">.</span><span class="nx">Customers</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">allConfs</span><span class="p">.</span><span class="nx">Customers</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">defaultParms</span><span class="p">);</span>
+      <span class="nx">shouldBe</span><span class="p">.</span><span class="nx">custTemplate</span><span class="p">.</span><span class="nx">mailings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="nx">mailed</span><span class="o">:</span><span class="s2">&quot;Y&quot;</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;JSON configuration files can be loaded&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/base.json&#39;</span><span class="p">,</span> <span class="s1">&#39;arg1&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">];</span>
+      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">dbName</span><span class="o">:</span><span class="s1">&#39;base_customers&#39;</span><span class="p">,</span>
+        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
+      <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;YAML configuration files can be loaded&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/base.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;arg1&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">];</span>
+      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">dbName</span><span class="o">:</span><span class="s1">&#39;base_customers&#39;</span><span class="p">,</span>
+        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
+      <span class="p">});</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Resetting command line args&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">orig</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="nx">orig</span><span class="p">.</span><span class="nx">argv</span><span class="p">;</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="nx">orig</span><span class="p">.</span><span class="nx">argv</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+  <span class="p">}</span>
+  
+<span class="p">});</span>
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class=""><a href="module_Config.html" title="Config">Config</a></li>
+                                <li class="selected"><a href="module_Test.html" title="Test">Test</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="ConfigTest.html" title="ConfigTest">ConfigTest</a></li>
+                                <li class=""><a href="ExtensionsTest.html" title="ExtensionsTest">ExtensionsTest</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="1-extensions-test.js.html" title="1-extensions-test.js">1-extensions-test.js</a></li>
+                                <li class="selected"><a href="2-config-test.js.html" title="2-config-test.js">2-config-test.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+        <span class="subtitle">version 0.4.0</span>
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [];
+</script>
+</body>
+</html>
