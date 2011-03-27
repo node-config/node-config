@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>Config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301065588.41" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301065588.41" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301248839.84" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301248839.84" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1301065588.41"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1301065588.41"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1301248839.84"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1301248839.84"></script>
 </head>
 
 <body id="node-monitor">
@@ -48,7 +48,7 @@
                         </style>
 <div class="highlight"><pre><span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Runtime configuration for Node.js deployments&lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * @module Config</span>
 <span class="cm"> */</span>
 
@@ -77,21 +77,21 @@
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">modName</span><span class="p">,</span> <span class="nx">origConfig</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="c1">// Initialize</span>
-  <span class="kd">var</span> <span class="nx">mixedConfig</span> <span class="o">=</span><span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">origConfig</span> <span class="o">||</span> <span class="p">{});</span>
+  <span class="kd">var</span> <span class="nx">mixedConfig</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">origConfig</span> <span class="o">||</span> <span class="p">{});</span>
 
   <span class="c1">// If no origConfig is given, return an existing config or all configs</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">origConfig</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">origConfig</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span><span class="nx">modName</span> <span class="o">?</span> <span class="nx">savedConfigs</span><span class="p">[</span><span class="nx">modName</span><span class="p">]</span> <span class="o">:</span> <span class="nx">savedConfigs</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="c1">// Mixin configuration files</span>
   <span class="kd">var</span> <span class="nx">argName</span> <span class="o">=</span> <span class="s1">&#39;-config&#39;</span><span class="p">;</span>
-  <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">pos</span><span class="p">){</span>
+  <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">pos</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">argName</span> <span class="o">==</span> <span class="nx">arg</span> <span class="o">&amp;&amp;</span> <span class="o">++</span><span class="nx">pos</span> <span class="o">&lt;</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
 
       <span class="c1">// If the filename is relative, make it relative to the process cwd</span>
       <span class="kd">var</span> <span class="nx">configFile</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="nx">pos</span><span class="p">];</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">configFile</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">configFile</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">configFile</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;./&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">configFile</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">configFile</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">configFile</span><span class="p">;</span>
       <span class="p">}</span>
 
@@ -101,7 +101,7 @@
 
         <span class="c1">// Determine the file type</span>
         <span class="kd">var</span> <span class="nx">fileParts</span> <span class="o">=</span> <span class="nx">configFile</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
-        <span class="nx">lastPart</span> <span class="o">=</span> <span class="nx">fileParts</span><span class="p">[</span><span class="nx">fileParts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">lastPart</span> <span class="o">=</span> <span class="nx">fileParts</span><span class="p">[</span><span class="nx">fileParts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="nx">toLowerCase</span><span class="p">();</span>
         <span class="kd">var</span> <span class="nx">isYAML</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lastPart</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">);</span>
         <span class="kd">var</span> <span class="nx">isJSON</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lastPart</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">);</span>
         <span class="kd">var</span> <span class="nx">isJS</span> <span class="o">=</span> <span class="p">(</span><span class="o">!</span><span class="nx">isYAML</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">isJSON</span><span class="p">);</span>
@@ -109,26 +109,25 @@
         <span class="c1">// Load and parse the file into a javascript object</span>
         <span class="k">try</span> <span class="p">{</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">isYAML</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">File</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">configFile</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+            <span class="kd">var</span> <span class="nx">yamlText</span> <span class="o">=</span> <span class="nx">File</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">configFile</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
             <span class="c1">//  Yaml library doesn&#39;t like strings that have newlines but don&#39;t end in</span>
             <span class="c1">//  a newline: https://github.com/visionmedia/js-yaml/issues/issue/13</span>
-            <span class="nx">text</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
-            <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+            <span class="nx">yamlText</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+            <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">yamlText</span><span class="p">);</span>
           <span class="p">}</span>
           <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isJSON</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">File</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">configFile</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
-            <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">jsonText</span> <span class="o">=</span> <span class="nx">File</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">configFile</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+            <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">jsonText</span><span class="p">);</span>
           <span class="p">}</span>
           <span class="k">else</span> <span class="p">{</span>
             <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">configFile</span><span class="p">);</span>
           <span class="p">}</span>
-          
+
           <span class="c1">// Remember the object so the file doesn&#39;t have to be parsed</span>
           <span class="c1">// again for the next module.</span>
           <span class="nx">savedConfigFiles</span><span class="p">[</span><span class="nx">configFile</span><span class="p">]</span> <span class="o">=</span> <span class="nx">configObject</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-        <span class="p">{</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;\nError parsing config file: &quot;</span> <span class="o">+</span> <span class="nx">configFile</span><span class="p">);</span>
           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
           <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
@@ -142,7 +141,8 @@
   <span class="p">});</span>
 
   <span class="c1">// Remember the configuration, and return it</span>
-  <span class="k">return</span> <span class="nx">savedConfigs</span><span class="p">[</span><span class="nx">modName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">mixedConfig</span><span class="p">;</span>
+  <span class="nx">savedConfigs</span><span class="p">[</span><span class="nx">modName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">mixedConfig</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">mixedConfig</span><span class="p">;</span>
 
 <span class="p">};</span>
 </pre></div>
