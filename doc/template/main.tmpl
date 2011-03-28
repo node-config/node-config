@@ -46,16 +46,7 @@
                 </fieldset>
             </form>
                 #if $index
-
-           
-                    <h2><b>Node.js Config</b> </h2> 
-                    <div class="summary description">
-                      <p>This is the API documentation for the
-                        <a href="https://github.com/lorenwest/node-config">Node.js Config</a> open source application.
-                      </p>
-                      <p>Choose a module name from the list for more information.</p>
-                    </div>
-
+                  #include "doc/template/overview.tmpl"
                 #end if
 
                 #if $filename
@@ -671,8 +662,7 @@
 	</div>
 	<div id="ft">
         <hr />
-        Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
-        <span class="subtitle">version $version</span>
+        #include "doc/template/footer.tmpl"
 	</div>
 </div>
 <script type="text/javascript">
