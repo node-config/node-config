@@ -1,0 +1,47 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/local/bin/npm', 'test' ]
+info using npm@1.0.6
+info using node@v0.4.8
+verbose config file /home/Loren/.npmrc
+verbose config file /usr/local/etc/npmrc
+silly testEngine { name: 'config',
+silly testEngine   version: '0.4.0',
+silly testEngine   main: './lib/config.js',
+silly testEngine   description: 'Runtime configuration for node.js deployment',
+silly testEngine   modules: { test: './test' },
+silly testEngine   author: 
+silly testEngine    { name: 'Loren West',
+silly testEngine      email: 'open_source@lorenwest.com' },
+silly testEngine   directories: { lib: './lib', config: './config', test: './test' },
+silly testEngine   dependencies: { yaml: '0.1.x', vows: '0.5.x' },
+silly testEngine   engines: { node: '0.x.x' },
+silly testEngine   scripts: { test: 'node_modules/vows/bin/vows test/*.js --spec' },
+silly testEngine   devDependencies: {},
+silly testEngine   _id: 'config@0.4.0',
+silly testEngine   _engineSupported: true,
+silly testEngine   _npmVersion: '1.0.6',
+silly testEngine   _nodeVersion: 'v0.4.8',
+silly testEngine   _defaultsLoaded: true }
+verbose caching /cygdrive/c/mydrop~1/open_source/node-config/package.json
+verbose loadDefaults config@0.4.0
+verbose run-script [ 'pretest', 'test', 'posttest' ]
+info pretest config@0.4.0
+info test config@0.4.0
+verbose unsafe-perm in lifecycle true
+silly exec sh "-c" "node_modules/vows/bin/vows test/*.js --spec"
+info config@0.4.0 Failed to exec test script
+ERR! config@0.4.0 test: `node_modules/vows/bin/vows test/*.js --spec`
+ERR! `sh "-c" "node_modules/vows/bin/vows test/*.js --spec"` failed with 1
+ERR! 
+ERR! Failed at the config@0.4.0 test script.
+ERR! This is most likely a problem with the config package,
+ERR! not with npm itself.
+ERR! Tell the author that this fails on your system:
+ERR!     node_modules/vows/bin/vows test/*.js --spec
+ERR! You can get their info via:
+ERR!     npm owner ls config
+ERR! There is likely additional logging output above.
+ERR! 
+ERR! System CYGWIN_NT-5.1 1.7.5(0.225/5/3)
+ERR! command "node" "/usr/local/bin/npm" "test"
+verbose exit [ 1, true ]

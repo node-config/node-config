@@ -2,13 +2,13 @@
 <html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<title>Config  Config  </title>
+	<title>node-config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301265639.5" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301265639.5" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1308514875.22" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1308514875.22" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1301265639.5"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1301265639.5"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1308514875.22"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1308514875.22"></script>
 </head>
 
 <body id="node-monitor">
@@ -17,7 +17,7 @@
 	<div id="hd">
         <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
         <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
-            &gt; <a href="./module_config.html" title="Config">Config</a>
+            &gt; <a href="./module_node-config.html" title="node-config">node-config</a>
                  &gt; Config 
                 
         <form onsubmit="return false">
@@ -58,46 +58,612 @@
   
 
                     <div class="summary description" property="yui:description">
-                        <p>Main configuration class</p>
-This takes a default configuration object for a module, and folds in values
-from configuration files and values passed in from the command line.
+                        <p>Runtime Application Configurations</p>
+<p>
+The config module is a singleton class representing all runtime
+configurations for this application instance.
+</p>
+<p>
+The require('config') constructor returns the global configuration object.
+For example, with the following config/default.yaml file:
+</p>
+<pre>
+...
+customer:
+&nbsp;&nbsp;initialCredit: 500
+&nbsp;&nbsp;db:
+&nbsp;&nbsp;&nbsp;&nbsp;name: customer
+&nbsp;&nbsp;&nbsp;&nbsp;port: 5984
+...
+</pre>
+<p>
+This code loads the customer section into the CONFIG variable:
+<p>
+<pre>
+var CONFIG = require('config').customer;
+...
+newCustomer.creditLimit = CONFIG.initialCredit;
+database.open(CONFIG.db.name, CONFIG.db.port);
+...
+</pre>
                     </div>
 
-                        <div class="section constructor details" rel="yui:constructor" resource="#constructor">
-                        <h3 id="constructor">Constructor</h3>
-                        <div class="content">
-                            <div class="detail">
-                                <strong property="yui:name">Config</strong>
-                                <code>
-                                    (
-  
-                                        
-                                                
-                                                config
-                                    )
-                                </code>
-                                <div class="description">
-                                        <dl rel="yui:parameters">
-                                            <dt>Parameters:</dt>
-                                                <dd rel="yui:parameter">
-                                                    <code><span property="yui:name">config</span>
-                                                    &lt;<span property="yui:type">object</span>&gt;
-                                                    </code>
-                                                    <span property="yui:description">  Configuration object (see Configuration attributes)</span>
-                                                </dd>
-                                        </dl>
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     
                     <div rel="yui:properties" resource="#properties">
 
                     </div>
 
                     <div rel="yui:methods" resource="#methods">
+                        <div class="section method details">
+                            <h3 id="methods">Methods</h3>
+                            <div class="content">
+                                    <div class="protected" rel="yui:method" resource="#method__attachProtoDeep">
+                                    <h4>
+                                        <a name="method__attachProtoDeep">_attachProtoDeep</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">_attachProtoDeep</strong>
+                                           (
+                                                
+                                                        
+                                                         toObject
+                                                    
+                                                
+                                                        , 
+                                                         depth
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Attach the Config class prototype to all config objects recursively.
+<p>
+This allows you to do anything with CONFIG sub-objects as you can do with
+the top-level CONFIG object.  It's so you can do this:
+</p>
+<pre>
+var CONFIG = require('config').Customer;
+CONFIG.watch(...)
+</pre>
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">toObject</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description"></span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">depth</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description"></span>
+                                                        </dd>
+                                                </dl>
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method__buildConfig">
+                                    <h4>
+                                        <a name="method__buildConfig">_buildConfig</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">_buildConfig</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            <p>Assemble the configuration object members into this object</p>
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method__cloneDeep">
+                                    <h4>
+                                        <a name="method__cloneDeep">_cloneDeep</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        object
+                                            <strong property="yui:name">_cloneDeep</strong>
+                                           (
+                                                
+                                                        
+                                                         copyFrom
+                                                    
+                                                
+                                                        , 
+                                                         depth
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Return a deep copy of the specified object.
+This returns a new object with all elements copied from the specified
+object.  Deep copies are made of objects and arrays so you can do anything
+with the returned object without affecting the input object.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">copyFrom</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The original object to copy from</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">depth</span>
+                                                        &lt;<span property="yui:type">integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An optional depth to prevent recursion.  Default: 20.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        object
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">A new object with the elements copied from the copyFrom object</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method__extendDeep">
+                                    <h4>
+                                        <a name="method__extendDeep">_extendDeep</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        object
+                                            <strong property="yui:name">_extendDeep</strong>
+                                           (
+                                                
+                                                        
+                                                         mergeInto
+                                                    
+                                                
+                                                        , 
+                                                         mergeFrom...
+                                                    
+                                                
+                                                        , 
+                                                         depth
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Extend an object, and any object it contains.
+This does not replace deep objects, but dives into them
+replacing individual elements instead.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">mergeInto</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The object to merge into</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">mergeFrom...</span>
+                                                        &lt;<span property="yui:type">object...</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - Any number of objects to merge from</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">depth</span>
+                                                        &lt;<span property="yui:type">integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An optional depth to prevent recursion.  Default: 20.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        object
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">The altered mergeInto object is returned</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method__isObject">
+                                    <h4>
+                                        <a name="method__isObject">_isObject</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        boolean
+                                            <strong property="yui:name">_isObject</strong>
+                                           (
+                                                
+                                                        
+                                                         arg
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Is the specified argument an object?
+The argument is an object if it's a JS object, but not an array.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">arg</span>
+                                                        &lt;<span property="yui:type">MIXED</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  An argument of any type.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        boolean
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">TRUE if the arg is an object, FALSE if not</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method__loadFileConfigs">
+                                    <h4>
+                                        <a name="method__loadFileConfigs">_loadFileConfigs</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        this
+                                            <strong property="yui:name">_loadFileConfigs</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Load the individual file configurations.
+<p>
+This method builds a map of filename to the configuration object defined
+by the file.  The search order is:
+</p>
+<pre>
+default.EXT
+(hostname).EXT
+(deployment).EXT
+(hostname)-(deployment).EXT
+runtime.json
+</pre>
+<p>
+EXT can be yaml, json, or js signifying the file type.  yaml is in YAML format,
+json is in strict JSON format, and js is a javascript executable file that is
+require()'d with module.exports being the config object.
+</p>
+<p>
+(hostname) is the $HOST environment variable if set, otherwise the
+$HOSTNAME environment variable if set, otherwise the hostname found from
+require('os').hostname()
+</p>
+<p>
+(deployment) is the deployment type, found in the $NODE_ENV environment
+variable.  Defaults to 'development'.
+</p>
+<p>
+The runtime.json file contains configuration changes made at runtime via
+the CONFIG.set('element',value) method.
+</p>
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        this
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">The configuration object</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method__watchForConfigFileChanges">
+                                    <h4>
+                                        <a name="method__watchForConfigFileChanges">_watchForConfigFileChanges</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">_watchForConfigFileChanges</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Monitor the filesystem for configuration file changes.
+<p>
+Runtime configuration changes are made by modifying the runtime.json file.
+This paradigm allows multiple application servers to internally notify
+listeners whenever the configuration changes.
+</p>
+<p>
+This method attaches the file watcher onto the runtime.json file.
+</p>
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_makeImmutable">
+                                    <h4>
+                                        <a name="method_makeImmutable">makeImmutable</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">makeImmutable</strong>
+                                           (
+                                                
+                                                        
+                                                         object
+                                                    
+                                                
+                                                        , 
+                                                         property
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            <p>Make a configuration property immutable (assuring it cannot be changed).</p>
+<p>
+This method was built for configuration properties that shouldn't change,
+but it can be applied to any javascript object property.
+</p>
+<p>
+This operation cannot be un-done.
+</p>
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">object</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The object to attach an immutable property into.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The name of the property to make immutable.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_watch">
+                                    <h4>
+                                        <a name="method_watch">watch</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        object
+                                            <strong property="yui:name">watch</strong>
+                                           (
+                                                
+                                                        
+                                                         object
+                                                    
+                                                
+                                                        , 
+                                                         property
+                                                    
+                                                
+                                                        , 
+                                                         handler
+                                                    
+                                                
+                                                        , 
+                                                         depth
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            <p>Monitor a configuration value for runtime changes.</p>
+<p>
+Configuration values can be changed in a running application by the 
+application applying changes, or by a manual change to the runtime.json
+file within the configuration directory. This method lets you specify a 
+function to run if a configuration value changes.  
+</p>
+<p>
+If you want to prevent changes to configuration values, it's better to use 
+the makePropertyImmutable method.
+</p>
+<p>
+This method was built for monitoring changes to configuration values,
+but it can be used for watching changes to any javascript object.
+</p>
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">object</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The object to watch.  Can be any javascript object.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The property name to watch.  Watch all object properties if null.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">handler</span>
+                                                        &lt;<span property="yui:type">function(object, propertyName, priorValue, newValue)</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - Handler called when a property change is detected.
+The handler is run along with other handlers registered for notification.
+If the handler changes the value of the property, that change is applied after all handlers have finished processing the current change.
+Then all handlers (including this one) will be called again with the newly changed value.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">depth</span>
+                                                        &lt;<span property="yui:type">integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  (optional) - If watching all object properties or if the specified property is an object, this specifies the depth of the object graph to watch for changes.  Default 6.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        object
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">object  - The original object is returned.</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -118,8 +684,8 @@ from configuration files and values passed in from the command line.
                     <div id="moduleList" class="module">
                         <h4>Modules</h4>
                         <ul class="content">
-                                <li class="selected"><a href="module_Config.html" title="Config">Config</a></li>
-                                <li class=""><a href="module_Test.html" title="Test">Test</a></li>
+                                <li class="selected"><a href="module_node-config.html" title="node-config">node-config</a></li>
+                                <li class=""><a href="module_test.html" title="test">test</a></li>
                         </ul>
                     </div>
 
@@ -127,7 +693,6 @@ from configuration files and values passed in from the command line.
                         <h4>Classes</h4>
                         <ul class="content">
                                 <li class="selected"><a href="Config.html" title="Config">Config</a></li>
-                                <li class=""><a href="UnderscoreExtensions.html" title="UnderscoreExtensions">UnderscoreExtensions</a></li>
                         </ul>
                     </div>
 
@@ -135,11 +700,24 @@ from configuration files and values passed in from the command line.
                         <h4>Files</h4>
                         <ul class="content">        
                                 <li class=""><a href="config.js.html" title="config.js">config.js</a></li>
-                                <li class=""><a href="extensions.js.html" title="extensions.js">extensions.js</a></li>
                         </ul>
                     </div>
 
 
+                    <div id="methodsList" class="module">
+                        <h4>Methods</h4>
+                        <ul class="content">        
+                                <li class="protected"><a href="#method__attachProtoDeep" title="_attachProtoDeep">_attachProtoDeep</a></li>
+                                <li class="protected"><a href="#method__buildConfig" title="_buildConfig">_buildConfig</a></li>
+                                <li class="protected"><a href="#method__cloneDeep" title="_cloneDeep">_cloneDeep</a></li>
+                                <li class="protected"><a href="#method__extendDeep" title="_extendDeep">_extendDeep</a></li>
+                                <li class="protected"><a href="#method__isObject" title="_isObject">_isObject</a></li>
+                                <li class="protected"><a href="#method__loadFileConfigs" title="_loadFileConfigs">_loadFileConfigs</a></li>
+                                <li class="protected"><a href="#method__watchForConfigFileChanges" title="_watchForConfigFileChanges">_watchForConfigFileChanges</a></li>
+                                <li class=""><a href="#method_makeImmutable" title="makeImmutable">makeImmutable</a></li>
+                                <li class=""><a href="#method_watch" title="watch">watch</a></li>
+                        </ul>
+                    </div>
 
 
 
@@ -153,7 +731,7 @@ Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__buildConfig", "access": "protected", "host": "Config", "type": "method", "name": "_buildConfig"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method__watchForConfigFileChanges", "access": "protected", "host": "Config", "type": "method", "name": "_watchForConfigFileChanges"}];
 </script>
 </body>
 </html>

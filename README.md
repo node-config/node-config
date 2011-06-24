@@ -3,35 +3,6 @@ node-config
 
 Runtime configuration for node.js deployment
 
-Development order:
-x - Addition of tools directory
-x - Remove deps.js dependency
-o - YUI Documentation setup
-o - Underscore cleanup
-o - Config directory discovery
-o - Metadata object - one for each element
-o - Remembering original loaded files & configuration path
-o - Config change events (after initial load)
-o - Runtime config changes (exposure & persistence)
-o - Runtime configuration reporting (including machine name, ram, etc)
-o - Middleware component for exposing configuration
-o - Documentation hosting via Dropbox
-
-
-Changes in v0.4.0
------------------
-* Default config directory loading
-* Config change events
-* Runtime config changes (dynamic & persistent)
-* Runtime configuration reporting (including machine name, ram, etc)
-* Middleware component for exposing configuration
-* YUI Documentation included & exposed as a service
-* Static documentation hosted on Dropbox (or github?)
-* New directory structure w/tools, doc templates, src, deploy
-* No extension of the underscore library
-
-
-
 Introduction
 ------------
 

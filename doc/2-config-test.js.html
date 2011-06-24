@@ -2,13 +2,13 @@
 <html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<title>Test   2-config-test.js </title>
+	<title>test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301265639.4" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301265639.4" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1308514875.27" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1308514875.27" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1301265639.4"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1301265639.4"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1308514875.27"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1308514875.27"></script>
 </head>
 
 <body id="node-monitor">
@@ -17,7 +17,7 @@
 	<div id="hd">
         <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
         <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
-            &gt; <a href="./module_test.html" title="Test">Test</a>
+            &gt; <a href="./module_test.html" title="test">test</a>
                 
                  &gt; 2-config-test.js (source view) 
         <form onsubmit="return false">
@@ -46,26 +46,22 @@
                         <style>
                             #doc3 .classopts { display:none; }
                         </style>
-<div class="highlight"><pre><span class="c1">// Dependencies</span>
-<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><span class="c1">// Hardcode $NODE_ENV=test for testing</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">;</span>
+
+<span class="c1">// Dependencies</span>
 <span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;vows&#39;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;assert&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/config&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">CONFIG</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/config&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">originalWatchedValue</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">newWatchedValue</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100000</span><span class="p">);</span>
 
-<span class="c1">// Module default parameters</span>
-<span class="kd">var</span> <span class="nx">defaultParms</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">dbHost</span><span class="o">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
-  <span class="nx">dbPort</span><span class="o">:</span> <span class="mi">5984</span><span class="p">,</span>
-  <span class="nx">dbName</span><span class="o">:</span> <span class="s1">&#39;customers&#39;</span><span class="p">,</span>
-  <span class="nx">custTemplate</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">credit</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
-    <span class="nx">region</span><span class="o">:</span> <span class="s1">&#39;Central&#39;</span><span class="p">,</span>
-    <span class="nx">mailings</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;intro&#39;</span><span class="p">,</span> <span class="s1">&#39;month1&#39;</span><span class="p">]</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="c1">// These tests require the directory to be the root of the node-config project</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">chdir</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/..&#39;</span><span class="p">);</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Unit tests for the node-config library&lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;Unit tests for the node-config library.  To run type:&lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;npm test&lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @class ConfigTest</span>
 <span class="cm"> * @constructor</span>
@@ -73,109 +69,93 @@
 <span class="nx">exports</span><span class="p">.</span><span class="nx">ConfigTest</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Test suite for node-config&#39;</span><span class="p">).</span><span class="nx">addBatch</span><span class="p">({</span>
   <span class="s1">&#39;Library initialization&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="s1">&#39;Config library is available&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">);</span>
     <span class="p">},</span>
-    <span class="s1">&#39;Config utils are included with the library&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="c1">// Normal underscore + config extensions</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">);</span>
+    <span class="s1">&#39;Config extensions are included with the library&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">},</span>
 
-  <span class="s1">&#39;Configuration Tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+  <span class="s1">&#39;Configuration file Tests&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="c1">// Remember the original command line argument values</span>
-      <span class="kd">var</span> <span class="nx">orig</span> <span class="o">=</span> <span class="p">{</span><span class="nx">argv</span><span class="o">:</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">};</span>
-      <span class="k">return</span> <span class="nx">orig</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">;</span>
     <span class="p">},</span>
 
-    <span class="s1">&#39;Default configuration is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">dbHost</span><span class="o">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
-        <span class="nx">dbPort</span><span class="o">:</span> <span class="mi">5984</span><span class="p">,</span>
-        <span class="nx">dbName</span><span class="o">:</span> <span class="s1">&#39;customers&#39;</span><span class="p">,</span>
-        <span class="nx">custTemplate</span><span class="o">:</span> <span class="p">{</span>
-          <span class="nx">credit</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
-          <span class="nx">region</span><span class="o">:</span> <span class="s1">&#39;Central&#39;</span><span class="p">,</span>
-          <span class="nx">mailings</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;intro&#39;</span><span class="p">,</span> <span class="s1">&#39;month1&#39;</span><span class="p">]</span>
-        <span class="p">}</span>
-      <span class="p">};</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="s1">&#39;Loading configurations from a JS module is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbHost</span> <span class="o">==</span> <span class="s1">&#39;base&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm1</span> <span class="o">==</span> <span class="s1">&#39;value1&#39;</span><span class="p">);</span>
     <span class="p">},</span>
 
-    <span class="s1">&#39;Alpha configuration was mixed in&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;arg1&#39;</span><span class="p">,</span> <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">];</span>
-      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
-        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
-      <span class="p">});</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="s1">&#39;Loading configurations from a JSON file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm1</span> <span class="o">==</span> <span class="s1">&#39;value1&#39;</span><span class="p">);</span>
     <span class="p">},</span>
 
-    <span class="s1">&#39;Multiple configurations can be mixed in&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/base.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg1&#39;</span><span class="p">,</span> 
-        <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">];</span>
-      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">dbName</span><span class="o">:</span><span class="s1">&#39;base_customers&#39;</span><span class="p">,</span>
-        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
-        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
-      <span class="p">});</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
+    <span class="s1">&#39;Loading configurations from a YAML file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm2</span> <span class="o">==</span> <span class="s1">&#39;value2&#39;</span><span class="p">);</span>
     <span class="p">},</span>
 
-    <span class="s1">&#39;Specific configurations are discoverable&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="c1">// Read the current Customers parameters</span>
-      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">defaultParms</span><span class="p">);</span>
-      <span class="nx">shouldBe</span><span class="p">.</span><span class="nx">custTemplate</span><span class="p">.</span><span class="nx">mailings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="nx">mailed</span><span class="o">:</span><span class="s2">&quot;Y&quot;</span><span class="p">};</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
-    <span class="p">},</span>
-
-    <span class="s1">&#39;All configurations are discoverable&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">allConfs</span> <span class="o">=</span> <span class="nx">config</span><span class="p">();</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">allConfs</span><span class="p">);</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">allConfs</span><span class="p">.</span><span class="nx">Customers</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">allConfs</span><span class="p">.</span><span class="nx">Customers</span><span class="p">;</span>
-      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">defaultParms</span><span class="p">);</span>
-      <span class="nx">shouldBe</span><span class="p">.</span><span class="nx">custTemplate</span><span class="p">.</span><span class="nx">mailings</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="nx">mailed</span><span class="o">:</span><span class="s2">&quot;Y&quot;</span><span class="p">};</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
-    <span class="p">},</span>
-
-    <span class="s1">&#39;JSON configuration files can be loaded&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/base.json&#39;</span><span class="p">,</span> <span class="s1">&#39;arg1&#39;</span><span class="p">,</span> 
-        <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">];</span>
-      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">dbName</span><span class="o">:</span><span class="s1">&#39;base_customers&#39;</span><span class="p">,</span>
-        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
-        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
-      <span class="p">});</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
-    <span class="p">},</span>
-
-    <span class="s1">&#39;YAML configuration files can be loaded&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/base.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;arg1&#39;</span><span class="p">,</span> 
-        <span class="s1">&#39;-config&#39;</span><span class="p">,</span> <span class="s1">&#39;./config/alpha.js&#39;</span><span class="p">,</span> <span class="s1">&#39;arg2&#39;</span><span class="p">];</span>
-      <span class="kd">var</span> <span class="nx">conf</span> <span class="o">=</span> <span class="nx">config</span><span class="p">(</span><span class="s1">&#39;Customers&#39;</span><span class="p">,</span> <span class="nx">defaultParms</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extendDeep</span><span class="p">({},</span> <span class="nx">defaultParms</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">dbName</span><span class="o">:</span><span class="s1">&#39;base_customers&#39;</span><span class="p">,</span>
-        <span class="nx">dbHost</span><span class="o">:</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
-        <span class="nx">dbPort</span><span class="o">:</span><span class="mi">5999</span>
-      <span class="p">});</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">conf</span><span class="p">,</span> <span class="nx">shouldBe</span><span class="p">);</span>
-    <span class="p">},</span>
-
-    <span class="s1">&#39;Resetting command line args&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">orig</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="nx">orig</span><span class="p">.</span><span class="nx">argv</span><span class="p">;</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="nx">orig</span><span class="p">.</span><span class="nx">argv</span><span class="p">);</span>
+    <span class="s1">&#39;Loading prior runtime.json configurations is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbName</span> <span class="o">==</span> <span class="s1">&#39;override_from_runtime_json&#39;</span><span class="p">);</span>
     <span class="p">}</span>
     
+  <span class="p">},</span>
+
+  <span class="s1">&#39;Assuring a configuration can be made immutable&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    	
+      <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">,</span> <span class="s1">&#39;parm1&#39;</span><span class="p">);</span>
+      <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm1</span> <span class="o">=</span> <span class="s2">&quot;setToThis&quot;</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm1</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Correctly unable to change an immutable configuration&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">value</span> <span class="o">!=</span> <span class="s2">&quot;setToThis&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Left the original value intact after attempting to change&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">value</span> <span class="o">==</span> <span class="s2">&quot;value1&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s1">&#39;Configuration Change Notification Tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    	
+      <span class="c1">// Attach this topic as a watcher</span>
+      <span class="kd">var</span> <span class="nx">cb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">callback</span><span class="p">;</span>
+      <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="nx">oldValue</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">){</span>
+    	  <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span><span class="nx">obj</span><span class="o">:</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span><span class="nx">prop</span><span class="p">,</span> <span class="nx">oldValue</span><span class="o">:</span><span class="nx">oldValue</span><span class="p">,</span> <span class="nx">newValue</span><span class="o">:</span><span class="nx">newValue</span><span class="p">});</span>
+      <span class="p">});</span>
+      
+      <span class="c1">// Write the new watched value out to the runtime.json file</span>
+      <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span> <span class="o">=</span> <span class="nx">newWatchedValue</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The change handler callback was made&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;And it was called on the correct object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">obj</span> <span class="o">===</span> <span class="nx">CONFIG</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;And it was called with the correct parameter&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">prop</span> <span class="o">==</span> <span class="s1">&#39;watchThisValue&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    
+    <span class="s1">&#39;And it has the correct prior value&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">oldValue</span> <span class="o">===</span> <span class="nx">originalWatchedValue</span><span class="p">);</span>
+    <span class="p">},</span>
+    
+    <span class="s1">&#39;And it has the correct new value&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">newValue</span> <span class="o">===</span> <span class="nx">newWatchedValue</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;And the config value was correctly set&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span> <span class="o">===</span> <span class="nx">newWatchedValue</span><span class="p">);</span>
+    <span class="p">}</span>
+
   <span class="p">}</span>
-  
+
 <span class="p">});</span>
 </pre></div>
                     </div>
@@ -187,8 +167,8 @@
                     <div id="moduleList" class="module">
                         <h4>Modules</h4>
                         <ul class="content">
-                                <li class=""><a href="module_Config.html" title="Config">Config</a></li>
-                                <li class="selected"><a href="module_Test.html" title="Test">Test</a></li>
+                                <li class=""><a href="module_node-config.html" title="node-config">node-config</a></li>
+                                <li class="selected"><a href="module_test.html" title="test">test</a></li>
                         </ul>
                     </div>
 
@@ -196,14 +176,14 @@
                         <h4>Classes</h4>
                         <ul class="content">
                                 <li class=""><a href="ConfigTest.html" title="ConfigTest">ConfigTest</a></li>
-                                <li class=""><a href="ExtensionsTest.html" title="ExtensionsTest">ExtensionsTest</a></li>
+                                <li class=""><a href="ProtectedTest.html" title="ProtectedTest">ProtectedTest</a></li>
                         </ul>
                     </div>
 
                     <div id="fileList" class="module">
                         <h4>Files</h4>
                         <ul class="content">        
-                                <li class=""><a href="1-extensions-test.js.html" title="1-extensions-test.js">1-extensions-test.js</a></li>
+                                <li class=""><a href="1-protected-test.js.html" title="1-protected-test.js">1-protected-test.js</a></li>
                                 <li class="selected"><a href="2-config-test.js.html" title="2-config-test.js">2-config-test.js</a></li>
                         </ul>
                     </div>

@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1301265639.5" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1301265639.5" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1305072387.2" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1305072387.2" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1301265639.5"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1301265639.5"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1305072387.2"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1305072387.2"></script>
 </head>
 
 <body id="node-monitor">
@@ -49,7 +49,34 @@
 
                     </h2>
                     <div class="description summary">
-                        <p>Runtime configuration for Node.js deployments</p>
+                        <p>Runtime Application Configurations</p>
+<p>
+The config module is a singleton class representing all runtime 
+configurations for this application instance. 
+</p>
+<p>
+The require('config') constructor returns the global configuration object.
+For example, with the following config/default.yaml file:
+</p>
+<pre>
+...
+customer:
+&nbsp;&nbsp;initialCredit: 500
+&nbsp;&nbsp;db:
+&nbsp;&nbsp;&nbsp;&nbsp;name: customer
+&nbsp;&nbsp;&nbsp;&nbsp;port: 5984
+...
+</pre>
+<p>
+This code loads the customer section into the CONFIG variable:
+<p>
+<pre>
+var CONFIG = require('config').customer;
+...
+newCustomer.creditLimit = CONFIG.initialCredit;
+database.open(CONFIG.db.name, CONFIG.db.port);
+...
+</pre>
                     </div>
 
 
@@ -59,12 +86,11 @@
 
                             <p>This module contains the following classes:</p>
                             <script>
-                            //var YUI_CLASS_LIST = [{"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "<p>Main configuration class</p>\nThis takes a default configuration object for a module, and folds in values\nfrom configuration files and values passed in from the command line.", "guessedname": "Config", "name": "Config"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "<p>Public extensions to the underscore library</p>\nThese extensions were written to assist development of the node-config\nlibrary.  They have been made public for other modules to use.\nTo use these extensions, simply include the underscore library and\ncall them as if they were a part of the library.\nExample:\n<pre>\nvar _ = require('underscore');\n_.extendDeep(extendInto, extendFrom, {some:\"defaults\"});\n</pre>", "guessedname": "UnderscoreExtensions", "name": "UnderscoreExtensions"}];
+                            //var YUI_CLASS_LIST = [{"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "<p>Runtime Application Configurations</p>\n<p>\nThe config module is a singleton class representing all runtime \nconfigurations for this application instance. \n</p>\n<p>\nThe require('config') constructor returns the global configuration object.\nFor example, with the following config/default.yaml file:\n</p>\n<pre>\n...\ncustomer:\n&nbsp;&nbsp;initialCredit: 500\n&nbsp;&nbsp;db:\n&nbsp;&nbsp;&nbsp;&nbsp;name: customer\n&nbsp;&nbsp;&nbsp;&nbsp;port: 5984\n...\n</pre>\n<p>\nThis code loads the customer section into the CONFIG variable:\n<p>\n<pre>\nvar CONFIG = require('config').customer;\n...\nnewCustomer.creditLimit = CONFIG.initialCredit;\ndatabase.open(CONFIG.db.name, CONFIG.db.port);\n...\n</pre>", "guessedname": "config", "name": "config"}];
                             </script>
                             <div id="splash_classList">
                                 <ul>
-                                    <li><a href="Config.html" title="Config" id="class_0">Config</a></li>
-                                    <li><a href="UnderscoreExtensions.html" title="UnderscoreExtensions" id="class_1">UnderscoreExtensions</a></li>
+                                    <li><a href="config.html" title="config" id="class_0">config</a></li>
                                 </ul>
                             </div>
                     </div>
@@ -89,8 +115,7 @@
                     <div id="classList" class="module">
                         <h4>Classes</h4>
                         <ul class="content">
-                                <li class=""><a href="Config.html" title="Config">Config</a></li>
-                                <li class=""><a href="UnderscoreExtensions.html" title="UnderscoreExtensions">UnderscoreExtensions</a></li>
+                                <li class=""><a href="config.html" title="config">config</a></li>
                         </ul>
                     </div>
 
@@ -98,7 +123,6 @@
                         <h4>Files</h4>
                         <ul class="content">        
                                 <li class=""><a href="config.js.html" title="config.js">config.js</a></li>
-                                <li class=""><a href="extensions.js.html" title="extensions.js">extensions.js</a></li>
                         </ul>
                     </div>
 
@@ -116,7 +140,7 @@ Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "UnderscoreExtensions.html#method__.cloneDeep", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.cloneDeep"}, {"url": "UnderscoreExtensions.html#method__.extendDeep", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.extendDeep"}, {"url": "UnderscoreExtensions.html#method__.isObject", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.isObject"}, {"url": "UnderscoreExtensions.html#method__.out", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.out"}, {"url": "UnderscoreExtensions.html#method__.outStr", "access": "", "host": "UnderscoreExtensions", "type": "method", "name": "_.outStr"}];
+    ALL_YUI_PROPS = [{"url": "config.html#method__cloneDeep", "access": "protected", "host": "config", "type": "method", "name": "_cloneDeep"}, {"url": "config.html#method__extendDeep", "access": "protected", "host": "config", "type": "method", "name": "_extendDeep"}, {"url": "config.html#method__isObject", "access": "protected", "host": "config", "type": "method", "name": "_isObject"}];
 </script>
 </body>
 </html>

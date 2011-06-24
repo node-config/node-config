@@ -1,0 +1,8 @@
+{
+  "Customers": {
+    "dbName":"from_default_json"
+  },
+  "AnotherModule": {
+    "parm1":"value1"
+  }
+}

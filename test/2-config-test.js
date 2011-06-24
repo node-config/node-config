@@ -1,23 +1,22 @@
-// Dependencies
-var _ = require('underscore');
-var vows = require('vows');
-var assert = require('assert');
-var config = require('../lib/config');
+// Hardcode $NODE_ENV=test for testing
+process.env.NODE_ENV='test';
 
-// Module default parameters
-var defaultParms = {
-  dbHost: 'localhost',
-  dbPort: 5984,
-  dbName: 'customers',
-  custTemplate: {
-    credit: 200,
-    region: 'Central',
-    mailings: ['intro', 'month1']
-  }
-};
+// Dependencies
+var vows = require('vows');
+    assert = require('assert'),
+    CONFIG = require('../lib/config'),
+    FileSystem = require('fs'),
+    originalWatchedValue = CONFIG.watchThisValue,
+    newWatchedValue = Math.floor(Math.random() * 100000);
+
+// These tests require the directory to be the root of the node-config project
+process.chdir(__dirname + '/..');
+var CONFIG_PATH = process.cwd() + '/config/',
+    runtimeJsonFilename = CONFIG_PATH + 'runtime.json';
 
 /**
- * <p>Unit tests for the node-config library</p>
+ * <p>Unit tests for the node-config library.  To run type:</p>
+ * <pre>npm test</pre>
  *
  * @class ConfigTest
  * @constructor
@@ -25,107 +24,115 @@ var defaultParms = {
 exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   'Library initialization': {
     'Config library is available': function() {
-      assert.isFunction(config);
+      assert.isObject(CONFIG);
     },
-    'Config utils are included with the library': function() {
-      // Normal underscore + config extensions
-      assert.isFunction(_);
-      assert.isFunction(_.cloneDeep);
+    'Config extensions are included with the library': function() {
+      assert.isFunction(CONFIG._cloneDeep);
     }
   },
 
-  'Configuration Tests': {
+  'Configuration file Tests': {
     topic: function() {
-      // Remember the original command line argument values
-      var orig = {argv:process.argv};
-      return orig;
+      return CONFIG;
     },
 
-    'Default configuration is correct': function() {
-      process.argv = [];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = {
-        dbHost: 'localhost',
-        dbPort: 5984,
-        dbName: 'customers',
-        custTemplate: {
-          credit: 200,
-          region: 'Central',
-          mailings: ['intro', 'month1']
-        }
-      };
-      assert.deepEqual(conf, shouldBe);
+    'Loading configurations from a JS module is correct': function() {
+      assert.equal(CONFIG.Customers.dbHost, 'base');
+      assert.equal(CONFIG.TestModule.parm1, 'value1');
     },
 
-    'Alpha configuration was mixed in': function() {
-      process.argv = ['arg1', '-config', './config/alpha.js'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-        dbHost:"alpha",
-        dbPort:5999
-      });
-      assert.deepEqual(conf, shouldBe);
+    'Loading configurations from a JSON file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm1, 'value1');
     },
 
-    'Multiple configurations can be mixed in': function() {
-      process.argv = ['-config', './config/base.js', 'arg1', 
-        '-config', './config/alpha.js', 'arg2'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-        dbName:'base_customers',
-        dbHost:"alpha",
-        dbPort:5999
-      });
-      assert.deepEqual(conf, shouldBe);
+    'Loading configurations from a YAML file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm2, 'value2');
     },
 
-    'Specific configurations are discoverable': function() {
-      // Read the current Customers parameters
-      var conf = config('Customers');
-      var shouldBe = _.cloneDeep(defaultParms);
-      shouldBe.custTemplate.mailings[1] = {name:"intro", mailed:"Y"};
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'All configurations are discoverable': function() {
-      var allConfs = config();
-      assert.isObject(allConfs);
-      assert.isObject(allConfs.Customers);
-      var conf = allConfs.Customers;
-      var shouldBe = _.cloneDeep(defaultParms);
-      shouldBe.custTemplate.mailings[1] = {name:"intro", mailed:"Y"};
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'JSON configuration files can be loaded': function() {
-      process.argv = ['-config', './config/base.json', 'arg1', 
-        '-config', './config/alpha.js', 'arg2'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-        dbName:'base_customers',
-        dbHost:"alpha",
-        dbPort:5999
-      });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'YAML configuration files can be loaded': function() {
-      process.argv = ['-config', './config/base.yaml', 'arg1', 
-        '-config', './config/alpha.js', 'arg2'];
-      var conf = config('Customers', defaultParms);
-      var shouldBe = _.extendDeep({}, defaultParms, {
-        dbName:'base_customers',
-        dbHost:"alpha",
-        dbPort:5999
-      });
-      assert.deepEqual(conf, shouldBe);
-    },
-
-    'Resetting command line args': function(orig) {
-      process.argv = orig.argv;
-      assert.deepEqual(process.argv, orig.argv);
+    'Loading prior runtime.json configurations is correct': function() {
+      assert.equal(CONFIG.Customers.dbName, 'override_from_runtime_json');
     }
     
+  },
+
+  'Assuring a configuration can be made immutable': {
+    topic: function() {
+    	
+      CONFIG.makeImmutable(CONFIG.TestModule, 'parm1');
+      CONFIG.TestModule.parm1 = "setToThis";
+      return CONFIG.TestModule.parm1;
+    },
+
+    'Correctly unable to change an immutable configuration': function(value) {
+      assert.isTrue(value != "setToThis");
+    },
+
+    'Left the original value intact after attempting the change': function(value) {
+      assert.equal(value, "value1");
+    }
+  },
+
+  'Configuration Change Notification Tests': {
+    topic: function() {
+    	
+      // Attach this topic as a watcher
+      var cb = this.callback;
+      CONFIG.watch(CONFIG, null, function(obj, prop, oldValue, newValue){
+    	  cb(null, {obj:obj, prop:prop, oldValue:oldValue, newValue:newValue});
+      });
+      
+      // Write the new watched value out to the runtime.json file
+      CONFIG.watchThisValue = newWatchedValue;
+    },
+
+    'The change handler callback was fired': function(err, obj) {
+      assert.isTrue(true);
+    },
+
+    'And it was called on the correct object': function(err, obj) {
+      assert.isTrue(obj.obj === CONFIG);
+    },
+
+    'And it was called with the correct parameter': function(err, obj) {
+      assert.equal(obj.prop, 'watchThisValue');
+    },
+    
+    'And it has the correct prior value': function(err, obj) {
+      assert.equal(obj.oldValue, originalWatchedValue);
+    },
+    
+    'And it has the correct new value': function(err, obj) {
+      assert.equal(obj.newValue, newWatchedValue);
+    },
+
+    'And the config value was correctly set': function(err, obj) {
+      assert.equal(CONFIG.watchThisValue, newWatchedValue);
+    },
+
+    'waiting for O/S change notification...': function(err, obj) {
+      // This is just a message for the next test
+      assert.isTrue(true);
+    }
+
+  },
+
+  'Runtime Configuration Changes are Persisted to runtime.json': {
+    topic: function() {
+      // Watch the file for changes
+      var t = this;
+      FileSystem.watchFile(runtimeJsonFilename, function(){
+        t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
+      });
+    },
+    'The O/S notified us of the configuration file change': function(err, runtimeObj) {
+      assert.isTrue(!err);
+    },
+    'Prior configuration values were kept intact': function(err, runtimeObj) {
+      assert.equal(runtimeObj.Customers.dbName, "override_from_runtime_json");
+    },
+    'Altered configuration values were persisted': function(err, runtimeObj) {
+      assert.equal(runtimeObj.watchThisValue, CONFIG.watchThisValue);
+    }
   }
-  
+
 });
