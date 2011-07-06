@@ -1,7 +1,7 @@
 /**
  * <p>Unit tests</p>
  * 
- * @module Test
+ * @module test
  */
 
 // Hardcode $NODE_ENV=test for testing
