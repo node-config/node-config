@@ -6,11 +6,13 @@ Configuration control for production node deployments
 Introduction
 ------------
 
-node-config lets you manage deployment configurations (development, qa, 
-staging, production, etc.) by extending from a default configuration.  
+Node-config is a configuration system for Node.js application server 
+deployments.  It lets you define a default set of application parameters,
+and tune them for different runtime environments (development, qa, 
+staging, production, etc.).
 
-At runtime you can tune configuration parameters in running multi-node 
-deployments without bouncing your servers.
+Parameters defined by node-config can be monitored and tuned at runtime
+without bouncing your production servers.
 
 Online documentation is available at <http://lorenwest.github.com/node-config/latest>
 
@@ -57,6 +59,7 @@ Quick Start
 Running in this configuration, CONFIG.dbPort and CONFIG.dbName 
 will come from the `default.yaml` file, and CONFIG.dbHost will
 come from the `production.yaml` file.
+
 
 See Also
 --------
