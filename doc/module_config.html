@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1305072387.2" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1305072387.2" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309964248.03" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309964248.03" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1305072387.2"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1305072387.2"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1309964248.03"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1309964248.03"></script>
 </head>
 
 <body id="node-monitor">
@@ -36,9 +36,9 @@
             <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
                 <fieldset>
                     <legend>Filters</legend>
-                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
-                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
-                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span id="showProtected" class="classopts" style="display:none'"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
                 </fieldset>
             </form>
 
@@ -51,11 +51,16 @@
                     <div class="description summary">
                         <p>Runtime Application Configurations</p>
 <p>
-The config module is a singleton class representing all runtime 
-configurations for this application instance. 
+The config module exports a singleton object representing all runtime
+configurations for this application deployment.
 </p>
 <p>
-The require('config') constructor returns the global configuration object.
+Application configurations are stored in files within the config directory
+of your application.  The default configuration file is loaded, followed
+by files specific to the deployment type (development, testing, staging,
+production, etc.).
+</p>
+<p>
 For example, with the following config/default.yaml file:
 </p>
 <pre>
@@ -68,7 +73,7 @@ customer:
 ...
 </pre>
 <p>
-This code loads the customer section into the CONFIG variable:
+The following code loads the customer section into the CONFIG variable:
 <p>
 <pre>
 var CONFIG = require('config').customer;
@@ -86,11 +91,11 @@ database.open(CONFIG.db.name, CONFIG.db.port);
 
                             <p>This module contains the following classes:</p>
                             <script>
-                            //var YUI_CLASS_LIST = [{"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "<p>Runtime Application Configurations</p>\n<p>\nThe config module is a singleton class representing all runtime \nconfigurations for this application instance. \n</p>\n<p>\nThe require('config') constructor returns the global configuration object.\nFor example, with the following config/default.yaml file:\n</p>\n<pre>\n...\ncustomer:\n&nbsp;&nbsp;initialCredit: 500\n&nbsp;&nbsp;db:\n&nbsp;&nbsp;&nbsp;&nbsp;name: customer\n&nbsp;&nbsp;&nbsp;&nbsp;port: 5984\n...\n</pre>\n<p>\nThis code loads the customer section into the CONFIG variable:\n<p>\n<pre>\nvar CONFIG = require('config').customer;\n...\nnewCustomer.creditLimit = CONFIG.initialCredit;\ndatabase.open(CONFIG.db.name, CONFIG.db.port);\n...\n</pre>", "guessedname": "config", "name": "config"}];
+                            //var YUI_CLASS_LIST = [{"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "<p>Runtime Application Configurations</p>\n<p>\nThe config module exports a singleton object representing all runtime\nconfigurations for this application deployment.\n</p>\n<p>\nApplication configurations are stored in files within the config directory\nof your application.  The default configuration file is loaded, followed\nby files specific to the deployment type (development, testing, staging,\nproduction, etc.).\n</p>\n<p>\nFor example, with the following config/default.yaml file:\n</p>\n<pre>\n...\ncustomer:\n&nbsp;&nbsp;initialCredit: 500\n&nbsp;&nbsp;db:\n&nbsp;&nbsp;&nbsp;&nbsp;name: customer\n&nbsp;&nbsp;&nbsp;&nbsp;port: 5984\n...\n</pre>\n<p>\nThe following code loads the customer section into the CONFIG variable:\n<p>\n<pre>\nvar CONFIG = require('config').customer;\n...\nnewCustomer.creditLimit = CONFIG.initialCredit;\ndatabase.open(CONFIG.db.name, CONFIG.db.port);\n...\n</pre>", "guessedname": "Config", "name": "Config"}];
                             </script>
                             <div id="splash_classList">
                                 <ul>
-                                    <li><a href="config.html" title="config" id="class_0">config</a></li>
+                                    <li><a href="Config.html" title="Config" id="class_0">Config</a></li>
                                 </ul>
                             </div>
                     </div>
@@ -115,7 +120,7 @@ database.open(CONFIG.db.name, CONFIG.db.port);
                     <div id="classList" class="module">
                         <h4>Classes</h4>
                         <ul class="content">
-                                <li class=""><a href="config.html" title="config">config</a></li>
+                                <li class=""><a href="Config.html" title="Config">Config</a></li>
                         </ul>
                     </div>
 
@@ -135,12 +140,12 @@ database.open(CONFIG.db.name, CONFIG.db.port);
 	</div>
 	<div id="ft">
         <hr />
-Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
 <span class="subtitle">version 0.4.0</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "config.html#method__cloneDeep", "access": "protected", "host": "config", "type": "method", "name": "_cloneDeep"}, {"url": "config.html#method__extendDeep", "access": "protected", "host": "config", "type": "method", "name": "_extendDeep"}, {"url": "config.html#method__isObject", "access": "protected", "host": "config", "type": "method", "name": "_isObject"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method__watchForConfigFileChanges", "access": "protected", "host": "Config", "type": "method", "name": "_watchForConfigFileChanges"}];
 </script>
 </body>
 </html>

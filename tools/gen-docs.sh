@@ -33,6 +33,7 @@ project_url="https://github.com/lorenwest/node-config"
 ##############################################################################
 # add -s to the end of the line to show items marked private
 
+rm doc/*.html
 $yuidoc_home/bin/yuidoc.py \
   $parser_in \
   -p $parser_tmp \
@@ -44,3 +45,10 @@ $yuidoc_home/bin/yuidoc.py \
   -Y $yuiversion
 
 rm -rf $parser_tmp
+
+echo Copying the documentation to ../lorenwest.github.com/node-config/$version
+rm -rf ../lorenwest.github.com/node-config/$version
+cp -dR doc ../lorenwest.github.com/node-config/$version
+echo Copying the documentation to ../lorenwest.github.com/node-config/latest
+rm -rf ../lorenwest.github.com/node-config/latest
+cp -dR doc ../lorenwest.github.com/node-config/latest

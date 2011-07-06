@@ -2,13 +2,13 @@
 <html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<title>node-config   config.js </title>
+	<title>Config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1308514875.22" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1308514875.22" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309964248.03" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309964248.03" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1308514875.22"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1308514875.22"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1309964248.03"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1309964248.03"></script>
 </head>
 
 <body id="node-monitor">
@@ -17,7 +17,7 @@
 	<div id="hd">
         <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
         <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
-            &gt; <a href="./module_node-config.html" title="node-config">node-config</a>
+            &gt; <a href="./module_config.html" title="Config">Config</a>
                 
                  &gt; config.js (source view) 
         <form onsubmit="return false">
@@ -36,9 +36,9 @@
             <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
                 <fieldset>
                     <legend>Filters</legend>
-                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
-                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
-                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span id="showProtected" class="classopts" style="display:none'"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
                 </fieldset>
             </form>
 
@@ -54,18 +54,28 @@
 <span class="c1">// Static members</span>
 <span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
     <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span>
-    <span class="nx">CONFIG_PATH</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config/&#39;</span>
+    <span class="nx">CONFIG_PATH</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config/&#39;</span><span class="p">,</span>
+    <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_PATH</span> <span class="o">+</span> <span class="s1">&#39;runtime.json&#39;</span><span class="p">,</span>
+    <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// Not including the runtime.json values</span>
+    <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>     <span class="c1">// Current runtimeJson extensions</span>
+    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Runtime Application Configurations&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * The config module is a singleton class representing all runtime</span>
-<span class="cm"> * configurations for this application instance.</span>
+<span class="cm"> * The config module exports a singleton object representing all runtime</span>
+<span class="cm"> * configurations for this application deployment.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * Application configurations are stored in files within the config directory</span>
+<span class="cm"> * of your application.  The default configuration file is loaded, followed</span>
+<span class="cm"> * by files specific to the deployment type (development, testing, staging,</span>
+<span class="cm"> * production, etc.).</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * The require(&#39;config&#39;) constructor returns the global configuration object.</span>
 <span class="cm"> * For example, with the following config/default.yaml file:</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
@@ -80,7 +90,7 @@
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This code loads the customer section into the CONFIG variable:</span>
+<span class="cm"> * The following code loads the customer section into the CONFIG variable:</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;pre&gt;</span>
@@ -91,43 +101,74 @@
 <span class="cm"> *   ...</span>
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
-<span class="cm"> * @module node-config</span>
+<span class="cm"> * @module Config</span>
 <span class="cm"> * @class Config</span>
 <span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Get the configuration object.&lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * The configuration object is a shared singleton object within the applicaiton,</span>
+<span class="cm"> * attained by calling require(&#39;config&#39;).</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * Usually you&#39;ll specify a CONFIG variable at the top of your .js file</span>
+<span class="cm"> * for file/module scope. If you want the root of the object, you can do this:</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> * var CONFIG = require(&#39;config&#39;);</span>
+<span class="cm"> * &lt;/pre&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * Sometimes you only care about a specific sub-object within the CONFIG</span>
+<span class="cm"> * object.  In that case you could do this at the top of your file:</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> * var CONFIG = require(&#39;config&#39;).customer;</span>
+<span class="cm"> * or</span>
+<span class="cm"> * var CUSTOMER_CONFIG = require(&#39;config&#39;).customer;</span>
+<span class="cm"> * &lt;/pre&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;script type=&quot;text/javascript&quot;&gt;</span>
+<span class="cm"> *   document.getElementById(&quot;showProtected&quot;).style.display = &quot;block&quot;;</span>
+<span class="cm"> * &lt;/script&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @method constructor</span>
+<span class="cm"> * @return CONFIG {object} - The top level configuration object</span>
+<span class="cm"> */</span>
 <span class="kd">var</span> <span class="nx">Config</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_buildConfig</span><span class="p">();</span>
-    <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_loadFileConfigs</span><span class="p">();</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_watchForConfigFileChanges</span><span class="p">();</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_persistConfigsOnChange</span><span class="p">();</span>
+<span class="p">};</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Monitor a configuration value for runtime changes.&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * </span>
-<span class="cm"> * Configuration values can be changed in a running application by the </span>
-<span class="cm"> * application applying changes, or by a manual change to the runtime.json</span>
-<span class="cm"> * file within the configuration directory. This method lets you specify a </span>
-<span class="cm"> * function to run if a configuration value changes.  </span>
+<span class="cm"> * Configuration values can be changed at runtime by the application or by a </span>
+<span class="cm"> * manual change to the config/runtime.json  file. </span>
+<span class="cm"> * This method lets you specify a function to run when a configuration </span>
+<span class="cm"> * value changes.  </span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> * </span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * If you want to prevent changes to configuration values, it&#39;s better to use </span>
-<span class="cm"> * the makePropertyImmutable method.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method was built for monitoring changes to configuration values,</span>
+<span class="cm"> * This was built for monitoring changes to configuration values,</span>
 <span class="cm"> * but it can be used for watching changes to any javascript object.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @method watch</span>
-<span class="cm"> * @param object {object} - The object to watch.  Can be any javascript object.</span>
+<span class="cm"> * @param object {object} - The object to watch.</span>
 <span class="cm"> * @param property {string} - The property name to watch.  Watch all object properties if null.</span>
 <span class="cm"> * @param handler {function(object, propertyName, priorValue, newValue)} - Handler called when a property change is detected.</span>
 <span class="cm"> *   The handler is run along with other handlers registered for notification.</span>
-<span class="cm"> *   If the handler changes the value of the property, that change is applied after all handlers have finished processing the current change.</span>
+<span class="cm"> *   If your handler changes the value of the property, that change is applied after all handlers have finished processing the current change.</span>
 <span class="cm"> *   Then all handlers (including this one) will be called again with the newly changed value.</span>
 <span class="cm"> * @param depth {integer} (optional) - If watching all object properties or if the specified property is an object, this specifies the depth of the object graph to watch for changes.  Default 6.</span>
-<span class="cm"> * @return object {object} - The original object is returned.</span>
+<span class="cm"> * @return object {object} - The original object is returned - for chaining.</span>
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watch</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
 
@@ -173,7 +214,6 @@
       <span class="c1">// Attach the property watcher</span>
       <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="p">{</span>
         <span class="nx">enumerable</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="nx">configurable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
 
         <span class="nx">get</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span> 
           <span class="c1">// If more than 1 item is in the values array,</span>
@@ -243,11 +283,73 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Make a configuration property immutable (assuring it cannot be changed).&lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * Set default configurations for a node.js module.</span>
+<span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> * </span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method was built for configuration properties that shouldn&#39;t change,</span>
-<span class="cm"> * but it can be applied to any javascript object property.</span>
+<span class="cm"> * This allows module developers to attach their configurations onto the </span>
+<span class="cm"> * default configuration object so they can be configured by the consumers</span>
+<span class="cm"> * of the module.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;Using the function within your module:&lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> *   var CONFIG = require(&quot;config&quot;);</span>
+<span class="cm"> *   CONFIG.setModuleDefaults(&quot;MyModule&quot;, {</span>
+<span class="cm"> *   &amp;nbsp;&amp;nbsp;templateName: &quot;t-50&quot;,</span>
+<span class="cm"> *   &amp;nbsp;&amp;nbsp;colorScheme: &quot;green&quot;</span>
+<span class="cm"> *   });</span>
+<span class="cm"> * &lt;br&gt;</span>
+<span class="cm"> *   // Template name may be overridden by application config files</span>
+<span class="cm"> *   console.log(&quot;Template: &quot; + CONFIG.MyModule.templateName);</span>
+<span class="cm"> * &lt;/pre&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * The above example results in a &quot;MyModule&quot; element of the configuration</span>
+<span class="cm"> * object, containing an object with the specified default values.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * @method setModuleDefaults</span>
+<span class="cm"> * @param moduleName {string} - Name of your module.</span>
+<span class="cm"> * @param defaultProperties {object} - The default module configuration.</span>
+<span class="cm"> * @return moduleConfig {object} - The module level configuration object.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setModuleDefaults</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">moduleName</span><span class="p">,</span> <span class="nx">defaultProperties</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Copy the properties into a new object</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">moduleConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">({},</span> <span class="nx">defaultProperties</span><span class="p">);</span>
+
+  <span class="c1">// Attach handlers &amp; watchers onto the module config object</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">);</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_persistConfigsOnChange</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">);</span>
+
+  <span class="c1">// Extend the module config object with values from originalConfig</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">])</span> <span class="p">{</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">,</span> <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]);</span>
+    
+    <span class="c1">// Save the mixed module config as the original</span>
+    <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">moduleConfig</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Extend the module config object with values from runtimeJson</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJson</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">])</span> <span class="p">{</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Attach the object onto the CONFIG object</span>
+  <span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">moduleConfig</span><span class="p">;</span>
+	
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Make a configuration property immutable (assuring it cannot be changed</span>
+<span class="cm"> * from the current value).&lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * This method was built for disabling runtime changes to configuration values,</span>
+<span class="cm"> * but it can be applied to any javascript object.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> * </span>
 <span class="cm"> * &lt;p&gt;</span>
@@ -257,29 +359,18 @@
 <span class="cm"> * @method makeImmutable</span>
 <span class="cm"> * @param object {object} - The object to attach an immutable property into.  </span>
 <span class="cm"> * @param property {string} - The name of the property to make immutable.</span>
+<span class="cm"> * @return object {object} - The original object is returned - for chaining.</span>
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">makeImmutable</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="c1">// Disable writing, and make sure the property cannot be re-configured.</span>
   <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">value</span> <span class="o">:</span> <span class="nx">object</span><span class="p">[</span><span class="nx">property</span><span class="p">],</span>
     <span class="nx">writable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">configurable</span><span class="o">:</span> <span class="kc">false</span>
   <span class="p">});</span>
-<span class="p">};</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Assemble the configuration object members into this object&lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * @protected</span>
-<span class="cm"> * @method _buildConfig</span>
-<span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_buildConfig</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-
-  <span class="c1">// Load the individual file configurations in order</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_loadFileConfigs</span><span class="p">();</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_watchForConfigFileChanges</span><span class="p">();</span>
-
+  
+  <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -292,7 +383,8 @@
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method attaches the file watcher onto the runtime.json file.</span>
+<span class="cm"> * This method attaches the file watcher onto the runtime.json file, reloading</span>
+<span class="cm"> * the file on change and merging the new values into the CONFIG object.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @protected</span>
@@ -302,8 +394,7 @@
 
   <span class="c1">// Attach the file watcher</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">runtimeYamlFilename</span> <span class="o">=</span> <span class="nx">CONFIG_PATH</span> <span class="o">+</span> <span class="s1">&#39;runtime.json&#39;</span><span class="p">;</span>
-  <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeYamlFilename</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// no-op if the file hasn&#39;t changed</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">mtime</span> <span class="o">==</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">mtime</span><span class="p">)</span> <span class="p">{</span>
@@ -311,11 +402,11 @@
     <span class="p">}</span>
 
     <span class="c1">// Load the runtime.json file asynchronously.</span>
-    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">runtimeYamlFilename</span><span class="p">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">fileContent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">fileContent</span><span class="p">)</span> <span class="p">{</span>
 
       <span class="c1">// Not much to do on error</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error loading &quot;</span> <span class="o">+</span> <span class="nx">runtimeYamlFilename</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error loading &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">);</span>
         <span class="k">return</span><span class="p">;</span>
       <span class="p">}</span>
 
@@ -330,6 +421,47 @@
       <span class="p">}</span>
 
     <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * Watch the specified object for a change in properties, and persist changes</span>
+<span class="cm"> * to runtime.json when a change is detected.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @protected</span>
+<span class="cm"> * @param object {object} - The config object to watch</span>
+<span class="cm"> * @method _persistConfigsOnChange</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_persistConfigsOnChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">objectToWatch</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Watch for configuration value changes</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="nx">objectToWatch</span> <span class="o">=</span> <span class="nx">objectToWatch</span> <span class="o">||</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">objectToWatch</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+
+    <span class="c1">// Return early if we&#39;re already queued up for persisting</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">isQueuedForPersistence</span><span class="p">)</span>
+	  <span class="k">return</span><span class="p">;</span>
+
+	<span class="c1">// Defer persisting until the next tick.  This results in a single </span>
+	<span class="c1">// persist across any number of config changes in a single event cycle.</span>
+	<span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+
+      <span class="c1">// Persist if necessary</span>
+	  <span class="kd">var</span> <span class="nx">newDiffs</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">originalConfig</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
+	  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">newDiffs</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">newDiffs</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">){</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error writing &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+		<span class="p">});</span>
+	  <span class="p">};</span>
+
+      <span class="c1">// Set up for next time</span>
+      <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+	<span class="p">});</span>
   <span class="p">});</span>
 <span class="p">};</span>
 
@@ -357,8 +489,7 @@
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * (hostname) is the $HOST environment variable if set, otherwise the</span>
-<span class="cm"> * $HOSTNAME environment variable if set, otherwise the hostname found from</span>
-<span class="cm"> * require(&#39;os&#39;).hostname()</span>
+<span class="cm"> * hostname found from require(&#39;os&#39;).hostname()</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
@@ -367,8 +498,8 @@
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * The runtime.json file contains configuration changes made at runtime via</span>
-<span class="cm"> * the CONFIG.set(&#39;element&#39;,value) method.</span>
+<span class="cm"> * The runtime.json file contains configuration changes made at runtime either</span>
+<span class="cm"> * manually, or by the application setting a configuration value.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @protected</span>
@@ -379,6 +510,10 @@
 
   <span class="c1">// Initialize</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  
+  <span class="c1">// Singleton</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">originalConfig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
 
   <span class="c1">// Determine the host name from the OS module, $HOST, or $HOSTNAME</span>
   <span class="c1">// Remove any . appendages, and default to null if not set</span>
@@ -394,7 +529,7 @@
   <span class="kd">var</span> <span class="nx">deployment</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="s1">&#39;development&#39;</span><span class="p">;</span>
 
   <span class="c1">// Read each file in turn</span>
-  <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">deployment</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">,</span> <span class="s1">&#39;runtime&#39;</span><span class="p">];</span>
+  <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">deployment</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">];</span>
   <span class="kd">var</span> <span class="nx">extNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;js&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">];</span>
   <span class="nx">baseNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">baseName</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">extNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">extName</span><span class="p">)</span> <span class="p">{</span>
@@ -406,6 +541,15 @@
       <span class="p">}</span>
     <span class="p">});</span>
   <span class="p">});</span>
+  
+  <span class="c1">// Remember the original configuration</span>
+  <span class="nx">originalConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+  
+  <span class="c1">// Extend the original config with any prior runtime.json diffs</span>
+  <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJson</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
+  <span class="p">}</span>
 
   <span class="c1">// Attach the config.prototype to all sub-objects.</span>
   <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
@@ -431,7 +575,7 @@
 <span class="cm"> * If the file can&#39;t be parsed, an exception will be thrown.</span>
 <span class="cm"> *</span>
 <span class="cm"> * @protected</span>
-<span class="cm"> * @method _loadFileConfigs</span>
+<span class="cm"> * @method _parseFile</span>
 <span class="cm"> * @param fullFilename {string} The full file path and name</span>
 <span class="cm"> * @return {configObject} The configuration object parsed from the file</span>
 <span class="cm"> */</span>
@@ -493,8 +637,8 @@
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> * </span>
 <span class="cm"> * &lt;pre&gt;</span>
-<span class="cm"> *   var CONFIG = require(&#39;config&#39;).Customer;</span>
-<span class="cm"> *   CONFIG.watch(...)</span>
+<span class="cm"> *   var CUST_CONFIG = require(&#39;config&#39;).Customer;</span>
+<span class="cm"> *   CUST_CONFIG.watch(...)</span>
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @protected</span>
@@ -572,6 +716,112 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
+<span class="cm"> * Return true if two objects have equal contents.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @protected</span>
+<span class="cm"> * @method _equalsDeep</span>
+<span class="cm"> * @param object1 {object} The object to compare from</span>
+<span class="cm"> * @param object2 {object} The object to compare with</span>
+<span class="cm"> * @param depth {integer} An optional depth to prevent recursion.  Default: 20.</span>
+<span class="cm"> * @return {boolean} True if both objects have equivalent contents</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_equalsDeep</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object1</span><span class="p">,</span> <span class="nx">object2</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Recursion detection</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="nx">depth</span> <span class="o">=</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">:</span> <span class="nx">depth</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{};</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Fast comparisons</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">object1</span> <span class="o">||</span> <span class="o">!</span><span class="nx">object2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">object1</span> <span class="o">===</span> <span class="nx">object2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">object1</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;object&#39;</span> <span class="o">||</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">object2</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// They must have the same keys.  If their length isn&#39;t the same</span>
+  <span class="c1">// then they&#39;re not equal.  If the keys aren&#39;t the same, the value</span>
+  <span class="c1">// comparisons will fail.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">object1</span><span class="p">).</span><span class="nx">length</span> <span class="o">!=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">object2</span><span class="p">).</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="c1">// Compare the values</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">object1</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Call recursively if an object or array</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">object2</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">object2</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Test passed.</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Returns an object containing all elements that differ between two objects.</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * This method was designed to be used to create the runtime.json file</span>
+<span class="cm"> * contents, but can be used to get the diffs between any two Javascript objects.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * It works best when object2 originated by deep copying object1, then </span>
+<span class="cm"> * changes were made to object2, and you want an object that would give you</span>
+<span class="cm"> * the changes made to object1 which resulted in object2.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @protected</span>
+<span class="cm"> * @method _diffDeep</span>
+<span class="cm"> * @param object1 {object} The base object to compare to</span>
+<span class="cm"> * @param object2 {object} The object to compare with</span>
+<span class="cm"> * @param depth {integer} An optional depth to prevent recursion.  Default: 20.</span>
+<span class="cm"> * @return {object} A differential object, which if extended onto object1 would</span>
+<span class="cm"> *                  result in object2.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_diffDeep</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object1</span><span class="p">,</span> <span class="nx">object2</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Recursion detection</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">diff</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="nx">depth</span> <span class="o">=</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">:</span> <span class="nx">depth</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{};</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Process each element from object2, adding any element that&#39;s different</span>
+  <span class="c1">// from object 1.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">parm</span> <span class="k">in</span> <span class="nx">object2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">value1</span> <span class="o">=</span> <span class="nx">object1</span><span class="p">[</span><span class="nx">parm</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">value2</span> <span class="o">=</span> <span class="nx">object2</span><span class="p">[</span><span class="nx">parm</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">value2</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">value1</span><span class="p">,</span> <span class="nx">value2</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="nx">diff</span><span class="p">[</span><span class="nx">parm</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">value1</span><span class="p">,</span> <span class="nx">value2</span><span class="p">,</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">value1</span> <span class="o">!==</span> <span class="nx">value2</span><span class="p">){</span>
+      <span class="nx">diff</span><span class="p">[</span><span class="nx">parm</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value2</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Return the diff object</span>
+  <span class="k">return</span> <span class="nx">diff</span><span class="p">;</span>
+
+<span class="p">};</span>
+
+<span class="cm">/**</span>
 <span class="cm"> * Extend an object, and any object it contains.</span>
 <span class="cm"> *</span>
 <span class="cm"> * This does not replace deep objects, but dives into them</span>
@@ -629,7 +879,7 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * Is the specified argument an object?</span>
+<span class="cm"> * Is the specified argument a regular javascript object?</span>
 <span class="cm"> *</span>
 <span class="cm"> * The argument is an object if it&#39;s a JS object, but not an array.</span>
 <span class="cm"> *</span>
@@ -649,31 +899,6 @@
 <span class="c1">// instance is immediately available on require(), and the prototype methods </span>
 <span class="c1">// aren&#39;t a part of the object namespace when inspected.</span>
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Config</span><span class="p">();</span>
-
-
-
-
-<span class="cm">/*</span>
-
-<span class="cm">Would like to have a :</span>
-
-<span class="cm">didChange() - </span>
-
-<span class="cm">1) Gathers a new runtime.json object as diff this vs. originalConfig</span>
-<span class="cm">2) If different from current runtime.json: (can javascript object.set() do this?)</span>
-<span class="cm">   * Save into current runtime.json</span>
-<span class="cm">   * Notify listeners</span>
-<span class="cm">   * Write it out to disk</span>
-
-<span class="cm">Change notification:</span>
-<span class="cm">1) Load the new runtime.json file</span>
-<span class="cm">2) If different from current runtime.json:</span>
-<span class="cm">   * Save into current runtime.json</span>
-<span class="cm">   * Merge into this</span>
-<span class="cm">   * Notify listeners</span>
-
-
-<span class="cm">*/</span>
 </pre></div>
                     </div>
 			</div>
@@ -684,8 +909,8 @@
                     <div id="moduleList" class="module">
                         <h4>Modules</h4>
                         <ul class="content">
-                                <li class="selected"><a href="module_node-config.html" title="node-config">node-config</a></li>
-                                <li class=""><a href="module_test.html" title="test">test</a></li>
+                                <li class="selected"><a href="module_Config.html" title="Config">Config</a></li>
+                                <li class=""><a href="module_Test.html" title="Test">Test</a></li>
                         </ul>
                     </div>
 
@@ -712,12 +937,12 @@
 	</div>
 	<div id="ft">
         <hr />
-Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
 <span class="subtitle">version 0.4.0</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__buildConfig", "access": "protected", "host": "Config", "type": "method", "name": "_buildConfig"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method__watchForConfigFileChanges", "access": "protected", "host": "Config", "type": "method", "name": "_watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method__watchForConfigFileChanges", "access": "protected", "host": "Config", "type": "method", "name": "_watchForConfigFileChanges"}];
 </script>
 </body>
 </html>

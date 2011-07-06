@@ -1,163 +1,68 @@
 node-config
 ===========
 
-Runtime configuration for node.js deployment
+Configuration control for production node deployments
 
 Introduction
 ------------
 
-node-config lets you apply a consistent pattern to module development
-making it easy to work with deployment configuration parameters.
+node-config lets you manage deployment configurations (development, qa, 
+staging, production, etc.) by extending from a default configuration.  
 
-As a module developer, node-config lets you define your parameters,
-then gets out of your way.
+At runtime you can tune configuration parameters in running multi-node 
+deployments without bouncing your servers.
 
-When running applications following this pattern, node-config lets you
-easily discover and set deployment-specific configuration parameters.
+Online documentation is available at <http://lorenwest.github.com/node-config/latest>
 
-Synopsis
---------
+Quick Start
+-----------
 
-Configurations are defined at the top of your module. The following example
-is for a *Customers* module:
+**In your project directory, install and verify using npm:**
 
-    // Configuration parameters and default values
-    var config = require('config')('Customers', {
-      dbHost: 'localhost',
-      dbPort: 5984,
-      dbName: 'customers',
-      syncFrequency: 60       // Minutes between synchronizations
-    });
+    my-project$ npm install config
+    my-project$ npm test config
 
-This gives you a *config* variable for your module, along with default values 
-to use during development.
+**Edit the default configuration file (.js, .json, or .yaml):**
 
-Use the *config* object anywhere in your module:
+    my-project$ mkdir config 
+    my-project$ vi config/default.yaml
 
-    // Connect to the database
-    var dbConn = db.connect(config.dbHost, config.dbPort);
+    (example default.yaml file):
 
-When running the application, you can specify module configuration overrides
-on the command line, or in a configuration file.
+    Customer:
+      dbHost: localhost
+      dbPort: 5984
+      dbName: customers
 
-For example, the above *dbHost* value of the *Customers* module can be 
-overridden on the command line, or in a config file.
+**Edit the production configuration file:**
 
-    Parameters specified on the command line:
-    $ node billing.js -Customers.dbHost smokin-db
+    my-project$ vi config/production.yaml
 
-    Parameters specified in a configuration file:
-    $ node billing.js -config ./smokeTest.js
+    (example production.yaml file):
 
-Any number of command line parameters and/or config files can be specified when
-running the application.
+    Customer:
+      dbHost: prod-db-server
 
-Installation & Testing
-----------------------
+**Use the configuration in your code:**
 
-Node-config installs with *npm* and comes with an extensive suite of tests to 
-make sure it performs well in your deployment environment.
+    var CONFIG = require('config').Customer;
+    ...
+    db.connect(CONFIG.dbHost, CONFIG.dbPort, CONFIG.dbName);
 
-To install and test node-config:
- 
-    $ npm install config
-    $ npm test config
+**Start your application server:**
+
+    my-project$ export NODE_ENV=production
+    my-project$ node app.js
     
-    
-How It Works
-------------
-
-When developing a module, use the following pattern for defining parameters
-and default values:
-
-    // Customers.js - Customer management utilities
-
-    // Configuration parameters and default values
-    var config = require('config')('Customers', {
-      dbHost: 'localhost',
-      dbPort: 5984,
-      dbName: 'customers',
-      syncFrequency: 60       // Minutes between synchronizations
-    });
-
-When the application runs, node-config extends these default values with 
-overrides from configuration files, followed by command line overrides,
-in the order they're specified on the command line.
-
-Configuration Files
--------------------
-
-Configuration files let you define application deployment configurations in 
-one place.
-
-A configuration file is a JavaScript module that exports a single configuration
-object containing the modules, parameters, and values you want to override for
-your application.
-
-The format of the object is best described by example *smokeTest.js*:
-
-    // Configuration overrides for smoke testing
-    module.exports = {
-      'mod-sync': {
-        remoteHost: 'smokin-sync',
-        remotePort: 5984
-      },
-      Customers: {
-        dbHost: 'smokin-db',
-        syncFrequency: 1
-      }
-    };
-
-When running the app, you can specify this config file and additional
-parameters at the same time:
-
-    $ node billing.js -config smokeTest.js -Customers.dbPort 5985
-
-This results in a *config* object in the *Customers* module with these values:
-
-    {
-      dbHost: 'smokin-db',
-      dbPort: 5985,
-      dbName: 'customers',
-      syncFrequency: 1
-    }
-
-Advanced Usage
---------------
-
-**Programmatic configuration**  If you'd rather specify configuration files 
-and parameter overrides in your application, just add the command line 
-arguments programatically before the module is loaded.
-
-    // Always use port 5994 for the Customers service
-    process.argv.push('-Customers.dbPort', 5994);
-    require('Customers');
-
-**Configuration discovery**  You can retrieve the current configuration for
-any module by omitting the second parameter, or all configurations by 
-omitting all parameters to config.
-
-    // Load the Customer module parameters
-    var custConfig = require('config')('Customers');
-
-    // Load all application parameters
-    var allConfigs = require('config')();
-
-**Complex command line variables**  Variable names and values passed on through 
-the command line can be strings, objects, or arrays.
-
-    $ node billing.js -Customers.custTemplate.region North
-    $ node billing.js -Customers.mailings[1] WelcomeMailing
-    $ node billing.js -Customers.mailingsSent [3,4,6]
-    $ node billing.js -Customers.homeOffice '{street:"4778 S. Main"}'
-    
+Running in this configuration, CONFIG.dbPort and CONFIG.dbName 
+will come from the `default.yaml` file, and CONFIG.dbHost will
+come from the `production.yaml` file.
 
 See Also
 --------
 
-The node-monitor project is a good example of a module that makes use of
-the node-config module.  It's also a pretty good way to monitor your running
-node.js application.
+[node-config] - Online documentation<br>
+[node-monitor] - Monitor your running node applications
 
 License
 -------
@@ -166,4 +71,7 @@ Released under the Apache License 2.0
  
 See `LICENSE` file.
  
-Copyright (c) 2010 Loren West
+Copyright (c) 2011 Loren West
+
+  [node-config]: http://lorenwest.github.com/node-config/latest
+  [node-monitor]: http://lorenwest.github.com/node-monitor/latest

@@ -2,13 +2,13 @@
 <html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<title>test   2-config-test.js </title>
+	<title>Test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1308514875.27" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1308514875.27" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309964247.94" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309964247.94" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1308514875.27"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1308514875.27"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1309964247.94"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1309964247.94"></script>
 </head>
 
 <body id="node-monitor">
@@ -17,7 +17,7 @@
 	<div id="hd">
         <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
         <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
-            &gt; <a href="./module_test.html" title="test">test</a>
+            &gt; <a href="./module_test.html" title="Test">Test</a>
                 
                  &gt; 2-config-test.js (source view) 
         <form onsubmit="return false">
@@ -36,9 +36,9 @@
             <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
                 <fieldset>
                     <legend>Filters</legend>
-                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
-                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
-                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span id="showProtected" class="classopts" style="display:none'"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
                 </fieldset>
             </form>
 
@@ -51,20 +51,22 @@
 
 <span class="c1">// Dependencies</span>
 <span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;vows&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;assert&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">CONFIG</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/config&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">originalWatchedValue</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">newWatchedValue</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100000</span><span class="p">);</span>
+    <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;assert&#39;</span><span class="p">),</span>
+    <span class="nx">CONFIG</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/config&#39;</span><span class="p">),</span>
+    <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">),</span>
+    <span class="nx">originalWatchedValue</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">,</span>
+    <span class="nx">newWatchedValue</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100000</span><span class="p">);</span>
 
 <span class="c1">// These tests require the directory to be the root of the node-config project</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">chdir</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/..&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">CONFIG_PATH</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config/&#39;</span><span class="p">,</span>
+    <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_PATH</span> <span class="o">+</span> <span class="s1">&#39;runtime.json&#39;</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Unit tests for the node-config library.  To run type:&lt;/p&gt;</span>
-<span class="cm"> * &lt;pre&gt;npm test&lt;/pre&gt;</span>
+<span class="cm"> * &lt;pre&gt;npm test config&lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @class ConfigTest</span>
-<span class="cm"> * @constructor</span>
 <span class="cm"> */</span>
 <span class="nx">exports</span><span class="p">.</span><span class="nx">ConfigTest</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Test suite for node-config&#39;</span><span class="p">).</span><span class="nx">addBatch</span><span class="p">({</span>
   <span class="s1">&#39;Library initialization&#39;</span><span class="o">:</span> <span class="p">{</span>
@@ -82,20 +84,20 @@
     <span class="p">},</span>
 
     <span class="s1">&#39;Loading configurations from a JS module is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbHost</span> <span class="o">==</span> <span class="s1">&#39;base&#39;</span><span class="p">);</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm1</span> <span class="o">==</span> <span class="s1">&#39;value1&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbHost</span><span class="p">,</span> <span class="s1">&#39;base&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm1</span><span class="p">,</span> <span class="s1">&#39;value1&#39;</span><span class="p">);</span>
     <span class="p">},</span>
 
     <span class="s1">&#39;Loading configurations from a JSON file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm1</span> <span class="o">==</span> <span class="s1">&#39;value1&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm1</span><span class="p">,</span> <span class="s1">&#39;value1&#39;</span><span class="p">);</span>
     <span class="p">},</span>
 
     <span class="s1">&#39;Loading configurations from a YAML file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm2</span> <span class="o">==</span> <span class="s1">&#39;value2&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm2</span><span class="p">,</span> <span class="s1">&#39;value2&#39;</span><span class="p">);</span>
     <span class="p">},</span>
 
     <span class="s1">&#39;Loading prior runtime.json configurations is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbName</span> <span class="o">==</span> <span class="s1">&#39;override_from_runtime_json&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbName</span><span class="p">,</span> <span class="s1">&#39;override_from_runtime_json&#39;</span><span class="p">);</span>
     <span class="p">}</span>
     
   <span class="p">},</span>
@@ -108,16 +110,47 @@
       <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm1</span><span class="p">;</span>
     <span class="p">},</span>
 
+    <span class="s1">&#39;The makeImmutable() method is available&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">);</span>
+    <span class="p">},</span>
+
     <span class="s1">&#39;Correctly unable to change an immutable configuration&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">value</span> <span class="o">!=</span> <span class="s2">&quot;setToThis&quot;</span><span class="p">);</span>
     <span class="p">},</span>
 
-    <span class="s1">&#39;Left the original value intact after attempting to change&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">value</span> <span class="o">==</span> <span class="s2">&quot;value1&quot;</span><span class="p">);</span>
+    <span class="s1">&#39;Left the original value intact after attempting the change&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="s2">&quot;value1&quot;</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">},</span>
 
-  <span class="s1">&#39;Configuration Change Notification Tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+  <span class="s1">&#39;Configuration for module developers&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    	
+      <span class="c1">// Set some parameters for the test module</span>
+      <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">setModuleDefaults</span><span class="p">(</span><span class="s2">&quot;TestModule&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">parm1</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="nx">parm2</span><span class="o">:</span> <span class="mi">2000</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The setModuleDefaults() method is available&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">setModuleDefaults</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The module config is in the CONFIG object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;undefined&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Local configurations are mixed in&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm1</span><span class="p">,</span> <span class="s2">&quot;value1&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Defaults remain intact unless overridden&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm2</span><span class="p">,</span> <span class="mi">2000</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s1">&#39;Change Notification Tests&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     	
       <span class="c1">// Attach this topic as a watcher</span>
@@ -130,7 +163,11 @@
       <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span> <span class="o">=</span> <span class="nx">newWatchedValue</span><span class="p">;</span>
     <span class="p">},</span>
 
-    <span class="s1">&#39;The change handler callback was made&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="s1">&#39;The watch() method is available&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watch</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The change handler callback was fired&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
     <span class="p">},</span>
 
@@ -139,21 +176,45 @@
     <span class="p">},</span>
 
     <span class="s1">&#39;And it was called with the correct parameter&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">prop</span> <span class="o">==</span> <span class="s1">&#39;watchThisValue&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">prop</span><span class="p">,</span> <span class="s1">&#39;watchThisValue&#39;</span><span class="p">);</span>
     <span class="p">},</span>
     
     <span class="s1">&#39;And it has the correct prior value&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">oldValue</span> <span class="o">===</span> <span class="nx">originalWatchedValue</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">oldValue</span><span class="p">,</span> <span class="nx">originalWatchedValue</span><span class="p">);</span>
     <span class="p">},</span>
     
     <span class="s1">&#39;And it has the correct new value&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">newValue</span> <span class="o">===</span> <span class="nx">newWatchedValue</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">newValue</span><span class="p">,</span> <span class="nx">newWatchedValue</span><span class="p">);</span>
     <span class="p">},</span>
 
     <span class="s1">&#39;And the config value was correctly set&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span> <span class="o">===</span> <span class="nx">newWatchedValue</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">,</span> <span class="nx">newWatchedValue</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;waiting for O/S change notification...&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// This is just a message for the next test</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
     <span class="p">}</span>
 
+  <span class="p">},</span>
+
+  <span class="s1">&#39;Runtime Configuration Changes are Persisted to runtime.json&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Watch the file for changes</span>
+      <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">));</span>
+      <span class="p">});</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;The O/S notified us of the configuration file change&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">runtimeObj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Prior configuration values were kept intact&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">runtimeObj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">runtimeObj</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbName</span><span class="p">,</span> <span class="s2">&quot;override_from_runtime_json&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Changed configuration values were persisted&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">runtimeObj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">runtimeObj</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">,</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">);</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 
 <span class="p">});</span>
@@ -167,8 +228,8 @@
                     <div id="moduleList" class="module">
                         <h4>Modules</h4>
                         <ul class="content">
-                                <li class=""><a href="module_node-config.html" title="node-config">node-config</a></li>
-                                <li class="selected"><a href="module_test.html" title="test">test</a></li>
+                                <li class=""><a href="module_Config.html" title="Config">Config</a></li>
+                                <li class="selected"><a href="module_Test.html" title="Test">Test</a></li>
                         </ul>
                     </div>
 
@@ -197,7 +258,7 @@
 	</div>
 	<div id="ft">
         <hr />
-Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
 <span class="subtitle">version 0.4.0</span>
 	</div>
 </div>

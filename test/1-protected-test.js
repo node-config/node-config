@@ -1,7 +1,7 @@
 /**
  * <p>Unit tests</p>
  * 
- * @module test
+ * @module Test
  */
 
 // Hardcode $NODE_ENV=test for testing
@@ -16,10 +16,10 @@ var assert = require('assert');
 process.chdir(__dirname + '/..');
 
 /**
- * <p>Tests for protected (hackable) utilities.</p>
+ * <p>Tests for protected utilities.  To run type:</p>
+ * <pre>npm test config</pre>
  *
  * @class ProtectedTest
- * @constructor
  */
 exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBatch({
   'Library initialization': {

@@ -2,13 +2,13 @@
 <html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<title>test   1-protected-test.js </title>
+	<title>Test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1308514875.27" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1308514875.27" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309964247.94" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309964247.94" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1308514875.27"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1308514875.27"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1309964247.94"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1309964247.94"></script>
 </head>
 
 <body id="node-monitor">
@@ -17,7 +17,7 @@
 	<div id="hd">
         <h1><a href="https://github.com/lorenwest/node-config" title="Node.js Configuration">Node.js Configuration</a></h1>
         <a href="./index.html" title="Node.js Configuration">Node.js Configuration</a>
-            &gt; <a href="./module_test.html" title="test">test</a>
+            &gt; <a href="./module_test.html" title="Test">Test</a>
                 
                  &gt; 1-protected-test.js (source view) 
         <form onsubmit="return false">
@@ -36,9 +36,9 @@
             <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
                 <fieldset>
                     <legend>Filters</legend>
-                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
-                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
-                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span id="showProtected" class="classopts" style="display:none'"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts" style="display:none;"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
                 </fieldset>
             </form>
 
@@ -49,7 +49,7 @@
 <div class="highlight"><pre><span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Unit tests&lt;/p&gt;</span>
 <span class="cm"> * </span>
-<span class="cm"> * @module test</span>
+<span class="cm"> * @module Test</span>
 <span class="cm"> */</span>
 
 <span class="c1">// Hardcode $NODE_ENV=test for testing</span>
@@ -64,10 +64,10 @@
 <span class="nx">process</span><span class="p">.</span><span class="nx">chdir</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/..&#39;</span><span class="p">);</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Tests for protected (hackable) utilities.&lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;Tests for protected utilities.  To run type:&lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;npm test config&lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @class ProtectedTest</span>
-<span class="cm"> * @constructor</span>
 <span class="cm"> */</span>
 <span class="nx">exports</span><span class="p">.</span><span class="nx">PrivateTest</span> <span class="o">=</span> <span class="nx">vows</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;Protected (hackable) utilities test&#39;</span><span class="p">).</span><span class="nx">addBatch</span><span class="p">({</span>
   <span class="s1">&#39;Library initialization&#39;</span><span class="o">:</span> <span class="p">{</span>
@@ -177,6 +177,102 @@
     <span class="p">}</span>
   <span class="p">},</span>
 
+  <span class="s1">&#39;_equalsDeep() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Succeeds on two empty objects&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">({},</span> <span class="p">{}));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Succeeds on array comparisons&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">]));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Succeeds on the same object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">a</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Succeeds on a regular object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Succeeds on a deep object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="s1">&#39;is&#39;</span><span class="p">,</span><span class="s1">&#39;the&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="s1">&#39;is&#39;</span><span class="p">,</span><span class="s1">&#39;the&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]};</span>
+      <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="p">{</span><span class="nx">creditLimit</span><span class="o">:</span> <span class="mi">10000</span><span class="p">,</span> <span class="nx">deepValue</span><span class="o">:</span> <span class="nx">a</span><span class="p">};</span>
+      <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="p">{</span><span class="nx">deepValue</span><span class="o">:</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">creditLimit</span><span class="o">:</span><span class="mi">10000</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">d</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Fails if either object is null&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">({},</span> <span class="kc">null</span><span class="p">));</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{}));</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Fails if either object is undefined&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">({}));</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="s1">&#39;noElement&#39;</span><span class="p">],</span> <span class="p">{}));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Fails if either object is undefined&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">({}));</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="s1">&#39;noElement&#39;</span><span class="p">],</span> <span class="p">{}));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Fails if object1 has more elements&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">otherElem</span><span class="o">:</span> <span class="mi">40</span><span class="p">};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Fails if object2 has more elements&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">otherElem</span><span class="o">:</span> <span class="mi">40</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Fails if any value is different&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="s1">&#39;is&#39;</span><span class="p">,</span><span class="s1">&#39;the&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="s1">&#39;is&#39;</span><span class="p">,</span><span class="s1">&#39;the&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">));</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="s1">&#39;is&#39;</span><span class="p">,</span><span class="s1">&#39;the&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="s1">&#39;now&#39;</span><span class="p">,</span><span class="s1">&#39;isnt&#39;</span><span class="p">,</span><span class="s1">&#39;the&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">]};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s1">&#39;_diffDeep() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Returns an empty object if no differences&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">)),</span> <span class="s1">&#39;object&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)).</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Returns an empty object if no differences (deep)&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">,</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">}}};</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">)),</span> <span class="s1">&#39;object&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)).</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Returns just the diff values&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;wurld&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">,</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">diff</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">hello</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Returns just the diff values (deep)&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;wurld&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;wurld&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">c</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">diff</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">.</span><span class="nx">b</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">a</span><span class="p">,</span> <span class="mi">45</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">,</span> <span class="mi">44</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
   <span class="s1">&#39;_parseFile() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/../config/default.yaml&#39;</span><span class="p">);</span>
@@ -211,7 +307,6 @@
     <span class="p">}</span>
   <span class="p">},</span>
   
-
   <span class="s1">&#39;_attachProtoDeep() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="c1">// Create an object that contains other objects to see</span>
@@ -255,8 +350,8 @@
                     <div id="moduleList" class="module">
                         <h4>Modules</h4>
                         <ul class="content">
-                                <li class=""><a href="module_node-config.html" title="node-config">node-config</a></li>
-                                <li class="selected"><a href="module_test.html" title="test">test</a></li>
+                                <li class=""><a href="module_Config.html" title="Config">Config</a></li>
+                                <li class="selected"><a href="module_Test.html" title="Test">Test</a></li>
                         </ul>
                     </div>
 
@@ -285,7 +380,7 @@
 	</div>
 	<div id="ft">
         <hr />
-Released on <a href="https://github.com/lorenwest/node-monitor">github</a> under the <a href="https://github.com/lorenwest/node-monitor/blob/master/LICENSE">Apache License 2.0</a>
+Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
 <span class="subtitle">version 0.4.0</span>
 	</div>
 </div>

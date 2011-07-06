@@ -1,4 +1,4 @@
-YAHOO.env.classMap = {"ConfigTest": "test", "Config": "node-config", "ProtectedTest": "test"};
+YAHOO.env.classMap = {"ConfigTest": "Test", "Config": "Config", "ProtectedTest": "Test"};
 
 YAHOO.env.resolveClass = function(className) {
     var a=className.split('.'), ns=YAHOO.env.classMap;

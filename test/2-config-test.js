@@ -16,10 +16,9 @@ var CONFIG_PATH = process.cwd() + '/config/',
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
- * <pre>npm test</pre>
+ * <pre>npm test config</pre>
  *
  * @class ConfigTest
- * @constructor
  */
 exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   'Library initialization': {
@@ -63,6 +62,10 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       return CONFIG.TestModule.parm1;
     },
 
+    'The makeImmutable() method is available': function() {
+      assert.isFunction(CONFIG.makeImmutable);
+    },
+
     'Correctly unable to change an immutable configuration': function(value) {
       assert.isTrue(value != "setToThis");
     },
@@ -72,7 +75,34 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     }
   },
 
-  'Configuration Change Notification Tests': {
+  'Configuration for module developers': {
+    topic: function() {
+    	
+      // Set some parameters for the test module
+      CONFIG.setModuleDefaults("TestModule", {
+        parm1: 1000, parm2: 2000
+      });
+      return CONFIG;
+    },
+
+    'The setModuleDefaults() method is available': function() {
+      assert.isFunction(CONFIG.setModuleDefaults);
+    },
+
+    'The module config is in the CONFIG object': function(config) {
+      assert.isTrue(typeof(config.TestModule) != "undefined");
+    },
+
+    'Local configurations are mixed in': function(config) {
+      assert.equal(config.TestModule.parm1, "value1");
+    },
+
+    'Defaults remain intact unless overridden': function(config) {
+      assert.equal(config.TestModule.parm2, 2000);
+    }
+  },
+
+  'Change Notification Tests': {
     topic: function() {
     	
       // Attach this topic as a watcher
@@ -83,6 +113,10 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       
       // Write the new watched value out to the runtime.json file
       CONFIG.watchThisValue = newWatchedValue;
+    },
+
+    'The watch() method is available': function() {
+      assert.isFunction(CONFIG.watch);
     },
 
     'The change handler callback was fired': function(err, obj) {
@@ -130,7 +164,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Prior configuration values were kept intact': function(err, runtimeObj) {
       assert.equal(runtimeObj.Customers.dbName, "override_from_runtime_json");
     },
-    'Altered configuration values were persisted': function(err, runtimeObj) {
+    'Changed configuration values were persisted': function(err, runtimeObj) {
       assert.equal(runtimeObj.watchThisValue, CONFIG.watchThisValue);
     }
   }

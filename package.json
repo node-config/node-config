@@ -2,7 +2,7 @@
   "name": "config",
   "version": "0.4.0",
   "main": "./lib/config.js",
-  "description": "Runtime configuration for node.js deployment",
+  "description": "Configuration for enterprise application server deployments",
   "modules" : { "test" : "./test" },
   "author": "Loren West <open_source@lorenwest.com>",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
@@ -10,8 +10,8 @@
     "yaml" : "0.1.x",
     "vows" : "0.5.x"
   },
-  "engines": {"node": "0.x.x"},
+  "engines": {"node": ">0.4.x"},
   "scripts": {
-    "test" : "node_modules/vows/bin/vows test/*.js --spec"
+    "test" : "./node_modules/vows/bin/vows test/*.js --spec"
   }
 }

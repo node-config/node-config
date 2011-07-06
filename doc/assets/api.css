@@ -1,10 +1,11 @@
-
-
 html { background-color: #ECF0F6; }
 
 /* main page */
+body { font-size: 15px; }
 a:link { color: #003399; }
 a:visited { color: #003399;}
+
+#overview li { margin-bottom: 10px; }
 
 #doc3 #hd { margin:1em 0em; padding: 0px 7px; font-size: 110%; position: relative; zoom: 1; }
 #doc3 #hd a { text-decoration: none; color: black; }
@@ -44,9 +45,8 @@ a:visited { color: #003399;}
     background-color: #fff;
 }
 #bd h2 {
-	padding-bottom:10px; 
+	padding:10px 0px; 
 	font-size:123.1%;
-	margin-top:-5px;
 }
 
 .submodules dd {
@@ -56,12 +56,13 @@ a:visited { color: #003399;}
 
 
 #doc3 .classopts { font-size: 85%; float:right; margin:10px 10px -10px 0px; padding: 4px 5px 3px 5px; background-color:#ECF0F6;border: 1px solid #98AAB1;}
+#yui-classopts-form { height: 0px; }
 #yui-classopts-form fieldset legend { display: none; }
 
 /* undo reset.css styles for description block formatting */
 #doc3 .description ul { padding: 10px 0 10px 28px; font-size: 90%; list-style: disc}
 #doc3 .description li { list-style: disc}
-#doc3 .description p { padding-bottom: 10px}
+#doc3 .description p { padding: 10px; }
 #doc3 .description strong { font-weight: bold;}
 #doc3 .description em {padding: 2px; background-color: #EFECCA}
 #doc3 pre { padding: 10px;}
