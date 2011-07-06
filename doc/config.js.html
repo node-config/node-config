@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309972024.4" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309972024.4" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309972892.96" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309972892.96" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1309972024.4"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1309972024.4"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1309972892.96"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1309972892.96"></script>
 </head>
 
 <body id="node-monitor">
@@ -195,7 +195,7 @@
     <span class="nx">makeHiddenProperty</span><span class="p">(</span><span class="s1">&#39;__watchers&#39;</span><span class="p">,</span> <span class="p">{});</span>
   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">)</span>
     <span class="nx">makeHiddenProperty</span><span class="p">(</span><span class="s1">&#39;__propertyValues&#39;</span><span class="p">,</span> <span class="p">{});</span>
-  
+
   <span class="c1">// Attach watchers to all requested properties</span>
   <span class="nx">allProperties</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">prop</span><span class="p">){</span>
 
@@ -261,16 +261,16 @@
             <span class="p">});</span>
 
             <span class="c1">// Done processing this value</span>
-       	    <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+            <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
           <span class="p">}</span>
         <span class="p">}</span>
       <span class="p">});</span>
-    	  
+
     <span class="p">}</span> <span class="c1">// Done setting up the property for watching (first time)</span>
 
     <span class="c1">// Add the watcher to the property</span>
     <span class="nx">t</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span>
-    
+
     <span class="c1">// Recurs if this is an object...</span>
     <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">t</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">t</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
@@ -328,7 +328,7 @@
   <span class="c1">// Extend the module config object with values from originalConfig</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">])</span> <span class="p">{</span>
     <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">,</span> <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]);</span>
-    
+
     <span class="c1">// Save the mixed module config as the original</span>
     <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">moduleConfig</span><span class="p">;</span>
   <span class="p">}</span>
@@ -340,7 +340,7 @@
 
   <span class="c1">// Attach the object onto the CONFIG object</span>
   <span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">moduleConfig</span><span class="p">;</span>
-	
+
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -369,7 +369,7 @@
     <span class="nx">writable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">configurable</span><span class="o">:</span> <span class="kc">false</span>
   <span class="p">});</span>
-  
+
   <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
 <span class="p">};</span>
 
@@ -442,26 +442,26 @@
   <span class="nx">t</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">objectToWatch</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
 
     <span class="c1">// Return early if we&#39;re already queued up for persisting</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">isQueuedForPersistence</span><span class="p">)</span>
-	  <span class="k">return</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isQueuedForPersistence</span><span class="p">)</span>
+      <span class="k">return</span><span class="p">;</span>
 
-	<span class="c1">// Defer persisting until the next tick.  This results in a single </span>
-	<span class="c1">// persist across any number of config changes in a single event cycle.</span>
-	<span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-	<span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="c1">// Defer persisting until the next tick.  This results in a single </span>
+    <span class="c1">// persist across any number of config changes in a single event cycle.</span>
+    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
 
       <span class="c1">// Persist if necessary</span>
-	  <span class="kd">var</span> <span class="nx">newDiffs</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">originalConfig</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
-	  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">newDiffs</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">newDiffs</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">originalConfig</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">newDiffs</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">))</span> <span class="p">{</span>
         <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">newDiffs</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">){</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span>
             <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error writing &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
-		<span class="p">});</span>
-	  <span class="p">};</span>
+        <span class="p">});</span>
+      <span class="p">};</span>
 
       <span class="c1">// Set up for next time</span>
       <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-	<span class="p">});</span>
+    <span class="p">});</span>
   <span class="p">});</span>
 <span class="p">};</span>
 
@@ -510,7 +510,7 @@
 
   <span class="c1">// Initialize</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  
+
   <span class="c1">// Singleton</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">originalConfig</span><span class="p">)</span>
     <span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
@@ -541,10 +541,10 @@
       <span class="p">}</span>
     <span class="p">});</span>
   <span class="p">});</span>
-  
+
   <span class="c1">// Remember the original configuration</span>
   <span class="nx">originalConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
-  
+
   <span class="c1">// Extend the original config with any prior runtime.json diffs</span>
   <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJson</span><span class="p">)</span> <span class="p">{</span>
@@ -655,7 +655,7 @@
   <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span><span class="p">;</span>
   <span class="p">}</span>
-  
+
   <span class="c1">// Attach the prototype to this object</span>
   <span class="nx">toObject</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
 
@@ -667,7 +667,7 @@
       <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">toObject</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
-  
+
   <span class="c1">// Return the original object</span>
   <span class="k">return</span> <span class="nx">toObject</span><span class="p">;</span>
 
@@ -751,7 +751,7 @@
   <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">object1</span><span class="p">).</span><span class="nx">length</span> <span class="o">!=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">object2</span><span class="p">).</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
   <span class="p">}</span>
-  
+
   <span class="c1">// Compare the values</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">object1</span><span class="p">)</span> <span class="p">{</span>
 
