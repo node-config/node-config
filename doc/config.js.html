@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309972892.96" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309972892.96" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309975697.07" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309975697.07" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1309972892.96"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1309972892.96"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1309975697.07"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1309975697.07"></script>
 </head>
 
 <body id="node-monitor">
@@ -159,6 +159,17 @@
 <span class="cm"> * This was built for monitoring changes to configuration values,</span>
 <span class="cm"> * but it can be used for watching changes to any javascript object.</span>
 <span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;Example:&lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> *   var CONFIG = require(&#39;config&#39;).customer;</span>
+<span class="cm"> *   ...</span>
+<span class="cm"> *   </span>
+<span class="cm"> *   // Watch for any changes to the customer configuration</span>
+<span class="cm"> *   CONFIG.watch(CONFIG, null, function(object, propertyName, priorValue, newValue) {</span>
+<span class="cm"> *   &amp;nbsp;console.log(&quot;Customer configuration &quot; + propertyName + &quot; changed from &quot; + priorValue + &quot; to &quot; + newValue);</span>
+<span class="cm"> *   });</span>
+<span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @method watch</span>
 <span class="cm"> * @param object {object} - The object to watch.</span>
@@ -355,6 +366,20 @@
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * This operation cannot be un-done.</span>
 <span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * &lt;p&gt;Example:&lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> *   var CONFIG = require(&#39;config&#39;).customer;</span>
+<span class="cm"> *   ...</span>
+<span class="cm"> *   </span>
+<span class="cm"> *   // Obtain a DB connection using CONFIG parameters</span>
+<span class="cm"> *   database.open(CONFIG.db.name, CONFIG.db.port);</span>
+<span class="cm"> *   ...</span>
+<span class="cm"> *   </span>
+<span class="cm"> *   // Don&#39;t allow database changes after connect</span>
+<span class="cm"> *   CONFIG.makeImmutable(CONFIG.db, &#39;name&#39;);</span>
+<span class="cm"> *   CONFIG.makeImmutable(CONFIG.db, &#39;port&#39;);</span>
+<span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @method makeImmutable</span>
 <span class="cm"> * @param object {object} - The object to attach an immutable property into.  </span>

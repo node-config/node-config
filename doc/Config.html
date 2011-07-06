@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309972892.96" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309972892.96" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1309975697.07" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1309975697.07" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1309972892.96"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1309972892.96"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1309975697.07"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1309975697.07"></script>
 </head>
 
 <body id="node-monitor">
@@ -822,6 +822,17 @@ but it can be applied to any javascript object.
 <p>
 This operation cannot be un-done.
 </p>
+<p>Example:</p>
+<pre>
+var CONFIG = require('config').customer;
+...
+// Obtain a DB connection using CONFIG parameters
+database.open(CONFIG.db.name, CONFIG.db.port);
+...
+// Don't allow database changes after connect
+CONFIG.makeImmutable(CONFIG.db, 'name');
+CONFIG.makeImmutable(CONFIG.db, 'port');
+</pre>
                                         </div>
 
                                         <div class="description">
@@ -984,6 +995,15 @@ value changes.
 This was built for monitoring changes to configuration values,
 but it can be used for watching changes to any javascript object.
 </p>
+<p>Example:</p>
+<pre>
+var CONFIG = require('config').customer;
+...
+// Watch for any changes to the customer configuration
+CONFIG.watch(CONFIG, null, function(object, propertyName, priorValue, newValue) {
+&nbsp;console.log("Customer configuration " + propertyName + " changed from " + priorValue + " to " + newValue);
+});
+</pre>
                                         </div>
 
                                         <div class="description">
