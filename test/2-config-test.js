@@ -79,26 +79,26 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     topic: function() {
     	
       // Set some parameters for the test module
-      CONFIG.setModuleDefaults("TestModule", {
+      return CONFIG.setModuleDefaults("TestModule", {
         parm1: 1000, parm2: 2000
       });
-      return CONFIG;
     },
 
     'The setModuleDefaults() method is available': function() {
       assert.isFunction(CONFIG.setModuleDefaults);
     },
 
-    'The module config is in the CONFIG object': function(config) {
-      assert.isTrue(typeof(config.TestModule) != "undefined");
+    'The module config is in the CONFIG object': function(moduleConfig) {
+      assert.isTrue(typeof(CONFIG.TestModule) != "undefined");
+      assert.deepEqual(CONFIG.TestModule, moduleConfig);
     },
 
-    'Local configurations are mixed in': function(config) {
-      assert.equal(config.TestModule.parm1, "value1");
+    'Local configurations are mixed in': function(moduleConfig) {
+      assert.equal(moduleConfig.parm1, "value1");
     },
 
-    'Defaults remain intact unless overridden': function(config) {
-      assert.equal(config.TestModule.parm2, 2000);
+    'Defaults remain intact unless overridden': function(moduleConfig) {
+      assert.equal(moduleConfig.parm2, 2000);
     }
   },
 
