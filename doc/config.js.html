@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1310049629.38" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1310049629.38" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1310429649.38" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1310429649.38" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1310049629.38"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1310049629.38"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1310429649.38"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1310429649.38"></script>
 </head>
 
 <body id="node-monitor">
@@ -352,6 +352,8 @@
   <span class="c1">// Attach the object onto the CONFIG object</span>
   <span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">moduleConfig</span><span class="p">;</span>
 
+  <span class="c1">// Return the module config</span>
+  <span class="k">return</span> <span class="nx">moduleConfig</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -438,7 +440,7 @@
       <span class="c1">// Parse the file and mix it in to this config object.</span>
       <span class="c1">// This notifies listeners</span>
       <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
         <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObject</span><span class="p">);</span>
       <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error parsing &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
@@ -605,7 +607,8 @@
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_parseFile</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="c1">// Initialize</span>
-  <span class="kd">var</span> <span class="nx">extension</span> <span class="o">=</span> <span class="nx">fullFilename</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">.</span><span class="nx">lastIndexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> 
+      <span class="nx">extension</span> <span class="o">=</span> <span class="nx">fullFilename</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">.</span><span class="nx">lastIndexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
       <span class="nx">configObject</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
       <span class="nx">fileContent</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
@@ -629,7 +632,8 @@
   <span class="k">catch</span> <span class="p">(</span><span class="nx">e2</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Config file &#39;</span> <span class="o">+</span> <span class="nx">fullFilename</span> <span class="o">+</span> <span class="s1">&#39; cannot be read&#39;</span><span class="p">);</span>
   <span class="p">}</span>
-
+  
+  <span class="c1">// Parse the file based on extension</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// The yaml library doesn&#39;t like strings that have newlines but don&#39;t </span>
@@ -638,9 +642,11 @@
       <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">);</span>
+      <span class="c1">// Allow comments in JSON files</span>
+      <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;js&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Use the built-in parser for .js files</span>
       <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
@@ -725,7 +731,7 @@
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// Call recursively if an object or array</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">||</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_isObject</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">]))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">copy</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="p">{</span>
@@ -902,6 +908,69 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
+<span class="cm"> * Strip all Javascript type comments from the string.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The string is usually a file loaded from the O/S, containing</span>
+<span class="cm"> * newlines and javascript type comments.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Thanks to James Padolsey, and all who conributed to this implementation.</span>
+<span class="cm"> * http://james.padolsey.com/javascript/javascript-comment-removal-revisted/</span>
+<span class="cm"> *</span>
+<span class="cm"> * @protected</span>
+<span class="cm"> * @method _stripComments</span>
+<span class="cm"> * @param fileString {string} The string to strip comments from</span>
+<span class="cm"> * @return {string} The string with comments stripped.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_stripComments</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fileStr</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">uid</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="o">+</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(),</span>
+      <span class="nx">primitives</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">primIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="nx">fileStr</span>
+
+    <span class="cm">/* Remove strings */</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/([&#39;&quot;])(\\\1|.)+?\1/g</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">match</span><span class="p">){</span>
+      <span class="nx">primitives</span><span class="p">[</span><span class="nx">primIndex</span><span class="p">]</span> <span class="o">=</span> <span class="nx">match</span><span class="p">;</span>
+      <span class="k">return</span> <span class="p">(</span><span class="nx">uid</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nx">primIndex</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">})</span>
+
+    <span class="cm">/* Remove Regexes */</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">match</span><span class="p">,</span> <span class="nx">$1</span><span class="p">,</span> <span class="nx">$2</span><span class="p">){</span>
+      <span class="nx">primitives</span><span class="p">[</span><span class="nx">primIndex</span><span class="p">]</span> <span class="o">=</span> <span class="nx">$2</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">$1</span> <span class="o">+</span> <span class="p">(</span><span class="nx">uid</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nx">primIndex</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">})</span>
+
+    <span class="cm">/*</span>
+<span class="cm">    - Remove single-line comments that contain would-be multi-line delimiters</span>
+<span class="cm">        E.g. // Comment /* &lt;--</span>
+<span class="cm">    - Remove multi-line comments that contain would be single-line delimiters</span>
+<span class="cm">        E.g. /* // &lt;-- </span>
+<span class="cm">   */</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="cm">/*</span>
+<span class="cm">    Remove single and multi-line comments,</span>
+<span class="cm">    no consideration of inner-contents</span>
+<span class="cm">   */</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="cm">/*</span>
+<span class="cm">    Remove multi-line comments that have a replaced ending (string/regex)</span>
+<span class="cm">    Greedy, so no inner strings/regexes will stop it.</span>
+<span class="cm">   */</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nb">RegExp</span><span class="p">(</span><span class="s1">&#39;\\/\\*[\\s\\S]+&#39;</span> <span class="o">+</span> <span class="nx">uid</span> <span class="o">+</span> <span class="s1">&#39;\\d+&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="cm">/* Bring back strings &amp; regexes */</span>
+    <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nb">RegExp</span><span class="p">(</span><span class="nx">uid</span> <span class="o">+</span> <span class="s1">&#39;(\\d+)&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">match</span><span class="p">,</span> <span class="nx">n</span><span class="p">){</span>
+      <span class="k">return</span> <span class="nx">primitives</span><span class="p">[</span><span class="nx">n</span><span class="p">];</span>
+    <span class="p">})</span>
+  <span class="p">);</span>
+
+<span class="p">};</span>
+
+<span class="cm">/**</span>
 <span class="cm"> * Is the specified argument a regular javascript object?</span>
 <span class="cm"> *</span>
 <span class="cm"> * The argument is an object if it&#39;s a JS object, but not an array.</span>
@@ -912,10 +981,7 @@
 <span class="cm"> * @return {boolean} TRUE if the arg is an object, FALSE if not</span>
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_isObject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">))</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="k">typeof</span> <span class="nx">obj</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
 <span class="p">};</span>
 
 <span class="c1">// The module exports a singleton instance of the Config class so the</span>
@@ -961,11 +1027,11 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.1</span>
+<span class="subtitle">version 0.4.2</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method__watchForConfigFileChanges", "access": "protected", "host": "Config", "type": "method", "name": "_watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method__watchForConfigFileChanges", "access": "protected", "host": "Config", "type": "method", "name": "_watchForConfigFileChanges"}];
 </script>
 </body>
 </html>

@@ -16,7 +16,7 @@ var assert = require('assert');
 process.chdir(__dirname + '/..');
 
 /**
- * <p>Tests for protected utilities.  To run type:</p>
+ * <p>Tests for underlying node-config utilities.  To run type:</p>
  * <pre>npm test config</pre>
  *
  * @class ProtectedTest
@@ -225,6 +225,33 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
+  '_stripComments() tests': {
+    // Only testing baseline stripComments functionality.
+	// This implementation handles lots of edge cases that aren't in these tests
+    'The function exists': function() {
+      assert.isFunction(CONFIG._stripComments);
+    },
+    'Leaves a simple string without comments alone': function() {
+   	  var str = "Hello\nWorld";
+   	  assert.equal(CONFIG._stripComments(str), str);
+    },
+    'Strips out line-type comments': function() {
+   	  var str1 = "var a='Hello'; // Comment about the a variable";
+   	  var str2 = "var a='Hello'; ";
+   	  assert.equal(CONFIG._stripComments(str1), str2);
+    },
+    'Strips out block-type comments': function() {
+   	  var str1 = "var a='Hello';/* Block Comment */ var b=24";
+   	  var str2 = "var a='Hello'; var b=24";
+   	  assert.equal(CONFIG._stripComments(str1), str2);
+    },
+    'Strips out multi-line block comments': function() {
+   	  var str1 = "var a='Hello';\n/* Block Comment\n  Line 2 comment\n*/\nvar b=24";
+   	  var str2 = "var a='Hello';\n\nvar b=24";
+   	  assert.equal(CONFIG._stripComments(str1), str2);
+    }
+  },
+
   '_parseFile() tests': {
     topic: function() {
       return CONFIG._parseFile(__dirname + '/../config/default.yaml');
@@ -258,7 +285,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.isTrue(config.Customers.dbName == 'override_from_runtime_json');
     }
   },
-  
+
   '_attachProtoDeep() tests': {
     topic: function() {
       // Create an object that contains other objects to see
@@ -289,6 +316,5 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.isFunction(config.subObject.subSubObject.__proto__.watch);
     }
   }
-
 
 });

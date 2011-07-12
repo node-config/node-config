@@ -67,18 +67,27 @@
 
   <h2>File Formats</h2>
   <p>
-    JSON files (.js) expose configuration parameters as a JSON object.  Example:
+    JSON files (.json) expose configuration parameters as a JSON object.
+    Comments are stripped out of .json files before parsing.
+    Example:
   </p>
   <pre>
+  /* Customer parameters
+   *
+   * This controls database access and legacy system synchronization
+   */
   {
     "Customer": {
       "dbName": "customers",
       "dbHost": "localhost",
       "dbPort": 5984
+      // Database synchronization frequency
       "syncFrequency": 60
     }
   }
   </pre>
+  <p>
+  </p>
 
   <p>
     JavaScript files (.js) expose configuration parameters as module.exports.  Example:

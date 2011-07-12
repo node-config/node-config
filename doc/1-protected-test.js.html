@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1310049629.28" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1310049629.28" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1310429649.26" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1310429649.26" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1310049629.28"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1310049629.28"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1310429649.26"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1310429649.26"></script>
 </head>
 
 <body id="node-monitor">
@@ -64,7 +64,7 @@
 <span class="nx">process</span><span class="p">.</span><span class="nx">chdir</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/..&#39;</span><span class="p">);</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Tests for protected utilities.  To run type:&lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;Tests for underlying node-config utilities.  To run type:&lt;/p&gt;</span>
 <span class="cm"> * &lt;pre&gt;npm test config&lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @class ProtectedTest</span>
@@ -273,6 +273,33 @@
     <span class="p">}</span>
   <span class="p">},</span>
 
+  <span class="s1">&#39;_stripComments() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="c1">// Only testing baseline stripComments functionality.</span>
+	<span class="c1">// This implementation handles lots of edge cases that aren&#39;t in these tests</span>
+    <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Leaves a simple string without comments alone&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+   	  <span class="kd">var</span> <span class="nx">str</span> <span class="o">=</span> <span class="s2">&quot;Hello\nWorld&quot;</span><span class="p">;</span>
+   	  <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">(</span><span class="nx">str</span><span class="p">),</span> <span class="nx">str</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Strips out line-type comments&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+   	  <span class="kd">var</span> <span class="nx">str1</span> <span class="o">=</span> <span class="s2">&quot;var a=&#39;Hello&#39;; // Comment about the a variable&quot;</span><span class="p">;</span>
+   	  <span class="kd">var</span> <span class="nx">str2</span> <span class="o">=</span> <span class="s2">&quot;var a=&#39;Hello&#39;; &quot;</span><span class="p">;</span>
+   	  <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">(</span><span class="nx">str1</span><span class="p">),</span> <span class="nx">str2</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Strips out block-type comments&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+   	  <span class="kd">var</span> <span class="nx">str1</span> <span class="o">=</span> <span class="s2">&quot;var a=&#39;Hello&#39;;/* Block Comment */ var b=24&quot;</span><span class="p">;</span>
+   	  <span class="kd">var</span> <span class="nx">str2</span> <span class="o">=</span> <span class="s2">&quot;var a=&#39;Hello&#39;; var b=24&quot;</span><span class="p">;</span>
+   	  <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">(</span><span class="nx">str1</span><span class="p">),</span> <span class="nx">str2</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Strips out multi-line block comments&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+   	  <span class="kd">var</span> <span class="nx">str1</span> <span class="o">=</span> <span class="s2">&quot;var a=&#39;Hello&#39;;\n/* Block Comment\n  Line 2 comment\n*/\nvar b=24&quot;</span><span class="p">;</span>
+   	  <span class="kd">var</span> <span class="nx">str2</span> <span class="o">=</span> <span class="s2">&quot;var a=&#39;Hello&#39;;\n\nvar b=24&quot;</span><span class="p">;</span>
+   	  <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">(</span><span class="nx">str1</span><span class="p">),</span> <span class="nx">str2</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
   <span class="s1">&#39;_parseFile() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/../config/default.yaml&#39;</span><span class="p">);</span>
@@ -306,7 +333,7 @@
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbName</span> <span class="o">==</span> <span class="s1">&#39;override_from_runtime_json&#39;</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">},</span>
-  
+
   <span class="s1">&#39;_attachProtoDeep() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="c1">// Create an object that contains other objects to see</span>
@@ -337,7 +364,6 @@
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">subSubObject</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">watch</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
-
 
 <span class="p">});</span>
 </pre></div>
@@ -381,7 +407,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.1</span>
+<span class="subtitle">version 0.4.2</span>
 	</div>
 </div>
 <script type="text/javascript">
