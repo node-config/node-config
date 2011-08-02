@@ -102,7 +102,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     }
   },
 
-  'Change Notification Tests': {
+  'Internal Change Notification Tests': {
     topic: function() {
     	
       // Attach this topic as a watcher
@@ -143,7 +143,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.equal(CONFIG.watchThisValue, newWatchedValue);
     },
 
-    'waiting for O/S change notification...': function(err, obj) {
+    'Waiting for the O/S to notify us of changes...': function(err, obj) {
       // This is just a message for the next test
       assert.isTrue(true);
     }
@@ -158,7 +158,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
       });
     },
-    'The O/S notified us of the configuration file change': function(err, runtimeObj) {
+    'The runtime.json file was changed': function(err, runtimeObj) {
       assert.isTrue(!err);
     },
     'Prior configuration values were kept intact': function(err, runtimeObj) {

@@ -151,9 +151,10 @@
   </p>
   <p>
     If configuration values change at runtime, these changes are persisted
-    into the runtime.json file within the config directory.  Application
-    instances monitor changes to this file to keep configuration values
-    consistent among the different application instances.
+    into the runtime.json file within the config directory.  Multi-node 
+    application instances can keep in synch by calling the
+    <a href="Config.html#method_watchForConfigFileChanges">watchForConfigFileChanges</a> 
+    method at startup.
   </p>
   <p>
     This paradigm does not currently extend beyond a single machine.

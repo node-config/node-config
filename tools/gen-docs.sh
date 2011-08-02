@@ -48,7 +48,7 @@ rm -rf $parser_tmp
 
 echo Copying the documentation to ../lorenwest.github.com/node-config/$version
 rm -rf ../lorenwest.github.com/node-config/$version
-cp -dR doc ../lorenwest.github.com/node-config/$version
+cp -R doc ../lorenwest.github.com/node-config/$version
 echo Copying the documentation to ../lorenwest.github.com/node-config/latest
 rm -rf ../lorenwest.github.com/node-config/latest
-cp -dR doc ../lorenwest.github.com/node-config/latest
+cp -R doc ../lorenwest.github.com/node-config/latest
