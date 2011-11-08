@@ -3,7 +3,6 @@
   "version": "0.4.3",
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
-  "modules" : { "test" : "./test" },
   "author": "Loren West <open_source@lorenwest.com>",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
   "dependencies": {
