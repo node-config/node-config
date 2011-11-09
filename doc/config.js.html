@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1312274888.63" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1312274888.63" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1320799598.59" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1320799598.59" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1312274888.63"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1312274888.63"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1320799598.59"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1320799598.59"></script>
 </head>
 
 <body id="node-monitor">
@@ -58,7 +58,8 @@
     <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_PATH</span> <span class="o">+</span> <span class="s1">&#39;runtime.json&#39;</span><span class="p">,</span>
     <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// Not including the runtime.json values</span>
     <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>     <span class="c1">// Current runtimeJson extensions</span>
-    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">isWatchingForConfigFileChanges</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Runtime Application Configurations&lt;/p&gt;</span>
@@ -421,8 +422,12 @@
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
-  <span class="c1">// Attach the file watcher</span>
+  <span class="c1">// Only set up watching once</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">isWatchingForConfigFileChanges</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+  <span class="nx">isWatchingForConfigFileChanges</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  
+  <span class="c1">// Attach the file watcher</span>
   <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// no-op if the file hasn&#39;t changed</span>
@@ -1029,7 +1034,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.3</span>
+<span class="subtitle">version 0.4.4</span>
 	</div>
 </div>
 <script type="text/javascript">
