@@ -51,12 +51,12 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Loading prior runtime.json configurations is correct': function() {
       assert.equal(CONFIG.Customers.dbName, 'override_from_runtime_json');
     }
-    
+
   },
 
   'Assuring a configuration can be made immutable': {
     topic: function() {
-    	
+
       CONFIG.makeImmutable(CONFIG.TestModule, 'parm1');
       CONFIG.TestModule.parm1 = "setToThis";
       return CONFIG.TestModule.parm1;
@@ -77,7 +77,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
   'Configuration for module developers': {
     topic: function() {
-    	
+
       // Set some parameters for the test module
       return CONFIG.setModuleDefaults("TestModule", {
         parm1: 1000, parm2: 2000
@@ -104,13 +104,13 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
   'Internal Change Notification Tests': {
     topic: function() {
-    	
+
       // Attach this topic as a watcher
       var cb = this.callback;
       CONFIG.watch(CONFIG, null, function(obj, prop, oldValue, newValue){
     	  cb(null, {obj:obj, prop:prop, oldValue:oldValue, newValue:newValue});
       });
-      
+
       // Write the new watched value out to the runtime.json file
       CONFIG.watchThisValue = newWatchedValue;
     },
@@ -130,11 +130,11 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'And it was called with the correct parameter': function(err, obj) {
       assert.equal(obj.prop, 'watchThisValue');
     },
-    
+
     'And it has the correct prior value': function(err, obj) {
       assert.equal(obj.oldValue, originalWatchedValue);
     },
-    
+
     'And it has the correct new value': function(err, obj) {
       assert.equal(obj.newValue, newWatchedValue);
     },
