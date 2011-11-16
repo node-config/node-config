@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1320799598.57" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1320799598.57" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1321484363.39" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1321484363.39" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1320799598.57"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1320799598.57"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1321484363.39"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1321484363.39"></script>
 </head>
 
 <body id="node-monitor">
@@ -48,7 +48,7 @@
                         </style>
 <div class="highlight"><pre><span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Unit tests&lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * @module test</span>
 <span class="cm"> */</span>
 
@@ -314,6 +314,8 @@
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">Customers</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbName</span> <span class="o">==</span> <span class="s1">&#39;from_default_yaml&#39;</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbPort</span> <span class="o">==</span> <span class="mi">5984</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm2</span> <span class="o">==</span> <span class="s2">&quot;value2&quot;</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">},</span>
 
@@ -407,7 +409,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.4</span>
+<span class="subtitle">version 0.4.5</span>
 	</div>
 </div>
 <script type="text/javascript">

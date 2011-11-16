@@ -1,12 +1,13 @@
 {
   "name": "config",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
+  "homepage": "http://lorenwest.github.com/node-config/",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
   "dependencies": {
-    "yaml" : "0.1.x",
+    "yaml" : "0.2.x",
     "vows" : "0.5.x"
   },
   "engines": {"node": ">0.4.x"},

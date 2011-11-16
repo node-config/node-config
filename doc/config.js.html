@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1320799598.59" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1320799598.59" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1321484363.42" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1321484363.42" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1320799598.59"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1320799598.59"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1321484363.42"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1321484363.42"></script>
 </head>
 
 <body id="node-monitor">
@@ -68,7 +68,7 @@
 <span class="cm"> * The config module exports a singleton object representing all runtime</span>
 <span class="cm"> * configurations for this application deployment.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * Application configurations are stored in files within the config directory</span>
 <span class="cm"> * of your application.  The default configuration file is loaded, followed</span>
@@ -108,12 +108,12 @@
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Get the configuration object.&lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * The configuration object is a shared singleton object within the applicaiton,</span>
 <span class="cm"> * attained by calling require(&#39;config&#39;).</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * Usually you&#39;ll specify a CONFIG variable at the top of your .js file</span>
 <span class="cm"> * for file/module scope. If you want the root of the object, you can do this:</span>
@@ -131,7 +131,7 @@
 <span class="cm"> * or</span>
 <span class="cm"> * var CUSTOMER_CONFIG = require(&#39;config&#39;).customer;</span>
 <span class="cm"> * &lt;/pre&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;script type=&quot;text/javascript&quot;&gt;</span>
 <span class="cm"> *   document.getElementById(&quot;showProtected&quot;).style.display = &quot;block&quot;;</span>
 <span class="cm"> * &lt;/script&gt;</span>
@@ -149,22 +149,22 @@
 <span class="cm"> * &lt;p&gt;Monitor a configuration value for runtime changes.&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * Configuration values can be changed at runtime by the application or by a </span>
-<span class="cm"> * manual change to the config/runtime.json  file. </span>
-<span class="cm"> * This method lets you specify a function to run when a configuration </span>
-<span class="cm"> * value changes.  </span>
+<span class="cm"> * Configuration values can be changed at runtime by the application or by a</span>
+<span class="cm"> * manual change to the config/runtime.json  file.</span>
+<span class="cm"> * This method lets you specify a function to run when a configuration</span>
+<span class="cm"> * value changes.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
-<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;&lt;i&gt;</span>
 <span class="cm"> * This was built for monitoring changes to configuration values,</span>
-<span class="cm"> * but it can be used for watching changes to any javascript object.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> * but it can be used for watching changes to &lt;u&gt;any&lt;/u&gt; javascript object.</span>
+<span class="cm"> * &lt;/i&gt;&lt;/p&gt;</span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;Example:&lt;/p&gt;</span>
 <span class="cm"> * &lt;pre&gt;</span>
 <span class="cm"> *   var CONFIG = require(&#39;config&#39;).customer;</span>
 <span class="cm"> *   ...</span>
-<span class="cm"> *   </span>
+<span class="cm"> *</span>
 <span class="cm"> *   // Watch for any changes to the customer configuration</span>
 <span class="cm"> *   CONFIG.watch(CONFIG, null, function(object, propertyName, priorValue, newValue) {</span>
 <span class="cm"> *   &amp;nbsp;console.log(&quot;Customer configuration &quot; + propertyName + &quot; changed from &quot; + priorValue + &quot; to &quot; + newValue);</span>
@@ -226,7 +226,7 @@
       <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="p">{</span>
         <span class="nx">enumerable</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
 
-        <span class="nx">get</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span> 
+        <span class="nx">get</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
           <span class="c1">// If more than 1 item is in the values array,</span>
           <span class="c1">// then we&#39;re currently processing watchers.</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
@@ -297,13 +297,13 @@
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * Set default configurations for a node.js module.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This allows module developers to attach their configurations onto the </span>
+<span class="cm"> * This allows module developers to attach their configurations onto the</span>
 <span class="cm"> * default configuration object so they can be configured by the consumers</span>
 <span class="cm"> * of the module.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;Using the function within your module:&lt;/p&gt;</span>
 <span class="cm"> * &lt;pre&gt;</span>
 <span class="cm"> *   var CONFIG = require(&quot;config&quot;);</span>
@@ -315,12 +315,12 @@
 <span class="cm"> *   // Template name may be overridden by application config files</span>
 <span class="cm"> *   console.log(&quot;Template: &quot; + CONFIG.MyModule.templateName);</span>
 <span class="cm"> * &lt;/pre&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * The above example results in a &quot;MyModule&quot; element of the configuration</span>
 <span class="cm"> * object, containing an object with the specified default values.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * @method setModuleDefaults</span>
 <span class="cm"> * @param moduleName {string} - Name of your module.</span>
 <span class="cm"> * @param defaultProperties {object} - The default module configuration.</span>
@@ -359,32 +359,32 @@
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Make a configuration property immutable (assuring it cannot be changed</span>
 <span class="cm"> * from the current value).&lt;/p&gt;</span>
-<span class="cm"> * </span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method was built for disabling runtime changes to configuration values,</span>
-<span class="cm"> * but it can be applied to any javascript object.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * This operation cannot be un-done.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+
+<span class="cm"> * &lt;p&gt;&lt;i&gt;</span>
+<span class="cm"> * This method was built for disabling runtime changes to configuration values,</span>
+<span class="cm"> * but it can be applied to &lt;u&gt;any&lt;/u&gt; javascript object.</span>
+<span class="cm"> * &lt;/i&gt;&lt;/p&gt;</span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;Example:&lt;/p&gt;</span>
 <span class="cm"> * &lt;pre&gt;</span>
 <span class="cm"> *   var CONFIG = require(&#39;config&#39;).customer;</span>
 <span class="cm"> *   ...</span>
-<span class="cm"> *   </span>
+<span class="cm"> *</span>
 <span class="cm"> *   // Obtain a DB connection using CONFIG parameters</span>
 <span class="cm"> *   database.open(CONFIG.db.name, CONFIG.db.port);</span>
 <span class="cm"> *   ...</span>
-<span class="cm"> *   </span>
+<span class="cm"> *</span>
 <span class="cm"> *   // Don&#39;t allow database changes after connect</span>
 <span class="cm"> *   CONFIG.makeImmutable(CONFIG.db, &#39;name&#39;);</span>
 <span class="cm"> *   CONFIG.makeImmutable(CONFIG.db, &#39;port&#39;);</span>
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @method makeImmutable</span>
-<span class="cm"> * @param object {object} - The object to attach an immutable property into.  </span>
+<span class="cm"> * @param object {object} - The object to attach an immutable property into.</span>
 <span class="cm"> * @param property {string} - The name of the property to make immutable.</span>
 <span class="cm"> * @return object {object} - The original object is returned - for chaining.</span>
 <span class="cm"> */</span>
@@ -404,10 +404,10 @@
 <span class="cm"> * Monitor the runtime.json file for configuration changes.</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * Long running processes can call this method at startup to have node-config </span>
+<span class="cm"> * Long running processes can call this method at startup to have node-config</span>
 <span class="cm"> * automatically monitor and apply changes made to the config/runtime.json file.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * This paradigm allows for manual changes to running application servers,</span>
 <span class="cm"> * and for multi-node application servers to keep in sync.</span>
@@ -426,7 +426,7 @@
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">isWatchingForConfigFileChanges</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
   <span class="nx">isWatchingForConfigFileChanges</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-  
+
   <span class="c1">// Attach the file watcher</span>
   <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
 
@@ -479,7 +479,7 @@
     <span class="k">if</span> <span class="p">(</span><span class="nx">isQueuedForPersistence</span><span class="p">)</span>
       <span class="k">return</span><span class="p">;</span>
 
-    <span class="c1">// Defer persisting until the next tick.  This results in a single </span>
+    <span class="c1">// Defer persisting until the next tick.  This results in a single</span>
     <span class="c1">// persist across any number of config changes in a single event cycle.</span>
     <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
     <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
@@ -614,14 +614,14 @@
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_parseFile</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="c1">// Initialize</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> 
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
       <span class="nx">extension</span> <span class="o">=</span> <span class="nx">fullFilename</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">.</span><span class="nx">lastIndexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
       <span class="nx">configObject</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
       <span class="nx">fileContent</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
   <span class="c1">// Return null if the file doesn&#39;t exist.</span>
-  <span class="c1">// Note that all methods here are the Sync versions.  This allows the </span>
-  <span class="c1">// config package to follow the same calling semantics as require(&#39;filename&#39;) </span>
+  <span class="c1">// Note that all methods here are the Sync versions.  This allows the</span>
+  <span class="c1">// config package to follow the same calling semantics as require(&#39;filename&#39;)</span>
   <span class="c1">// which is also synchronous.</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">stat</span> <span class="o">=</span> <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">statSync</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
@@ -639,14 +639,14 @@
   <span class="k">catch</span> <span class="p">(</span><span class="nx">e2</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Config file &#39;</span> <span class="o">+</span> <span class="nx">fullFilename</span> <span class="o">+</span> <span class="s1">&#39; cannot be read&#39;</span><span class="p">);</span>
   <span class="p">}</span>
-  
+
   <span class="c1">// Parse the file based on extension</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// The yaml library doesn&#39;t like strings that have newlines but don&#39;t </span>
+      <span class="c1">// The yaml library doesn&#39;t like strings that have newlines but don&#39;t</span>
       <span class="c1">// end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13</span>
       <span class="nx">fileContent</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
-      <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">);</span>
+      <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripYamlComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// Allow comments in JSON files</span>
@@ -671,7 +671,7 @@
 <span class="cm"> * This allows you to do anything with CONFIG sub-objects as you can do with</span>
 <span class="cm"> * the top-level CONFIG object.  It&#39;s so you can do this:</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * &lt;pre&gt;</span>
 <span class="cm"> *   var CUST_CONFIG = require(&#39;config&#39;).Customer;</span>
 <span class="cm"> *   CUST_CONFIG.watch(...)</span>
@@ -815,7 +815,7 @@
 <span class="cm"> * contents, but can be used to get the diffs between any two Javascript objects.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * It works best when object2 originated by deep copying object1, then </span>
+<span class="cm"> * It works best when object2 originated by deep copying object1, then</span>
 <span class="cm"> * changes were made to object2, and you want an object that would give you</span>
 <span class="cm"> * the changes made to object1 which resulted in object2.</span>
 <span class="cm"> * &lt;/p&gt;</span>
@@ -915,11 +915,27 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
+<span class="cm"> * Strip YAML comments from the string</span>
+<span class="cm"> *</span>
+<span class="cm"> * The 2.0 yaml parser doesn&#39;t allow comment-only or blank lines.  Strip them.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @protected</span>
+<span class="cm"> * @method _stripYamlComments</span>
+<span class="cm"> * @param fileString {string} The string to strip comments from</span>
+<span class="cm"> * @return {string} The string with comments stripped.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_stripYamlComments</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">fileStr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// First replace removes comment-only lines</span>
+  <span class="c1">// Second replace removes blank lines</span>
+  <span class="k">return</span> <span class="nx">fileStr</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^\s*#.*/mg</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^\s*[\n|\r]+/mg</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
 <span class="cm"> * Strip all Javascript type comments from the string.</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * The string is usually a file loaded from the O/S, containing</span>
 <span class="cm"> * newlines and javascript type comments.</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * Thanks to James Padolsey, and all who conributed to this implementation.</span>
 <span class="cm"> * http://james.padolsey.com/javascript/javascript-comment-removal-revisted/</span>
 <span class="cm"> *</span>
@@ -953,7 +969,7 @@
 <span class="cm">    - Remove single-line comments that contain would-be multi-line delimiters</span>
 <span class="cm">        E.g. // Comment /* &lt;--</span>
 <span class="cm">    - Remove multi-line comments that contain would be single-line delimiters</span>
-<span class="cm">        E.g. /* // &lt;-- </span>
+<span class="cm">        E.g. /* // &lt;--</span>
 <span class="cm">   */</span>
     <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
@@ -992,7 +1008,7 @@
 <span class="p">};</span>
 
 <span class="c1">// The module exports a singleton instance of the Config class so the</span>
-<span class="c1">// instance is immediately available on require(), and the prototype methods </span>
+<span class="c1">// instance is immediately available on require(), and the prototype methods</span>
 <span class="c1">// aren&#39;t a part of the object namespace when inspected.</span>
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Config</span><span class="p">();</span>
 </pre></div>
@@ -1034,11 +1050,11 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.4</span>
+<span class="subtitle">version 0.4.5</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
 </script>
 </body>
 </html>

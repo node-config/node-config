@@ -1,6 +1,6 @@
 /**
  * <p>Unit tests</p>
- * 
+ *
  * @module test
  */
 
@@ -266,6 +266,8 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.isObject(config.Customers);
       assert.isTrue(config.Customers.dbName == 'from_default_yaml');
       assert.isTrue(config.Customers.dbPort == 5984);
+      assert.isObject(config.AnotherModule);
+      assert.isTrue(config.AnotherModule.parm2 == "value2");
     }
   },
 

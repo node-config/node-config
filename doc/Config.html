@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1320799598.59" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1320799598.59" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1321484363.42" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1321484363.42" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1320799598.59"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1320799598.59"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1321484363.42"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1321484363.42"></script>
 </head>
 
 <body id="node-monitor">
@@ -262,7 +262,7 @@ This method was designed to be used to create the runtime.json file
 contents, but can be used to get the diffs between any two Javascript objects.
 </p>
 <p>
-It works best when object2 originated by deep copying object1, then 
+It works best when object2 originated by deep copying object1, then
 changes were made to object2, and you want an object that would give you
 the changes made to object1 which resulted in object2.
 </p>
@@ -738,6 +738,58 @@ http://james.padolsey.com/javascript/javascript-comment-removal-revisted/
                                     </div>
                                     <hr />
                                     </div>
+                                    <div class="protected" rel="yui:method" resource="#method__stripYamlComments">
+                                    <h4>
+                                        <a name="method__stripYamlComments">_stripYamlComments</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        string
+                                            <strong property="yui:name">_stripYamlComments</strong>
+                                           (
+                                                
+                                                        
+                                                         fileString
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Strip YAML comments from the string
+The 2.0 yaml parser doesn't allow comment-only or blank lines.  Strip them.
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">fileString</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  The string to strip comments from</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        string
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">The string with comments stripped.</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
                                     <div class="" rel="yui:method" resource="#method_constructor">
                                     <h4>
                                         <a name="method_constructor">constructor</a></h4>
@@ -825,12 +877,12 @@ document.getElementById("showProtected").style.display = "block";
                                             <p>Make a configuration property immutable (assuring it cannot be changed
 from the current value).</p>
 <p>
-This method was built for disabling runtime changes to configuration values,
-but it can be applied to any javascript object.
-</p>
-<p>
 This operation cannot be un-done.
 </p>
+<p><i>
+This method was built for disabling runtime changes to configuration values,
+but it can be applied to <u>any</u> javascript object.
+</i></p>
 <p>Example:</p>
 <pre>
 var CONFIG = require('config').customer;
@@ -906,7 +958,7 @@ CONFIG.makeImmutable(CONFIG.db, 'port');
 Set default configurations for a node.js module.
 </p>
 <p>
-This allows module developers to attach their configurations onto the 
+This allows module developers to attach their configurations onto the
 default configuration object so they can be configured by the consumers
 of the module.
 </p>
@@ -995,15 +1047,15 @@ object, containing an object with the specified default values.
                                         <div class="description" property="yui:description">
                                             <p>Monitor a configuration value for runtime changes.</p>
 <p>
-Configuration values can be changed at runtime by the application or by a 
-manual change to the config/runtime.json  file. 
-This method lets you specify a function to run when a configuration 
-value changes.  
+Configuration values can be changed at runtime by the application or by a
+manual change to the config/runtime.json  file.
+This method lets you specify a function to run when a configuration
+value changes.
 </p>
-<p>
+<p><i>
 This was built for monitoring changes to configuration values,
-but it can be used for watching changes to any javascript object.
-</p>
+but it can be used for watching changes to <u>any</u> javascript object.
+</i></p>
 <p>Example:</p>
 <pre>
 var CONFIG = require('config').customer;
@@ -1081,7 +1133,7 @@ Then all handlers (including this one) will be called again with the newly chang
                                         <div class="description" property="yui:description">
                                             Monitor the runtime.json file for configuration changes.
 <p>
-Long running processes can call this method at startup to have node-config 
+Long running processes can call this method at startup to have node-config
 automatically monitor and apply changes made to the config/runtime.json file.
 </p>
 <p>
@@ -1168,6 +1220,7 @@ the file on change and merging the new values into the CONFIG object.
                                 <li class="protected"><a href="#method__parseFile" title="_parseFile">_parseFile</a></li>
                                 <li class="protected"><a href="#method__persistConfigsOnChange" title="_persistConfigsOnChange">_persistConfigsOnChange</a></li>
                                 <li class="protected"><a href="#method__stripComments" title="_stripComments">_stripComments</a></li>
+                                <li class="protected"><a href="#method__stripYamlComments" title="_stripYamlComments">_stripYamlComments</a></li>
                                 <li class=""><a href="#method_constructor" title="constructor">constructor</a></li>
                                 <li class=""><a href="#method_makeImmutable" title="makeImmutable">makeImmutable</a></li>
                                 <li class=""><a href="#method_setModuleDefaults" title="setModuleDefaults">setModuleDefaults</a></li>
@@ -1184,11 +1237,11 @@ the file on change and merging the new values into the CONFIG object.
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.4</span>
+<span class="subtitle">version 0.4.5</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
 </script>
 </body>
 </html>
