@@ -1,8 +1,6 @@
-var sys = require('sys');
-
 var options = {};
-var console = require('vows/console');
-var spec = require('vows/reporters/spec');
+var console = require('../../vows/console');
+var spec = require('../../vows/reporters/spec');
 var stylize = console.stylize,
     puts = console.puts(options);
 //
@@ -11,22 +9,23 @@ var stylize = console.stylize,
 var lastContext;
 
 this.name = 'watch';
+this.setStream = function (s) {
+    options.stream = s;
+};
 this.reset = function () {
     lastContext = null;
 };
 this.report = function (data) {
     var event = data[1];
 
-    options.stream = process.stdout;
-
     switch (data[0]) {
         case 'vow':
             if (['honored', 'pending'].indexOf(event.status) === -1) {
                 if (lastContext !== event.context) {
                     lastContext = event.context;
-                    puts(spec.contextText(event.context));
+                    puts(console.contextText(event.context));
                 }
-                puts(spec.vowText(event));
+                puts(console.vowText(event));
                 puts('');
             }
             break;

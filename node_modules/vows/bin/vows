@@ -34,14 +34,13 @@ var inspect = require('eyes').inspector({
     styles: { string: 'grey', regexp: 'grey' }
 });
 
-require.paths.unshift(path.join(__dirname, '..', 'lib'));
-
-var vows = require('vows');
-var cutils = require('vows/console');
-var stylize = require('vows/console').stylize;
-var _reporter = require('vows/reporters/dot-matrix'), reporter = {
-    name: _reporter.name,
+var vows = require('../lib/vows');
+var cutils = require('../lib/vows/console');
+var stylize = require('../lib/vows/console').stylize;
+var _reporter = require('../lib/vows/reporters/dot-matrix'), reporter = {
+    name: _reporter.name
 };
+var _coverage;
 
 var help = [
     "usage: vows [FILE, ...] [options]",
@@ -50,12 +49,16 @@ var help = [
     "  -v, --verbose     Enable verbose output",
     "  -w, --watch       Watch mode",
     "  -s, --silent      Don't report",
+    "  -i, --isolate     Run each test in it's own vows process",
     "  -m  PATTERN       Only run tests matching the PATTERN string",
     "  -r  PATTERN       Only run tests matching the PATTERN regexp",
     "  --json            Use JSON reporter",
     "  --spec            Use Spec reporter",
     "  --dot-matrix      Use Dot-Matrix reporter",
     "  --xunit           Use xUnit reporter",
+    "  --cover-plain     Print plain coverage map if detected",
+    "  --cover-html      Write coverage map to \"coverage.html\"",
+    "  --cover-json      Write unified coverage map to \"coverage.json\"",
     //"  --no-color        Don't use terminal colors",
     "  --version         Show version",
     "  -h, --help        You're staring at it"
@@ -64,7 +67,9 @@ var help = [
 var options = {
     reporter: reporter,
     matcher: /.*/,
-    watch: false
+    watch: false,
+    coverage: false,
+    isolate: false
 };
 
 var files = [];
@@ -101,20 +106,32 @@ while (arg = argv.shift()) {
         } else {
             switch (arg) {
                 case 'json':
-                    _reporter = require('vows/reporters/json');
+                    _reporter = require('../lib/vows/reporters/json');
                     break;
                 case 'spec':
-                    _reporter = require('vows/reporters/spec');
+                    _reporter = require('../lib/vows/reporters/spec');
                     break;
                 case 'dot-matrix':
-                    _reporter = require('vows/reporters/dot-matrix');
+                    _reporter = require('../lib/vows/reporters/dot-matrix');
                     break;
                 case 'silent':
                 case 's':
-                    _reporter = require('vows/reporters/silent');
+                    _reporter = require('../lib/vows/reporters/silent');
                     break;
                 case 'xunit':
-                    _reporter = require('vows/reporters/xunit');
+                    _reporter = require('../lib/vows/reporters/xunit');
+                    break;
+                case 'cover-plain':
+                    options.coverage = true;
+                    _coverage = require('../lib/vows/coverage/report-plain');
+                    break;
+                case 'cover-html':
+                    options.coverage = true;
+                    _coverage = require('../lib/vows/coverage/report-html');
+                    break;
+                case 'cover-json':
+                    options.coverage = true;
+                    _coverage = require('../lib/vows/coverage/report-json');
                     break;
                 case 'verbose':
                 case 'v':
@@ -123,6 +140,13 @@ while (arg = argv.shift()) {
                 case 'watch':
                 case 'w':
                     options.watch = true;
+                    break;
+                case 'supress-stdout':
+                    options.supressStdout = true;
+                    break;
+                case 'isolate':
+                case 'i':
+                    options.isolate = true;
                     break;
                 case 'no-color':
                     options.nocolor = true;
@@ -143,8 +167,16 @@ while (arg = argv.shift()) {
     }
 }
 
+if (options.supressStdout) {
+    _reporter.setStream && _reporter.setStream(process.stdout);
+    var devNullStream = fs.createWriteStream('/dev/null');
+    process.__defineGetter__('stdout', function () {
+        return devNullStream;
+    });
+}
+
 if (options.watch) {
-    options.reporter = reporter = require('vows/reporters/watch');
+    options.reporter = reporter = require('../lib/vows/reporters/watch');
 }
 
 msg('bin', 'argv', args);
@@ -185,10 +217,14 @@ if (! options.watch) {
                 _reporter.report(data, filename);
                 break;
             case 'end':
-                (options.verbose || _reporter.name === 'json') && _reporter.report(data);
+                (options.verbose || _reporter.name === 'json') &&
+                _reporter.report(data);
                 break;
             case 'finish':
-                options.verbose ? _reporter.print('\n') : _reporter.print(' ');
+                options.verbose ?
+                    _reporter.print('\n')
+                    :
+                    _reporter.print(' ');
                 break;
         }
     };
@@ -196,7 +232,9 @@ if (! options.watch) {
     reporter.print = _reporter.print;
 
     files = args.map(function (a) {
-        return path.join(process.cwd(), a.replace(fileExt, ''));
+        return (!a.match(/^\//))
+            ? path.join(process.cwd(), a.replace(fileExt, ''))
+            : a.replace(fileExt, '');
     });
 
     runSuites(importSuites(files), function (results) {
@@ -209,6 +247,13 @@ if (! options.watch) {
                 util.print(str.replace(/^\n\n/, '\n'));
             }
         });
+        try {
+            if (options.coverage === true && _$jscoverage !== undefined) {
+                _coverage.report(_$jscoverage);
+            }
+        } catch (err) {
+            // ignore the undefined jscoverage
+        }
         if (process.stdout.write('')) { // Check if stdout is drained
             process.exit(status);
         } else {
@@ -365,10 +410,62 @@ function runSuites(suites, callback) {
 function importSuites(files) {
     msg(options.watcher ? 'watcher' : 'runner', 'loading', files);
 
-    return files.reduce(function (suites, f) {
+    var spawn = require('child_process').spawn;
+
+    function cwdname(f) {
+        return f.replace(process.cwd() + '/', '') + '.js';
+    }
+
+    function wrapSpawn(f) {
+        f = cwdname(f);
+        return function (options, callback) {
+            var args = [process.argv[1], '--json', '--supress-stdout', f],
+                p = spawn(process.argv[0], args),
+                result;
+
+            p.on('exit', function (code) {
+                callback(
+                    !result ?
+                         {errored: 1, total: 1}
+                         :
+                         result
+                );
+            });
+
+            var buffer = [];
+            p.stdout.on('data', function (data) {
+                data = data.toString().split(/\n/g);
+                if (data.length == 1) {
+                    buffer.push(data[0]);
+                } else {
+                    data[0] = buffer.concat(data[0]).join('');
+                    buffer = [data.pop()];
+
+                    data.forEach(function (data) {
+                        if (data) {
+                            data = JSON.parse(data);
+                            if (data && data[0] === 'finish') {
+                                result = data[1];
+                            } else {
+                                reporter.report(data);
+                            }
+                        }
+                    });
+                }
+            });
+
+            p.stderr.pipe(process.stderr);
+        }
+    }
+
+    return files.reduce(options.isolate ? function (suites, f) {
+        return suites.concat({
+            run: wrapSpawn(f)
+        });
+    } : function (suites, f) {
         var obj = require(f);
         return suites.concat(Object.keys(obj).map(function (s) {
-            obj[s]._filename = f.replace(process.cwd() + '/', '') + '.js';
+            obj[s]._filename = cwdname(f);
             return obj[s];
         }));
     }, [])

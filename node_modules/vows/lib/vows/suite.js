@@ -1,15 +1,13 @@
 var events = require('events'),
     path = require('path');
 
-require.paths.unshift(path.join(__dirname, '..'));
-
-var vows = require('vows');
-var Context = require('vows/context').Context;
+var vows = require('../vows');
+var Context = require('../vows/context').Context;
 
 this.Suite = function (subject) {
     this.subject = subject;
     this.matcher = /.*/;
-    this.reporter = require('vows/reporters/dot-matrix');
+    this.reporter = require('./reporters/dot-matrix');
     this.batches = [];
     this.options = { error: true };
     this.reset();

@@ -1,9 +1,13 @@
-var stylize = require('vows/console').stylize;
-var inspect = require('vows/console').inspect;
+var stylize = require('../vows/console').stylize;
+var inspect = require('../vows/console').inspect;
 
 require('assert').AssertionError.prototype.toString = function () {
     var that = this,
+        source;
+
+    if (this.stack) {
         source = this.stack.match(/([a-zA-Z0-9._-]+\.js)(:\d+):\d+/);
+    }
 
     function parse(str) {
         return str.replace(/{actual}/g,   inspect(that.actual)).
@@ -15,7 +19,7 @@ require('assert').AssertionError.prototype.toString = function () {
 
     if (this.message) {
         return stylize(parse(this.message), 'yellow') +
-               stylize(' // ' + source[1] + source[2], 'grey');
+               ((source) ? stylize(' // ' + source[1] + source[2], 'grey') : '');
     } else {
         return stylize([
             this.expected,

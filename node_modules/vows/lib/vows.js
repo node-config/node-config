@@ -15,17 +15,15 @@
 //           }
 //       }).run();
 //
-var sys = require('sys'),
+var util = require('util'),
     path = require('path'),
     events = require('events'),
     vows = exports;
 
-require.paths.unshift(__dirname);
-
 // Options
 vows.options = {
     Emitter: events.EventEmitter,
-    reporter: require('vows/reporters/dot-matrix'),
+    reporter: require('./vows/reporters/dot-matrix'),
     matcher: /.*/,
     error: true // Handle "error" event
 };
@@ -34,12 +32,12 @@ vows.__defineGetter__('reporter', function () {
     return vows.options.reporter;
 });
 
-var stylize = require('vows/console').stylize;
-var console = require('vows/console');
+var stylize = require('./vows/console').stylize;
+var console = require('./vows/console');
 
-vows.inspect = require('vows/console').inspect;
-vows.prepare = require('vows/extras').prepare;
-vows.tryEnd = require('vows/suite').tryEnd;
+vows.inspect = require('./vows/console').inspect;
+vows.prepare = require('./vows/extras').prepare;
+vows.tryEnd  = require('./vows/suite').tryEnd;
 
 //
 // Assertion Macros & Extensions
@@ -50,7 +48,7 @@ require('./assert/macros');
 //
 // Suite constructor
 //
-var Suite = require('vows/suite').Suite;
+var Suite = require('./vows/suite').Suite;
 
 //
 // This function gets added to events.EventEmitter.prototype, by default.
@@ -75,7 +73,7 @@ function addVow(vow) {
 
     }).on("error", function (err) {
         if (vow.callback.length >= 2 || !batch.suite.options.error) {
-            runTest([err], this.ctx);
+            runTest(arguments, this.ctx);
         } else {
             output('errored', { type: 'promise', error: err.stack || err.message || JSON.stringify(err) });
         }
@@ -83,8 +81,6 @@ function addVow(vow) {
     });
 
     function runTest(args, ctx) {
-        var topic, status;
-
         if (vow.callback instanceof String) {
             return output('pending');
         }
@@ -143,7 +139,7 @@ process.on('exit', function () {
                 }
             });
 
-            if (unFired.length > 0) { sys.print('\n') }
+            if (unFired.length > 0) { util.print('\n') }
 
             unFired.forEach(function (title) {
                 s.reporter.report(['error', {
@@ -163,7 +159,7 @@ process.on('exit', function () {
         });
     });
     if (failure) {
-        sys.puts(console.result(results));
+        util.puts(console.result(results));
     }
 });
 
@@ -191,5 +187,6 @@ vows.describe = function (subject) {
 };
 
 
-vows.version = require('fs').readFileSync(path.join(__dirname, '..', 'package.json'))
-                            .toString().match(/"version"\s*:\s*"([\d.]+)"/)[1];
+vows.version = JSON.parse(require('fs')
+                          .readFileSync(path.join(__dirname, '..', 'package.json')))
+                          .version

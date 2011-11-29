@@ -32,12 +32,18 @@ var $ = this.$ = function (str) {
 
 this.puts = function (options) {
     var stylize = exports.stylize;
+    options.stream || (options.stream = process.stdout);
+    options.tail = options.tail || '';
+
     return function (args) {
-        args = Array.prototype.slice.call(arguments).map(function (a) {
-            return a.replace(/`([^`]+)`/g,   function (_, capture) { return stylize(capture, 'italic') })
-                    .replace(/\*([^*]+)\*/g, function (_, capture) { return stylize(capture, 'bold') });
-        });
-        return options.stream.write(args.join('\n') + '\n');
+        args = Array.prototype.slice.call(arguments);
+        if (!options.raw) {
+            args = args.map(function (a) {
+                return a.replace(/`([^`]+)`/g,   function (_, capture) { return stylize(capture, 'italic') })
+                        .replace(/\*([^*]+)\*/g, function (_, capture) { return stylize(capture, 'bold') });
+            });
+        }
+        return options.stream.write(args.join('\n') + options.tail);
     };
 };
 
@@ -73,7 +79,7 @@ this.result = function (event) {
         time = ' (' + event.time.toFixed(3) + 's)';
         time = this.stylize(time, 'grey');
     }
-    buffer.push(header + result + time);
+    buffer.push(header + result + time + '\n');
 
     return buffer;
 };
@@ -90,4 +96,36 @@ this.error = function (obj) {
         string += '    in ' + $(obj.suite._filename).red;
 
     return string;
+};
+
+this.contextText = function (event) {
+    return '  ' + event;
+};
+
+this.vowText = function (event) {
+    var buffer = [];
+
+    buffer.push('   ' + {
+        honored: ' ✓ ',
+        broken:  ' ✗ ',
+        errored: ' ✗ ',
+        pending: ' - '
+    }[event.status] + this.stylize(event.title, ({
+        honored: 'green',
+        broken:  'yellow',
+        errored: 'red',
+        pending: 'cyan'
+    })[event.status]));
+
+    if (event.status === 'broken') {
+        buffer.push('      » ' + event.exception);
+    } else if (event.status === 'errored') {
+        if (event.exception.type === 'promise') {
+            buffer.push('      » ' + this.stylize("An unexpected error was caught: " +
+                           this.stylize(event.exception.error, 'bold'), 'red'));
+        } else {
+            buffer.push('    ' + this.stylize(event.exception, 'red'));
+        }
+    }
+    return buffer.join('\n');
 };

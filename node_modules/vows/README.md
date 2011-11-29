@@ -37,3 +37,10 @@ documentation
 
 Head over to <http://vowsjs.org>
 
+authors
+-------
+
+Alexis Sellier <<alexis@cloudhead.io>>, Charlie Robbins,
+
+*...and many others*
+

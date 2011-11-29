@@ -1,12 +1,8 @@
-var path = require('path');
-
-require.paths.unshift(path.join(__dirname, '..', 'lib'));
-
-var events = require('events'),
+var path   = require('path'),
+    events = require('events'),
     assert = require('assert'),
-    fs     = require('fs');
-
-var vows = require('vows');
+    fs     = require('fs'),
+    vows   = require('../lib/vows');
 
 var api = vows.prepare({
     get: function (id, callback) {
@@ -116,7 +112,7 @@ vows.describe("Vows").addBatch({
                             return this.context.topics.slice(0);
                         },
                         "should pass the topics down": function (topics) {
-                            assert.length(topics, 2);
+                            assert.lengthOf(topics, 2);
                             assert.equal(topics[0], 101);
                             assert.equal(topics[1], 45);
                         }
@@ -353,6 +349,11 @@ vows.describe("Vows with teardowns").addBatch({
         },
         "And a final vow": function (topic) {
             assert.isTrue(topic.flag);
+        },
+        'subcontext': {
+          'nested': function (_, topic) {
+            assert.isTrue(topic.flag);
+          }
         },
         teardown: function (topic) {
             topic.flag = false;

@@ -13,7 +13,7 @@ this.prepare = function (obj, targets) {
                     args.push(function (err /* [, data] */) {
                         var args = Array.prototype.slice.call(arguments, 1);
 
-                        if (err) { ee.emit('error', err) }
+                        if (err) { ee.emit.apply(ee, ['error', err].concat(args)) }
                         else     { ee.emit.apply(ee, ['success'].concat(args)) }
                     });
                     fun.apply(obj, args);

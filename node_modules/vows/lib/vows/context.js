@@ -28,7 +28,7 @@ this.Context = function (vow, ctx, env) {
                     if (typeof(e) === 'boolean' && args.length === 0) {
                         that.emitter.emit.call(that.emitter, 'success', e);
                     } else {
-                        if (e) { that.emitter.emit.call(that.emitter, 'error', e) }
+                        if (e) { that.emitter.emit.apply(that.emitter, ['error', e].concat(args)) }
                         else   { that.emitter.emit.apply(that.emitter, ['success'].concat(args)) }
                     }
                 };
