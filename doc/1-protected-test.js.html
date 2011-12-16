@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1322585627.86" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1322585627.86" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324028682.79" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324028682.79" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1322585627.86"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1322585627.86"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1324028682.79"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1324028682.79"></script>
 </head>
 
 <body id="node-monitor">
@@ -358,12 +358,18 @@
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">item1</span> <span class="o">===</span> <span class="mi">23</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">subSubObject</span><span class="p">.</span><span class="nx">item2</span> <span class="o">===</span> <span class="s2">&quot;hello&quot;</span><span class="p">);</span>
     <span class="p">},</span>
-    <span class="s1">&#39;The watch method is attached to the object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">watch</span><span class="p">);</span>
+    <span class="s1">&#39;The _cloneDeep method is attached to the object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">27</span><span class="p">}.</span><span class="nx">a</span> <span class="o">==</span> <span class="nx">config</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">27</span><span class="p">}).</span><span class="nx">a</span><span class="p">);</span>
     <span class="p">},</span>
-    <span class="s1">&#39;The watch method is attached to the sub-objects&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">watch</span><span class="p">);</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">subSubObject</span><span class="p">.</span><span class="nx">__proto__</span><span class="p">.</span><span class="nx">watch</span><span class="p">);</span>
+    <span class="s1">&#39;The _cloneDeep method is also attached to sub-objects&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">27</span><span class="p">}.</span><span class="nx">a</span> <span class="o">==</span> <span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">27</span><span class="p">}).</span><span class="nx">a</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">27</span><span class="p">}.</span><span class="nx">a</span> <span class="o">==</span> <span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">subSubObject</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">({</span><span class="nx">a</span><span class="o">:</span><span class="mi">27</span><span class="p">}).</span><span class="nx">a</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Prototype methods are not exposed in the object&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// This test is here because altering object.__proto__ places the method</span>
+      <span class="c1">// directly onto the object. That caused problems when iterating over the</span>
+      <span class="c1">// object.  This implementation does the same thing, but hides them.</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;{&quot;subObject&quot;:{&quot;item1&quot;:23,&quot;subSubObject&quot;:{&quot;item2&quot;:&quot;hello&quot;}}}&#39;</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
@@ -409,7 +415,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.6</span>
+<span class="subtitle">version 0.4.7</span>
 	</div>
 </div>
 <script type="text/javascript">

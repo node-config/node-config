@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1322585627.86" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1322585627.86" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324028682.79" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324028682.79" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1322585627.86"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1322585627.86"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1324028682.79"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1324028682.79"></script>
 </head>
 
 <body id="node-monitor">
@@ -102,7 +102,38 @@
 
   <span class="p">},</span>
 
-  <span class="s1">&#39;Assuring a configuration can be made immutable&#39;</span><span class="o">:</span> <span class="p">{</span>
+ <span class="s1">&#39;Assuring a configuration property can be hidden&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">object</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">item1</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+        <span class="nx">subObject</span><span class="o">:</span> <span class="p">{</span>
+      	  <span class="nx">item2</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+      <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The makeHidden() method is available&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">makeHidden</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The test object (before hiding) is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;{&quot;item1&quot;:23,&quot;subObject&quot;:{&quot;item2&quot;:&quot;hello&quot;}}&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The test object (after hiding) is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">makeHidden</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="s1">&#39;item1&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;{&quot;subObject&quot;:{&quot;item2&quot;:&quot;hello&quot;}}&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;The hidden property is readable, and has not changed&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;{&quot;subObject&quot;:{&quot;item2&quot;:&quot;hello&quot;}}&#39;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">object</span><span class="p">.</span><span class="nx">item1</span> <span class="o">==</span> <span class="mi">23</span><span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="p">},</span>
+
+  <span class="s1">&#39;Assuring a configuration property can be made immutable&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
       <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">,</span> <span class="s1">&#39;parm1&#39;</span><span class="p">);</span>
@@ -259,7 +290,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.6</span>
+<span class="subtitle">version 0.4.7</span>
 	</div>
 </div>
 <script type="text/javascript">

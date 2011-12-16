@@ -1,3 +1,11 @@
+0.4.7 / 2011-12-16
+==================
+
+  * Created the makeHidden method to hide a property of an object
+  * Added a value argument to makeImmutable for creating new properties
+  * Fixed setModuleDefaults to hide injected prototype methods
+  * Added documentation and unit tests
+
 0.4.6 / 2011-11-29
 ==================
 

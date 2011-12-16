@@ -310,12 +310,18 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.isTrue(config.subObject.item1 === 23);
       assert.isTrue(config.subObject.subSubObject.item2 === "hello");
     },
-    'The watch method is attached to the object': function(config) {
-      assert.isFunction(config.__proto__.watch);
+    'The _cloneDeep method is attached to the object': function(config) {
+      assert.isTrue({a:27}.a == config._cloneDeep({a:27}).a);
     },
-    'The watch method is attached to the sub-objects': function(config) {
-      assert.isFunction(config.subObject.__proto__.watch);
-      assert.isFunction(config.subObject.subSubObject.__proto__.watch);
+    'The _cloneDeep method is also attached to sub-objects': function(config) {
+      assert.isTrue({a:27}.a == config.subObject._cloneDeep({a:27}).a);
+      assert.isTrue({a:27}.a == config.subObject.subSubObject._cloneDeep({a:27}).a);
+    },
+    'Prototype methods are not exposed in the object': function(config) {
+      // This test is here because altering object.__proto__ places the method
+      // directly onto the object. That caused problems when iterating over the
+      // object.  This implementation does the same thing, but hides them.
+      assert.isTrue(JSON.stringify(config) == '{"subObject":{"item1":23,"subSubObject":{"item2":"hello"}}}');
     }
   }
 

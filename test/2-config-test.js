@@ -54,7 +54,38 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
   },
 
-  'Assuring a configuration can be made immutable': {
+ 'Assuring a configuration property can be hidden': {
+    topic: function() {
+      var object = {
+        item1: 23,
+        subObject: {
+      	  item2: "hello"
+        }
+      };
+      return object;
+    },
+
+    'The makeHidden() method is available': function() {
+      assert.isFunction(CONFIG.makeHidden);
+    },
+
+    'The test object (before hiding) is correct': function(object) {
+      assert.isTrue(JSON.stringify(object) == '{"item1":23,"subObject":{"item2":"hello"}}');
+    },
+
+    'The test object (after hiding) is correct': function(object) {
+      CONFIG.makeHidden(object, 'item1');
+      assert.isTrue(JSON.stringify(object) == '{"subObject":{"item2":"hello"}}');
+    },
+
+    'The hidden property is readable, and has not changed': function(object) {
+      assert.isTrue(JSON.stringify(object) == '{"subObject":{"item2":"hello"}}');
+      assert.isTrue(object.item1 == 23);
+    }
+
+  },
+
+  'Assuring a configuration property can be made immutable': {
     topic: function() {
 
       CONFIG.makeImmutable(CONFIG.TestModule, 'parm1');

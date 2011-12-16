@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1322585627.88" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1322585627.88" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324028682.82" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324028682.82" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1322585627.88"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1322585627.88"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1324028682.82"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1324028682.82"></script>
 </head>
 
 <body id="node-monitor">
@@ -47,9 +47,10 @@
                             #doc3 .classopts { display:none; }
                         </style>
 <div class="highlight"><pre><span class="c1">// Dependencies</span>
-<span class="kd">var</span> <span class="nx">File</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">Sys</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;sys&#39;</span><span class="p">),</span>
+    <span class="nx">File</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">),</span>
+    <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">),</span>
+    <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="c1">// Static members</span>
 <span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
@@ -184,8 +185,8 @@
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watch</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">depth</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="c1">// Initialize</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">object</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">allProperties</span> <span class="o">=</span> <span class="nx">property</span> <span class="o">?</span> <span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">:</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">o</span> <span class="o">=</span> <span class="nx">object</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">allProperties</span> <span class="o">=</span> <span class="nx">property</span> <span class="o">?</span> <span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">:</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">o</span><span class="p">);</span>
 
   <span class="c1">// Depth detection</span>
   <span class="nx">depth</span> <span class="o">=</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">:</span> <span class="nx">depth</span><span class="p">);</span>
@@ -194,77 +195,69 @@
   <span class="p">}</span>
 
   <span class="c1">// Create hidden properties on the object</span>
-  <span class="kd">function</span> <span class="nx">makeHiddenProperty</span><span class="p">(</span><span class="nx">hiddenProp</span><span class="p">,</span> <span class="nx">initialValue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">hiddenProp</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">value</span><span class="o">:</span> <span class="nx">initialValue</span><span class="p">,</span>
-      <span class="nx">writable</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nx">enumerable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="nx">configurable</span> <span class="o">:</span> <span class="kc">false</span>
-    <span class="p">});</span>
-  <span class="p">}</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">)</span>
-    <span class="nx">makeHiddenProperty</span><span class="p">(</span><span class="s1">&#39;__watchers&#39;</span><span class="p">,</span> <span class="p">{});</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">)</span>
-    <span class="nx">makeHiddenProperty</span><span class="p">(</span><span class="s1">&#39;__propertyValues&#39;</span><span class="p">,</span> <span class="p">{});</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">o</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">)</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">makeHidden</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="s1">&#39;__watchers&#39;</span><span class="p">,</span> <span class="p">{});</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">)</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">makeHidden</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="s1">&#39;__propertyValues&#39;</span><span class="p">,</span> <span class="p">{});</span>
 
   <span class="c1">// Attach watchers to all requested properties</span>
   <span class="nx">allProperties</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">prop</span><span class="p">){</span>
 
     <span class="c1">// Setup the property for watching (first time only)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
 
       <span class="c1">// Don&#39;t error re-defining the property if immutable</span>
-      <span class="kd">var</span> <span class="nx">descriptor</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">getOwnPropertyDescriptor</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span><span class="nx">prop</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">descriptor</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">getOwnPropertyDescriptor</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="nx">prop</span><span class="p">);</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">descriptor</span> <span class="o">&amp;&amp;</span> <span class="nx">descriptor</span><span class="p">.</span><span class="nx">writable</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span>
         <span class="k">return</span><span class="p">;</span>
 
       <span class="c1">// Copy the value to the hidden field, and add the property to watchers</span>
-      <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">t</span><span class="p">[</span><span class="nx">prop</span><span class="p">]];</span>
-      <span class="nx">t</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">]];</span>
+      <span class="nx">o</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
 
       <span class="c1">// Attach the property watcher</span>
-      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="p">{</span>
         <span class="nx">enumerable</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
 
         <span class="nx">get</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
           <span class="c1">// If more than 1 item is in the values array,</span>
           <span class="c1">// then we&#39;re currently processing watchers.</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
             <span class="c1">// Current value</span>
-            <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+            <span class="k">return</span> <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
           <span class="k">else</span>
             <span class="c1">// [0] is prior value, [1] is new value being processed</span>
-            <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+            <span class="k">return</span> <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
         <span class="p">},</span>
 
         <span class="nx">set</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newValue</span><span class="p">)</span> <span class="p">{</span>
 
           <span class="c1">// Return early if no change</span>
-          <span class="kd">var</span> <span class="nx">origValue</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">prop</span><span class="p">];</span>
+          <span class="kd">var</span> <span class="nx">origValue</span> <span class="o">=</span> <span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">];</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">origValue</span> <span class="o">===</span> <span class="nx">newValue</span><span class="p">)</span>
             <span class="k">return</span><span class="p">;</span>
 
           <span class="c1">// Remember the new value, and return if we&#39;re in another setter</span>
-          <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">newValue</span><span class="p">);</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
+          <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">newValue</span><span class="p">);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
             <span class="k">return</span><span class="p">;</span>
 
           <span class="c1">// Call all watchers for each change requested</span>
           <span class="kd">var</span> <span class="nx">numIterations</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-          <span class="k">while</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">while</span> <span class="p">(</span><span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
 
             <span class="c1">// Detect recursion</span>
             <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="nx">numIterations</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">)</span> <span class="p">{</span>
-              <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">origValue</span><span class="p">];</span>
+              <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nx">origValue</span><span class="p">];</span>
               <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Recursion detected while setting [&#39;</span> <span class="o">+</span> <span class="nx">prop</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span><span class="p">);</span>
             <span class="p">}</span>
 
             <span class="c1">// Call each watcher for the current values</span>
-            <span class="kd">var</span> <span class="nx">oldValue</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
-            <span class="nx">newValue</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
-            <span class="nx">t</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">watcher</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">oldValue</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+            <span class="nx">newValue</span> <span class="o">=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span>
+            <span class="nx">o</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">watcher</span><span class="p">)</span> <span class="p">{</span>
               <span class="k">try</span> <span class="p">{</span>
-                <span class="nx">watcher</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="nx">oldValue</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">);</span>
+                <span class="nx">watcher</span><span class="p">(</span><span class="nx">o</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="nx">oldValue</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">);</span>
               <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
                 <span class="c1">// Log an error and continue with subsequent watchers</span>
                 <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Exception in watcher for &quot;</span> <span class="o">+</span> <span class="nx">prop</span><span class="p">);</span>
@@ -272,7 +265,7 @@
             <span class="p">});</span>
 
             <span class="c1">// Done processing this value</span>
-            <span class="nx">t</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+            <span class="nx">o</span><span class="p">.</span><span class="nx">__propertyValues</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
           <span class="p">}</span>
         <span class="p">}</span>
       <span class="p">});</span>
@@ -280,17 +273,17 @@
     <span class="p">}</span> <span class="c1">// Done setting up the property for watching (first time)</span>
 
     <span class="c1">// Add the watcher to the property</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span>
+    <span class="nx">o</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span>
 
     <span class="c1">// Recurs if this is an object...</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">t</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">t</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
 
   <span class="p">});</span> <span class="c1">// Done processing each property</span>
 
   <span class="c1">// Return the original object - for chaining</span>
-  <span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">o</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -357,14 +350,63 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Make a configuration property hidden so it doesn&#39;t appear when enumerating</span>
+<span class="cm"> * elements of the object.&lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * The property still exists and can be read from and written to, but it won&#39;t</span>
+<span class="cm"> * show up in for ... in loops, Object.keys(), or JSON.stringify() type methods.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * If the property already exists, it will be made hidden.  Otherwise it will</span>
+<span class="cm"> * be created as a hidden property with the specified value.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;&lt;i&gt;</span>
+<span class="cm"> * This method was built for hiding configuration values, but it can be applied</span>
+<span class="cm"> * to &lt;u&gt;any&lt;/u&gt; javascript object.</span>
+<span class="cm"> * &lt;/i&gt;&lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;Example:&lt;/p&gt;</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> *   var CONFIG = require(&#39;config&#39;);</span>
+<span class="cm"> *   ...</span>
+<span class="cm"> *</span>
+<span class="cm"> *   // Hide the Amazon S3 credentials</span>
+<span class="cm"> *   CONFIG.makeHidden(CONFIG.amazonS3, &#39;access_id&#39;);</span>
+<span class="cm"> *   CONFIG.makeHidden(CONFIG.amazonS3, &#39;secret_key&#39;);</span>
+<span class="cm"> * &lt;/pre&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @method makeHidden</span>
+<span class="cm"> * @param object {object} - The object to make a hidden property into.</span>
+<span class="cm"> * @param property {string} - The name of the property to make hidden.</span>
+<span class="cm"> * @param value {mixed} - (optional) Set the property value to this (otherwise leave alone)</span>
+<span class="cm"> * @return object {object} - The original object is returned - for chaining.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">makeHidden</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Use the existing value if the new value isn&#39;t specified</span>
+  <span class="nx">value</span> <span class="o">=</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="nx">object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">:</span> <span class="nx">value</span><span class="p">;</span>
+
+  <span class="c1">// Create the hidden property</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">value</span><span class="o">:</span> <span class="nx">value</span><span class="p">,</span>
+    <span class="nx">enumerable</span> <span class="o">:</span> <span class="kc">false</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Make a configuration property immutable (assuring it cannot be changed</span>
 <span class="cm"> * from the current value).&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * This operation cannot be un-done.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-
 <span class="cm"> * &lt;p&gt;&lt;i&gt;</span>
+<span class="cm"> *</span>
 <span class="cm"> * This method was built for disabling runtime changes to configuration values,</span>
 <span class="cm"> * but it can be applied to &lt;u&gt;any&lt;/u&gt; javascript object.</span>
 <span class="cm"> * &lt;/i&gt;&lt;/p&gt;</span>
@@ -386,13 +428,17 @@
 <span class="cm"> * @method makeImmutable</span>
 <span class="cm"> * @param object {object} - The object to attach an immutable property into.</span>
 <span class="cm"> * @param property {string} - The name of the property to make immutable.</span>
+<span class="cm"> * @param value {mixed} - (optional) Set the property value to this (otherwise leave alone)</span>
 <span class="cm"> * @return object {object} - The original object is returned - for chaining.</span>
 <span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">makeImmutable</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">makeImmutable</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// Use the existing value if a new value isn&#39;t specified</span>
+  <span class="nx">value</span> <span class="o">=</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="nx">object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">:</span> <span class="nx">value</span><span class="p">;</span>
 
   <span class="c1">// Disable writing, and make sure the property cannot be re-configured.</span>
   <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">value</span> <span class="o">:</span> <span class="nx">object</span><span class="p">[</span><span class="nx">property</span><span class="p">],</span>
+    <span class="nx">value</span> <span class="o">:</span> <span class="nx">value</span><span class="p">,</span>
     <span class="nx">writable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">configurable</span><span class="o">:</span> <span class="kc">false</span>
   <span class="p">});</span>
@@ -689,11 +735,14 @@
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
   <span class="nx">depth</span> <span class="o">=</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">:</span> <span class="nx">depth</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">depth</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">toObject</span><span class="p">;</span>
   <span class="p">}</span>
 
-  <span class="c1">// Attach the prototype to this object</span>
-  <span class="nx">toObject</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+  <span class="c1">// Adding Config.prototype methods directly to toObject as hidden properties</span>
+  <span class="c1">// because adding to toObject.__proto__ exposes the function in toObject</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">fnName</span> <span class="k">in</span> <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">makeHidden</span><span class="p">(</span><span class="nx">toObject</span><span class="p">,</span> <span class="nx">fnName</span><span class="p">,</span> <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">fnName</span><span class="p">]);</span>
+  <span class="p">}</span>
 
   <span class="c1">// Cycle through each element</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">toObject</span><span class="p">)</span> <span class="p">{</span>
@@ -1050,11 +1099,11 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.6</span>
+<span class="subtitle">version 0.4.7</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
 </script>
 </body>
 </html>
