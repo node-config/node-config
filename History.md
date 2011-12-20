@@ -1,3 +1,9 @@
+0.4.8 / 2011-12-20
+==================
+
+  * Fixed a bug where changes to module default configs weren't persisted
+  * Added a test to validate the bugfix
+
 0.4.7 / 2011-12-16
 ==================
 

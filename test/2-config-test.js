@@ -111,7 +111,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
       // Set some parameters for the test module
       return CONFIG.setModuleDefaults("TestModule", {
-        parm1: 1000, parm2: 2000
+        parm1: 1000, parm2: 2000, parm3: 3000
       });
     },
 
@@ -131,6 +131,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Defaults remain intact unless overridden': function(moduleConfig) {
       assert.equal(moduleConfig.parm2, 2000);
     }
+
   },
 
   'Internal Change Notification Tests': {
@@ -139,11 +140,16 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       // Attach this topic as a watcher
       var cb = this.callback;
       CONFIG.watch(CONFIG, null, function(obj, prop, oldValue, newValue){
+	  // Don't process the submodule test - that's for later
+	  if (prop == 'parm3') return;
     	  cb(null, {obj:obj, prop:prop, oldValue:oldValue, newValue:newValue});
       });
 
       // Write the new watched value out to the runtime.json file
       CONFIG.watchThisValue = newWatchedValue;
+
+      // Test that submodule configurations are persisted
+      CONFIG.TestModule.parm3 = 1234;
     },
 
     'The watch() method is available': function() {
@@ -197,6 +203,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
     'Changed configuration values were persisted': function(err, runtimeObj) {
       assert.equal(runtimeObj.watchThisValue, CONFIG.watchThisValue);
+    },
+    'Module default values are persisted': function(err, runtimeObj) {
+      assert.equal(runtimeObj.TestModule.parm3, 1234);
     }
   }
 
