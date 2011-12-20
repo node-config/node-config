@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324028682.79" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324028682.79" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324374396.71" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324374396.71" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1324028682.79"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1324028682.79"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1324374396.71"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1324374396.71"></script>
 </head>
 
 <body id="node-monitor">
@@ -159,7 +159,7 @@
 
       <span class="c1">// Set some parameters for the test module</span>
       <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">setModuleDefaults</span><span class="p">(</span><span class="s2">&quot;TestModule&quot;</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">parm1</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="nx">parm2</span><span class="o">:</span> <span class="mi">2000</span>
+        <span class="nx">parm1</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span> <span class="nx">parm2</span><span class="o">:</span> <span class="mi">2000</span><span class="p">,</span> <span class="nx">parm3</span><span class="o">:</span> <span class="mi">3000</span>
       <span class="p">});</span>
     <span class="p">},</span>
 
@@ -179,6 +179,7 @@
     <span class="s1">&#39;Defaults remain intact unless overridden&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">.</span><span class="nx">parm2</span><span class="p">,</span> <span class="mi">2000</span><span class="p">);</span>
     <span class="p">}</span>
+
   <span class="p">},</span>
 
   <span class="s1">&#39;Internal Change Notification Tests&#39;</span><span class="o">:</span> <span class="p">{</span>
@@ -187,11 +188,16 @@
       <span class="c1">// Attach this topic as a watcher</span>
       <span class="kd">var</span> <span class="nx">cb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">callback</span><span class="p">;</span>
       <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">prop</span><span class="p">,</span> <span class="nx">oldValue</span><span class="p">,</span> <span class="nx">newValue</span><span class="p">){</span>
+	  <span class="c1">// Don&#39;t process the submodule test - that&#39;s for later</span>
+	  <span class="k">if</span> <span class="p">(</span><span class="nx">prop</span> <span class="o">==</span> <span class="s1">&#39;parm3&#39;</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
     	  <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span><span class="nx">obj</span><span class="o">:</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">prop</span><span class="o">:</span><span class="nx">prop</span><span class="p">,</span> <span class="nx">oldValue</span><span class="o">:</span><span class="nx">oldValue</span><span class="p">,</span> <span class="nx">newValue</span><span class="o">:</span><span class="nx">newValue</span><span class="p">});</span>
       <span class="p">});</span>
 
       <span class="c1">// Write the new watched value out to the runtime.json file</span>
       <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span> <span class="o">=</span> <span class="nx">newWatchedValue</span><span class="p">;</span>
+
+      <span class="c1">// Test that submodule configurations are persisted</span>
+      <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm3</span> <span class="o">=</span> <span class="mi">1234</span><span class="p">;</span>
     <span class="p">},</span>
 
     <span class="s1">&#39;The watch() method is available&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -245,6 +251,9 @@
     <span class="p">},</span>
     <span class="s1">&#39;Changed configuration values were persisted&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">runtimeObj</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">runtimeObj</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">,</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Module default values are persisted&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">runtimeObj</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">runtimeObj</span><span class="p">.</span><span class="nx">TestModule</span><span class="p">.</span><span class="nx">parm3</span><span class="p">,</span> <span class="mi">1234</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
@@ -290,7 +299,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.7</span>
+<span class="subtitle">version 0.4.8</span>
 	</div>
 </div>
 <script type="text/javascript">

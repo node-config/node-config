@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324028682.82" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324028682.82" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324374396.73" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324374396.73" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1324028682.82"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1324028682.82"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1324374396.73"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1324374396.73"></script>
 </head>
 
 <body id="node-monitor">
@@ -332,10 +332,10 @@
   <span class="c1">// Extend the module config object with values from originalConfig</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">])</span> <span class="p">{</span>
     <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">,</span> <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]);</span>
-
-    <span class="c1">// Save the mixed module config as the original</span>
-    <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">moduleConfig</span><span class="p">;</span>
   <span class="p">}</span>
+
+  <span class="c1">// Save the mixed module config as the original</span>
+  <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">);</span>
 
   <span class="c1">// Extend the module config object with values from runtimeJson</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJson</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">])</span> <span class="p">{</span>
@@ -1099,7 +1099,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.7</span>
+<span class="subtitle">version 0.4.8</span>
 	</div>
 </div>
 <script type="text/javascript">
