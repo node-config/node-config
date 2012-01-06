@@ -8,7 +8,8 @@
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
   "dependencies": {
     "yaml" : "0.2.x",
-    "vows" : "0.5.x"
+    "vows" : "0.5.x",
+    "coffee-script" : ">=1.2.0"
   },
   "engines": {"node": ">0.4.x"},
   "scripts": {
