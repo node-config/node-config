@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324374396.73" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324374396.73" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1325918557.52" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1325918557.52" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1324374396.73"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1324374396.73"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1325918557.52"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1325918557.52"></script>
 </head>
 
 <body id="node-monitor">
@@ -50,6 +50,7 @@
 <span class="kd">var</span> <span class="nx">Sys</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;sys&#39;</span><span class="p">),</span>
     <span class="nx">File</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">),</span>
     <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">),</span>
+    <span class="nx">Coffee</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;coffee-script&#39;</span><span class="p">),</span>
     <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="c1">// Static members</span>
@@ -562,7 +563,8 @@
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * EXT can be yaml, json, or js signifying the file type.  yaml is in YAML format,</span>
+<span class="cm"> * EXT can be yaml, coffee, json, or js signifying the file type.</span>
+<span class="cm"> * yaml is in YAML format, coffee is a coffee-script,</span>
 <span class="cm"> * json is in strict JSON format, and js is a javascript executable file that is</span>
 <span class="cm"> * require()&#39;d with module.exports being the config object.</span>
 <span class="cm"> * &lt;/p&gt;</span>
@@ -610,7 +612,7 @@
 
   <span class="c1">// Read each file in turn</span>
   <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">deployment</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">];</span>
-  <span class="kd">var</span> <span class="nx">extNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;js&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">];</span>
+  <span class="kd">var</span> <span class="nx">extNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;js&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">];</span>
   <span class="nx">baseNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">baseName</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">extNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">extName</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// Try merging the config object into this object</span>
@@ -646,6 +648,7 @@
 <span class="cm"> *</span>
 <span class="cm"> * .js = File to run that has a module.exports containing the config object</span>
 <span class="cm"> * .json = File is parsed using JSON.parse()</span>
+<span class="cm"> * .coffee = File to run that has a module.exports with coffee-script containing the config object</span>
 <span class="cm"> * .yaml = Parsed with a YAML parser</span>
 <span class="cm"> *</span>
 <span class="cm"> * If the file doesn&#39;t exist, a null will be returned.</span>
@@ -700,6 +703,10 @@
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;js&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// Use the built-in parser for .js files</span>
+      <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;coffee&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Use the built-in parser for .coffee files with coffee-script</span>
       <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>

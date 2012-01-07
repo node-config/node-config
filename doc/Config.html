@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1324374396.73" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1324374396.73" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1325918557.52" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1325918557.52" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1324374396.73"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1324374396.73"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1325918557.52"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1325918557.52"></script>
 </head>
 
 <body id="node-monitor">
@@ -533,7 +533,8 @@ default.EXT
 runtime.json
 </pre>
 <p>
-EXT can be yaml, json, or js signifying the file type.  yaml is in YAML format,
+EXT can be yaml, coffee, json, or js signifying the file type.
+yaml is in YAML format, coffee is a coffee-script,
 json is in strict JSON format, and js is a javascript executable file that is
 require()'d with module.exports being the config object.
 </p>
@@ -596,6 +597,7 @@ parse and return it as a JavaScript object.
 The file extension determines the parser to use.
 .js = File to run that has a module.exports containing the config object
 .json = File is parsed using JSON.parse()
+.coffee = File to run that has a module.exports with coffee-script containing the config object
 .yaml = Parsed with a YAML parser
 If the file doesn't exist, a null will be returned.
 If the file can't be parsed, an exception will be thrown.

@@ -1,3 +1,12 @@
+0.4.9 / 2012-01-06
+==================
+
+  * Added coffee-script file type support with extension .coffee
+  * Added an example coffee-script configuration file
+  * Added coffee-script module dependency
+  * Added a test for coffee-script configuration files
+  * Documented coffee-script support, regenerated documentation
+
 0.4.8 / 2011-12-20
 ==================
 
