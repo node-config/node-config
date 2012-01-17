@@ -1,0 +1,9 @@
+# Example of the baseline configuration in YAML
+
+Customers:
+  dbPort: 5984
+  dbName: from_default_yaml
+
+AnotherModule:
+  parm2: value2
+

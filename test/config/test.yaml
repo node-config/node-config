@@ -1,0 +1,4 @@
+# This is loaded if $NODE_ENV=test
+
+Customers:
+  dbPort: 5999

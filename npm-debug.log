@@ -1,0 +1,63 @@
+info it worked if it ends with ok
+verbose cli [ 'node',
+verbose cli   '/Users/loren/Library/local/node/bin/npm',
+verbose cli   'test' ]
+info using npm@1.0.106
+info using node@v0.4.8
+verbose /Users/loren/Library/local/node/bin/node node symlink
+verbose config file /Users/loren/.npmrc
+verbose config file /Users/loren/Library/local/node/etc/npmrc
+verbose config file /Users/loren/Library/local/node-v0.4.8/lib/node_modules/npm/npmrc
+silly testEngine { name: 'config',
+silly testEngine   version: '0.4.10',
+silly testEngine   main: './lib/config.js',
+silly testEngine   description: 'Configuration control for production node deployments',
+silly testEngine   author: 
+silly testEngine    { name: 'Loren West',
+silly testEngine      email: 'open_source@lorenwest.com' },
+silly testEngine   homepage: 'http://lorenwest.github.com/node-config/',
+silly testEngine   directories: { lib: './lib', config: './config', test: './test' },
+silly testEngine   dependencies: 
+silly testEngine    { yaml: '0.2.x',
+silly testEngine      vows: '0.5.x',
+silly testEngine      'coffee-script': '>=1.2.0' },
+silly testEngine   engines: { node: '>0.4.x' },
+silly testEngine   scripts: { test: './node_modules/vows/bin/vows test/*.js --spec' },
+silly testEngine   _npmUser: { name: 'lorenwest', email: 'npm@lorenwest.com' },
+silly testEngine   _id: 'config@0.4.10',
+silly testEngine   devDependencies: {},
+silly testEngine   _engineSupported: true,
+silly testEngine   _npmVersion: '1.0.106',
+silly testEngine   _nodeVersion: 'v0.4.8',
+silly testEngine   _defaultsLoaded: true }
+verbose caching /Users/loren/Dropbox/open_source/node-config/package.json
+verbose loadDefaults config@0.4.10
+verbose run-script [ 'pretest', 'test', 'posttest' ]
+info pretest config@0.4.10
+info test config@0.4.10
+verbose unsafe-perm in lifecycle true
+silly exec sh "-c" "./node_modules/vows/bin/vows test/*.js --spec"
+silly spawning [ 'sh',
+silly spawning   [ '-c',
+silly spawning     './node_modules/vows/bin/vows test/*.js --spec' ],
+silly spawning   '/Users/loren/Dropbox/open_source/node-config' ]
+info config@0.4.10 Failed to exec test script
+ERR! config@0.4.10 test: `./node_modules/vows/bin/vows test/*.js --spec`
+ERR! `sh "-c" "./node_modules/vows/bin/vows test/*.js --spec"` failed with 1
+ERR! 
+ERR! Failed at the config@0.4.10 test script.
+ERR! This is most likely a problem with the config package,
+ERR! not with npm itself.
+ERR! Tell the author that this fails on your system:
+ERR!     ./node_modules/vows/bin/vows test/*.js --spec
+ERR! You can get their info via:
+ERR!     npm owner ls config
+ERR! There is likely additional logging output above.
+ERR! 
+ERR! System Darwin 11.2.0
+ERR! command "node" "/Users/loren/Library/local/node/bin/npm" "test"
+ERR! cwd /Users/loren/Dropbox/open_source/node-config
+ERR! node -v v0.4.8
+ERR! npm -v 1.0.106
+ERR! code ELIFECYCLE
+verbose exit [ 1, true ]
