@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1325918745.34" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1325918745.34" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1326819801.88" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1326819801.88" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1325918745.34"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1325918745.34"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1326819801.88"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1326819801.88"></script>
 </head>
 
 <body id="node-monitor">
@@ -38,14 +38,14 @@
                 <span class="classopts" style="display:none;"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
                 </fieldset>
             </form>
-<h2><b>Online Documentation</b> </h2> 
+<h2><b>Online Documentation</b> </h2>
 <div id="overview" class="summary description">
 
   <h2>Introduction</h2>
   <p>
-    Node-config is a configuration system for Node.js application server 
+    Node-config is a configuration system for Node.js application server
     deployments.  It lets you define a default set of application parameters,
-    and tune them for different runtime environments (development, qa, 
+    and tune them for different runtime environments (development, qa,
     staging, production, etc.).
   </p>
   <p>
@@ -61,17 +61,18 @@
     <li>Powerful - For multi-node enterprise deployment</li>
     <li>Easy Integration - For module developers</li>
   </ul>
-     
+
   <h2>Getting Started</h2>
   <p>
-    See the quick-start guide hosted on <a href="https://github.com/lorenwest/node-config">github</a>  
+    See the quick-start guide hosted on <a href="https://github.com/lorenwest/node-config">github</a>
   </p>
- 
+
   <h2>Configuration Files</h2>
   <p>
-    Node-config reads configuration files stored in the <i>config</i>
-    directory within your top-level application directory.  Configuration files
-    can be in .js format, .json format, or .yaml format - whichever you prefer.
+    Node-config reads configuration files stored in the directory specified by
+    the <i>NODE_CONFIG_DIR</i> environment variable, which defaults to the <i>config</i>
+    directory within your top-level application directory.  Configuration files can be
+    in .js format, .json format, .coffee format, or .yaml format - whichever you prefer.
   </p>
   <p>
     Configuration files in the config directory are loaded in the following order:
@@ -84,7 +85,7 @@
     runtime.json
   </pre>
   <p>
-    Where EXT can be .yaml, .json, or .js depending on the format you prefer.
+    Where EXT can be .yaml, .coffee, .json, or .js depending on the format you prefer.
   </p>
   <p>
     <i>hostname</i> is the $HOST environment variable if set, otherwise the
@@ -96,19 +97,24 @@
   </p>
   <p>
     The runtime.json file contains configuration changes made at runtime either
-    manually, or by the application setting a configuration value.  Node-config 
+    manually, or by the application setting a configuration value.  Node-config
     monitors this file and loads any new configurations it detects.
   </p>
   <p>
-    In the running application, each configuration parameter is internally 
+    In the running application, each configuration parameter is internally
     monitored for changes, and persisted to runtime.json upon change.
     This keeps configurations in sync in a mutli-node deployment.
+  </p>
+
+  <h2>File Comments</h2>
+  <p>
+    Javascript-style comments are stripped out of files before parsing,
+    regardless of the file format type.
   </p>
 
   <h2>File Formats</h2>
   <p>
     JSON files (.json) expose configuration parameters as a JSON object.
-    Comments are stripped out of .json files before parsing.
     Example:
   </p>
   <pre>
@@ -154,10 +160,22 @@
       creditLimit: 600
   </pre>
 
+  <p>
+    Coffee-script files (.coffee) expose configuration parameters in coffee-script format.  Example:
+  </p>
+  <pre>
+  module.exports =
+    Customer:
+      dbName: "customers"
+      dbHost: "localhost"
+      dbPort: 5984
+      creditLimit: 600
+  </pre>
+
   <h2>Monitoring Changes</h2>
   <p>
     One important attribute of node-config is the ability to tune configuration
-    parameters at runtime.  Configuration parameters fall into one of the 
+    parameters at runtime.  Configuration parameters fall into one of the
     following categories:
   </p>
   <ul>
@@ -167,18 +185,18 @@
       parameter value is read every time it's used.
     </li>
     <li>
-      <strong>Monitored</strong> - Some parameters are read infrequently 
-      (usually at the start of the application), and need to be monitored for 
-      change.  The CONFIG.watch() function is available to watch these 
+      <strong>Monitored</strong> - Some parameters are read infrequently
+      (usually at the start of the application), and need to be monitored for
+      change.  The CONFIG.watch() function is available to watch these
       parameters, and run a function when the value changes.  See the
       <a href="Config.html#method_watch">watch</a> method definition for more
       information.
     </li>
     <li>
-      <strong>Not OK to change</strong> - Some parameters must be fixed at 
-      runtime and remain stable throughout the lifecycle of the application.  
-      For these parameters, the 
-      <a href="Config.html#method_makeImmutable">makeImmutable</a> method is 
+      <strong>Not OK to change</strong> - Some parameters must be fixed at
+      runtime and remain stable throughout the lifecycle of the application.
+      For these parameters, the
+      <a href="Config.html#method_makeImmutable">makeImmutable</a> method is
       offered to guarantee the parameter cannot be changed.
     </li>
   </ul>
@@ -191,9 +209,9 @@
   </p>
   <p>
     If configuration values change at runtime, these changes are persisted
-    into the runtime.json file within the config directory.  Multi-node 
+    into the runtime.json file within the config directory.  Multi-node
     application instances can keep in synch by calling the
-    <a href="Config.html#method_watchForConfigFileChanges">watchForConfigFileChanges</a> 
+    <a href="Config.html#method_watchForConfigFileChanges">watchForConfigFileChanges</a>
     method at startup.
   </p>
   <p>
@@ -211,15 +229,13 @@
     a different mechanism is offered to specify your default configuration.
   </p>
   <p>
-    The <a href="Config.html#method_setModuleDefaults">setModuleDefaults</a> 
-    method creates an object (named after the module) within the CONFIG object 
-    containing all module configuration parameters, and their defaults.  
+    The <a href="Config.html#method_setModuleDefaults">setModuleDefaults</a>
+    method creates an object (named after the module) within the CONFIG object
+    containing all module configuration parameters, and their defaults.
   </p>
   <p>
     Users of your module may override your defaults in their config/defaults
-    file, or any of their deployment-specific configuration files.  You can 
-    offer this capability for your module without requiring your users to
-    include node-config in their application.
+    file, or any of their deployment-specific configuration files.
   </p>
 
   <p style="text-align:right; padding-bottom:0; font-size:93%;">
@@ -256,6 +272,7 @@
                                 <li class=""><a href="1-protected-test.js.html" title="1-protected-test.js">1-protected-test.js</a></li>
                                 <li class=""><a href="2-config-test.js.html" title="2-config-test.js">2-config-test.js</a></li>
                                 <li class=""><a href="config.js.html" title="config.js">config.js</a></li>
+                                <li class=""><a href="default.js.html" title="default.js">default.js</a></li>
                         </ul>
                     </div>
 
@@ -269,7 +286,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.9</span>
+<span class="subtitle">version 0.4.10</span>
 	</div>
 </div>
 <script type="text/javascript">

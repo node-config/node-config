@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1325918745.29" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1325918745.29" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1326819801.83" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1326819801.83" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1325918745.29"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1325918745.29"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1326819801.83"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1326819801.83"></script>
 </head>
 
 <body id="node-monitor">
@@ -57,10 +57,7 @@
     <span class="nx">originalWatchedValue</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">watchThisValue</span><span class="p">,</span>
     <span class="nx">newWatchedValue</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100000</span><span class="p">);</span>
 
-<span class="c1">// These tests require the directory to be the root of the node-config project</span>
-<span class="nx">process</span><span class="p">.</span><span class="nx">chdir</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/..&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">CONFIG_PATH</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config/&#39;</span><span class="p">,</span>
-    <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_PATH</span> <span class="o">+</span> <span class="s1">&#39;runtime.json&#39;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/config/runtime.json&#39;</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Unit tests for the node-config library.  To run type:&lt;/p&gt;</span>
@@ -290,6 +287,7 @@
                         <ul class="content">        
                                 <li class=""><a href="1-protected-test.js.html" title="1-protected-test.js">1-protected-test.js</a></li>
                                 <li class="selected"><a href="2-config-test.js.html" title="2-config-test.js">2-config-test.js</a></li>
+                                <li class=""><a href="default.js.html" title="default.js">default.js</a></li>
                         </ul>
                     </div>
 
@@ -303,7 +301,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.9</span>
+<span class="subtitle">version 0.4.10</span>
 	</div>
 </div>
 <script type="text/javascript">

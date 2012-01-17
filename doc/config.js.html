@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1325918745.31" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1325918745.31" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1326819801.86" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1326819801.86" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1325918745.31"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1325918745.31"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1326819801.86"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1326819801.86"></script>
 </head>
 
 <body id="node-monitor">
@@ -56,8 +56,9 @@
 <span class="c1">// Static members</span>
 <span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
     <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span>
-    <span class="nx">CONFIG_PATH</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config/&#39;</span><span class="p">,</span>
-    <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_PATH</span> <span class="o">+</span> <span class="s1">&#39;runtime.json&#39;</span><span class="p">,</span>
+    <span class="nx">DIR</span> <span class="o">=</span> <span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span>
+    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">?</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">,</span>
+    <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">,</span>
     <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// Not including the runtime.json values</span>
     <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>     <span class="c1">// Current runtimeJson extensions</span>
     <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
@@ -616,7 +617,7 @@
   <span class="nx">baseNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">baseName</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">extNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">extName</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// Try merging the config object into this object</span>
-      <span class="kd">var</span> <span class="nx">fullFilename</span> <span class="o">=</span> <span class="nx">CONFIG_PATH</span> <span class="o">+</span> <span class="nx">baseName</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">extName</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">fullFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">baseName</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">extName</span><span class="p">;</span>
       <span class="kd">var</span> <span class="nx">configObj</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">configObj</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
@@ -1063,10 +1064,13 @@
   <span class="k">return</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
 <span class="p">};</span>
 
+<span class="c1">// Assure the configuration object is a singleton.</span>
+<span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span> <span class="o">=</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span> <span class="o">?</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span> <span class="o">:</span> <span class="k">new</span> <span class="nx">Config</span><span class="p">();</span>
+
 <span class="c1">// The module exports a singleton instance of the Config class so the</span>
 <span class="c1">// instance is immediately available on require(), and the prototype methods</span>
 <span class="c1">// aren&#39;t a part of the object namespace when inspected.</span>
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Config</span><span class="p">();</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">;</span>
 </pre></div>
                     </div>
 			</div>
@@ -1106,7 +1110,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.9</span>
+<span class="subtitle">version 0.4.10</span>
 	</div>
 </div>
 <script type="text/javascript">

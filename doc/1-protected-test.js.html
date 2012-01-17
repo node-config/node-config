@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1325918745.29" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1325918745.29" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1326819801.83" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1326819801.83" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1325918745.29"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1325918745.29"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1326819801.83"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1326819801.83"></script>
 </head>
 
 <body id="node-monitor">
@@ -52,6 +52,9 @@
 <span class="cm"> * @module test</span>
 <span class="cm"> */</span>
 
+<span class="c1">// Change the configuration directory for testing</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_CONFIG_DIR</span> <span class="o">=</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">;</span>
+
 <span class="c1">// Hardcode $NODE_ENV=test for testing</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">;</span>
 
@@ -59,9 +62,6 @@
 <span class="kd">var</span> <span class="nx">CONFIG</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/config&#39;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;vows&#39;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;assert&#39;</span><span class="p">);</span>
-
-<span class="c1">// These tests require the directory to be the root of the node-config project</span>
-<span class="nx">process</span><span class="p">.</span><span class="nx">chdir</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/..&#39;</span><span class="p">);</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Tests for underlying node-config utilities.  To run type:&lt;/p&gt;</span>
@@ -302,7 +302,7 @@
 
   <span class="s1">&#39;_parseFile() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/../config/default.yaml&#39;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/config/default.yaml&#39;</span><span class="p">);</span>
     <span class="p">},</span>
     <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">);</span>
@@ -402,6 +402,7 @@
                         <ul class="content">        
                                 <li class="selected"><a href="1-protected-test.js.html" title="1-protected-test.js">1-protected-test.js</a></li>
                                 <li class=""><a href="2-config-test.js.html" title="2-config-test.js">2-config-test.js</a></li>
+                                <li class=""><a href="default.js.html" title="default.js">default.js</a></li>
                         </ul>
                     </div>
 
@@ -415,7 +416,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.9</span>
+<span class="subtitle">version 0.4.10</span>
 	</div>
 </div>
 <script type="text/javascript">
