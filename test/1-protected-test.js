@@ -4,6 +4,9 @@
  * @module test
  */
 
+// Change the configuration directory for testing
+process.env.NODE_CONFIG_DIR = __dirname;
+
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
@@ -11,9 +14,6 @@ process.env.NODE_ENV='test';
 var CONFIG = require('../lib/config');
 var vows = require('vows');
 var assert = require('assert');
-
-// These tests require the directory to be the root of the node-config project
-process.chdir(__dirname + '/..');
 
 /**
  * <p>Tests for underlying node-config utilities.  To run type:</p>
@@ -254,7 +254,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
 
   '_parseFile() tests': {
     topic: function() {
-      return CONFIG._parseFile(__dirname + '/../config/default.yaml');
+      return CONFIG._parseFile(__dirname + '/config/default.yaml');
     },
     'The function exists': function() {
       assert.isFunction(CONFIG._parseFile);

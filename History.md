@@ -1,3 +1,10 @@
+0.4.10 / 2012-01-18
+===================
+
+  * Made sure the CONFIG object is a shared singleton
+  * Added NODE_CONFIG_DIR environment variable to point to a different directory
+  * Added tests and documentation for the above
+
 0.4.9 / 2012-01-06
 ==================
 
