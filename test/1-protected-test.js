@@ -5,7 +5,7 @@
  */
 
 // Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname;
+process.env.NODE_CONFIG_DIR = __dirname + '/config';
 
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';

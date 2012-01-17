@@ -9,10 +9,7 @@ var vows = require('vows');
     originalWatchedValue = CONFIG.watchThisValue,
     newWatchedValue = Math.floor(Math.random() * 100000);
 
-// These tests require the directory to be the root of the node-config project
-process.chdir(__dirname + '/..');
-var CONFIG_PATH = process.cwd() + '/config/',
-    runtimeJsonFilename = CONFIG_PATH + 'runtime.json';
+var runtimeJsonFilename = __dirname + '/config/runtime.json';
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
