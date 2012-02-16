@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1326819801.86" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1326819801.86" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1329362514.15" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1329362514.15" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1326819801.86"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1326819801.86"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1329362514.15"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1329362514.15"></script>
 </head>
 
 <body id="node-monitor">
@@ -1231,27 +1231,39 @@ Then all handlers (including this one) will be called again with the newly chang
                                         void
                                             <strong property="yui:name">watchForConfigFileChanges</strong>
                                            (
+                                                
+                                                        
+                                                         interval
+                                                    
+                                                
                                             )
                                         </code>
                                         
                                         <div class="description" property="yui:description">
-                                            Monitor the runtime.json file for configuration changes.
+                                            Change the runtime.json file watching polling interval.
 <p>
-Long running processes can call this method at startup to have node-config
-automatically monitor and apply changes made to the config/runtime.json file.
+Node-config automatically monitors and apply changes made to the
+config/runtime.json file.  This paradigm allows for manual changes to running
+application servers, and for multi-node application servers to keep in sync.
 </p>
 <p>
-This paradigm allows for manual changes to running application servers,
-and for multi-node application servers to keep in sync.
-</p>
-<p>
-This method attaches a file watcher onto the runtime.json file, reloading
-the file on change and merging the new values into the CONFIG object.
+This method allows you to change the polling interval from the default
+interval (2.5 seconds), or to turn file watching off.  On Linux systems with
+inotify, this interval is ignored.
 </p>
                                         </div>
 
                                         <div class="description">
 
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">interval</span>
+                                                        &lt;<span property="yui:type">Integer</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - Polling interval in milliseconds.  Defaults to 2500.</span>
+                                                        </dd>
+                                                </dl>
 
                                                 <dl>
                                                     <dt>Returns:
@@ -1342,7 +1354,7 @@ the file on change and merging the new values into the CONFIG object.
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.10</span>
+<span class="subtitle">version 0.4.11</span>
 	</div>
 </div>
 <script type="text/javascript">

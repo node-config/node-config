@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1326819801.86" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1326819801.86" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1329362514.15" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1329362514.15" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1326819801.86"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1326819801.86"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1329362514.15"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1329362514.15"></script>
 </head>
 
 <body id="node-monitor">
@@ -47,22 +47,19 @@
                             #doc3 .classopts { display:none; }
                         </style>
 <div class="highlight"><pre><span class="c1">// Dependencies</span>
-<span class="kd">var</span> <span class="nx">Sys</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;sys&#39;</span><span class="p">),</span>
-    <span class="nx">File</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">),</span>
-    <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">),</span>
+<span class="kd">var</span> <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">),</span>
     <span class="nx">Coffee</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;coffee-script&#39;</span><span class="p">),</span>
     <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="c1">// Static members</span>
 <span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
-    <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span>
+    <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">2500</span><span class="p">,</span>
     <span class="nx">DIR</span> <span class="o">=</span> <span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span>
     <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">?</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">,</span>
     <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">,</span>
     <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// Not including the runtime.json values</span>
     <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>     <span class="c1">// Current runtimeJson extensions</span>
-    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">isWatchingForConfigFileChanges</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Runtime Application Configurations&lt;/p&gt;</span>
@@ -449,37 +446,37 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * Monitor the runtime.json file for configuration changes.</span>
+<span class="cm"> * Change the runtime.json file watching polling interval.</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * Long running processes can call this method at startup to have node-config</span>
-<span class="cm"> * automatically monitor and apply changes made to the config/runtime.json file.</span>
+<span class="cm"> * Node-config automatically monitors and apply changes made to the</span>
+<span class="cm"> * config/runtime.json file.  This paradigm allows for manual changes to running</span>
+<span class="cm"> * application servers, and for multi-node application servers to keep in sync.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This paradigm allows for manual changes to running application servers,</span>
-<span class="cm"> * and for multi-node application servers to keep in sync.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method attaches a file watcher onto the runtime.json file, reloading</span>
-<span class="cm"> * the file on change and merging the new values into the CONFIG object.</span>
+<span class="cm"> * This method allows you to change the polling interval from the default</span>
+<span class="cm"> * interval (2.5 seconds), or to turn file watching off.  On Linux systems with</span>
+<span class="cm"> * inotify, this interval is ignored.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @method watchForConfigFileChanges</span>
+<span class="cm"> * @param interval {Integer} - Polling interval in milliseconds.  Defaults to 2500.</span>
 <span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">interval</span><span class="p">)</span> <span class="p">{</span>
 
-  <span class="c1">// Only set up watching once</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">isWatchingForConfigFileChanges</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-  <span class="nx">isWatchingForConfigFileChanges</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="c1">// Turn off any prior watching</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">watchInterval</span> <span class="o">=</span> <span class="nx">interval</span> <span class="o">||</span> <span class="nx">FILE_WATCHER_INTERVAL</span><span class="p">;</span>
+  <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">unwatchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">);</span>
 
-  <span class="c1">// Attach the file watcher</span>
-  <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// If interval is zero, don&#39;t attach a new watcher</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">interval</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">;}</span>
+
+  <span class="c1">// Attach a new watcher</span>
+  <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nx">interval</span><span class="o">:</span><span class="nx">watchInterval</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// no-op if the file hasn&#39;t changed</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">mtime</span> <span class="o">==</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">mtime</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">===</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">())</span> <span class="p">{</span>
       <span class="k">return</span><span class="p">;</span>
     <span class="p">}</span>
 
@@ -1071,6 +1068,9 @@
 <span class="c1">// instance is immediately available on require(), and the prototype methods</span>
 <span class="c1">// aren&#39;t a part of the object namespace when inspected.</span>
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">;</span>
+
+<span class="c1">// Watch for configuration file changes</span>
+<span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span><span class="p">();</span>
 </pre></div>
                     </div>
 			</div>
@@ -1110,7 +1110,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.10</span>
+<span class="subtitle">version 0.4.11</span>
 	</div>
 </div>
 <script type="text/javascript">
