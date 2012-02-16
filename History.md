@@ -1,6 +1,7 @@
-0.4.11 /
+0.4.11 / 2012-02-15
 ===================
 
+  * Automatically watching runtime.json for changes
   * Fixed a date comparison bug during file watching
   * Changed require('sys') to require('util')
 
