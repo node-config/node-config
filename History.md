@@ -1,3 +1,9 @@
+0.4.11 /
+===================
+
+  * Fixed a date comparison bug during file watching
+  * Changed require('sys') to require('util')
+
 0.4.10 / 2012-01-18
 ===================
 
