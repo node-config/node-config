@@ -192,7 +192,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     topic: function() {
       // Watch the file for changes
       var t = this;
-      FileSystem.watchFile(runtimeJsonFilename, function(){
+      FileSystem.unwatchFile(runtimeJsonFilename);
+      FileSystem.watchFile(runtimeJsonFilename, {persistent:true}, function(){
         t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
       });
     },
