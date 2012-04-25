@@ -1,3 +1,11 @@
+0.4.12 / 2012-04-25
+===================
+
+  * Removed all external dependencies
+  * Lazy loading of yaml and coffee-script only if these file types are used
+  * Added new style file watching if available (retaining pre 6.0 compatibility)
+  * Windows compatibility - file watching changes were required
+
 0.4.11 / 2012-02-15
 ===================
 
