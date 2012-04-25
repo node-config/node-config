@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1329362514.15" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1329362514.15" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1335369884.79" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1335369884.79" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1329362514.15"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1329362514.15"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1335369884.79"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1335369884.79"></script>
 </head>
 
 <body id="node-monitor">
@@ -46,20 +46,22 @@
                         <style>
                             #doc3 .classopts { display:none; }
                         </style>
-<div class="highlight"><pre><span class="c1">// Dependencies</span>
-<span class="kd">var</span> <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">),</span>
-    <span class="nx">Coffee</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;coffee-script&#39;</span><span class="p">),</span>
+<div class="highlight"><pre><span class="cm">/*jsl:declare global */</span>
+<span class="c1">// Dependencies</span>
+<span class="kd">var</span> <span class="nx">Yaml</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>    <span class="c1">// External libraries are lazy-loaded</span>
+    <span class="nx">Coffee</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// only if these file types exist.</span>
     <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="c1">// Static members</span>
 <span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
-    <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">2500</span><span class="p">,</span>
+    <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">2500</span><span class="p">,</span> <span class="c1">// For old style (pre-6.0) file watching</span>
     <span class="nx">DIR</span> <span class="o">=</span> <span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span>
     <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">?</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">,</span>
     <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">,</span>
-    <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// Not including the runtime.json values</span>
-    <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>     <span class="c1">// Current runtimeJson extensions</span>
-    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>       <span class="c1">// Not including the runtime.json values</span>
+    <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>            <span class="c1">// Current runtimeJson extensions</span>
+    <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>   <span class="c1">// Filesystem watcher for runtime.json</span>
+    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Runtime Application Configurations&lt;/p&gt;</span>
@@ -467,20 +469,20 @@
 
   <span class="c1">// Turn off any prior watching</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">watchInterval</span> <span class="o">=</span> <span class="nx">interval</span> <span class="o">||</span> <span class="nx">FILE_WATCHER_INTERVAL</span><span class="p">;</span>
-  <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">unwatchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJsonWatcher</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">runtimeJsonWatcher</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+      <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">unwatchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">);</span>
+  <span class="p">}</span>
 
   <span class="c1">// If interval is zero, don&#39;t attach a new watcher</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">interval</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">;}</span>
 
-  <span class="c1">// Attach a new watcher</span>
-  <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nx">interval</span><span class="o">:</span><span class="nx">watchInterval</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="c1">// no-op if the file hasn&#39;t changed</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">===</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">())</span> <span class="p">{</span>
-      <span class="k">return</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="c1">// Load the runtime.json file asynchronously.</span>
+  <span class="c1">// Re-merge the runtime JSON file if we notice a change</span>
+  <span class="kd">var</span> <span class="nx">onFileChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">fileContent</span><span class="p">)</span> <span class="p">{</span>
 
       <span class="c1">// Not much to do on error</span>
@@ -498,9 +500,25 @@
         <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error parsing &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
         <span class="k">return</span><span class="p">;</span>
       <span class="p">}</span>
-
     <span class="p">});</span>
-  <span class="p">});</span>
+  <span class="p">};</span>
+
+  <span class="c1">// Use the latest version of file watching</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This is the latest</span>
+    <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">false</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">filename</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">!=</span> <span class="s1">&#39;change&#39;</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">;}</span>
+      <span class="nx">onFileChange</span><span class="p">();</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// Old style polling - only choice if running pre-6.0</span>
+    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nx">interval</span><span class="o">:</span><span class="nx">watchInterval</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">===</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">())</span> <span class="p">{</span><span class="k">return</span><span class="p">;}</span>
+      <span class="nx">onFileChange</span><span class="p">();</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -536,7 +554,7 @@
           <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span>
             <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error writing &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
         <span class="p">});</span>
-      <span class="p">};</span>
+      <span class="p">}</span>
 
       <span class="c1">// Set up for next time</span>
       <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
@@ -690,6 +708,8 @@
   <span class="c1">// Parse the file based on extension</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Lazy loading</span>
+      <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">Yaml</span> <span class="o">||</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">);</span>
       <span class="c1">// The yaml library doesn&#39;t like strings that have newlines but don&#39;t</span>
       <span class="c1">// end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13</span>
       <span class="nx">fileContent</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
@@ -704,6 +724,8 @@
       <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;coffee&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Lazy load the coffee-script extension</span>
+      <span class="nx">Coffee</span> <span class="o">=</span> <span class="nx">Coffee</span> <span class="o">||</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;coffee-script&#39;</span><span class="p">);</span>
       <span class="c1">// Use the built-in parser for .coffee files with coffee-script</span>
       <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
     <span class="p">}</span>
@@ -1110,7 +1132,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.11</span>
+<span class="subtitle">version 0.4.12</span>
 	</div>
 </div>
 <script type="text/javascript">
