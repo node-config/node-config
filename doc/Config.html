@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1329362514.15" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1329362514.15" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1335400935.6" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1335400935.6" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1329362514.15"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1329362514.15"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1335400935.6"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1335400935.6"></script>
 </head>
 
 <body id="node-monitor">
@@ -599,8 +599,10 @@ The file extension determines the parser to use.
 .json = File is parsed using JSON.parse()
 .coffee = File to run that has a module.exports with coffee-script containing the config object
 .yaml = Parsed with a YAML parser
-If the file doesn't exist, a null will be returned.
-If the file can't be parsed, an exception will be thrown.
+If the file doesn't exist, a null will be returned.  If the file can't be
+parsed, an exception will be thrown.
+This method performs synchronous file operations, and should not be called
+after synchronous module loading.
                                         </div>
 
                                         <div class="description">
@@ -1249,7 +1251,7 @@ application servers, and for multi-node application servers to keep in sync.
 <p>
 This method allows you to change the polling interval from the default
 interval (2.5 seconds), or to turn file watching off.  On Linux systems with
-inotify, this interval is ignored.
+inotify, and in node.js versions 0.6 and above, this interval is ignored.
 </p>
                                         </div>
 
@@ -1354,7 +1356,7 @@ inotify, this interval is ignored.
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.11</span>
+<span class="subtitle">version 0.4.13</span>
 	</div>
 </div>
 <script type="text/javascript">

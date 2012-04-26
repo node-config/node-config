@@ -1,3 +1,8 @@
+0.4.13 / 2012-04-25
+===================
+
+  * Assuring the runtime.json file exists.  Undocumented fs.watch() requirement.
+
 0.4.12 / 2012-04-25
 ===================
 
