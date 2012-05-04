@@ -1,3 +1,8 @@
+0.4.14 / 2012-04-27
+===================
+
+  * Added the local.EXT and local-deployment.EXT configs.
+
 0.4.13 / 2012-04-25
 ===================
 
