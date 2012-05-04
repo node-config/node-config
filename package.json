@@ -10,7 +10,7 @@
     "vows" : ">=0.5.13"
   },
   "devDependencies": {
-    "yaml" : "0.2.x",
+    "js-yaml" : "0.3.x",
     "coffee-script" : ">=1.2.0"
   },
   "engines": {"node": ">0.4.x"},
