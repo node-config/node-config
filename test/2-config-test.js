@@ -49,6 +49,18 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.equal(CONFIG.AnotherModule.parm3, 'value3');
     },
 
+    'Loading configurations from an environment file is correct': function() {
+      assert.equal(CONFIG.Customers.dbPort, '5999');
+    },
+
+    'Loading configurations from the local file is correct': function() {
+      assert.equal(CONFIG.Customers.dbPassword, 'real password');
+    },
+
+    'Loading configurations from the local environment file is correct': function() {
+      assert.equal(CONFIG.Customers.dbPassword2, 'another password');
+    },
+
     'Loading prior runtime.json configurations is correct': function() {
       assert.equal(CONFIG.Customers.dbName, 'override_from_runtime_json');
     }
