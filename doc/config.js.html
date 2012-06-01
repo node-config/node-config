@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1335400935.6" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1335400935.6" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1338535530.99" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1338535530.99" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1335400935.6"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1335400935.6"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1338535530.99"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1338535530.99"></script>
 </head>
 
 <body id="node-monitor">
@@ -49,7 +49,8 @@
 <div class="highlight"><pre><span class="cm">/*jsl:declare global */</span>
 <span class="c1">// Dependencies</span>
 <span class="kd">var</span> <span class="nx">Yaml</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>    <span class="c1">// External libraries are lazy-loaded</span>
-    <span class="nx">Coffee</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// only if these file types exist.</span>
+    <span class="nx">VisionmediaYaml</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// only if these file types exist.</span>
+    <span class="nx">Coffee</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
     <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="c1">// Static members</span>
@@ -277,7 +278,7 @@
     <span class="nx">o</span><span class="p">.</span><span class="nx">__watchers</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span>
 
     <span class="c1">// Recurs if this is an object...</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">o</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">handler</span><span class="p">,</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
 
@@ -482,7 +483,7 @@
   <span class="k">if</span> <span class="p">(</span><span class="nx">interval</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">;}</span>
 
   <span class="c1">// Re-merge the runtime JSON file if we notice a change</span>
-  <span class="kd">var</span> <span class="nx">onFileChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">onFileChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">retry</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">fileContent</span><span class="p">)</span> <span class="p">{</span>
 
       <span class="c1">// Not much to do on error</span>
@@ -498,6 +499,12 @@
         <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObject</span><span class="p">);</span>
       <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error parsing &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+        <span class="c1">// Retry once - could be someone else writing</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">retry</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+            <span class="nx">onFileChange</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+          <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="k">return</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -575,6 +582,8 @@
 <span class="cm"> *   (hostname).EXT</span>
 <span class="cm"> *   (deployment).EXT</span>
 <span class="cm"> *   (hostname)-(deployment).EXT</span>
+<span class="cm"> *   local.EXT</span>
+<span class="cm"> *   local-(deployment).EXT</span>
 <span class="cm"> *   runtime.json</span>
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
@@ -627,7 +636,7 @@
   <span class="kd">var</span> <span class="nx">deployment</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="s1">&#39;development&#39;</span><span class="p">;</span>
 
   <span class="c1">// Read each file in turn</span>
-  <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">deployment</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">];</span>
+  <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">deployment</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;local-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">];</span>
   <span class="kd">var</span> <span class="nx">extNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;js&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">];</span>
   <span class="nx">baseNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">baseName</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">extNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">extName</span><span class="p">)</span> <span class="p">{</span>
@@ -689,8 +698,15 @@
   <span class="c1">// Make sure the runtime.json file exists.  This is required for fs.watch().</span>
   <span class="kd">var</span> <span class="nx">checkRuntimeJson</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">fullFilename</span> <span class="o">==</span> <span class="nx">runtimeJsonFilename</span><span class="p">)</span> <span class="p">{</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Writing runtime json file&quot;</span><span class="p">);</span>
-      <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="s1">&#39;{}&#39;</span><span class="p">);</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="s1">&#39;{}&#39;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Cannot write runtime.json file &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">);</span>
+        <span class="c1">//if we cannot write file, clear watch function</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">};</span>
+      <span class="p">}</span>
       <span class="k">return</span> <span class="p">{};</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
@@ -719,12 +735,27 @@
   <span class="c1">// Parse the file based on extension</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// Lazy loading</span>
-      <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">Yaml</span> <span class="o">||</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">);</span>
-      <span class="c1">// The yaml library doesn&#39;t like strings that have newlines but don&#39;t</span>
-      <span class="c1">// end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13</span>
-      <span class="nx">fileContent</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
-      <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripYamlComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Yaml</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">VisionmediaYaml</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Lazy loading</span>
+        <span class="k">try</span> <span class="p">{</span>
+          <span class="c1">// Try to load the better js-yaml module</span>
+          <span class="nx">Yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;js-yaml&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// If it doesn&#39;t exist, load the fallback visionmedia yaml module.</span>
+          <span class="nx">VisionmediaYaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;yaml&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">Yaml</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">Yaml</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripYamlComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">VisionmediaYaml</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// The yaml library doesn&#39;t like strings that have newlines but don&#39;t</span>
+        <span class="c1">// end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13</span>
+        <span class="nx">fileContent</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+        <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">VisionmediaYaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripYamlComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
+      <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// Allow comments in JSON files</span>
@@ -825,7 +856,7 @@
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// Call recursively if an object or array</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span> <span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">copy</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="p">{</span>
@@ -879,7 +910,7 @@
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">object1</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// Call recursively if an object or array</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">object2</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
       <span class="p">}</span>
@@ -929,7 +960,7 @@
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">parm</span> <span class="k">in</span> <span class="nx">object2</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">value1</span> <span class="o">=</span> <span class="nx">object1</span><span class="p">[</span><span class="nx">parm</span><span class="p">];</span>
     <span class="kd">var</span> <span class="nx">value2</span> <span class="o">=</span> <span class="nx">object2</span><span class="p">[</span><span class="nx">parm</span><span class="p">];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">value2</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value2</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">value2</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">value1</span><span class="p">,</span> <span class="nx">value2</span><span class="p">)))</span> <span class="p">{</span>
         <span class="nx">diff</span><span class="p">[</span><span class="nx">parm</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">value1</span><span class="p">,</span> <span class="nx">value2</span><span class="p">,</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
       <span class="p">}</span>
@@ -1091,7 +1122,7 @@
 <span class="cm"> * @return {boolean} TRUE if the arg is an object, FALSE if not</span>
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_isObject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
 <span class="p">};</span>
 
 <span class="c1">// Assure the configuration object is a singleton.</span>
@@ -1143,7 +1174,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.13</span>
+<span class="subtitle">version 0.4.14</span>
 	</div>
 </div>
 <script type="text/javascript">

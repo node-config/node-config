@@ -1,9 +1,11 @@
-0.4.14 / 2012-04-27
+0.4.14 / 2012-06-01
 ===================
 
   * Added the local.EXT and local-deployment.EXT configs.
   * Removed unnecessary debug output
   * Added retry logic on file parse to reduce read/write collisions
+  * Added support for a better YAML parser
+  * Fixed problems with null configuration values
 
 0.4.13 / 2012-04-25
 ===================

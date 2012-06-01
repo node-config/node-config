@@ -40,6 +40,8 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
    	  assert.isFalse(CONFIG._isObject(45));
    	  assert.isFalse(CONFIG._isObject([2, 3]));
    	  assert.isFalse(CONFIG._isObject(["a", "b"]));
+   	  assert.isFalse(CONFIG._isObject(null));
+   	  assert.isFalse(CONFIG._isObject(undefined));
     }
   },
 

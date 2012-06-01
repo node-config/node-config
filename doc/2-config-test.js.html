@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1335400935.57" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1335400935.57" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1338535530.96" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1338535530.96" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1335400935.57"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1335400935.57"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1338535530.96"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1338535530.96"></script>
 </head>
 
 <body id="node-monitor">
@@ -95,6 +95,18 @@
 
     <span class="s1">&#39;Loading configurations from a Coffee-Script file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">AnotherModule</span><span class="p">.</span><span class="nx">parm3</span><span class="p">,</span> <span class="s1">&#39;value3&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Loading configurations from an environment file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbPort</span><span class="p">,</span> <span class="s1">&#39;5999&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Loading configurations from the local file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbPassword</span><span class="p">,</span> <span class="s1">&#39;real password&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;Loading configurations from the local environment file is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">dbPassword2</span><span class="p">,</span> <span class="s1">&#39;another password&#39;</span><span class="p">);</span>
     <span class="p">},</span>
 
     <span class="s1">&#39;Loading prior runtime.json configurations is correct&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -302,7 +314,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.13</span>
+<span class="subtitle">version 0.4.14</span>
 	</div>
 </div>
 <script type="text/javascript">
