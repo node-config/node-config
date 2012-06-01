@@ -3,6 +3,7 @@
 
   * Added the local.EXT and local-deployment.EXT configs.
   * Removed unnecessary debug output
+  * Added retry logic on file parse to reduce read/write collisions
 
 0.4.13 / 2012-04-25
 ===================
