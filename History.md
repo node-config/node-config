@@ -2,6 +2,7 @@
 ===================
 
   * Added the local.EXT and local-deployment.EXT configs.
+  * Removed unnecessary debug output
 
 0.4.13 / 2012-04-25
 ===================
