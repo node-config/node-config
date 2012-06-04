@@ -1,3 +1,8 @@
+0.4.15 / 2012-06-04
+===================
+
+  * Placed YAML and Coffee-Script libraries back into the download.  Still lazy loading into memory.
+
 0.4.14 / 2012-06-01
 ===================
 

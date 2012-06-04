@@ -7,11 +7,11 @@
   "homepage": "http://lorenwest.github.com/node-config/",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
   "dependencies": {
+    "js-yaml" : "0.3.x",
+    "coffee-script" : ">=1.2.0",
     "vows" : ">=0.5.13"
   },
   "devDependencies": {
-    "js-yaml" : "0.3.x",
-    "coffee-script" : ">=1.2.0"
   },
   "engines": {"node": ">0.4.x"},
   "scripts": {
