@@ -1,3 +1,10 @@
+0.4.16 / 2012-08-09
+===================
+
+  * Allowing a zero interval in watchForConfigFileChanges() to disable file watching.
+  * Fixed a comparator bug in _equalsDeep()
+  * Added a test to confirm deep extending array functionality
+
 0.4.15 / 2012-06-04
 ===================
 

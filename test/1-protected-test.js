@@ -115,7 +115,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.deepEqual(CONFIG._extendDeep(orig, extWith), shouldBe);
     },
     'Correctly types new objects and arrays': function() {
-      var orig = {e1:"val1"};
+      var orig = {e1:"val1", e3:["val5"]};
       var extWith = {e2:{elem1:"val1"}, e3:["val6","val7"]};
       var shouldBe = {e1:"val1", e2:{elem1:"val1"}, e3:["val6","val7"]};
       var ext = CONFIG._extendDeep({}, orig, extWith);
