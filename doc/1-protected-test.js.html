@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1338821083.05" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1338821083.05" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1348692006.46" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1348692006.46" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1338821083.05"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1338821083.05"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1348692006.46"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1348692006.46"></script>
 </head>
 
 <body id="node-monitor">
@@ -163,7 +163,7 @@
       <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">orig</span><span class="p">,</span> <span class="nx">extWith</span><span class="p">),</span> <span class="nx">shouldBe</span><span class="p">);</span>
     <span class="p">},</span>
     <span class="s1">&#39;Correctly types new objects and arrays&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">orig</span> <span class="o">=</span> <span class="p">{</span><span class="nx">e1</span><span class="o">:</span><span class="s2">&quot;val1&quot;</span><span class="p">};</span>
+      <span class="kd">var</span> <span class="nx">orig</span> <span class="o">=</span> <span class="p">{</span><span class="nx">e1</span><span class="o">:</span><span class="s2">&quot;val1&quot;</span><span class="p">,</span> <span class="nx">e3</span><span class="o">:</span><span class="p">[</span><span class="s2">&quot;val5&quot;</span><span class="p">]};</span>
       <span class="kd">var</span> <span class="nx">extWith</span> <span class="o">=</span> <span class="p">{</span><span class="nx">e2</span><span class="o">:</span><span class="p">{</span><span class="nx">elem1</span><span class="o">:</span><span class="s2">&quot;val1&quot;</span><span class="p">},</span> <span class="nx">e3</span><span class="o">:</span><span class="p">[</span><span class="s2">&quot;val6&quot;</span><span class="p">,</span><span class="s2">&quot;val7&quot;</span><span class="p">]};</span>
       <span class="kd">var</span> <span class="nx">shouldBe</span> <span class="o">=</span> <span class="p">{</span><span class="nx">e1</span><span class="o">:</span><span class="s2">&quot;val1&quot;</span><span class="p">,</span> <span class="nx">e2</span><span class="o">:</span><span class="p">{</span><span class="nx">elem1</span><span class="o">:</span><span class="s2">&quot;val1&quot;</span><span class="p">},</span> <span class="nx">e3</span><span class="o">:</span><span class="p">[</span><span class="s2">&quot;val6&quot;</span><span class="p">,</span><span class="s2">&quot;val7&quot;</span><span class="p">]};</span>
       <span class="kd">var</span> <span class="nx">ext</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">({},</span> <span class="nx">orig</span><span class="p">,</span> <span class="nx">extWith</span><span class="p">);</span>
@@ -418,7 +418,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.15</span>
+<span class="subtitle">version 0.4.17</span>
 	</div>
 </div>
 <script type="text/javascript">

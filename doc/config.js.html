@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1338821083.07" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1338821083.07" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1348692006.48" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1348692006.48" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1338821083.07"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1338821083.07"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1348692006.48"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1348692006.48"></script>
 </head>
 
 <body id="node-monitor">
@@ -57,8 +57,9 @@
 <span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
     <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">2500</span><span class="p">,</span> <span class="c1">// For old style (pre-6.0) file watching</span>
     <span class="nx">DIR</span> <span class="o">=</span> <span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span>
-    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">?</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">,</span>
-    <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">,</span>
+    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">DIR</span><span class="p">]</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">,</span>
+    <span class="nx">RUNTIME</span> <span class="o">=</span> <span class="s1">&#39;NODE_CONFIG_RUNTIME_JSON&#39;</span><span class="p">,</span>
+    <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">RUNTIME</span><span class="p">]</span> <span class="o">||</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">,</span>
     <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>       <span class="c1">// Not including the runtime.json values</span>
     <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>            <span class="c1">// Current runtimeJson extensions</span>
     <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>   <span class="c1">// Filesystem watcher for runtime.json</span>
@@ -469,7 +470,7 @@
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">interval</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="c1">// Turn off any prior watching</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">watchInterval</span> <span class="o">=</span> <span class="nx">interval</span> <span class="o">||</span> <span class="nx">FILE_WATCHER_INTERVAL</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">watchInterval</span> <span class="o">=</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">interval</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">:</span> <span class="nx">interval</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJsonWatcher</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">runtimeJsonWatcher</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
@@ -910,7 +911,7 @@
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">object1</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// Call recursively if an object or array</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">])</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">object1</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">object2</span><span class="p">[</span><span class="nx">prop</span><span class="p">],</span> <span class="nx">depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
       <span class="p">}</span>
@@ -1174,7 +1175,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.15</span>
+<span class="subtitle">version 0.4.17</span>
 	</div>
 </div>
 <script type="text/javascript">

@@ -1,3 +1,10 @@
+0.4.17 / 2012-09-26
+===================
+
+  * Allow the location of runtime.json to be picked up from the environment
+  * Added documentation for the NODE_CONFIG_RUNTIME_JSON environment variable
+  * package.json cleanup - created optionalDependencies and devDependencies
+
 0.4.16 / 2012-08-09
 ===================
 
