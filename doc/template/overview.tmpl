@@ -60,7 +60,9 @@
   </p>
   <p>
     The runtime.json file contains configuration changes made at runtime either
-    manually, or by the application setting a configuration value.  Node-config
+    manually, or by the application setting a configuration value.  The location is
+    specified by <i>NODE_CONFIG_RUNTIME_JSON</i> environment variable. By default, it
+    is a file called runtime.json in <i>NODE_CONFIG_DIR</i> directory.  Node-config
     monitors this file and loads any new configurations it detects.
   </p>
   <p>
