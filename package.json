@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "js-yaml" : "0.3.x",
-    "coffee-script" : ">=1.2.0"
+    "coffee-script" : ">=1.2.0",
     "vows" : ">=0.5.13"
   },
   "engines": {"node": ">0.4.x"},
