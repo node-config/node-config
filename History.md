@@ -1,3 +1,10 @@
+0.4.18 / 2012-10-30
+===================
+
+  * Moved coffee-script and js-yaml from optionalDependencies back to
+    devDependencies to trim the install size for those not needing
+    these packages.
+
 0.4.17 / 2012-09-26
 ===================
 
