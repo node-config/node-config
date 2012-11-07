@@ -4,6 +4,7 @@
   * Moved coffee-script and js-yaml from optionalDependencies back to
     devDependencies to trim the install size for those not needing
     these packages.
+  * Promoted $HOSTNAME and $HOST above OS.hostname()
 
 0.4.17 / 2012-09-26
 ===================
