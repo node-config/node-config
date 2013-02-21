@@ -3,7 +3,7 @@
 
   * Added discovery of .yml in addition to .yaml for YAML configs (w/doc)
   * Added testing of .yml file discovery
-  * Made licensing files consistent
+  * Removed licensing inconsistencies
 
 0.4.18 / 2012-10-30
 ===================

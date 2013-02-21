@@ -70,11 +70,11 @@ See Also
 License
 -------
  
-Released under the Apache License 2.0
+May be freely distributed under the MIT license
  
 See `LICENSE` file.
  
-Copyright (c) 2011 Loren West
+Copyright (c) 2010-2013 Loren West and other contributors
 
   [node-config]: http://lorenwest.github.com/node-config/latest
   [node-monitor]: http://lorenwest.github.com/node-monitor/latest

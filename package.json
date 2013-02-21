@@ -1,11 +1,12 @@
 {
   "name": "config",
-  "version": "0.4.18",
+  "version": "0.4.19",
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
   "homepage": "http://lorenwest.github.com/node-config/",
   "directories": {"lib": "./lib", "config": "./config", "test": "./test"},
+  "licenses": ["MIT"],
   "dependencies": {
   },
   "devDependencies": {
