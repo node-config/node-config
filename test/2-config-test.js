@@ -41,8 +41,12 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.equal(CONFIG.AnotherModule.parm1, 'value1');
     },
 
-    'Loading configurations from a YAML file is correct': function() {
+    'Loading configurations from a .yaml YAML file is correct': function() {
       assert.equal(CONFIG.AnotherModule.parm2, 'value2');
+    },
+
+    'Loading configurations from a .yml YAML file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm2yml, 'value2yml');
     },
 
     'Loading configurations from a Coffee-Script file is correct': function() {

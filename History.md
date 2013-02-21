@@ -1,3 +1,10 @@
+0.4.19 / 2013-02-21
+===================
+
+  * Added discovery of .yml in addition to .yaml for YAML configs (w/doc)
+  * Added testing of .yml file discovery
+  * Made licensing files consistent
+
 0.4.18 / 2012-10-30
 ===================
 
