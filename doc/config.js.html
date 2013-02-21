@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1352250494.81" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1352250494.81" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1361463882.76" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1361463882.76" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1352250494.81"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1352250494.81"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1361463882.76"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1361463882.76"></script>
 </head>
 
 <body id="node-monitor">
@@ -47,6 +47,11 @@
                             #doc3 .classopts { display:none; }
                         </style>
 <div class="highlight"><pre><span class="cm">/*jsl:declare global */</span>
+<span class="c1">// config.js (c) 2010-2013 Loren West and other contributors</span>
+<span class="c1">// May be freely distributed under the MIT license.</span>
+<span class="c1">// For further details and documentation:</span>
+<span class="c1">// http://lorenwest.github.com/node-config</span>
+
 <span class="c1">// Dependencies</span>
 <span class="kd">var</span> <span class="nx">Yaml</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>    <span class="c1">// External libraries are lazy-loaded</span>
     <span class="nx">VisionmediaYaml</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>  <span class="c1">// only if these file types exist.</span>
@@ -589,9 +594,9 @@
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * EXT can be yaml, coffee, json, or js signifying the file type.</span>
-<span class="cm"> * yaml is in YAML format, coffee is a coffee-script,</span>
-<span class="cm"> * json is in strict JSON format, and js is a javascript executable file that is</span>
+<span class="cm"> * EXT can be yml, yaml, coffee, json, or js signifying the file type.</span>
+<span class="cm"> * yaml (and yml) is in YAML format, coffee is a coffee-script,</span>
+<span class="cm"> * json is in JSON format, and js is a javascript executable file that is</span>
 <span class="cm"> * require()&#39;d with module.exports being the config object.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
@@ -627,7 +632,7 @@
   <span class="c1">// Remove any . appendages, and default to null if not set</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">hostName</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">HOST</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">HOSTNAME</span><span class="p">;</span>
-   
+
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">hostName</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">OS</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;os&#39;</span><span class="p">);</span>
         <span class="nx">hostName</span> <span class="o">=</span> <span class="nx">OS</span><span class="p">.</span><span class="nx">hostname</span><span class="p">();</span>
@@ -642,7 +647,7 @@
 
   <span class="c1">// Read each file in turn</span>
   <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">deployment</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;local-&#39;</span> <span class="o">+</span> <span class="nx">deployment</span><span class="p">];</span>
-  <span class="kd">var</span> <span class="nx">extNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;js&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">];</span>
+  <span class="kd">var</span> <span class="nx">extNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;js&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;yml&#39;</span><span class="p">];</span>
   <span class="nx">baseNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">baseName</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">extNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">extName</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// Try merging the config object into this object</span>
@@ -679,7 +684,7 @@
 <span class="cm"> * .js = File to run that has a module.exports containing the config object</span>
 <span class="cm"> * .json = File is parsed using JSON.parse()</span>
 <span class="cm"> * .coffee = File to run that has a module.exports with coffee-script containing the config object</span>
-<span class="cm"> * .yaml = Parsed with a YAML parser</span>
+<span class="cm"> * .yaml (or .yml) = Parsed with a YAML parser</span>
 <span class="cm"> *</span>
 <span class="cm"> * If the file doesn&#39;t exist, a null will be returned.  If the file can&#39;t be</span>
 <span class="cm"> * parsed, an exception will be thrown.</span>
@@ -739,7 +744,7 @@
 
   <span class="c1">// Parse the file based on extension</span>
   <span class="k">try</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">===</span> <span class="s1">&#39;yaml&#39;</span> <span class="o">||</span> <span class="nx">extension</span> <span class="o">===</span> <span class="s1">&#39;yml&#39;</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Yaml</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">VisionmediaYaml</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Lazy loading</span>
         <span class="k">try</span> <span class="p">{</span>
@@ -1179,7 +1184,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.18</span>
+<span class="subtitle">version 0.4.19</span>
 	</div>
 </div>
 <script type="text/javascript">

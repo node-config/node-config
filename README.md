@@ -6,9 +6,9 @@ Configuration control for production node deployments
 Introduction
 ------------
 
-Node-config is a configuration system for Node.js application server 
+Node-config is a configuration system for Node.js application server
 deployments.  It lets you define a default set of application parameters,
-and tune them for different runtime environments (development, qa, 
+and tune them for different runtime environments (development, qa,
 staging, production, etc.).
 
 Parameters defined by node-config can be monitored and tuned at runtime
@@ -26,7 +26,7 @@ Quick Start
 
 **Edit the default configuration file (.js, .json, or .yaml):**
 
-    my-project$ mkdir config 
+    my-project$ mkdir config
     my-project$ vi config/default.yaml
 
     (example default.yaml file):
@@ -55,8 +55,8 @@ Quick Start
 
     my-project$ export NODE_ENV=production
     my-project$ node app.js
-    
-Running in this configuration, CONFIG.dbPort and CONFIG.dbName 
+
+Running in this configuration, CONFIG.dbPort and CONFIG.dbName
 will come from the `default.yaml` file, and CONFIG.dbHost will
 come from the `production.yaml` file.
 
@@ -64,17 +64,17 @@ come from the `production.yaml` file.
 See Also
 --------
 
-[node-config] - Online documentation<br>
-[node-monitor] - Monitor your running node applications
+[config] - Online documentation<br>
+[monitor] - Remote monitoring for Node.js applications
 
 License
 -------
- 
+
 May be freely distributed under the MIT license
- 
+
 See `LICENSE` file.
- 
+
 Copyright (c) 2010-2013 Loren West and other contributors
 
-  [node-config]: http://lorenwest.github.com/node-config/latest
-  [node-monitor]: http://lorenwest.github.com/node-monitor/latest
+  [config]: http://lorenwest.github.com/node-config/latest
+  [monitor]: http://lorenwest.github.com/monitor/
