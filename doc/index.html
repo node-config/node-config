@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1361463882.8" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1361463882.8" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1361465103.72" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1361465103.72" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1361463882.8"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1361463882.8"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1361465103.72"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1361465103.72"></script>
 </head>
 
 <body id="node-monitor">
@@ -72,7 +72,7 @@
     Node-config reads configuration files stored in the directory specified by
     the <i>NODE_CONFIG_DIR</i> environment variable, which defaults to the <i>config</i>
     directory within your top-level application directory.  Configuration files can be
-    in .js format, .json format, .coffee format, or .yaml format - whichever you prefer.
+    in JavaScript format, JSON format, COFFEE format, or YAML format - whichever you prefer.
   </p>
   <p>
     Configuration files in the config directory are loaded in the following order:
@@ -85,8 +85,8 @@
     runtime.json
   </pre>
   <p>
-    Where EXT can be .yaml, .coffee, .json, or .js depending on the format you prefer.
-    NOTE: If you use .yaml or .coffee file extensions, the 'yaml' or 'coffee-script'
+    Where EXT can be .yml, .yaml, .coffee, .json, or .js depending on the format you prefer.
+    NOTE: If you use .yml, .yaml, or .coffee file extensions, the 'yaml' or 'coffee-script'
     modules must be available.  These external dependencies are not included from
     this package.
   </p>
@@ -155,7 +155,7 @@
   </pre>
 
   <p>
-    YAML files (.yaml) expose configuration parameters in YAML format.  Example:
+    YAML files (.yaml or .yml) expose configuration parameters in YAML format.  Example:
   </p>
   <pre>
   Customer:
