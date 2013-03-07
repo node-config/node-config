@@ -1,6 +1,8 @@
 node-config
 ===========
 
+[![Build Status](https://secure.travis-ci.org/lorenwest/node-config.png?branch=master)](https://travis-ci.org/lorenwest/node-config)
+
 Configuration control for production node deployments
 
 Introduction

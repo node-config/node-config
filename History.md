@@ -1,3 +1,10 @@
+0.4.21 / 2013-03-06
+===================
+
+  * Triggering file.watch when an editor saves a file - rename vs. change
+  * Installed Travis-CI continuous integration testing framework
+
+
 0.4.20 / 2013-02-21
 ===================
 
