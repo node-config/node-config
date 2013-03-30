@@ -1,3 +1,10 @@
+0.4.22 / 2013-03-29
+===================
+
+  * Added configuration $CONFIG_* environment variables
+  * Added $CONFIG_* documentation and tests
+  * Added NodeJS 0.10 integration test
+
 0.4.21 / 2013-03-06
 ===================
 

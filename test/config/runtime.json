@@ -5,5 +5,9 @@
   "Customers": {
     "dbName": "override_from_runtime_json"
   },
-  "watchThisValue": 80397
+  "EnvOverride": {
+    "parm_1": "overridden from test",
+    "parm2": 13
+  },
+  "watchThisValue": 7069
 }

@@ -1,6 +1,10 @@
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
+// Test for environment variable overrides
+process.env.CONFIG_EnvOverride_parm__1 = 'overridden from test';
+process.env.CONFIG_EnvOverride_parm2 = 13;
+
 // Dependencies
 var vows = require('vows');
     assert = require('assert'),
@@ -69,6 +73,20 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.equal(CONFIG.Customers.dbName, 'override_from_runtime_json');
     }
 
+  },
+
+  'Configurations from environment variables': {
+    topic: function() {
+      return CONFIG;
+    },
+
+    'Configuration can come from environment variables': function() {
+      assert.equal(CONFIG.EnvOverride.parm2, 13);
+    },
+
+    'Double__underscores escape to single_underscores': function() {
+      assert.equal(CONFIG.EnvOverride.parm_1, 'overridden from test');
+    }
   },
 
  'Assuring a configuration property can be hidden': {

@@ -10,6 +10,10 @@ process.env.NODE_CONFIG_DIR = __dirname + '/config';
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
+// Test for environment variable overrides
+process.env.CONFIG_EnvOverride_parm__1 = 'overridden from test';
+process.env.CONFIG_EnvOverride_parm2 = 13;
+
 // Dependencies
 var CONFIG = require('../lib/config');
 var vows = require('vows');

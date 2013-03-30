@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1362642423.13" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1362642423.13" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1364618460.8" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1364618460.8" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1362642423.13"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1362642423.13"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1364618460.8"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1364618460.8"></script>
 </head>
 
 <body id="node-monitor">
@@ -665,6 +665,39 @@
   <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">)</span> <span class="o">||</span> <span class="p">{};</span>
   <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
 
+  <span class="c1">// Override configurations with environment variables</span>
+  <span class="kd">var</span> <span class="nx">envOverride</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">varName</span> <span class="k">in</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">varName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;CONFIG_&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="c1">// Get the string or numeric value</span>
+      <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">varName</span><span class="p">],</span>
+          <span class="nx">floatVal</span> <span class="o">=</span> <span class="nb">parseFloat</span><span class="p">(</span><span class="nx">value</span><span class="p">),</span>
+          <span class="nx">value</span> <span class="o">=</span> <span class="nx">floatVal</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">===</span> <span class="nx">value</span> <span class="o">?</span> <span class="nx">floatVal</span> <span class="o">:</span> <span class="nx">value</span><span class="p">;</span>
+
+      <span class="c1">// Convert __ to ` (which you can&#39;t have in environment variables)</span>
+      <span class="c1">// After splitting, ` are converted to single underscores</span>
+      <span class="nx">varName</span> <span class="o">=</span> <span class="nx">varName</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/__/g</span><span class="p">,</span><span class="s1">&#39;`&#39;</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">parts</span> <span class="o">=</span> <span class="nx">varName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">);</span>
+      <span class="nx">parts</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// remove CONFIG</span>
+
+      <span class="kd">var</span> <span class="nx">curCtxt</span> <span class="o">=</span> <span class="nx">envOverride</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">partName</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;`&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">==</span> <span class="nx">l</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// Final (element) part</span>
+          <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+          <span class="c1">// Mid (object) part</span>
+          <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">]</span> <span class="o">||</span> <span class="p">{};</span>
+          <span class="nx">curCtxt</span> <span class="o">=</span> <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">];</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">envOverride</span><span class="p">);</span>
+
   <span class="c1">// Attach the config.prototype to all sub-objects.</span>
   <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
 
@@ -1183,7 +1216,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.21</span>
+<span class="subtitle">version 0.4.22</span>
 	</div>
 </div>
 <script type="text/javascript">
