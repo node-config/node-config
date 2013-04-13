@@ -239,6 +239,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       var t = this;
       FileSystem.unwatchFile(runtimeJsonFilename);
       FileSystem.watchFile(runtimeJsonFilename, {persistent:true}, function(){
+console.error("GOT WATCHFILE CALLBACK: ", arguments);
+console.error("PARSED: ", CONFIG._parseFile(runtimeJsonFilename));
         t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
       });
     },
