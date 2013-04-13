@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1364618460.65" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1364618460.65" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365871495.27" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365871495.27" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1364618460.65"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1364618460.65"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1365871495.27"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1365871495.27"></script>
 </head>
 
 <body id="node-monitor">
@@ -57,6 +57,9 @@
 
 <span class="c1">// Hardcode $NODE_ENV=test for testing</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">;</span>
+
+<span class="c1">// Test for multi-instance applications</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_APP_INSTANCE</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">;</span>
 
 <span class="c1">// Test for environment variable overrides</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CONFIG_EnvOverride_parm__1</span> <span class="o">=</span> <span class="s1">&#39;overridden from test&#39;</span><span class="p">;</span>
@@ -422,7 +425,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.22</span>
+<span class="subtitle">version 0.4.23</span>
 	</div>
 </div>
 <script type="text/javascript">

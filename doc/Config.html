@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1364618460.8" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1364618460.8" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365871495.29" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365871495.29" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1364618460.8"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1364618460.8"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1365871495.29"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1365871495.29"></script>
 </head>
 
 <body id="node-monitor">
@@ -551,6 +551,11 @@ variable.  Defaults to 'development'.
 <p>
 The runtime.json file contains configuration changes made at runtime either
 manually, or by the application setting a configuration value.
+</p>
+<p>
+If the $NODE_APP_INSTANCE environment variable is set, then files with this
+appended will be loaded.  See the Multiple Applicstion Instances section of
+the main documentaion page for more information.
 </p>
                                         </div>
 
@@ -1244,7 +1249,7 @@ Then all handlers (including this one) will be called again with the newly chang
                                         </code>
                                         
                                         <div class="description" property="yui:description">
-                                            Change the runtime.json file watching polling interval.
+                                            Start or stop runtime.json configuration file watching
 <p>
 Node-config automatically monitors and apply changes made to the
 config/runtime.json file.  This paradigm allows for manual changes to running
@@ -1358,7 +1363,7 @@ inotify, and in node.js versions 0.6 and above, this interval is ignored.
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.22</span>
+<span class="subtitle">version 0.4.23</span>
 	</div>
 </div>
 <script type="text/javascript">

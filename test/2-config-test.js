@@ -1,6 +1,9 @@
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
+// Test for multi-instance applications
+process.env.NODE_APP_INSTANCE='3';
+
 // Test for environment variable overrides
 process.env.CONFIG_EnvOverride_parm__1 = 'overridden from test';
 process.env.CONFIG_EnvOverride_parm2 = 13;
@@ -71,6 +74,14 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
     'Loading prior runtime.json configurations is correct': function() {
       assert.equal(CONFIG.Customers.dbName, 'override_from_runtime_json');
+    },
+
+    'Multi-instance default.json override is correct': function() {
+      assert.equal(CONFIG.Customers.altDbPort, 4400);
+    },
+
+    'Multi-instance local.yaml override is correct': function() {
+      assert.equal(CONFIG.Customers.altDbPort1, 2209);
     }
 
   },

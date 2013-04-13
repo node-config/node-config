@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1364618460.9" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1364618460.9" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365871495.31" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365871495.31" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1364618460.9"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1364618460.9"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1365871495.31"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1365871495.31"></script>
 </head>
 
 <body id="node-monitor">
@@ -180,7 +180,7 @@
 
   <h2>Environment Variable Configuration</h2>
   <p>
-    Environment variables can be used to override file configurations.  
+    Environment variables can be used to override file configurations.
     Any environment variable that starts with <i>$CONFIG_</i>
     is set into the CONFIG object.
   </p>
@@ -192,6 +192,35 @@
     Underscores in variable names can be escaped by a double underscore <strong>__</strong>.
     Example:  <i>$CONFIG_Customer_DB__PORT=5984</i> will set the CONFIG.Customer.DB_PORT
     configuration variable to 5984.
+  </p>
+
+  <h2>Multiple Instance Applications</h2>
+  <p>
+    When running multiple instances of your application, you may specify the
+    <i>$NODE_APP_INSTANCE</i> environment variable prior to running
+    your app. If set, this variable should contain an identifier for
+    the specific instance of your app on this server, or within the network.
+  </p>
+  <p>
+    Configuration files appended with this identifier will be loaded after
+    the configuration file without the instance identifier.
+  </p>
+  <p>
+    Example:
+  </p>
+  <pre>
+    $ export NODE_ENV=staging
+    $ export NODE_APP_INSTANCE=3
+    $ node myApp.js
+  </pre>
+  <p>
+    This instructs node-config to load <i>default-3.json</i> (if present)
+    immediately after <i>default.json</i>, and <i>staging-3.json</i> after
+    <i>staging.json</i>.
+  </p>
+  <p>
+    All configuration files (except runtime.json) follow this pattern, allowing
+    your application to specify instance-specific configurations at any level.
   </p>
 
   <h2>Monitoring Changes</h2>
@@ -225,7 +254,7 @@
 
   <h2>Production Deployments</h2>
   <p>
-    Node-config is designed to run in a multi-node deployment, where a few
+    Node-config is designed to run in a multi-node deployment, where many
     instances of your application are running on a production server (usually
     one per core processor).
   </p>
@@ -233,7 +262,7 @@
     If configuration values change at runtime, these changes are persisted
     into the runtime.json file within the config directory.  Multi-node
     application instances keep in synch by watching for and loading changes
-    in this file when detected.
+    in runtime.json when detected.
   </p>
   <p>
     This paradigm does not extend beyond a single machine.
@@ -254,6 +283,16 @@
     method creates an object (named after the module) within the CONFIG object
     containing all module configuration parameters, and their defaults.
   </p>
+  <p>
+    Example:
+  </p>
+  <pre>
+    var CONFIG = require("config");
+    CONFIG.setModuleDefaults("MyModule", {
+      templateName: "t-50",
+      colorScheme: "green"
+    });
+  </pre>
   <p>
     Users of your module may override your defaults in their config/defaults
     file, or any of their deployment-specific configuration files.
@@ -307,7 +346,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.22</span>
+<span class="subtitle">version 0.4.23</span>
 	</div>
 </div>
 <script type="text/javascript">

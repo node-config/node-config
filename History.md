@@ -1,3 +1,9 @@
+0.4.23 / 2013-04-13
+===================
+
+  * Multiple application instance support via $NODE_APP_INSTANCE
+  * Multi-app testing & documentation
+
 0.4.22 / 2013-03-29
 ===================
 
@@ -10,7 +16,6 @@
 
   * Triggering file.watch when an editor saves a file - rename vs. change
   * Installed Travis-CI continuous integration testing framework
-
 
 0.4.20 / 2013-02-21
 ===================
