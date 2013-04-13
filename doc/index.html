@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365871495.31" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365871495.31" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365879139.62" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365879139.62" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1365871495.31"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1365871495.31"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1365879139.62"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1365879139.62"></script>
 </head>
 
 <body id="node-monitor">
@@ -178,23 +178,7 @@
       creditLimit: 600
   </pre>
 
-  <h2>Environment Variable Configuration</h2>
-  <p>
-    Environment variables can be used to override file configurations.
-    Any environment variable that starts with <i>$CONFIG_</i>
-    is set into the CONFIG object.
-  </p>
-  <p>
-    For example, setting <i>$CONFIG_Customer_dbPort=5984</i> will set
-    the CONFIG.Customer.dbPort variable, overriding all file configurations.
-  </p>
-  <p>
-    Underscores in variable names can be escaped by a double underscore <strong>__</strong>.
-    Example:  <i>$CONFIG_Customer_DB__PORT=5984</i> will set the CONFIG.Customer.DB_PORT
-    configuration variable to 5984.
-  </p>
-
-  <h2>Multiple Instance Applications</h2>
+  <h2>Multiple Instance Configuration</h2>
   <p>
     When running multiple instances of your application, you may specify the
     <i>$NODE_APP_INSTANCE</i> environment variable prior to running
@@ -221,6 +205,22 @@
   <p>
     All configuration files (except runtime.json) follow this pattern, allowing
     your application to specify instance-specific configurations at any level.
+  </p>
+
+  <h2>Environment Variable Configuration</h2>
+  <p>
+    Environment variables can be used to override file configurations.
+    Any environment variable that starts with <i>$CONFIG_</i>
+    is set into the CONFIG object.
+  </p>
+  <p>
+    For example, setting <i>$CONFIG_Customer_dbPort=5984</i> will set
+    the CONFIG.Customer.dbPort variable, overriding all file configurations.
+  </p>
+  <p>
+    Underscores in variable names can be escaped by a double underscore <strong>__</strong>.
+    Example:  <i>$CONFIG_Customer_DB__PORT=5984</i> will set the CONFIG.Customer.DB_PORT
+    configuration variable to 5984.
   </p>
 
   <h2>Monitoring Changes</h2>

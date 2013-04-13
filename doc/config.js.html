@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365871495.29" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365871495.29" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365879139.59" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365879139.59" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1365871495.29"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1365871495.29"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1365879139.59"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1365879139.59"></script>
 </head>
 
 <body id="node-monitor">
@@ -68,8 +68,6 @@
     <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>            <span class="c1">// Current runtimeJson extensions</span>
     <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>   <span class="c1">// Filesystem watcher for runtime.json</span>
     <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;APP INSTANCE: &quot;</span> <span class="o">+</span> <span class="nx">appInstance</span><span class="p">);</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Runtime Application Configurations&lt;/p&gt;</span>
@@ -667,7 +665,6 @@
       <span class="c1">// See if the application instance file is available</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">appInstance</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">fullFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">baseName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">appInstance</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">extName</span><span class="p">;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;CHECKING FILE: &quot;</span> <span class="o">+</span> <span class="nx">fullFilename</span><span class="p">);</span>
         <span class="nx">configObj</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">configObj</span><span class="p">)</span> <span class="p">{</span>
           <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>

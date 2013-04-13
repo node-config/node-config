@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365871495.27" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365871495.27" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365879139.57" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365879139.57" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1365871495.27"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1365871495.27"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1365879139.57"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1365879139.57"></script>
 </head>
 
 <body id="node-monitor">
@@ -287,7 +287,11 @@
       <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
       <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">unwatchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">);</span>
       <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">true</span><span class="p">},</span> <span class="kd">function</span><span class="p">(){</span>
-        <span class="nx">t</span><span class="p">.</span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">));</span>
+        <span class="c1">// This was failing on node v0.6 due to the watch happening before full write,</span>
+	<span class="c1">// so adding a small interval so it doesn&#39;t fail on older node.js versions</span>
+	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+	  <span class="nx">t</span><span class="p">.</span><span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">));</span>
+	<span class="p">},</span><span class="mi">10</span><span class="p">);</span>
       <span class="p">});</span>
     <span class="p">},</span>
     <span class="s1">&#39;The runtime.json file was changed&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">runtimeObj</span><span class="p">)</span> <span class="p">{</span>
