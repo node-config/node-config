@@ -239,9 +239,11 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       var t = this;
       FileSystem.unwatchFile(runtimeJsonFilename);
       FileSystem.watchFile(runtimeJsonFilename, {persistent:true}, function(){
-console.error("GOT WATCHFILE CALLBACK: ", arguments);
-console.error("PARSED: ", CONFIG._parseFile(runtimeJsonFilename));
-        t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
+        // This was failing on node v0.6 due to the watch happening before full write,
+	// so adding a small interval so it doesn't fail on older node.js versions
+	setTimeout(function(){
+	  t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
+	},10);
       });
     },
     'The runtime.json file was changed': function(err, runtimeObj) {
