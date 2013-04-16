@@ -257,6 +257,21 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
     'Module default values are persisted': function(err, runtimeObj) {
       assert.equal(runtimeObj.TestModule.parm3, 1234);
+    },
+    'The resetRuntime() method is available': function() {
+      assert.isFunction(CONFIG.resetRuntime);
+    },
+    'Runtime Configuration is empty': function() {
+      assert.isTrue(CONFIG.resetRuntime());
+    }
+  },
+
+  'Assuring you can get originalConfig': {
+    topic: function() {
+      return CONFIG.getOriginalConfig();
+    },
+    'The getOriginalConfig() method is available': function() {
+      assert.isFunction(CONFIG.getOriginalConfig);
     }
   }
 
