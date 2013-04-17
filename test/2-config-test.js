@@ -262,7 +262,11 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.isFunction(CONFIG.resetRuntime);
     },
     'Runtime Configuration is empty': function() {
-      assert.isTrue(CONFIG.resetRuntime());
+      CONFIG.resetRuntime(function(err, written, buffer) {
+        FileSystem.readFile(runtimeJsonFilename, function(err, data) {
+            assert.isEqual(data,'{}');
+        });
+      });
     }
   },
 
