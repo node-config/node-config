@@ -17,6 +17,7 @@ var vows = require('vows');
     newWatchedValue = Math.floor(Math.random() * 100000);
 
 var runtimeJsonFilename = __dirname + '/config/runtime.json';
+var runtimeJsonFilenameBak = runtimeJsonFilename+'.bak';
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
@@ -240,10 +241,12 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       FileSystem.unwatchFile(runtimeJsonFilename);
       FileSystem.watchFile(runtimeJsonFilename, {persistent:true}, function(){
         // This was failing on node v0.6 due to the watch happening before full write,
-	// so adding a small interval so it doesn't fail on older node.js versions
-	setTimeout(function(){
-	  t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
-	},10);
+        // so adding a small interval so it doesn't fail on older node.js versions
+        setTimeout(function(){
+	        t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
+	      },10);
+
+        FileSystem.createReadStream(runtimeJsonFilename).pipe(FileSystem.createWriteStream(runtimeJsonFilenameBak));
       });
     },
     'The runtime.json file was changed': function(err, runtimeObj) {
@@ -266,6 +269,13 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
         FileSystem.readFile(runtimeJsonFilename, function(err, data) {
             assert.isEqual(data,'{}');
         });
+      });
+    },
+    teardown: function() {
+      FileSystem.rename(runtimeJsonFilenameBak, runtimeJsonFilename, function(err) {
+        if(err) {
+          console.log('Cant rename file');
+        }
       });
     }
   },
