@@ -1,3 +1,9 @@
+0.4.24 / 2013-04-13
+===================
+
+  * Added resetRuntime() to reset the runtime.json file
+  * Updated docs to reflect the new public method
+
 0.4.23 / 2013-04-13
 ===================
 

@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1365879139.59" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1365879139.59" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1367010227.64" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1367010227.64" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1365879139.59"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1365879139.59"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1367010227.64"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1367010227.64"></script>
 </head>
 
 <body id="node-monitor">
@@ -1182,6 +1182,45 @@
   <span class="k">return</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
 <span class="p">};</span>
 
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Exposing original Config&lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * This method allows get the original config properties.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @method getOriginalConfig</span>
+<span class="cm"> * @return {object} The original config object is returned</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getOriginalConfig</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">originalConfig</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Reset Runtime Config&lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * This method allows you to reset the runtime.json generated file.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @method resetRuntime</span>
+<span class="cm"> * @param callback {function} An optional callback function</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">resetRuntime</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="s1">&#39;{}&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">written</span><span class="p">,</span> <span class="nx">buffer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Cannot write runtime.json file &quot;</span> <span class="o">+</span> <span class="nx">err</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Write to runtime.json completed&quot;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">written</span><span class="p">,</span> <span class="nx">buffer</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
 <span class="c1">// Assure the configuration object is a singleton.</span>
 <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span> <span class="o">=</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span> <span class="o">?</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span> <span class="o">:</span> <span class="k">new</span> <span class="nx">Config</span><span class="p">();</span>
 
@@ -1231,11 +1270,11 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.23</span>
+<span class="subtitle">version 0.4.24</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
 </script>
 </body>
 </html>
