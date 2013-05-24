@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1367010227.64" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1367010227.64" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1369406797.3" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1369406797.3" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1367010227.64"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1367010227.64"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1369406797.3"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1369406797.3"></script>
 </head>
 
 <body id="node-monitor">
@@ -541,8 +541,10 @@ json is in JSON format, and js is a javascript executable file that is
 require()'d with module.exports being the config object.
 </p>
 <p>
-(hostname) is the $HOST environment variable if set, otherwise the
-hostname found from require('os').hostname()
+hostname is the $HOST environment variable if set, otherwise the $HOSTNAME 
+environment variable if set, otherwise the hostname found from 
+require('os').hostname(). Once a hostname is found, everything from the 
+first period ('.') onwards is removed. For example, abc.example.com becomes abc
 </p>
 <p>
 (deployment) is the deployment type, found in the $NODE_ENV environment

@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1367010227.64" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1367010227.64" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1369406797.3" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1369406797.3" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1367010227.64"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1367010227.64"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1369406797.3"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1369406797.3"></script>
 </head>
 
 <body id="node-monitor">
@@ -599,8 +599,10 @@
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * (hostname) is the $HOST environment variable if set, otherwise the</span>
-<span class="cm"> * hostname found from require(&#39;os&#39;).hostname()</span>
+<span class="cm"> * hostname is the $HOST environment variable if set, otherwise the $HOSTNAME </span>
+<span class="cm"> * environment variable if set, otherwise the hostname found from </span>
+<span class="cm"> * require(&#39;os&#39;).hostname(). Once a hostname is found, everything from the </span>
+<span class="cm"> * first period (&#39;.&#39;) onwards is removed. For example, abc.example.com becomes abc</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
