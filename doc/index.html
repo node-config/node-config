@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1369407391.87" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1369407391.87" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1369407625.92" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1369407625.92" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1369407391.87"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1369407391.87"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1369407625.92"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1369407625.92"></script>
 </head>
 
 <body id="node-monitor">
@@ -92,8 +92,10 @@
     this package.
   </p>
   <p>
-    <i>hostname</i> is the $HOST environment variable if set, otherwise the
-    hostname found from require('os').hostname()
+    <i>hostname</i> is the $HOST environment variable if set, otherwise the $HOSTNAME 
+    environment variable if set, otherwise the hostname found from 
+    require('os').hostname(). Once a hostname is found, everything from the 
+    first period ('.') onwards is removed. For example, abc.example.com becomes abc
   </p>
   <p>
     <i>deployment</i> is the deployment type, found in the $NODE_ENV environment

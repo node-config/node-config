@@ -52,8 +52,10 @@
     this package.
   </p>
   <p>
-    <i>hostname</i> is the \$HOST environment variable if set, otherwise the
-    hostname found from require('os').hostname()
+    <i>hostname</i> is the \$HOST environment variable if set, otherwise the \$HOSTNAME 
+    environment variable if set, otherwise the hostname found from 
+    require('os').hostname(). Once a hostname is found, everything from the 
+    first period ('.') onwards is removed. For example, abc.example.com becomes abc
   </p>
   <p>
     <i>deployment</i> is the deployment type, found in the \$NODE_ENV environment
