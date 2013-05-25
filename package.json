@@ -1,6 +1,6 @@
 {
   "name": "config",
-  "version": "0.4.24",
+  "version": "0.4.25",
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
