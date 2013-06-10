@@ -1,3 +1,9 @@
+0.4.26 / 2013-06-10
+===================
+
+  * Re-watch file on rename (allows editing runtime.json with vi)
+
+
 0.4.25 / 2013-05-24
 ===================
 
