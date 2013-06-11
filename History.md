@@ -2,6 +2,9 @@
 ===================
 
   * Re-watch file on rename (allows editing runtime.json with vi)
+  * Allow runtime.json file watch disable via NODE_CONFIG_DISABLE_FILE_WATCH=Y
+  * Change no yaml parser error message to suggest using js-yaml
+  * Changed default clone depth from 6 to 20 to allow for deeper configurations
 
 
 0.4.25 / 2013-05-24
