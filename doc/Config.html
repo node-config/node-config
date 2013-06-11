@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1369451170.09" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1369451170.09" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1370911304.58" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1370911304.58" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1369451170.09"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1369451170.09"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1370911304.58"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1370911304.58"></script>
 </head>
 
 <body id="node-monitor">
@@ -541,9 +541,9 @@ json is in JSON format, and js is a javascript executable file that is
 require()'d with module.exports being the config object.
 </p>
 <p>
-hostname is the $HOST environment variable if set, otherwise the $HOSTNAME 
-environment variable if set, otherwise the hostname found from 
-require('os').hostname(). Once a hostname is found, everything from the 
+hostname is the $HOST environment variable if set, otherwise the $HOSTNAME
+environment variable if set, otherwise the hostname found from
+require('os').hostname(). Once a hostname is found, everything from the
 first period ('.') onwards is removed. For example, abc.example.com becomes abc
 </p>
 <p>
@@ -1356,6 +1356,10 @@ This method allows you to change the polling interval from the default
 interval (2.5 seconds), or to turn file watching off.  On Linux systems with
 inotify, and in node.js versions 0.6 and above, this interval is ignored.
 </p>
+<p>
+runtime.json file watching can be disabled by setting the NODE_CONFIG_DISABLE_FILE_WATCH
+environment variable to "Y" prior to running your application.
+</p>
                                         </div>
 
                                         <div class="description">
@@ -1461,7 +1465,7 @@ inotify, and in node.js versions 0.6 and above, this interval is ignored.
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.25</span>
+<span class="subtitle">version 0.4.26</span>
 	</div>
 </div>
 <script type="text/javascript">

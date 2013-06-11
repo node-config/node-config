@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1369451170.09" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1369451170.09" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1370911304.58" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1370911304.58" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1369451170.09"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1369451170.09"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1370911304.58"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1370911304.58"></script>
 </head>
 
 <body id="node-monitor">
@@ -59,7 +59,7 @@
     <span class="nx">FileSystem</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="c1">// Static members</span>
-<span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+<span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
     <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">2500</span><span class="p">,</span> <span class="c1">// For old style (pre-6.0) file watching</span>
     <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">]</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">,</span>
     <span class="nx">runtimeJsonFilename</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s1">&#39;NODE_CONFIG_RUNTIME_JSON&#39;</span><span class="p">]</span> <span class="o">||</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">,</span>
@@ -468,6 +468,11 @@
 <span class="cm"> * inotify, and in node.js versions 0.6 and above, this interval is ignored.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * runtime.json file watching can be disabled by setting the NODE_CONFIG_DISABLE_FILE_WATCH</span>
+<span class="cm"> * environment variable to &quot;Y&quot; prior to running your application.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
 <span class="cm"> * @method watchForConfigFileChanges</span>
 <span class="cm"> * @param interval {Integer} - Polling interval in milliseconds.  Defaults to 2500.</span>
 <span class="cm"> */</span>
@@ -484,8 +489,10 @@
     <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">unwatchFile</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="c1">// If interval is zero, don&#39;t attach a new watcher</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">interval</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span><span class="p">;}</span>
+  <span class="c1">// If interval is zero or file watching is disabled, don&#39;t attach a new watcher</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">interval</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s1">&#39;NODE_CONFIG_DISABLE_FILE_WATCH&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
 
   <span class="c1">// Re-merge the runtime JSON file if we notice a change</span>
   <span class="kd">var</span> <span class="nx">onFileChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">retry</span><span class="p">)</span> <span class="p">{</span>
@@ -493,7 +500,7 @@
 
       <span class="c1">// Not much to do on error</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error loading &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error loading &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
         <span class="k">return</span><span class="p">;</span>
       <span class="p">}</span>
 
@@ -520,6 +527,17 @@
     <span class="k">if</span> <span class="p">(</span><span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// This is the latest</span>
       <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">false</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">filename</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// Re-attach watcher on inode change (happens when some editors save a file)</span>
+        <span class="c1">// Wait for the O/S rename to complete, then re-watch the file</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">==</span> <span class="s1">&#39;rename&#39;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+            <span class="nx">t</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span><span class="p">();</span>
+            <span class="nx">onFileChange</span><span class="p">();</span>
+          <span class="p">},</span> <span class="mi">10</span><span class="p">);</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
         <span class="nx">onFileChange</span><span class="p">();</span>
       <span class="p">});</span>
     <span class="p">}</span>
@@ -531,7 +549,7 @@
       <span class="p">});</span>
     <span class="p">}</span>
   <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error watching for file: &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error watching for file: &quot;</span> <span class="o">+</span> <span class="nx">runtimeJsonFilename</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
   <span class="p">}</span>
 
 <span class="p">};</span>
@@ -603,9 +621,9 @@
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * hostname is the $HOST environment variable if set, otherwise the $HOSTNAME </span>
-<span class="cm"> * environment variable if set, otherwise the hostname found from </span>
-<span class="cm"> * require(&#39;os&#39;).hostname(). Once a hostname is found, everything from the </span>
+<span class="cm"> * hostname is the $HOST environment variable if set, otherwise the $HOSTNAME</span>
+<span class="cm"> * environment variable if set, otherwise the hostname found from</span>
+<span class="cm"> * require(&#39;os&#39;).hostname(). Once a hostname is found, everything from the</span>
 <span class="cm"> * first period (&#39;.&#39;) onwards is removed. For example, abc.example.com becomes abc</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
@@ -818,6 +836,9 @@
         <span class="c1">// end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13</span>
         <span class="nx">fileContent</span> <span class="o">+=</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
         <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">VisionmediaYaml</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripYamlComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;No YAML parser loaded.  Suggest adding js-yaml dependency to your package.json file.&quot;</span><span class="p">)</span>
       <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">extension</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span> <span class="p">{</span>
@@ -1276,7 +1297,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.25</span>
+<span class="subtitle">version 0.4.26</span>
 	</div>
 </div>
 <script type="text/javascript">
