@@ -79,4 +79,4 @@ See `LICENSE` file.
 Copyright (c) 2010-2013 Loren West and other contributors
 
   [config]: http://lorenwest.github.com/node-config/latest
-  [monitor]: http://lorenwest.github.com/monitor/
+  [monitor]: https://github.com/lorenwest/node-monitor
