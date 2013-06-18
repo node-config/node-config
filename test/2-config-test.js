@@ -5,7 +5,7 @@ process.env.NODE_ENV='test';
 process.env.NODE_APP_INSTANCE='3';
 
 // Test for environment variable overrides
-process.env.CONFIG_EnvOverride_parm__1 = 'overridden from test';
+process.env.CONFIG_EnvOverride_parm__number__1 = 'overridden from test';
 process.env.CONFIG_EnvOverride_parm2 = 13;
 
 // Dependencies
@@ -97,7 +97,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Double__underscores escape to single_underscores': function() {
-      assert.equal(CONFIG.EnvOverride.parm_1, 'overridden from test');
+
+      JSON.stringify(CONFIG, null, 2);
+      assert.equal(CONFIG.EnvOverride.parm_number_1, 'overridden from test');
     }
   },
 

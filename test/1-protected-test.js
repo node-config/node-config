@@ -14,7 +14,7 @@ process.env.NODE_ENV='test';
 process.env.NODE_APP_INSTANCE='3';
 
 // Test for environment variable overrides
-process.env.CONFIG_EnvOverride_parm__1 = 'overridden from test';
+process.env.CONFIG_EnvOverride_parm__number__1 = 'overridden from test';
 process.env.CONFIG_EnvOverride_parm2 = 13;
 
 // Dependencies
