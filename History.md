@@ -1,3 +1,8 @@
+0.4.27 / 2013-06-18
+===================
+
+  * Fixed a bug preventing double underscores in config environment variables
+
 0.4.26 / 2013-06-10
 ===================
 
@@ -5,7 +10,6 @@
   * Allow runtime.json file watch disable via NODE_CONFIG_DISABLE_FILE_WATCH=Y
   * Change no yaml parser error message to suggest using js-yaml
   * Changed default clone depth from 6 to 20 to allow for deeper configurations
-
 
 0.4.25 / 2013-05-24
 ===================
