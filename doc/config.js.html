@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1370911304.58" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1370911304.58" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1375283917.75" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1375283917.75" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1370911304.58"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1370911304.58"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1375283917.75"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1375283917.75"></script>
 </head>
 
 <body id="node-monitor">
@@ -722,7 +722,7 @@
 
       <span class="kd">var</span> <span class="nx">curCtxt</span> <span class="o">=</span> <span class="nx">envOverride</span><span class="p">;</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">partName</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;`&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">partName</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/`/g</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">==</span> <span class="nx">l</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
           <span class="c1">// Final (element) part</span>
           <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
@@ -1297,7 +1297,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.26</span>
+<span class="subtitle">version 0.4.27</span>
 	</div>
 </div>
 <script type="text/javascript">

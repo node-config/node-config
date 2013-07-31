@@ -1,3 +1,8 @@
+0.4.28 / 2013-07-31
+===================
+
+  * Eliminated a totally annoying install warning in newer versions of NPM
+
 0.4.27 / 2013-06-18
 ===================
 

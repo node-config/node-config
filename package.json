@@ -14,6 +14,10 @@
     "coffee-script" : ">=1.2.0",
     "vows" : ">=0.5.13"
   },
+  "repository": {
+    "type" : "git",
+    "url" : "http://github.com/lorenwest/node-config.git"
+  },
   "engines": {"node": ">0.4.x"},
   "scripts": {
     "test" : "./node_modules/vows/bin/vows test/*.js --spec"

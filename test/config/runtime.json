@@ -1,6 +1,13 @@
 {
+  "TestModule": {
+    "parm3": 1234
+  },
   "Customers": {
     "dbName": "override_from_runtime_json"
   },
-  "watchThisValue": 27465
+  "EnvOverride": {
+    "parm_number_1": "overridden from test",
+    "parm2": 13
+  },
+  "watchThisValue": 87261
 }
