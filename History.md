@@ -1,3 +1,8 @@
+0.4.29 / 2013-08-07
+===================
+
+  * Added flag for disabling the write of runtime.json
+
 0.4.28 / 2013-07-31
 ===================
 

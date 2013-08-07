@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1375284117.04" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1375284117.04" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1375893680.75" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1375893680.75" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1375284117.04"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1375284117.04"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1375893680.75"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1375893680.75"></script>
 </head>
 
 <body id="node-monitor">
@@ -566,6 +566,9 @@
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_persistConfigsOnChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">objectToWatch</span><span class="p">)</span> <span class="p">{</span>
 
+  <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s1">&#39;NODE_CONFIG_PERSIST_ON_CHANGE&#39;</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;N&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
   <span class="c1">// Watch for configuration value changes</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
   <span class="nx">objectToWatch</span> <span class="o">=</span> <span class="nx">objectToWatch</span> <span class="o">||</span> <span class="nx">t</span><span class="p">;</span>
@@ -1297,7 +1300,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.28</span>
+<span class="subtitle">version 0.4.29</span>
 	</div>
 </div>
 <script type="text/javascript">
