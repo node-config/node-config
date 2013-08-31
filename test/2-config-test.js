@@ -14,7 +14,9 @@ var vows = require('vows');
     CONFIG = require('../lib/config'),
     FileSystem = require('fs'),
     originalWatchedValue = CONFIG.watchThisValue,
-    newWatchedValue = Math.floor(Math.random() * 100000);
+    newWatchedValue = Math.floor(Math.random() * 100000),
+    originalDynamicArray = CONFIG.dynamicArray,
+    newDynamicArray = [Math.floor(Math.random() * 100000), Math.floor(Math.random() * 100000)];
 
 var runtimeJsonFilename = __dirname + '/config/runtime.json';
 var runtimeJsonFilenameBak = runtimeJsonFilename+'.bak';
@@ -71,6 +73,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
     'Loading configurations from the local environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPassword2, 'another password');
+      assert.deepEqual(CONFIG.Customers.lang, ['en','de','es']);
     },
 
     'Loading prior runtime.json configurations is correct': function() {
@@ -189,9 +192,15 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       // Attach this topic as a watcher
       var cb = this.callback;
       CONFIG.watch(CONFIG, null, function(obj, prop, oldValue, newValue){
-	  // Don't process the submodule test - that's for later
-	  if (prop == 'parm3') return;
-    	  cb(null, {obj:obj, prop:prop, oldValue:oldValue, newValue:newValue});
+        // Don't process the submodule test - that's for later
+        if (prop == 'parm3') return;
+        if (prop == 'dynamicArray') return;
+        if (prop == 'staticArray') {
+          cb('Watch callback should not have been called for staticArray');
+          return false;
+        }
+
+        cb(null, {obj:obj, prop:prop, oldValue:oldValue, newValue:newValue});
       });
 
       // Write the new watched value out to the runtime.json file
@@ -199,6 +208,12 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
       // Test that submodule configurations are persisted
       CONFIG.TestModule.parm3 = 1234;
+
+      // Write the new array value out to the runtime.json file
+      CONFIG.dynamicArray = newDynamicArray;
+
+      // Test that changing an array d
+      CONFIG.staticArray = [2,1,3];
     },
 
     'The watch() method is available': function() {
@@ -259,6 +274,10 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
     'Changed configuration values were persisted': function(err, runtimeObj) {
       assert.equal(runtimeObj.watchThisValue, CONFIG.watchThisValue);
+      assert.deepEqual(runtimeObj.dynamicArray, CONFIG.dynamicArray);
+    },
+    'Unchanged configuration values were not persisted': function(err, runtimeObj) {
+      assert.isUndefined(runtimeObj.staticArray);
     },
     'Module default values are persisted': function(err, runtimeObj) {
       assert.equal(runtimeObj.TestModule.parm3, 1234);
