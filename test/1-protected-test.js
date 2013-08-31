@@ -22,6 +22,9 @@ var CONFIG = require('../lib/config');
 var vows = require('vows');
 var assert = require('assert');
 
+// Make a copy of the command line args
+var argvOrg = process.argv;
+
 /**
  * <p>Tests for underlying node-config utilities.  To run type:</p>
  * <pre>npm test config</pre>
@@ -331,6 +334,42 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       // directly onto the object. That caused problems when iterating over the
       // object.  This implementation does the same thing, but hides them.
       assert.isTrue(JSON.stringify(config) == '{"subObject":{"item1":23,"subSubObject":{"item2":"hello"}}}');
+    }
+  },
+
+  '_getCmdLineArg() tests': {
+    topic: function() {
+        // Set process.argv example object
+        var testArgv = [
+            process.argv[0],
+            process.argv[1],
+            'NODE_ENV',
+            'staging'
+        ];
+        process.argv = testArgv;
+        return CONFIG._getCmdLineArg('NODE_ENV');
+    },
+    'The function exists': function() {
+        assert.isFunction(CONFIG._getCmdLineArg);
+    },
+    'NodeEnv should be staging': function(nodeEnv) {
+        assert.equal(nodeEnv, 'staging');
+    },
+    'Returns false if the argument did not match': function() {
+        assert.isFalse(CONFIG._getCmdLineArg('NODE_CONFIG_DIR'));
+    },
+    'Returns the argument (alternative syntax)': function() {
+        process.argv.push('--node_config_dir=/etc/nodeConfig');
+        assert.equal(CONFIG._getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
+    },
+    'Returns always the first matching': function() {
+        process.argv.push('NODE_ENV=test');
+        assert.equal(CONFIG._getCmdLineArg('NODE_ENV'), 'staging');
+    },
+    'Revert original process aruments': function() {
+        assert.notEqual(process.argv, argvOrg);
+        process.argv = argvOrg;
+        assert.equal(process.argv, argvOrg);
     }
   }
 
