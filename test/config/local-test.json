@@ -1,5 +1,6 @@
 {
   "Customers": {
-    "dbPassword2":"another password"
+    "dbPassword2":"another password",
+    "lang":["en","de","es"]
   }
 }
