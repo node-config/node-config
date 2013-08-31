@@ -269,7 +269,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Runtime Configuration is empty': function() {
       CONFIG.resetRuntime(function(err, written, buffer) {
         FileSystem.readFile(runtimeJsonFilename, function(err, data) {
-            assert.isEqual(data,'{}');
+            assert.equal(data,'{}');
         });
       });
     },
@@ -288,6 +288,17 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
     'The getOriginalConfig() method is available': function() {
       assert.isFunction(CONFIG.getOriginalConfig);
+    }
+  },
+
+  'Checking that extendFrom can extend configs from directory': {
+    topic: function() {
+      CONFIG.extendFrom(__dirname + '/subconfigs');
+      return CONFIG;
+    },
+    'Loading configuration from subconfigs is correct': function(config) {
+      assert.isTrue(typeof(config.SubModule) != "undefined");
+      assert.equal(config.SubModule.parm2, "value2");
     }
   }
 
