@@ -291,14 +291,19 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     }
   },
 
-  'Checking that extendFrom can extend configs from directory': {
+  'Checking extendFrom': {
     topic: function() {
-      CONFIG.extendFrom(__dirname + '/subconfigs');
       return CONFIG;
     },
     'Loading configuration from subconfigs is correct': function(config) {
+      config.extendFrom(__dirname + '/subconfigs');
       assert.isTrue(typeof(config.SubModule) != "undefined");
       assert.equal(config.SubModule.parm2, "value2");
+    },
+    'Loading configuration from object is correct': function(config) {
+      config.extendFrom({ ExtendFromObject: { check: "me" } });
+      assert.isTrue(typeof(config.ExtendFromObject) != "undefined");
+      assert.equal(config.ExtendFromObject.check, "me");
     }
   }
 

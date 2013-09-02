@@ -9,5 +9,11 @@
     "parm_number_1": "overridden from test",
     "parm2": 13
   },
-  "watchThisValue": 87261
+  "watchThisValue": 77803,
+  "SubModule": {
+    "parm2": "value2"
+  },
+  "ExtendFromObject": {
+    "check": "me"
+  }
 }
