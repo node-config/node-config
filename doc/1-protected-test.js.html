@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1375893680.72" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1375893680.72" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1379047859.93" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1379047859.93" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1375893680.72"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1375893680.72"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1379047859.93"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1379047859.93"></script>
 </head>
 
 <body id="node-monitor">
@@ -61,14 +61,21 @@
 <span class="c1">// Test for multi-instance applications</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_APP_INSTANCE</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">;</span>
 
-<span class="c1">// Test for environment variable overrides</span>
+<span class="c1">// Test for old style environment variable overrides</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CONFIG_EnvOverride_parm__number__1</span> <span class="o">=</span> <span class="s1">&#39;overridden from test&#39;</span><span class="p">;</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CONFIG_EnvOverride_parm2</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+
+<span class="c1">// Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="o">=</span><span class="s1">&#39;{&quot;EnvOverride&quot;:{&quot;parm3&quot;:&quot;overridden from $NODE_CONFIG&quot;,&quot;parm4&quot;:100}}&#39;</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;--NODE_CONFIG={&quot;EnvOverride&quot;:{&quot;parm5&quot;:&quot;overridden from --NODE_CONFIG&quot;,&quot;parm6&quot;:101}}&#39;</span><span class="p">);</span>
 
 <span class="c1">// Dependencies</span>
 <span class="kd">var</span> <span class="nx">CONFIG</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../lib/config&#39;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">vows</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;vows&#39;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">assert</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;assert&#39;</span><span class="p">);</span>
+
+<span class="c1">// Make a copy of the command line args</span>
+<span class="kd">var</span> <span class="nx">argvOrg</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Tests for underlying node-config utilities.  To run type:&lt;/p&gt;</span>
@@ -258,8 +265,8 @@
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)).</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
     <span class="p">},</span>
     <span class="s1">&#39;Returns an empty object if no differences (deep)&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
-      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">,</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;world&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">,</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">}}};</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">)),</span> <span class="s1">&#39;object&#39;</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)).</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
     <span class="p">},</span>
@@ -271,14 +278,15 @@
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">hello</span><span class="p">,</span> <span class="s1">&#39;world&#39;</span><span class="p">);</span>
     <span class="p">},</span>
     <span class="s1">&#39;Returns just the diff values (deep)&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;wurld&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
-      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;wurld&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">c</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;wurld&#39;</span><span class="p">,</span> <span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">c</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">a</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
+      <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">{</span><span class="nx">value_1</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s1">&#39;wurld&#39;</span><span class="p">,</span> <span class="nx">value_3</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span> <span class="nx">value_4</span><span class="o">:</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;goodbye&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="nx">deepObj</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">22</span><span class="p">,</span><span class="nx">b</span><span class="o">:</span><span class="p">{</span><span class="nx">a</span><span class="o">:</span><span class="mi">45</span><span class="p">,</span><span class="nx">c</span><span class="o">:</span><span class="mi">44</span><span class="p">}}};</span>
       <span class="kd">var</span> <span class="nx">diff</span> <span class="o">=</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">);</span>
-      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">.</span><span class="nx">b</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">a</span><span class="p">,</span> <span class="mi">45</span><span class="p">);</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">deepObj</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">,</span> <span class="mi">44</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">deepEqual</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nx">value_4</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;goodbye&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">]);</span>
     <span class="p">}</span>
   <span class="p">},</span>
 
@@ -380,6 +388,41 @@
       <span class="c1">// object.  This implementation does the same thing, but hides them.</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;{&quot;subObject&quot;:{&quot;item1&quot;:23,&quot;subSubObject&quot;:{&quot;item2&quot;:&quot;hello&quot;}}}&#39;</span><span class="p">);</span>
     <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s1">&#39;_getCmdLineArg() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Set process.argv example object</span>
+        <span class="kd">var</span> <span class="nx">testArgv</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s1">&#39;--NODE_ENV=staging&#39;</span>
+        <span class="p">];</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="nx">testArgv</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_getCmdLineArg</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_getCmdLineArg</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;NODE_ENV should be staging&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">nodeEnv</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">nodeEnv</span><span class="p">,</span> <span class="s1">&#39;staging&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Returns false if the argument did not match&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">isFalse</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_getCmdLineArg</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Returns the argument (alternative syntax)&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;--NODE_CONFIG_DIR=/etc/nodeConfig&#39;</span><span class="p">);</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_getCmdLineArg</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">),</span> <span class="s1">&#39;/etc/nodeConfig&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Returns always the first matching&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;--NODE_ENV=test&#39;</span><span class="p">);</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_getCmdLineArg</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">),</span> <span class="s1">&#39;staging&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Revert original process aruments&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">notEqual</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="nx">argvOrg</span><span class="p">);</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="nx">argvOrg</span><span class="p">;</span>
+        <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="nx">argvOrg</span><span class="p">);</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 
 <span class="p">});</span>
@@ -425,7 +468,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.29</span>
+<span class="subtitle">version 0.4.30</span>
 	</div>
 </div>
 <script type="text/javascript">

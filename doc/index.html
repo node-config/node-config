@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1375893680.78" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1375893680.78" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1379047859.99" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1379047859.99" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1375893680.78"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1375893680.78"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1379047859.99"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1379047859.99"></script>
 </head>
 
 <body id="node-monitor">
@@ -92,9 +92,9 @@
     this package.
   </p>
   <p>
-    <i>hostname</i> is the $HOST environment variable if set, otherwise the $HOSTNAME 
-    environment variable if set, otherwise the hostname found from 
-    require('os').hostname(). Once a hostname is found, everything from the 
+    <i>hostname</i> is the $HOST environment variable if set, otherwise the $HOSTNAME
+    environment variable if set, otherwise the hostname found from
+    require('os').hostname(). Once a hostname is found, everything from the
     first period ('.') onwards is removed. For example, abc.example.com becomes abc
   </p>
   <p>
@@ -212,20 +212,31 @@
     your application to specify instance-specific configurations at any level.
   </p>
 
-  <h2>Environment Variable Configuration</h2>
+  <h2>Environment Variable Configurations</h2>
   <p>
-    Environment variables can be used to override file configurations.
-    Any environment variable that starts with <i>$CONFIG_</i>
-    is set into the CONFIG object.
+    If the $NODE_CONFIG environment variable is set, it must be a valid
+    JSON string containing configuration overrides.  These are applied
+    after all configuration files have been loaded.
   </p>
   <p>
-    For example, setting <i>$CONFIG_Customer_dbPort=5984</i> will set
+    For example, setting <i>$NODE_CONFIG={"Customer":{"dbPort":5984}}</i> will set
     the CONFIG.Customer.dbPort variable, overriding all file configurations.
   </p>
+
+  <h2>Command Line Alternatives to Environment Variables</h2>
   <p>
-    Underscores in variable names can be escaped by a double underscore <strong>__</strong>.
-    Example:  <i>$CONFIG_Customer_DB__PORT=5984</i> will set the CONFIG.Customer.DB_PORT
-    configuration variable to 5984.
+    All environment variables described above may also be supplied on the command
+    line.
+  </p>
+  <p>
+    Example:
+  </p>
+  <pre>
+    $ node myApp.js --NODE_ENV=staging --NODE_APP_INSTANCE=3 '--NODE_CONFIG={"Customer":{"dbPort":5984}}'
+  </pre>
+  <p>
+    The format must be two dashes followed by the environment variable name,
+    an equals sign, and the value (as in the example above).
   </p>
 
   <h2>Monitoring Changes</h2>
@@ -351,11 +362,11 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.29</span>
+<span class="subtitle">version 0.4.30</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method__loadOldStyleEnv", "access": "protected", "host": "Config", "type": "method", "name": "_loadOldStyleEnv"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
 </script>
 </body>
 </html>
