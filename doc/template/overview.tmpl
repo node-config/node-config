@@ -66,7 +66,9 @@
     manually, or by the application setting a configuration value.  The location is
     specified by <i>NODE_CONFIG_RUNTIME_JSON</i> environment variable. By default, it
     is a file called runtime.json in <i>NODE_CONFIG_DIR</i> directory.  Node-config
-    monitors this file and loads any new configurations it detects.
+    monitors this file and loads any new configurations it detects.  This file is
+    loaded after all other configurations, including the \$NODE_CONFIG environment
+    variable and --NODE_CONFIG command line parameter (see below).
   </p>
   <p>
     In the running application, each configuration parameter is internally
@@ -176,11 +178,11 @@
   <p>
     If the \$NODE_CONFIG environment variable is set, it must be a valid
     JSON string containing configuration overrides.  These are applied
-    after all configuration files have been loaded.
+    after configuration files have been loaded.
   </p>
   <p>
     For example, setting <i>\$NODE_CONFIG={"Customer":{"dbPort":5984}}</i> will set
-    the CONFIG.Customer.dbPort variable, overriding all file configurations.
+    the CONFIG.Customer.dbPort variable, overriding file configurations.
   </p>
 
   <h2>Command Line Alternatives to Environment Variables</h2>

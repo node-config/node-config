@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1379047859.95" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1379047859.95" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1379053589.57" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1379053589.57" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1379047859.95"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1379047859.95"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1379053589.57"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1379053589.57"></script>
 </head>
 
 <body id="node-monitor">
@@ -744,13 +744,6 @@
     <span class="p">});</span>
   <span class="p">});</span>
 
-  <span class="c1">// Remember the original configuration (before adding runtimeJson)</span>
-  <span class="nx">originalConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
-
-  <span class="c1">// Extend the original config with any prior runtime.json diffs</span>
-  <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">)</span> <span class="o">||</span> <span class="p">{};</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
-
   <span class="c1">// Override configurations with the old-style environment variables</span>
   <span class="c1">// Warning: This will be deprecated in a future major revision release</span>
   <span class="kd">var</span> <span class="nx">oldStyleEnv</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_loadOldStyleEnv</span><span class="p">();</span>
@@ -792,6 +785,13 @@
       <span class="nx">parsed</span><span class="o">:</span> <span class="nx">cmdLineConfig</span><span class="p">,</span>
     <span class="p">});</span>
   <span class="p">}</span>
+
+  <span class="c1">// Remember the original configuration (before adding runtimeJson)</span>
+  <span class="nx">originalConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+
+  <span class="c1">// Extend the original config with any prior runtime.json diffs</span>
+  <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">)</span> <span class="o">||</span> <span class="p">{};</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
 
   <span class="c1">// Attach the config.prototype to all sub-objects.</span>
   <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
