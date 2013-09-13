@@ -1,12 +1,19 @@
+// Change the configuration directory for testing
+process.env.NODE_CONFIG_DIR = __dirname + '/config';
+
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
 // Test for multi-instance applications
 process.env.NODE_APP_INSTANCE='3';
 
-// Test for environment variable overrides
+// Test for old style environment variable overrides
 process.env.CONFIG_EnvOverride_parm__number__1 = 'overridden from test';
 process.env.CONFIG_EnvOverride_parm2 = 13;
+
+// Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
+process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
+process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
 
 // Dependencies
 var vows = require('vows');
@@ -90,7 +97,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
   },
 
-  'Configurations from environment variables': {
+  'Old-Style Configurations from environment variables (deprecated)': {
     topic: function() {
       return CONFIG;
     },
@@ -104,6 +111,36 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       JSON.stringify(CONFIG, null, 2);
       assert.equal(CONFIG.EnvOverride.parm_number_1, 'overridden from test');
     }
+  },
+
+  'Configurations from the $NODE_CONFIG environment variable': {
+    topic: function() {
+      return CONFIG;
+    },
+
+    'Configuration can come from the $NODE_CONFIG environment': function() {
+      assert.equal(CONFIG.EnvOverride.parm3, 'overridden from $NODE_CONFIG');
+    },
+
+    'Type correct configurations from $NODE_CONFIG': function() {
+      assert.equal(CONFIG.EnvOverride.parm4, 100);
+    }
+
+  },
+
+  'Configurations from the --NODE_CONFIG command line': {
+    topic: function() {
+      return CONFIG;
+    },
+
+    'Configuration can come from the --NODE_CONFIG command line argument': function() {
+      assert.equal(CONFIG.EnvOverride.parm5, 'overridden from --NODE_CONFIG');
+    },
+
+    'Type correct configurations from --NODE_CONFIG': function() {
+      assert.equal(CONFIG.EnvOverride.parm6, 101);
+    }
+
   },
 
  'Assuring a configuration property can be hidden': {

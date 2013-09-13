@@ -1,12 +1,14 @@
-0.4.30 / 
+0.4.30 / 2013-10-12
 ===================
 
   * More consistent array extension
-  * Allowing all environment variables as command line params
   * No longer requiring a config directory
   * Not erroneously writing runtime.json
   * Exposing the original configuration sources
-  * Allowing all environment variables from the command line
+  * Added --NODE_CONFIG={json} command line overrides
+  * Added $NODE_CONFIG={json} environment variable overrides
+  * Consistent handling of environment variables and command line parameters
+  * Reached 100 regression tests
 
 0.4.29 / 2013-08-07
 ===================
