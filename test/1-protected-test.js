@@ -344,8 +344,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
         var testArgv = [
             process.argv[0],
             process.argv[1],
-            'NODE_ENV',
-            'staging'
+            '--NODE_ENV=staging'
         ];
         process.argv = testArgv;
         return CONFIG._getCmdLineArg('NODE_ENV');
@@ -353,18 +352,18 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     'The function exists': function() {
         assert.isFunction(CONFIG._getCmdLineArg);
     },
-    'NodeEnv should be staging': function(nodeEnv) {
+    'NODE_ENV should be staging': function(nodeEnv) {
         assert.equal(nodeEnv, 'staging');
     },
     'Returns false if the argument did not match': function() {
         assert.isFalse(CONFIG._getCmdLineArg('NODE_CONFIG_DIR'));
     },
     'Returns the argument (alternative syntax)': function() {
-        process.argv.push('--node_config_dir=/etc/nodeConfig');
+        process.argv.push('--NODE_CONFIG_DIR=/etc/nodeConfig');
         assert.equal(CONFIG._getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
     },
     'Returns always the first matching': function() {
-        process.argv.push('NODE_ENV=test');
+        process.argv.push('--NODE_ENV=test');
         assert.equal(CONFIG._getCmdLineArg('NODE_ENV'), 'staging');
     },
     'Revert original process aruments': function() {

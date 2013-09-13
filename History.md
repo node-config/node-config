@@ -1,11 +1,12 @@
 0.4.30 / 
 ===================
 
-  * Allowing all environment variables from the command line
   * More consistent array extension
-  * No longer rquiring a config directory
+  * Allowing all environment variables as command line params
+  * No longer requiring a config directory
   * Not erroneously writing runtime.json
   * Exposing the original configuration sources
+  * Allowing all environment variables from the command line
 
 0.4.29 / 2013-08-07
 ===================
