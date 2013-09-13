@@ -22,6 +22,9 @@ var CONFIG = require('../lib/config');
 var vows = require('vows');
 var assert = require('assert');
 
+// Make a copy of the command line args
+var argvOrg = process.argv;
+
 /**
  * <p>Tests for underlying node-config utilities.  To run type:</p>
  * <pre>npm test config</pre>
@@ -210,8 +213,8 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.isTrue(Object.keys(CONFIG._diffDeep(a, b)).length == 0);
     },
     'Returns an empty object if no differences (deep)': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29, deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'world', value_3: 14, deepObj:{a:22,b:{a:44,c:45}}};
+      var a = {value_3: 14, hello:'world', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
+      var b = {value_1: 29, hello:'world', value_3: 14, value_4:[1,'hello',2], deepObj:{a:22,b:{a:44,c:45}}};
       assert.equal(typeof(CONFIG._diffDeep(a,b)), 'object');
       assert.isTrue(Object.keys(CONFIG._diffDeep(a, b)).length == 0);
     },
@@ -223,14 +226,15 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.equal(diff.hello, 'world');
     },
     'Returns just the diff values (deep)': function() {
-      var a = {value_3: 14, hello:'wurld', value_1: 29, deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'wurld', value_3: 14, deepObj:{a:22,b:{a:45,c:44}}};
+      var a = {value_3: 14, hello:'wurld', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
+      var b = {value_1: 29, hello:'wurld', value_3: 14, value_4:[1,'goodbye',2], deepObj:{a:22,b:{a:45,c:44}}};
       var diff = CONFIG._diffDeep(a,b);
-      assert.equal(Object.keys(diff).length, 1);
+      assert.equal(Object.keys(diff).length, 2);
       assert.equal(Object.keys(diff.deepObj).length, 1);
       assert.equal(Object.keys(diff.deepObj.b).length, 2);
       assert.equal(diff.deepObj.b.a, 45);
       assert.equal(diff.deepObj.b.c, 44);
+      assert.deepEqual(diff.value_4, [1, 'goodbye', 2]);
     }
   },
 
@@ -331,6 +335,42 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       // directly onto the object. That caused problems when iterating over the
       // object.  This implementation does the same thing, but hides them.
       assert.isTrue(JSON.stringify(config) == '{"subObject":{"item1":23,"subSubObject":{"item2":"hello"}}}');
+    }
+  },
+
+  '_getCmdLineArg() tests': {
+    topic: function() {
+        // Set process.argv example object
+        var testArgv = [
+            process.argv[0],
+            process.argv[1],
+            'NODE_ENV',
+            'staging'
+        ];
+        process.argv = testArgv;
+        return CONFIG._getCmdLineArg('NODE_ENV');
+    },
+    'The function exists': function() {
+        assert.isFunction(CONFIG._getCmdLineArg);
+    },
+    'NodeEnv should be staging': function(nodeEnv) {
+        assert.equal(nodeEnv, 'staging');
+    },
+    'Returns false if the argument did not match': function() {
+        assert.isFalse(CONFIG._getCmdLineArg('NODE_CONFIG_DIR'));
+    },
+    'Returns the argument (alternative syntax)': function() {
+        process.argv.push('--node_config_dir=/etc/nodeConfig');
+        assert.equal(CONFIG._getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
+    },
+    'Returns always the first matching': function() {
+        process.argv.push('NODE_ENV=test');
+        assert.equal(CONFIG._getCmdLineArg('NODE_ENV'), 'staging');
+    },
+    'Revert original process aruments': function() {
+        assert.notEqual(process.argv, argvOrg);
+        process.argv = argvOrg;
+        assert.equal(process.argv, argvOrg);
     }
   }
 
