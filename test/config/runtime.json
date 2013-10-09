@@ -5,13 +5,9 @@
   "Customers": {
     "dbName": "override_from_runtime_json"
   },
-  "EnvOverride": {
-    "parm_number_1": "overridden from test",
-    "parm2": 13
-  },
-  "watchThisValue": 85935,
+  "watchThisValue": 10788,
   "dynamicArray": [
-    59524,
-    33370
+    99287,
+    72082
   ]
 }
