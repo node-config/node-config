@@ -1,4 +1,4 @@
-0.4.31 /
+0.4.31 / 2013-10-18
 ===================
 
   * Changed getConfigSources to copy array vs. object
