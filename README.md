@@ -1,8 +1,8 @@
 node-config
 ===========
 
-[![Build Status](https://secure.travis-ci.org/lorenwest/node-config.png?branch=master)](https://travis-ci.org/lorenwest/node-config)
-[![NPM](https://nodei.co/npm/config.png?downloads=true&stars=true)](https://nodei.co/npm/config/)
+[![Build Status](https://secure.travis-ci.org/lorenwest/node-config.png?branch=master)](https://travis-ci.org/lorenwest/node-config)<br>
+[![NPM](https://nodei.co/npm/config.png?downloads=true&stars=true)](https://nodei.co/npm/config/)<br>
 [![NPM](https://nodei.co/npm-dl/config.png?months=9)](https://nodei.co/npm/config/)
 
 Configuration control for production node deployments
