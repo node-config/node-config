@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1379053589.57" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1379053589.57" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1382629024.25" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1382629024.25" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1379053589.57"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1379053589.57"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1382629024.25"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1382629024.25"></script>
 </head>
 
 <body id="node-monitor">
@@ -344,7 +344,7 @@
       <span class="nx">moduleConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">({},</span> <span class="nx">defaultProperties</span><span class="p">);</span>
 
   <span class="c1">// Set module defaults into the first sources element</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">configSources</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span> <span class="o">!==</span> <span class="s1">&#39;Module Defaults&#39;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">configSources</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">configSources</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span> <span class="o">!==</span> <span class="s1">&#39;Module Defaults&#39;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">configSources</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Module Defaults&#39;</span><span class="p">,</span>
       <span class="nx">parsed</span><span class="o">:</span> <span class="p">{}</span>
@@ -571,7 +571,10 @@
       <span class="p">});</span>
     <span class="p">}</span>
   <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error watching for file: &quot;</span> <span class="o">+</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+    <span class="c1">// Complain if it exists and we can&#39;t watch it</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">code</span> <span class="o">!==</span> <span class="s1">&#39;ENOENT&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error watching for file: &quot;</span> <span class="o">+</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 
 <span class="p">};</span>
@@ -591,7 +594,7 @@
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getConfigSources</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">({},</span> <span class="nx">configSources</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">configSources</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -766,7 +769,7 @@
     <span class="p">}</span>
     <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">newStyleEnv</span><span class="p">);</span>
     <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;$NODE_CONFIG environment variable&quot;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;$NODE_CONFIG&quot;</span><span class="p">,</span>
       <span class="nx">parsed</span><span class="o">:</span> <span class="nx">newStyleEnv</span><span class="p">,</span>
     <span class="p">});</span>
   <span class="p">}</span>
@@ -781,7 +784,7 @@
     <span class="p">}</span>
     <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">cmdLineConfig</span><span class="p">);</span>
     <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;--NODE_CONFIG command line argument&quot;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;--NODE_CONFIG argument&quot;</span><span class="p">,</span>
       <span class="nx">parsed</span><span class="o">:</span> <span class="nx">cmdLineConfig</span><span class="p">,</span>
     <span class="p">});</span>
   <span class="p">}</span>
@@ -883,8 +886,7 @@
       <span class="k">try</span> <span class="p">{</span>
         <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="s1">&#39;{}&#39;</span><span class="p">);</span>
       <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Cannot write runtime.json file &quot;</span> <span class="o">+</span> <span class="nx">e</span><span class="p">);</span>
-        <span class="c1">//if we cannot write file, clear watch function</span>
+        <span class="c1">// If we cannot write file, clear watch function.</span>
         <span class="nx">t</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
           <span class="k">return</span><span class="p">;</span>
         <span class="p">};</span>
@@ -961,12 +963,14 @@
     <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Cannot parse config file: &#39;&quot;</span> <span class="o">+</span> <span class="nx">fullFilename</span> <span class="o">+</span> <span class="s2">&quot;&#39;: &quot;</span> <span class="o">+</span> <span class="nx">e3</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="c1">// Keep track of this configuration source</span>
-  <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="nx">fullFilename</span><span class="p">,</span>
-    <span class="nx">original</span><span class="o">:</span> <span class="nx">fileContent</span><span class="p">,</span>
-    <span class="nx">parsed</span><span class="o">:</span> <span class="nx">configObject</span><span class="p">,</span>
-  <span class="p">});</span>
+  <span class="c1">// Keep track of this configuration source if it has anything in it</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">configObject</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="nx">fullFilename</span><span class="p">,</span>
+      <span class="nx">original</span><span class="o">:</span> <span class="nx">fileContent</span><span class="p">,</span>
+      <span class="nx">parsed</span><span class="o">:</span> <span class="nx">configObject</span><span class="p">,</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
 
   <span class="k">return</span> <span class="nx">configObject</span><span class="p">;</span>
 <span class="p">};</span>
@@ -1399,7 +1403,7 @@
     <span class="kd">var</span> <span class="nx">cmdLineArgs</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span>
         <span class="nx">argName</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span> <span class="o">+</span> <span class="nx">searchFor</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span><span class="p">;</span>
 
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">argvIt</span> <span class="k">in</span> <span class="nx">cmdLineArgs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">argvIt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">argvIt</span> <span class="o">&lt;</span> <span class="nx">cmdLineArgs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">argvIt</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">cmdLineArgs</span><span class="p">[</span><span class="nx">argvIt</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">argName</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">cmdLineArgs</span><span class="p">[</span><span class="nx">argvIt</span><span class="p">].</span><span class="nx">substr</span><span class="p">(</span><span class="nx">argName</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
       <span class="p">}</span>
@@ -1457,7 +1461,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.30</span>
+<span class="subtitle">version 0.4.32</span>
 	</div>
 </div>
 <script type="text/javascript">

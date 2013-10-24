@@ -1,3 +1,9 @@
+0.4.32 / 2013-10-24
+===================
+
+  * Don't freak out if running without a config directory
+  * Don't be so chatty if runtime.json doesn't exist
+
 0.4.31 / 2013-10-18
 ===================
 
