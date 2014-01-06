@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1382629024.25" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1382629024.25" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1389023854.24" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1389023854.24" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1382629024.25"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1382629024.25"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1389023854.24"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1389023854.24"></script>
 </head>
 
 <body id="node-monitor">
@@ -1350,6 +1350,82 @@ This method allows you to reset the runtime.json generated file.
                                     </div>
                                     <hr />
                                     </div>
+                                    <div class="" rel="yui:method" resource="#method_safeWriteFile">
+                                    <h4>
+                                        <a name="method_safeWriteFile">safeWriteFile</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">safeWriteFile</strong>
+                                           (
+                                                
+                                                        
+                                                         filename
+                                                    
+                                                
+                                                        , 
+                                                         content
+                                                    
+                                                
+                                                        , 
+                                                         callback
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            <p>Safely write a file</p>
+<p>
+This method safely overwrites a file by first writing to a temporary file
+and then renaming it. This to ensure no other process reads to file in a
+truncated state.
+</p>
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">filename</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  Filename to write to.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">content</span>
+                                                        &lt;<span property="yui:type">String</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">   Data to write.</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">callback</span>
+                                                        &lt;<span property="yui:type">Function</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  Callback function.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        void
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo"></dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
                                     <div class="" rel="yui:method" resource="#method_setModuleDefaults">
                                     <h4>
                                         <a name="method_setModuleDefaults">setModuleDefaults</a></h4>
@@ -1667,6 +1743,7 @@ to "Y" prior to running your application.
                                 <li class=""><a href="#method_makeHidden" title="makeHidden">makeHidden</a></li>
                                 <li class=""><a href="#method_makeImmutable" title="makeImmutable">makeImmutable</a></li>
                                 <li class=""><a href="#method_resetRuntime" title="resetRuntime">resetRuntime</a></li>
+                                <li class=""><a href="#method_safeWriteFile" title="safeWriteFile">safeWriteFile</a></li>
                                 <li class=""><a href="#method_setModuleDefaults" title="setModuleDefaults">setModuleDefaults</a></li>
                                 <li class=""><a href="#method_watch" title="watch">watch</a></li>
                                 <li class=""><a href="#method_watchForConfigFileChanges" title="watchForConfigFileChanges">watchForConfigFileChanges</a></li>
@@ -1681,11 +1758,11 @@ to "Y" prior to running your application.
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.32</span>
+<span class="subtitle">version 0.4.34</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method__loadOldStyleEnv", "access": "protected", "host": "Config", "type": "method", "name": "_loadOldStyleEnv"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method__loadOldStyleEnv", "access": "protected", "host": "Config", "type": "method", "name": "_loadOldStyleEnv"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_safeWriteFile", "access": "", "host": "Config", "type": "method", "name": "safeWriteFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
 </script>
 </body>
 </html>

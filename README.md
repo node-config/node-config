@@ -78,7 +78,7 @@ May be freely distributed under the MIT license
 
 See `LICENSE` file.
 
-Copyright (c) 2010-2013 Loren West and other contributors
+Copyright (c) 2010-2014 Loren West and other contributors
 
   [config]: http://lorenwest.github.com/node-config/latest
   [monitor]: https://github.com/lorenwest/node-monitor
