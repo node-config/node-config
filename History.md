@@ -1,3 +1,8 @@
+0.4.35 / 2014-01-16
+===================
+
+  * NODE_CONFIG_DIR can now contain a relative path for .js and .coffee configurations
+
 0.4.34 / 2014-01-06
 ===================
 
