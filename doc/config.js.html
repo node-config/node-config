@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1389023854.24" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1389023854.24" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1389938588.15" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1389938588.15" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1389023854.24"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1389023854.24"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1389938588.15"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1389938588.15"></script>
 </head>
 
 <body id="node-monitor">
@@ -153,6 +153,9 @@
   <span class="c1">// Initialize parameters from command line, environment, or default</span>
   <span class="nx">NODE_ENV</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;development&#39;</span><span class="p">);</span>
   <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">CONFIG_DIR</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">CONFIG_DIR</span><span class="p">;</span>
+  <span class="p">}</span>
   <span class="nx">RUNTIME_JSON_FILENAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_RUNTIME_JSON&#39;</span><span class="p">,</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">);</span>
   <span class="nx">DISABLE_FILE_WATCH</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DISABLE_FILE_WATCH&#39;</span><span class="p">);</span>
   <span class="nx">PERSIST_ON_CHANGE</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_PERSIST_ON_CHANGE&#39;</span><span class="p">);</span>
@@ -1491,7 +1494,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.34</span>
+<span class="subtitle">version 0.4.35</span>
 	</div>
 </div>
 <script type="text/javascript">
