@@ -31,6 +31,8 @@ var argvOrg = process.argv;
 
 /**
  * <p>Tests for underlying node-config utilities.  To run type:</p>
+ * <pre>npm test</pre>
+ * <p>Or, in a project that uses node-config:</p>
  * <pre>npm test config</pre>
  *
  * @class ProtectedTest
