@@ -30,6 +30,8 @@ var runtimeJsonFilenameBak = runtimeJsonFilename+'.bak';
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
+ * <pre>npm test</pre>
+ * <p>Or, in a project that uses node-config:</p>
  * <pre>npm test config</pre>
  *
  * @class ConfigTest
