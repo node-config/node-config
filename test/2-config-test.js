@@ -83,18 +83,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Loading configurations from the local environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPassword2, 'another password');
       assert.deepEqual(CONFIG.Customers.lang, ['en','de','es']);
-    },
-
-    'Loading prior runtime.json configurations is correct': function() {
-      assert.equal(CONFIG.Customers.dbName, 'override_from_runtime_json');
-    },
-
-    'Multi-instance default.json override is correct': function() {
-      assert.equal(CONFIG.Customers.altDbPort, 4400);
-    },
-
-    'Multi-instance local.yaml override is correct': function() {
-      assert.equal(CONFIG.Customers.altDbPort1, 2209);
     }
 
   },
@@ -281,63 +269,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
     'And the config value was correctly set': function(err, obj) {
       assert.equal(CONFIG.watchThisValue, newWatchedValue);
-    },
-
-    'Waiting for the O/S to notify us of changes...': function(err, obj) {
-      // This is just a message for the next test
-      assert.isTrue(true);
     }
 
-  },
-
-  'Runtime Configuration Changes are Persisted to runtime.json': {
-    topic: function() {
-      // Watch the file for changes
-      var t = this;
-      FileSystem.unwatchFile(runtimeJsonFilename);
-      FileSystem.watchFile(runtimeJsonFilename, {persistent:true}, function(){
-        // This was failing on node v0.6 due to the watch happening before full write,
-        // so adding a small interval so it doesn't fail on older node.js versions
-        setTimeout(function(){
-	        t.callback(null, CONFIG._parseFile(runtimeJsonFilename));
-	      },10);
-
-        FileSystem.createReadStream(runtimeJsonFilename).pipe(FileSystem.createWriteStream(runtimeJsonFilenameBak));
-      });
-    },
-    'The runtime.json file was changed': function(err, runtimeObj) {
-      assert.isTrue(!err);
-    },
-    'Prior configuration values were kept intact': function(err, runtimeObj) {
-      assert.equal(runtimeObj.Customers.dbName, "override_from_runtime_json");
-    },
-    'Changed configuration values were persisted': function(err, runtimeObj) {
-      assert.equal(runtimeObj.watchThisValue, CONFIG.watchThisValue);
-      assert.deepEqual(runtimeObj.dynamicArray, CONFIG.dynamicArray);
-    },
-    'Unchanged configuration values were not persisted': function(err, runtimeObj) {
-      assert.isUndefined(runtimeObj.staticArray);
-    },
-    'Module default values are persisted': function(err, runtimeObj) {
-      assert.equal(runtimeObj.TestModule.parm3, 1234);
-    },
-    'The resetRuntime() method is available': function() {
-      assert.isFunction(CONFIG.resetRuntime);
-    },
-    'Runtime Configuration is empty': function() {
-      CONFIG.resetRuntime(function(err, written, buffer) {
-        FileSystem.readFile(runtimeJsonFilename, function(err, data) {
-            assert.isEqual(data,'{}');
-        });
-      });
-    },
-    teardown: function() {
-      FileSystem.rename(runtimeJsonFilenameBak, runtimeJsonFilename, function(err) {
-        if(err) {
-          console.log('Cant rename file');
-        }
-      });
-    }
   },
 
   'Assuring you can get originalConfig': {
