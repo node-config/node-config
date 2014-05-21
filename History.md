@@ -1,3 +1,13 @@
+1.0.0 / 2014-05-
+===================
+
+  * Update to semver versioning
+  * Removed runtime.json file writing and monitoring
+  * Change load ordering 
+      from hostname.EXT --> deployment.EXT 
+      to deployment.EXT --> hostname.EXT
+
+
 0.4.35 / 2014-01-16
 ===================
 
