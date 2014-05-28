@@ -1,4 +1,4 @@
-1.0.0 / 2014-05-
+1.0.0 / 2014-06-
 ===================
 
   * Update to semver versioning
@@ -12,6 +12,11 @@
   * Change node-config behavior to make all configurations immutable
   * Removed runtime.json file writing and monitoring
   * Deprecated the attribute watch functionality
+
+0.4.36 / 2014-05-27
+===================
+
+  * Not writing runtime.json if not used
 
 0.4.35 / 2014-01-16
 ===================
