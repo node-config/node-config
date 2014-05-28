@@ -2,11 +2,16 @@
 ===================
 
   * Update to semver versioning
-  * Removed runtime.json file writing and monitoring
-  * Change load ordering 
-      from hostname.EXT --> deployment.EXT 
+  * Change load ordering
+      from hostname.EXT --> deployment.EXT
       to deployment.EXT --> hostname.EXT
-
+  * Allow makeImmutable to accept an array of attributes
+  * Allow makeImmutable to accept no attrs, making all attributes immutable
+  * Allow recursion in makeImmutable, if an attribute is an object
+  * Prevent recursive loops
+  * Change node-config behavior to make all configurations immutable
+  * Removed runtime.json file writing and monitoring
+  * Deprecated the attribute watch functionality
 
 0.4.35 / 2014-01-16
 ===================
