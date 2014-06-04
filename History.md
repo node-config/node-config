@@ -13,6 +13,7 @@
   * Removed runtime.json file writing and monitoring
   * Removed previously deprecated $CONFIG_* environment configurations
   * Deprecated the attribute watch functionality
+  * Added error output if no configurations found
 
 0.4.36 / 2014-05-27
 ===================
