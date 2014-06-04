@@ -13,10 +13,6 @@ process.env.NODE_ENV='test';
 // Test for multi-instance applications
 process.env.NODE_APP_INSTANCE='3';
 
-// Test for old style environment variable overrides
-process.env.CONFIG_EnvOverride_parm__number__1 = 'overridden from test';
-process.env.CONFIG_EnvOverride_parm2 = 13;
-
 // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
 process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
 process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
