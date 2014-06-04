@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1392660278.28" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1392660278.28" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1401848265.57" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1401848265.57" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1392660278.28"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1392660278.28"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1401848265.57"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1401848265.57"></script>
 </head>
 
 <body id="node-monitor">
@@ -45,12 +45,8 @@
   <p>
     Node-config is a configuration system for Node.js application server
     deployments.  It lets you define a default set of application parameters,
-    and tune them for different runtime environments (development, qa,
+    and tune them for different deployment environments (development, qa,
     staging, production, etc.).
-  </p>
-  <p>
-    Parameters defined by node-config can be monitored and tuned at runtime
-    without bouncing your production servers.
   </p>
 
   <h2>Project Guidelines</h2>
@@ -80,12 +76,11 @@
   </p>
   <pre>
     default.EXT
-    <i>hostname</i>.EXT
     <i>deployment</i>.EXT
+    <i>hostname</i>.EXT
     <i>hostname</i>-<i>deployment</i>.EXT
     local.EXT
     local-<i>deployment</i>.EXT
-    runtime.json
   </pre>
   <p>
     Where EXT can be .yml, .yaml, .coffee, .json, or .js depending on the format you prefer.
@@ -102,23 +97,6 @@
   <p>
     <i>deployment</i> is the deployment type, found in the $NODE_ENV environment
     variable.  Defaults to 'development'.
-  </p>
-  <p>
-    The runtime.json file contains configuration changes made at runtime either
-    manually, or by the application setting a configuration value.  The location is
-    specified by <i>NODE_CONFIG_RUNTIME_JSON</i> environment variable. By default, it
-    is a file called runtime.json in <i>NODE_CONFIG_DIR</i> directory.  Node-config
-    monitors this file and loads any new configurations it detects.  This file is
-    loaded after all other configurations, including the $NODE_CONFIG environment
-    variable and --NODE_CONFIG command line parameter (see below).
-  </p>
-  <p>
-    In the running application, each configuration parameter is internally
-    monitored for changes, and persisted to runtime.json upon change.
-    This keeps configurations in sync in a mutli-node deployment. If you want to
-    disable this persistence and sync you can set the environment variable
-    <i>NODE_CONFIG_PERSIST_ON_CHANGE</i> to "N". This will lead to lower I/O if you
-    change variables very often in your application.
   </p>
 
   <h2>File Comments</h2>
@@ -212,8 +190,8 @@
     <i>staging.json</i>.
   </p>
   <p>
-    All configuration files (except runtime.json) follow this pattern, allowing
-    your application to specify instance-specific configurations at any level.
+    All configuration files follow this pattern, allowing your application
+    to specify instance-specific configurations at any level.
   </p>
 
   <h2>Environment Variable Configurations</h2>
@@ -243,55 +221,10 @@
     an equals sign, and the value (as in the example above).
   </p>
 
-  <h2>Monitoring Changes</h2>
-  <p>
-    One important attribute of node-config is the ability to tune configuration
-    parameters at runtime.  Configuration parameters fall into one of the
-    following categories:
-  </p>
-  <ul>
-    <li>
-      <strong>OK to change</strong> - This parameter type can change without
-      adverse effect.  Most parameters fall into this category, where the
-      parameter value is read every time it's used.
-    </li>
-    <li>
-      <strong>Monitored</strong> - Some parameters are read infrequently
-      (usually at the start of the application), and need to be monitored for
-      change.  The CONFIG.watch() function is available to watch these
-      parameters, and run a function when the value changes.  See the
-      <a href="Config.html#method_watch">watch</a> method definition for more
-      information.
-    </li>
-    <li>
-      <strong>Not OK to change</strong> - Some parameters must be fixed at
-      runtime and remain stable throughout the lifecycle of the application.
-      For these parameters, the
-      <a href="Config.html#method_makeImmutable">makeImmutable</a> method is
-      offered to guarantee the parameter cannot be changed.
-    </li>
-  </ul>
-
-  <h2>Production Deployments</h2>
-  <p>
-    Node-config is designed to run in a multi-node deployment, where many
-    instances of your application are running on a production server (usually
-    one per core processor).
-  </p>
-  <p>
-    If configuration values change at runtime, these changes are persisted
-    into the runtime.json file within the config directory.  Multi-node
-    application instances keep in synch by watching for and loading changes
-    in runtime.json when detected.
-  </p>
-  <p>
-    This paradigm does not extend beyond a single machine.
-  </p>
-
   <h2>For Module Developers</h2>
   <p>
     Module developers can use node-config to define module specific
-    configuration parameters, and offer the same runtime tuning and multiple
+    configuration parameters, and offer the same multiple
     deployment capability as the local application.
   </p>
   <p>
@@ -366,11 +299,11 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.35</span>
+<span class="subtitle">version 1.0.0</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method__loadOldStyleEnv", "access": "protected", "host": "Config", "type": "method", "name": "_loadOldStyleEnv"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_safeWriteFile", "access": "", "host": "Config", "type": "method", "name": "safeWriteFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
 </script>
 </body>
 </html>
