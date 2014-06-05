@@ -187,7 +187,68 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Defaults remain intact unless overridden': function(moduleConfig) {
       assert.equal(moduleConfig.parm2, 2000);
     }
+  },
 
+  'get() tests': {
+    topic: function() {
+      return CONFIG;
+    },
+    'The function exists': function(config) {
+      assert.isFunction(config.get);
+    },
+    'A top level item is returned': function(config) {
+      assert.isTrue(typeof config.get('TestModule') === 'object');
+    },
+    'A sub level item is returned': function(config) {
+      assert.equal(config.get('Customers.dbHost'), 'base');
+    },
+    'get is attached deeply': function(config) {
+      assert.equal(config.Customers.get('dbHost'), 'base');
+    },
+    'A proper exception is thrown on mis-spellings': function(config) {
+      var didThrow = false;
+      try {
+        var topItem = config.get('mis.spelled');
+        didThrow = false;
+      } catch(e) {
+        didThrow = true;
+      }
+      assert.isTrue(didThrow);
+    },
+    'An exception is thrown on non-objects': function(config) {
+      var didThrow = false;
+      try {
+        var topItem = config.get('Testmodule.misspelled');
+        didThrow = false;
+      } catch(e) {
+        didThrow = true;
+      }
+      assert.isTrue(didThrow);
+    }
+  },
+
+  'has() tests': {
+    topic: function() {
+      return CONFIG;
+    },
+    'The function exists': function(config) {
+      assert.isFunction(config.has);
+    },
+    'A top level item can be tested': function(config) {
+      assert.isTrue(config.has('TestModule'));
+    },
+    'A sub level item can be tested': function(config) {
+      assert.isTrue(config.has('Customers.dbHost'));
+    },
+    'has is attached deeply': function(config) {
+      assert.isTrue(config.Customers.has('dbHost'));
+    },
+    'Correctly identifies not having element': function(config) {
+      assert.isTrue(!config.Customers.has('dbHosx'));
+    },
+    'Correctly identifies not having element (deep)': function(config) {
+      assert.isTrue(!config.has('Customers.dbHosx'));
+    }
   }
 
 });

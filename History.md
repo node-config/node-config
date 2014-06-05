@@ -14,6 +14,8 @@
   * Removed previously deprecated $CONFIG_* environment configurations
   * Deprecated the attribute watch functionality
   * Added error output if no configurations found
+  * Exposed config loading for alternate configurations
+  * Added config.get() and config.has() methods & tests
 
 0.4.36 / 2014-05-27
 ===================

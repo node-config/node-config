@@ -373,6 +373,50 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
         process.argv = argvOrg;
         assert.equal(process.argv, argvOrg);
     }
+  },
+
+  '_get() tests': {
+    topic: function() {
+      // Create an object that contains other objects to validate get functionality
+      var getThis = {
+	topItem: true,
+        subObject: {
+          item1: 23,
+          subSubObject: {
+        	item2: "hello",
+		item3: false
+          }
+        }
+      };
+      return CONFIG._attachProtoDeep(getThis);
+    },
+    'The function exists': function() {
+      assert.isFunction(CONFIG._get);
+    },
+    'A top level item is returned': function(config) {
+      assert.isTrue(CONFIG._get(config, 'topItem'));
+    },
+    'A sub level item is returned': function(config) {
+      assert.equal(CONFIG._get(config, 'subObject.item1'), 23);
+    },
+    'A sub sub level item is returned': function(config) {
+      assert.equal(CONFIG._get(config, 'subObject.subSubObject.item2'), "hello");
+      assert.equal(CONFIG._get(config, 'subObject.subSubObject.item3'), false);
+    },
+    '_get is attached deeply': function(config) {
+      assert.equal(CONFIG._get(config.subObject.subSubObject, 'item2'), "hello");
+    },
+    'Undefined is returned on non-objects': function(config) {
+      assert.isTrue(CONFIG._get(config, 'topItem.subSubobject.item2') === undefined);
+    },
+    'Undefined is returned on object mis-spellings': function(config) {
+      assert.isTrue(CONFIG._get(config, 'subObject.subSubobject.item2') === undefined);
+    },
+    'Undefined is returned on element mis-spellings': function(config) {
+      assert.isTrue(CONFIG._get(config, 'topItrm') === undefined);
+    }
+
   }
+
 
 });
