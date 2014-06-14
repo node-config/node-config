@@ -70,7 +70,7 @@ getContributorTable(function(error, htmlTable) {
   // Replace the contributor table
   var fileLines = fs.readFileSync(README_FILE).toString().split('\n');
   for (var i in fileLines) {
-    if (fileLines[i].indexOf('<table id="contributors">')) {
+    if (fileLines[i].indexOf('<table id="contributors">') === 0) {
       fileLines[i] = htmlTable;
       fs.writeFileSync(README_FILE, fileLines.join('\n'));
       console.log('Contributor table replaced.');
