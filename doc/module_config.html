@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1392660278.24" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1392660278.24" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1403224238.23" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1403224238.23" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1392660278.24"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1392660278.24"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1403224238.23"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1403224238.23"></script>
 </head>
 
 <body id="node-monitor">
@@ -49,9 +49,9 @@
 
                     </h2>
                     <div class="description summary">
-                        <p>Runtime Application Configurations</p>
+                        <p>Application Configurations</p>
 <p>
-The config module exports a singleton object representing all runtime
+The config module exports a singleton object representing all
 configurations for this application deployment.
 </p>
 <p>
@@ -91,7 +91,7 @@ database.open(CONFIG.db.name, CONFIG.db.port);
 
                             <p>This module contains the following classes:</p>
                             <script>
-                            //var YUI_CLASS_LIST = [{"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "<p>Runtime Application Configurations</p>\n<p>\nThe config module exports a singleton object representing all runtime\nconfigurations for this application deployment.\n</p>\n<p>\nApplication configurations are stored in files within the config directory\nof your application.  The default configuration file is loaded, followed\nby files specific to the deployment type (development, testing, staging,\nproduction, etc.).\n</p>\n<p>\nFor example, with the following config/default.yaml file:\n</p>\n<pre>\n...\ncustomer:\n&nbsp;&nbsp;initialCredit: 500\n&nbsp;&nbsp;db:\n&nbsp;&nbsp;&nbsp;&nbsp;name: customer\n&nbsp;&nbsp;&nbsp;&nbsp;port: 5984\n...\n</pre>\n<p>\nThe following code loads the customer section into the CONFIG variable:\n<p>\n<pre>\nvar CONFIG = require('config').customer;\n...\nnewCustomer.creditLimit = CONFIG.initialCredit;\ndatabase.open(CONFIG.db.name, CONFIG.db.port);\n...\n</pre>", "guessedname": "Config", "name": "Config"}];
+                            //var YUI_CLASS_LIST = [{"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "<p>Application Configurations</p>\n<p>\nThe config module exports a singleton object representing all\nconfigurations for this application deployment.\n</p>\n<p>\nApplication configurations are stored in files within the config directory\nof your application.  The default configuration file is loaded, followed\nby files specific to the deployment type (development, testing, staging,\nproduction, etc.).\n</p>\n<p>\nFor example, with the following config/default.yaml file:\n</p>\n<pre>\n...\ncustomer:\n&nbsp;&nbsp;initialCredit: 500\n&nbsp;&nbsp;db:\n&nbsp;&nbsp;&nbsp;&nbsp;name: customer\n&nbsp;&nbsp;&nbsp;&nbsp;port: 5984\n...\n</pre>\n<p>\nThe following code loads the customer section into the CONFIG variable:\n<p>\n<pre>\nvar CONFIG = require('config').customer;\n...\nnewCustomer.creditLimit = CONFIG.initialCredit;\ndatabase.open(CONFIG.db.name, CONFIG.db.port);\n...\n</pre>", "guessedname": "Config", "name": "Config"}];
                             </script>
                             <div id="splash_classList">
                                 <ul>
@@ -141,11 +141,11 @@ database.open(CONFIG.db.name, CONFIG.db.port);
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.35</span>
+<span class="subtitle">version 1.0.0</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method__loadOldStyleEnv", "access": "protected", "host": "Config", "type": "method", "name": "_loadOldStyleEnv"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_safeWriteFile", "access": "", "host": "Config", "type": "method", "name": "safeWriteFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__get", "access": "protected", "host": "Config", "type": "method", "name": "_get"}, {"url": "Config.html#method_get", "access": "", "host": "Config", "type": "method", "name": "get"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_has", "access": "", "host": "Config", "type": "method", "name": "has"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
 </script>
 </body>
 </html>

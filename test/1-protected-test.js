@@ -13,10 +13,6 @@ process.env.NODE_ENV='test';
 // Test for multi-instance applications
 process.env.NODE_APP_INSTANCE='3';
 
-// Test for old style environment variable overrides
-process.env.CONFIG_EnvOverride_parm__number__1 = 'overridden from test';
-process.env.CONFIG_EnvOverride_parm2 = 13;
-
 // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
 process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
 process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
@@ -377,6 +373,50 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
         process.argv = argvOrg;
         assert.equal(process.argv, argvOrg);
     }
+  },
+
+  '_get() tests': {
+    topic: function() {
+      // Create an object that contains other objects to validate get functionality
+      var getThis = {
+	topItem: true,
+        subObject: {
+          item1: 23,
+          subSubObject: {
+        	item2: "hello",
+		item3: false
+          }
+        }
+      };
+      return CONFIG._attachProtoDeep(getThis);
+    },
+    'The function exists': function() {
+      assert.isFunction(CONFIG._get);
+    },
+    'A top level item is returned': function(config) {
+      assert.isTrue(CONFIG._get(config, 'topItem'));
+    },
+    'A sub level item is returned': function(config) {
+      assert.equal(CONFIG._get(config, 'subObject.item1'), 23);
+    },
+    'A sub sub level item is returned': function(config) {
+      assert.equal(CONFIG._get(config, 'subObject.subSubObject.item2'), "hello");
+      assert.equal(CONFIG._get(config, 'subObject.subSubObject.item3'), false);
+    },
+    '_get is attached deeply': function(config) {
+      assert.equal(CONFIG._get(config.subObject.subSubObject, 'item2'), "hello");
+    },
+    'Undefined is returned on non-objects': function(config) {
+      assert.isTrue(CONFIG._get(config, 'topItem.subSubobject.item2') === undefined);
+    },
+    'Undefined is returned on object mis-spellings': function(config) {
+      assert.isTrue(CONFIG._get(config, 'subObject.subSubobject.item2') === undefined);
+    },
+    'Undefined is returned on element mis-spellings': function(config) {
+      assert.isTrue(CONFIG._get(config, 'topItrm') === undefined);
+    }
+
   }
+
 
 });

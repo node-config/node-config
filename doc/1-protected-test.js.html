@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   1-protected-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1392660278.2" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1392660278.2" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1403224238.19" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1403224238.19" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1392660278.2"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1392660278.2"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1403224238.19"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1403224238.19"></script>
 </head>
 
 <body id="node-monitor">
@@ -60,10 +60,6 @@
 
 <span class="c1">// Test for multi-instance applications</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_APP_INSTANCE</span><span class="o">=</span><span class="s1">&#39;3&#39;</span><span class="p">;</span>
-
-<span class="c1">// Test for old style environment variable overrides</span>
-<span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CONFIG_EnvOverride_parm__number__1</span> <span class="o">=</span> <span class="s1">&#39;overridden from test&#39;</span><span class="p">;</span>
-<span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CONFIG_EnvOverride_parm2</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
 
 <span class="c1">// Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter</span>
 <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="o">=</span><span class="s1">&#39;{&quot;EnvOverride&quot;:{&quot;parm3&quot;:&quot;overridden from $NODE_CONFIG&quot;,&quot;parm4&quot;:100}}&#39;</span>
@@ -425,7 +421,51 @@
         <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span> <span class="o">=</span> <span class="nx">argvOrg</span><span class="p">;</span>
         <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">,</span> <span class="nx">argvOrg</span><span class="p">);</span>
     <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s1">&#39;_get() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Create an object that contains other objects to validate get functionality</span>
+      <span class="kd">var</span> <span class="nx">getThis</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">topItem</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nx">subObject</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">item1</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+          <span class="nx">subSubObject</span><span class="o">:</span> <span class="p">{</span>
+        	<span class="nx">item2</span><span class="o">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span>
+		<span class="nx">item3</span><span class="o">:</span> <span class="kc">false</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">getThis</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A top level item is returned&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="s1">&#39;topItem&#39;</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A sub level item is returned&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="s1">&#39;subObject.item1&#39;</span><span class="p">),</span> <span class="mi">23</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A sub sub level item is returned&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="s1">&#39;subObject.subSubObject.item2&#39;</span><span class="p">),</span> <span class="s2">&quot;hello&quot;</span><span class="p">);</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="s1">&#39;subObject.subSubObject.item3&#39;</span><span class="p">),</span> <span class="kc">false</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;_get is attached deeply&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">subObject</span><span class="p">.</span><span class="nx">subSubObject</span><span class="p">,</span> <span class="s1">&#39;item2&#39;</span><span class="p">),</span> <span class="s2">&quot;hello&quot;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Undefined is returned on non-objects&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="s1">&#39;topItem.subSubobject.item2&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Undefined is returned on object mis-spellings&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="s1">&#39;subObject.subSubobject.item2&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Undefined is returned on element mis-spellings&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">CONFIG</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="s1">&#39;topItrm&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">);</span>
+    <span class="p">}</span>
+
   <span class="p">}</span>
+
 
 <span class="p">});</span>
 </pre></div>
@@ -470,7 +510,7 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.35</span>
+<span class="subtitle">version 1.0.0</span>
 	</div>
 </div>
 <script type="text/javascript">

@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1392660278.24" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1392660278.24" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1403224238.23" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1403224238.23" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1392660278.24"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1392660278.24"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1403224238.23"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1403224238.23"></script>
 </head>
 
 <body id="node-monitor">
@@ -60,20 +60,16 @@
 
 <span class="c1">// Static members</span>
 <span class="kd">var</span> <span class="nx">DEFAULT_CLONE_DEPTH</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">=</span> <span class="mi">2500</span><span class="p">,</span> <span class="c1">// For old style (pre-6.0) file watching</span>
     <span class="nx">CONFIG_DIR</span><span class="p">,</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">NODE_ENV</span><span class="p">,</span> <span class="nx">APP_INSTANCE</span><span class="p">,</span>
-    <span class="nx">DISABLE_FILE_WATCH</span><span class="p">,</span> <span class="nx">PERSIST_ON_CHANGE</span><span class="p">,</span> <span class="nx">HOST</span><span class="p">,</span> <span class="nx">HOSTNAME</span><span class="p">,</span>
-    <span class="nx">originalConfig</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>       <span class="c1">// Not including the runtime.json values</span>
-    <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="p">{},</span>            <span class="c1">// Current runtimeJson extensions</span>
-    <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>   <span class="c1">// Filesystem watcher for runtime.json</span>
+    <span class="nx">HOST</span><span class="p">,</span> <span class="nx">HOSTNAME</span><span class="p">,</span>
     <span class="nx">configSources</span> <span class="o">=</span> <span class="p">[],</span>          <span class="c1">// Configuration sources - array of {name, original, parsed}</span>
     <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Runtime Application Configurations&lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;Application Configurations&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * The config module exports a singleton object representing all runtime</span>
+<span class="cm"> * The config module exports a singleton object representing all</span>
 <span class="cm"> * configurations for this application deployment.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
@@ -150,50 +146,93 @@
 <span class="kd">var</span> <span class="nx">Config</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
 
-  <span class="c1">// Initialize parameters from command line, environment, or default</span>
-  <span class="nx">NODE_ENV</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;development&#39;</span><span class="p">);</span>
-  <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">CONFIG_DIR</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">CONFIG_DIR</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="nx">RUNTIME_JSON_FILENAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_RUNTIME_JSON&#39;</span><span class="p">,</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">);</span>
-  <span class="nx">DISABLE_FILE_WATCH</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DISABLE_FILE_WATCH&#39;</span><span class="p">);</span>
-  <span class="nx">PERSIST_ON_CHANGE</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_PERSIST_ON_CHANGE&#39;</span><span class="p">);</span>
-  <span class="nx">APP_INSTANCE</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_APP_INSTANCE&#39;</span><span class="p">);</span>
-  <span class="nx">HOST</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOST&#39;</span><span class="p">);</span>
-  <span class="nx">HOSTNAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOSTNAME&#39;</span><span class="p">);</span>
-
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_loadFileConfigs</span><span class="p">();</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_persistConfigsOnChange</span><span class="p">();</span>
+  <span class="c1">// Merge configurations into this</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_loadFileConfigs</span><span class="p">());</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Monitor a configuration value for runtime changes.&lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;Get a configuration value&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * Configuration values can be changed at runtime by the application or by a</span>
-<span class="cm"> * manual change to the config/runtime.json  file.</span>
-<span class="cm"> * This method lets you specify a function to run when a configuration</span>
-<span class="cm"> * value changes.</span>
+<span class="cm"> * This will return the specified property value, throwing an exception if the</span>
+<span class="cm"> * configuration isn&#39;t defined.  It is used to assure configurations are defined</span>
+<span class="cm"> * before being used, and to prevent typos.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;&lt;i&gt;</span>
-<span class="cm"> * This was built for monitoring changes to configuration values,</span>
-<span class="cm"> * but it can be used for watching changes to &lt;u&gt;any&lt;/u&gt; javascript object.</span>
-<span class="cm"> * &lt;/i&gt;&lt;/p&gt;</span>
+<span class="cm"> * @method get</span>
+<span class="cm"> * @param property {string} - The configuration property to get. Can include &#39;.&#39; sub-properties.</span>
+<span class="cm"> * @return value {mixed} - The property value</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+      <span class="nx">value</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">property</span><span class="p">);</span>
+
+  <span class="c1">// Produce an exception if the property doesn&#39;t exist</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Configuration property &quot;&#39;</span> <span class="o">+</span> <span class="nx">property</span> <span class="o">+</span> <span class="s1">&#39;&quot; is not defined&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Test that a configuration parameter exists</span>
 <span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;Example:&lt;/p&gt;</span>
 <span class="cm"> * &lt;pre&gt;</span>
-<span class="cm"> *   var CONFIG = require(&#39;config&#39;).customer;</span>
-<span class="cm"> *   ...</span>
-<span class="cm"> *</span>
-<span class="cm"> *   // Watch for any changes to the customer configuration</span>
-<span class="cm"> *   CONFIG.watch(CONFIG, null, function(object, propertyName, priorValue, newValue) {</span>
-<span class="cm"> *   &amp;nbsp;console.log(&quot;Customer configuration &quot; + propertyName + &quot; changed from &quot; + priorValue + &quot; to &quot; + newValue);</span>
-<span class="cm"> *   });</span>
+<span class="cm"> *    var config = require(&#39;config&#39;);</span>
+<span class="cm"> *    if (config.has(&#39;customer.dbName&#39;)) {</span>
+<span class="cm"> *      console.log(&#39;Customer database name: &#39; + config.customer.dbName);</span>
+<span class="cm"> *    }</span>
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
+<span class="cm"> * @method has</span>
+<span class="cm"> * @param property {string} - The configuration property to test. Can include &#39;.&#39; sub-properties.</span>
+<span class="cm"> * @return isPresent {boolean} - True if the property is defined, false if not defined.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">has</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">property</span><span class="p">)</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Underlying get mechanism</span>
+<span class="cm"> *</span>
+<span class="cm"> * @protected</span>
+<span class="cm"> * @method _get</span>
+<span class="cm"> * @param object {object} - Object to get the property for</span>
+<span class="cm"> * @param property {string | array[string]} - The property name to get (as an array or &#39;.&#39; delimited string)</span>
+<span class="cm"> * @return value {mixed} - Property value, including undefined if not defined.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+      <span class="nx">elems</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">property</span><span class="p">)</span> <span class="o">?</span> <span class="nx">property</span> <span class="o">:</span> <span class="nx">property</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
+      <span class="nx">name</span> <span class="o">=</span> <span class="nx">elems</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">value</span> <span class="o">=</span> <span class="nx">object</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">elems</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">elems</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Monitor a javascript property for runtime changes.&lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * This method was built for an earlier version of node-config that allowed</span>
+<span class="cm"> * configuration value mutations.  Since version 1.0.0, node-config no longer</span>
+<span class="cm"> * allows configuration mutations, and is no longer used in node-config.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * It is deprecated, and will be removed in the next semver incompatible release 2.0.0.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
 <span class="cm"> * @method watch</span>
+<span class="cm"> * @deprecated</span>
 <span class="cm"> * @param object {object} - The object to watch.</span>
 <span class="cm"> * @param property {string} - The property name to watch.  Watch all object properties if null.</span>
 <span class="cm"> * @param handler {function(object, propertyName, priorValue, newValue)} - Handler called when a property change is detected.</span>
@@ -344,7 +383,7 @@
 
   <span class="c1">// Copy the properties into a new object</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
-      <span class="nx">moduleConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">({},</span> <span class="nx">defaultProperties</span><span class="p">);</span>
+      <span class="nx">moduleConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">defaultProperties</span><span class="p">);</span>
 
   <span class="c1">// Set module defaults into the first sources element</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">configSources</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">configSources</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span> <span class="o">!==</span> <span class="s1">&#39;Module Defaults&#39;</span><span class="p">)</span> <span class="p">{</span>
@@ -358,26 +397,17 @@
 
   <span class="c1">// Attach handlers &amp; watchers onto the module config object</span>
   <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">);</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_persistConfigsOnChange</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">);</span>
 
-  <span class="c1">// Extend the module config object with values from originalConfig</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">])</span> <span class="p">{</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">,</span> <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]);</span>
-  <span class="p">}</span>
+  <span class="c1">// Make the module configs immutable</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">);</span>
 
-  <span class="c1">// Save the mixed module config as the original</span>
-  <span class="nx">originalConfig</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">);</span>
-
-  <span class="c1">// Extend the module config object with values from runtimeJson</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJson</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">])</span> <span class="p">{</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]);</span>
-  <span class="p">}</span>
-
-  <span class="c1">// Attach the object onto the CONFIG object</span>
-  <span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">moduleConfig</span><span class="p">;</span>
+  <span class="c1">// Fold module configs into the config object.  This won&#39;t override</span>
+  <span class="c1">// current values, as they&#39;ve been made immutable.</span>
+  <span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">]</span> <span class="o">||</span> <span class="p">{};</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">],</span> <span class="nx">moduleConfig</span><span class="p">);</span>
 
   <span class="c1">// Return the module config</span>
-  <span class="k">return</span> <span class="nx">moduleConfig</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">t</span><span class="p">[</span><span class="nx">moduleName</span><span class="p">];</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -430,186 +460,81 @@
 <span class="p">}</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Make a configuration property immutable (assuring it cannot be changed</span>
+<span class="cm"> * &lt;p&gt;Make a javascript object property immutable (assuring it cannot be changed</span>
 <span class="cm"> * from the current value).&lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * If the specified property is an object, all attributes of that object are</span>
+<span class="cm"> * made immutable, including properties of contained objects, recursively.</span>
+<span class="cm"> * If a property name isn&#39;t supplied, all properties of the object are made</span>
+<span class="cm"> * immutable.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> *</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * New properties can be added to the object and those properties will not be</span>
+<span class="cm"> * immutable unless this method is called on those new properties.</span>
+<span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * This operation cannot be undone.</span>
 <span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> * &lt;p&gt;&lt;i&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * This method was built for disabling runtime changes to configuration values,</span>
-<span class="cm"> * but it can be applied to &lt;u&gt;any&lt;/u&gt; javascript object.</span>
-<span class="cm"> * &lt;/i&gt;&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;Example:&lt;/p&gt;</span>
 <span class="cm"> * &lt;pre&gt;</span>
-<span class="cm"> *   var CONFIG = require(&#39;config&#39;).customer;</span>
-<span class="cm"> *   ...</span>
-<span class="cm"> *</span>
-<span class="cm"> *   // Obtain a DB connection using CONFIG parameters</span>
-<span class="cm"> *   database.open(CONFIG.db.name, CONFIG.db.port);</span>
-<span class="cm"> *   ...</span>
-<span class="cm"> *</span>
-<span class="cm"> *   // Don&#39;t allow database changes after connect</span>
-<span class="cm"> *   CONFIG.makeImmutable(CONFIG.db, &#39;name&#39;);</span>
-<span class="cm"> *   CONFIG.makeImmutable(CONFIG.db, &#39;port&#39;);</span>
+<span class="cm"> *   var config = require(&#39;config&#39;);</span>
+<span class="cm"> *   var myObject = {hello:&#39;world&#39;};</span>
+<span class="cm"> *   config.makeImmutable(myObject);</span>
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @method makeImmutable</span>
-<span class="cm"> * @param object {object} - The object to attach an immutable property into.</span>
-<span class="cm"> * @param property {string} - The name of the property to make immutable.</span>
-<span class="cm"> * @param value {mixed} - (optional) Set the property value to this (otherwise leave alone)</span>
+<span class="cm"> * @param object {object} - The object to specify immutable properties for</span>
+<span class="cm"> * @param [property] {string | [string]} - The name of the property (or array of names) to make immutable.</span>
+<span class="cm"> *        If not provided, all owned properties of the object are made immutable.</span>
+<span class="cm"> * @param [value] {mixed | [mixed]} - Property value (or array of values) to set</span>
+<span class="cm"> *        the property to before making immutable. Only used when setting a single</span>
+<span class="cm"> *        property. Retained for backward compatibility.</span>
 <span class="cm"> * @return object {object} - The original object is returned - for chaining.</span>
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">makeImmutable</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+      <span class="nx">properties</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
-  <span class="c1">// Use the existing value if a new value isn&#39;t specified</span>
-  <span class="nx">value</span> <span class="o">=</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="nx">object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">:</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="c1">// Backwards compatibility mode where property/value can be specified</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">property</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">value</span> <span class="o">:</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="nx">object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">:</span> <span class="nx">value</span><span class="p">,</span>
+      <span class="nx">writable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nx">configurable</span><span class="o">:</span> <span class="kc">false</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
 
-  <span class="c1">// Disable writing, and make sure the property cannot be re-configured.</span>
-  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">value</span> <span class="o">:</span> <span class="nx">value</span><span class="p">,</span>
-    <span class="nx">writable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">configurable</span><span class="o">:</span> <span class="kc">false</span>
-  <span class="p">});</span>
+  <span class="c1">// Get the list of properties to work with</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">property</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">properties</span> <span class="o">=</span> <span class="nx">property</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">properties</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">object</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Process each property</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">propertyName</span> <span class="o">=</span> <span class="nx">properties</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+        <span class="nx">value</span> <span class="o">=</span> <span class="nx">object</span><span class="p">[</span><span class="nx">propertyName</span><span class="p">];</span>
+
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">propertyName</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">value</span><span class="o">:</span> <span class="nx">value</span><span class="p">,</span>
+      <span class="nx">writable</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="nx">configurable</span><span class="o">:</span> <span class="kc">false</span>
+    <span class="p">});</span>
+
+    <span class="c1">// Call recursively if an object.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_isObject</span><span class="p">(</span><span class="nx">value</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">t</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
   <span class="k">return</span> <span class="nx">object</span><span class="p">;</span>
 <span class="p">};</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Start or stop runtime.json configuration file watching</span>
-<span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * Node-config automatically monitors and apply changes made to the</span>
-<span class="cm"> * config/runtime.json file.  This paradigm allows for manual changes to running</span>
-<span class="cm"> * application servers, and for multi-node application servers to keep in sync.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method allows you to change the polling interval from the default</span>
-<span class="cm"> * interval (2.5 seconds), or to turn file watching off.  On Linux systems with</span>
-<span class="cm"> * inotify, and in node.js versions 0.6 and above, this interval is ignored.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * runtime.json file watching can be disabled by setting the NODE_CONFIG_DISABLE_FILE_WATCH</span>
-<span class="cm"> * environment variable or --NODE_CONFIG_DISABLE_FILE_WATCH command line parameter</span>
-<span class="cm"> * to &quot;Y&quot; prior to running your application.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * @method watchForConfigFileChanges</span>
-<span class="cm"> * @param interval {Integer} - Polling interval in milliseconds.  Defaults to 2500.</span>
-<span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">interval</span><span class="p">)</span> <span class="p">{</span>
-
-  <span class="c1">// Turn off any prior watching</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span> <span class="nx">watchInterval</span> <span class="o">=</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">interval</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">FILE_WATCHER_INTERVAL</span> <span class="o">:</span> <span class="nx">interval</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">runtimeJsonWatcher</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">runtimeJsonWatcher</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
-      <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">unwatchFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="c1">// If interval is zero or file watching is disabled, don&#39;t attach a new watcher</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">interval</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">DISABLE_FILE_WATCH</span> <span class="o">===</span> <span class="s2">&quot;Y&quot;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="p">}</span>
-
-  <span class="c1">// Re-merge the runtime JSON file if we notice a change</span>
-  <span class="kd">var</span> <span class="nx">onFileChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">retry</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">fileContent</span><span class="p">)</span> <span class="p">{</span>
-
-      <span class="c1">// Not much to do on error</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error loading &quot;</span> <span class="o">+</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
-        <span class="k">return</span><span class="p">;</span>
-      <span class="p">}</span>
-
-      <span class="c1">// Parse the file and mix it in to this config object.</span>
-      <span class="c1">// This notifies listeners</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">configObject</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_stripComments</span><span class="p">(</span><span class="nx">fileContent</span><span class="p">));</span>
-        <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObject</span><span class="p">);</span>
-      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error parsing &quot;</span> <span class="o">+</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
-        <span class="c1">// Retry once - could be someone else writing</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">retry</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-            <span class="nx">onFileChange</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-          <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-  <span class="p">};</span>
-
-  <span class="c1">// Use the latest version of file watching</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// This is the latest</span>
-      <span class="nx">runtimeJsonWatcher</span> <span class="o">=</span> <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">false</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">filename</span><span class="p">)</span> <span class="p">{</span>
-
-        <span class="c1">// Re-attach watcher on inode change (happens when some editors save a file)</span>
-        <span class="c1">// Wait for the O/S rename to complete, then re-watch the file</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">event</span> <span class="o">==</span> <span class="s1">&#39;rename&#39;</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-            <span class="nx">t</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span><span class="p">();</span>
-            <span class="nx">onFileChange</span><span class="p">();</span>
-          <span class="p">},</span> <span class="mi">10</span><span class="p">);</span>
-          <span class="k">return</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="nx">onFileChange</span><span class="p">();</span>
-      <span class="p">});</span>
-    <span class="p">}</span>
-    <span class="k">else</span> <span class="p">{</span>
-      <span class="c1">// Old style polling - only choice if running pre-6.0</span>
-      <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">watchFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="p">{</span><span class="nx">persistent</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nx">interval</span><span class="o">:</span><span class="nx">watchInterval</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">curr</span><span class="p">,</span> <span class="nx">prev</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">curr</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">===</span> <span class="nx">prev</span><span class="p">.</span><span class="nx">mtime</span><span class="p">.</span><span class="nx">getTime</span><span class="p">())</span> <span class="p">{</span><span class="k">return</span><span class="p">;}</span>
-        <span class="nx">onFileChange</span><span class="p">();</span>
-      <span class="p">});</span>
-    <span class="p">}</span>
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// Complain if it exists and we can&#39;t watch it</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">code</span> <span class="o">!==</span> <span class="s1">&#39;ENOENT&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error watching for file: &quot;</span> <span class="o">+</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">e</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-
-<span class="p">};</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Safely write a file&lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method safely overwrites a file by first writing to a temporary file</span>
-<span class="cm"> * and then renaming it. This to ensure no other process reads to file in a</span>
-<span class="cm"> * truncated state.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * @method safeWriteFile</span>
-<span class="cm"> * @param filename {String} Filename to write to.</span>
-<span class="cm"> * @param content  {String} Data to write.</span>
-<span class="cm"> * @param callback {Function} Callback function.</span>
-<span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">safeWriteFile</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">filename</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">rand</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">)),</span>
-        <span class="nx">tmpFilename</span> <span class="o">=</span> <span class="nx">filename</span> <span class="o">+</span> <span class="s1">&#39;.tmp-&#39;</span> <span class="o">+</span> <span class="nx">rand</span><span class="p">;</span>
-
-    <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">tmpFilename</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">rename</span><span class="p">(</span><span class="nx">tmpFilename</span><span class="p">,</span> <span class="nx">filename</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-        <span class="p">});</span>
-    <span class="p">});</span>
-<span class="p">}</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * Return the sources for the configurations</span>
@@ -630,50 +555,6 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * Watch the specified object for a change in properties, and persist changes</span>
-<span class="cm"> * to runtime.json when a change is detected.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * @protected</span>
-<span class="cm"> * @param object {object} - The config object to watch</span>
-<span class="cm"> * @method _persistConfigsOnChange</span>
-<span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_persistConfigsOnChange</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">objectToWatch</span><span class="p">)</span> <span class="p">{</span>
-
-  <span class="k">if</span> <span class="p">(</span><span class="nx">PERSIST_ON_CHANGE</span> <span class="o">===</span> <span class="s1">&#39;N&#39;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="c1">// Watch for configuration value changes</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="nx">objectToWatch</span> <span class="o">=</span> <span class="nx">objectToWatch</span> <span class="o">||</span> <span class="nx">t</span><span class="p">;</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">watch</span><span class="p">(</span><span class="nx">objectToWatch</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
-
-    <span class="c1">// Return early if we&#39;re already queued up for persisting</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">isQueuedForPersistence</span><span class="p">)</span>
-      <span class="k">return</span><span class="p">;</span>
-
-    <span class="c1">// Defer persisting until the next tick.  This results in a single</span>
-    <span class="c1">// persist across any number of config changes in a single event cycle.</span>
-    <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-    <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-
-      <span class="c1">// Persist if necessary</span>
-      <span class="kd">var</span> <span class="nx">newDiffs</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_diffDeep</span><span class="p">(</span><span class="nx">originalConfig</span><span class="p">,</span> <span class="nx">t</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">_equalsDeep</span><span class="p">(</span><span class="nx">newDiffs</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">t</span><span class="p">.</span><span class="nx">safeWriteFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">newDiffs</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">){</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error writing &quot;</span> <span class="o">+</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
-        <span class="p">});</span>
-      <span class="p">}</span>
-
-      <span class="c1">// Set up for next time</span>
-      <span class="nx">isQueuedForPersistence</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-    <span class="p">});</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-<span class="cm">/**</span>
 <span class="cm"> * Load the individual file configurations.</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
@@ -683,8 +564,8 @@
 <span class="cm"> *</span>
 <span class="cm"> * &lt;pre&gt;</span>
 <span class="cm"> *   default.EXT</span>
-<span class="cm"> *   (hostname).EXT</span>
 <span class="cm"> *   (deployment).EXT</span>
+<span class="cm"> *   (hostname).EXT</span>
 <span class="cm"> *   (hostname)-(deployment).EXT</span>
 <span class="cm"> *   local.EXT</span>
 <span class="cm"> *   local-(deployment).EXT</span>
@@ -723,23 +604,32 @@
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * If the $NODE_APP_INSTANCE environment variable (or --NODE_APP_INSTANCE</span>
 <span class="cm"> * command line parameter) is set, then files with this appendage will be loaded.</span>
-<span class="cm"> * See the Multiple Applicstion Instances section of the main documentaion page</span>
+<span class="cm"> * See the Multiple Application Instances section of the main documentaion page</span>
 <span class="cm"> * for more information.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @protected</span>
 <span class="cm"> * @method _loadFileConfigs</span>
-<span class="cm"> * @return {this} The configuration object</span>
+<span class="cm"> * @return config {Object} The configuration object</span>
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_loadFileConfigs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
   <span class="c1">// Initialize</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+      <span class="nx">config</span> <span class="o">=</span> <span class="p">{};</span>
 
-  <span class="c1">// Run only once</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">originalConfig</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="c1">// Initialize parameters from command line, environment, or default</span>
+  <span class="nx">NODE_ENV</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;development&#39;</span><span class="p">);</span>
+  <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">CONFIG_DIR</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">CONFIG_DIR</span><span class="p">;</span>
   <span class="p">}</span>
+  <span class="nx">APP_INSTANCE</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_APP_INSTANCE&#39;</span><span class="p">);</span>
+  <span class="nx">HOST</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOST&#39;</span><span class="p">);</span>
+  <span class="nx">HOSTNAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOSTNAME&#39;</span><span class="p">);</span>
+
+  <span class="c1">// This is for backward compatibility</span>
+  <span class="nx">RUNTIME_JSON_FILENAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_RUNTIME_JSON&#39;</span><span class="p">,</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">);</span>
 
   <span class="c1">// Determine the host name from the OS module, $HOST, or $HOSTNAME</span>
   <span class="c1">// Remove any . appendages, and default to null if not set</span>
@@ -756,7 +646,7 @@
   <span class="nx">hostName</span> <span class="o">=</span> <span class="nx">hostName</span> <span class="o">?</span> <span class="nx">hostName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
 
   <span class="c1">// Read each file in turn</span>
-  <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">NODE_ENV</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">NODE_ENV</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;local-&#39;</span> <span class="o">+</span> <span class="nx">NODE_ENV</span><span class="p">];</span>
+  <span class="kd">var</span> <span class="nx">baseNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="nx">NODE_ENV</span><span class="p">,</span> <span class="nx">hostName</span><span class="p">,</span> <span class="nx">hostName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">NODE_ENV</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;local-&#39;</span> <span class="o">+</span> <span class="nx">NODE_ENV</span><span class="p">];</span>
   <span class="kd">var</span> <span class="nx">extNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;js&#39;</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;coffee&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;yml&#39;</span><span class="p">];</span>
   <span class="nx">baseNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">baseName</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">extNames</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">extName</span><span class="p">)</span> <span class="p">{</span>
@@ -765,7 +655,7 @@
       <span class="kd">var</span> <span class="nx">fullFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">baseName</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">extName</span><span class="p">;</span>
       <span class="kd">var</span> <span class="nx">configObj</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">configObj</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
       <span class="p">}</span>
 
       <span class="c1">// See if the application instance file is available</span>
@@ -773,36 +663,24 @@
         <span class="nx">fullFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">baseName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">APP_INSTANCE</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">extName</span><span class="p">;</span>
         <span class="nx">configObj</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">configObj</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
+          <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
         <span class="p">}</span>
       <span class="p">}</span>
     <span class="p">});</span>
   <span class="p">});</span>
 
-  <span class="c1">// Override configurations with the old-style environment variables</span>
-  <span class="c1">// Warning: This will be deprecated in a future major revision release</span>
-  <span class="kd">var</span> <span class="nx">oldStyleEnv</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_loadOldStyleEnv</span><span class="p">();</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">oldStyleEnv</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">oldStyleEnv</span><span class="p">);</span>
-    <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Old-Style Environment Variables&quot;</span><span class="p">,</span>
-      <span class="nx">parsed</span><span class="o">:</span> <span class="nx">oldStyleEnv</span><span class="p">,</span>
-    <span class="p">});</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;\nWarning - old style $CONFIG_* environment configurations found. Convert to $NODE_CONFIG={JSON}&#39;</span><span class="p">)</span>
-  <span class="p">}</span>
-
   <span class="c1">// Override configurations from the $NODE_CONFIG environment variable</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">newStyleEnv</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="kd">var</span> <span class="nx">envConfig</span> <span class="o">=</span> <span class="p">{};</span>
     <span class="k">try</span> <span class="p">{</span>
-      <span class="nx">newStyleEnv</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">);</span>
+      <span class="nx">envConfig</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">);</span>
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;The $NODE_CONFIG environment variable is malformed JSON&#39;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">newStyleEnv</span><span class="p">);</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">envConfig</span><span class="p">);</span>
     <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
       <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;$NODE_CONFIG&quot;</span><span class="p">,</span>
-      <span class="nx">parsed</span><span class="o">:</span> <span class="nx">newStyleEnv</span><span class="p">,</span>
+      <span class="nx">parsed</span><span class="o">:</span> <span class="nx">envConfig</span><span class="p">,</span>
     <span class="p">});</span>
   <span class="p">}</span>
 
@@ -814,71 +692,20 @@
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;The --NODE_CONFIG={json} command line argument is malformed JSON&#39;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">cmdLineConfig</span><span class="p">);</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">cmdLineConfig</span><span class="p">);</span>
     <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
       <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;--NODE_CONFIG argument&quot;</span><span class="p">,</span>
       <span class="nx">parsed</span><span class="o">:</span> <span class="nx">cmdLineConfig</span><span class="p">,</span>
     <span class="p">});</span>
   <span class="p">}</span>
 
-  <span class="c1">// Remember the original configuration (before adding runtimeJson)</span>
-  <span class="nx">originalConfig</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_cloneDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
-
-  <span class="c1">// Extend the original config with any prior runtime.json diffs</span>
+  <span class="c1">// Extend the original config with the contents of runtime.json (backwards compatibility)</span>
   <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">)</span> <span class="o">||</span> <span class="p">{};</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
-
-  <span class="c1">// Attach the config.prototype to all sub-objects.</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
 
   <span class="c1">// Return the configuration object</span>
-  <span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
 <span class="p">};</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Check for the old-style environment variable configurations</span>
-<span class="cm"> *</span>
-<span class="cm"> * @protected</span>
-<span class="cm"> * @deprecated</span>
-<span class="cm"> * @method _loadOldStyleEnv</span>
-<span class="cm"> * @return {Object} old-style configurations from process.env</span>
-<span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_loadOldStyleEnv</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
-      <span class="nx">envOverride</span> <span class="o">=</span> <span class="p">{};</span>
-
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">varName</span> <span class="k">in</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">varName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;CONFIG_&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-
-      <span class="c1">// Get the string or numeric value</span>
-      <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">varName</span><span class="p">],</span>
-          <span class="nx">floatVal</span> <span class="o">=</span> <span class="nb">parseFloat</span><span class="p">(</span><span class="nx">value</span><span class="p">),</span>
-          <span class="nx">value</span> <span class="o">=</span> <span class="nx">floatVal</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">===</span> <span class="nx">value</span> <span class="o">?</span> <span class="nx">floatVal</span> <span class="o">:</span> <span class="nx">value</span><span class="p">;</span>
-
-      <span class="c1">// Convert __ to ` (which you can&#39;t have in environment variables)</span>
-      <span class="c1">// After splitting, ` are converted to single underscores</span>
-      <span class="nx">varName</span> <span class="o">=</span> <span class="nx">varName</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/__/g</span><span class="p">,</span><span class="s1">&#39;`&#39;</span><span class="p">);</span>
-      <span class="kd">var</span> <span class="nx">parts</span> <span class="o">=</span> <span class="nx">varName</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">);</span>
-      <span class="nx">parts</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// remove CONFIG</span>
-
-      <span class="kd">var</span> <span class="nx">curCtxt</span> <span class="o">=</span> <span class="nx">envOverride</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">partName</span> <span class="o">=</span> <span class="nx">parts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/`/g</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">==</span> <span class="nx">l</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-          <span class="c1">// Final (element) part</span>
-          <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="p">{</span>
-          <span class="c1">// Mid (object) part</span>
-          <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">]</span> <span class="o">||</span> <span class="p">{};</span>
-          <span class="nx">curCtxt</span> <span class="o">=</span> <span class="nx">curCtxt</span><span class="p">[</span><span class="nx">partName</span><span class="p">];</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="nx">envOverride</span><span class="p">;</span>
-<span class="p">}</span>
-
 
 <span class="cm">/**</span>
 <span class="cm"> * Parse and return the specified configuration file.</span>
@@ -912,32 +739,16 @@
       <span class="nx">configObject</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
       <span class="nx">fileContent</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
-  <span class="c1">// Make sure the runtime.json file exists.  This is required for fs.watch().</span>
-  <span class="kd">var</span> <span class="nx">checkRuntimeJson</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">fullFilename</span> <span class="o">==</span> <span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">try</span> <span class="p">{</span>
-        <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="s1">&#39;{}&#39;</span><span class="p">);</span>
-      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// If we cannot write file, clear watch function.</span>
-        <span class="nx">t</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-          <span class="k">return</span><span class="p">;</span>
-        <span class="p">};</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="p">{};</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="p">};</span>
-
   <span class="c1">// Return null if the file doesn&#39;t exist.</span>
   <span class="c1">// Note that all methods here are the Sync versions.  This is appropriate during</span>
   <span class="c1">// module loading (which is a synchronous operation), but not thereafter.</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">stat</span> <span class="o">=</span> <span class="nx">FileSystem</span><span class="p">.</span><span class="nx">statSync</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">stat</span> <span class="o">||</span> <span class="nx">stat</span><span class="p">.</span><span class="nx">size</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">checkRuntimeJson</span><span class="p">();</span>
+      <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">checkRuntimeJson</span><span class="p">();</span>
+    <span class="k">return</span> <span class="kc">null</span>
   <span class="p">}</span>
 
   <span class="c1">// Try loading the file.</span>
@@ -1017,7 +828,7 @@
 <span class="cm"> *</span>
 <span class="cm"> * &lt;pre&gt;</span>
 <span class="cm"> *   var CUST_CONFIG = require(&#39;config&#39;).Customer;</span>
-<span class="cm"> *   CUST_CONFIG.watch(...)</span>
+<span class="cm"> *   CUST_CONFIG.get(...)</span>
 <span class="cm"> * &lt;/pre&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @protected</span>
@@ -1359,46 +1170,6 @@
 <span class="p">};</span>
 
 <span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Exposing original Config&lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method allows get the original config properties.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * @method getOriginalConfig</span>
-<span class="cm"> * @return {object} The original config object is returned</span>
-<span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getOriginalConfig</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">originalConfig</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * &lt;p&gt;Reset Runtime Config&lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * &lt;p&gt;</span>
-<span class="cm"> * This method allows you to reset the runtime.json generated file.</span>
-<span class="cm"> * &lt;/p&gt;</span>
-<span class="cm"> *</span>
-<span class="cm"> * @method resetRuntime</span>
-<span class="cm"> * @param callback {function} An optional callback function</span>
-<span class="cm"> */</span>
-<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">resetRuntime</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">safeWriteFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">,</span> <span class="s1">&#39;{}&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">written</span><span class="p">,</span> <span class="nx">buffer</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Cannot write runtime.json file &quot;</span> <span class="o">+</span> <span class="nx">err</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">return</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Write to runtime.json completed&quot;</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">&amp;&amp;</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">written</span><span class="p">,</span> <span class="nx">buffer</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">});</span>
-<span class="p">}</span>
-
-<span class="cm">/**</span>
 <span class="cm"> * &lt;p&gt;Initialize a parameter from the command line or process environment&lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * &lt;p&gt;</span>
@@ -1453,8 +1224,12 @@
 <span class="c1">// aren&#39;t a part of the object namespace when inspected.</span>
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">;</span>
 
-<span class="c1">// Watch for configuration file changes</span>
-<span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">.</span><span class="nx">watchForConfigFileChanges</span><span class="p">();</span>
+<span class="c1">// Produce warnings if the global config is empty</span>
+<span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;WARNING: No configurations found in configuration directory:&#39;</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;WARNING: &#39;</span> <span class="o">+</span> <span class="nx">CONFIG_DIR</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;WARNING: See https://www.npmjs.org/package/config for more information.&#39;</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
                     </div>
 			</div>
@@ -1494,11 +1269,11 @@
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.35</span>
+<span class="subtitle">version 1.0.0</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method__loadOldStyleEnv", "access": "protected", "host": "Config", "type": "method", "name": "_loadOldStyleEnv"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_safeWriteFile", "access": "", "host": "Config", "type": "method", "name": "safeWriteFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__get", "access": "protected", "host": "Config", "type": "method", "name": "_get"}, {"url": "Config.html#method_get", "access": "", "host": "Config", "type": "method", "name": "get"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_has", "access": "", "host": "Config", "type": "method", "name": "has"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
 </script>
 </body>
 </html>

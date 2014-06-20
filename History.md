@@ -8,10 +8,14 @@
   * Allow makeImmutable to accept an array of attributes
   * Allow makeImmutable to accept no attrs, making all attributes immutable
   * Allow recursion in makeImmutable, if an attribute is an object
-  * Prevent recursive loops
   * Change node-config behavior to make all configurations immutable
+  * Removed getOriginalConfig as no longer necessary post-immutable
   * Removed runtime.json file writing and monitoring
+  * Removed previously deprecated $CONFIG_* environment configurations
   * Deprecated the attribute watch functionality
+  * Added error output if no configurations found
+  * Exposed config loading for alternate configurations
+  * Added config.get() and config.has() methods & tests
 
 0.4.36 / 2014-05-27
 ===================

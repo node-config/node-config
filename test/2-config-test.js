@@ -7,10 +7,6 @@ process.env.NODE_ENV='test';
 // Test for multi-instance applications
 process.env.NODE_APP_INSTANCE='3';
 
-// Test for old style environment variable overrides
-process.env.CONFIG_EnvOverride_parm__number__1 = 'overridden from test';
-process.env.CONFIG_EnvOverride_parm2 = 13;
-
 // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
 process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
 process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
@@ -24,9 +20,6 @@ var vows = require('vows');
     newWatchedValue = Math.floor(Math.random() * 100000),
     originalDynamicArray = CONFIG.dynamicArray,
     newDynamicArray = [Math.floor(Math.random() * 100000), Math.floor(Math.random() * 100000)];
-
-var runtimeJsonFilename = __dirname + '/config/runtime.json';
-var runtimeJsonFilenameBak = runtimeJsonFilename+'.bak';
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
@@ -85,22 +78,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.deepEqual(CONFIG.Customers.lang, ['en','de','es']);
     }
 
-  },
-
-  'Old-Style Configurations from environment variables (deprecated)': {
-    topic: function() {
-      return CONFIG;
-    },
-
-    'Configuration can come from environment variables': function() {
-      assert.equal(CONFIG.EnvOverride.parm2, 13);
-    },
-
-    'Double__underscores escape to single_underscores': function() {
-
-      JSON.stringify(CONFIG, null, 2);
-      assert.equal(CONFIG.EnvOverride.parm_number_1, 'overridden from test');
-    }
   },
 
   'Configurations from the $NODE_CONFIG environment variable': {
@@ -210,75 +187,67 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Defaults remain intact unless overridden': function(moduleConfig) {
       assert.equal(moduleConfig.parm2, 2000);
     }
-
   },
 
-  'Internal Change Notification Tests': {
+  'get() tests': {
     topic: function() {
-
-      // Attach this topic as a watcher
-      var cb = this.callback;
-      CONFIG.watch(CONFIG, null, function(obj, prop, oldValue, newValue){
-        // Don't process the submodule test - that's for later
-        if (prop == 'parm3') return;
-        if (prop == 'dynamicArray') return;
-        if (prop == 'staticArray') {
-          cb('Watch callback should not have been called for staticArray');
-          return false;
-        }
-
-        cb(null, {obj:obj, prop:prop, oldValue:oldValue, newValue:newValue});
-      });
-
-      // Write the new watched value out to the runtime.json file
-      CONFIG.watchThisValue = newWatchedValue;
-
-      // Test that submodule configurations are persisted
-      CONFIG.TestModule.parm3 = 1234;
-
-      // Write the new array value out to the runtime.json file
-      CONFIG.dynamicArray = newDynamicArray;
-
-      // Test that changing an array d
-      CONFIG.staticArray = [2,1,3];
+      return CONFIG;
     },
-
-    'The watch() method is available': function() {
-      assert.isFunction(CONFIG.watch);
+    'The function exists': function(config) {
+      assert.isFunction(config.get);
     },
-
-    'The change handler callback was fired': function(err, obj) {
-      assert.isTrue(true);
+    'A top level item is returned': function(config) {
+      assert.isTrue(typeof config.get('TestModule') === 'object');
     },
-
-    'And it was called on the correct object': function(err, obj) {
-      assert.isTrue(obj.obj === CONFIG);
+    'A sub level item is returned': function(config) {
+      assert.equal(config.get('Customers.dbHost'), 'base');
     },
-
-    'And it was called with the correct parameter': function(err, obj) {
-      assert.equal(obj.prop, 'watchThisValue');
+    'get is attached deeply': function(config) {
+      assert.equal(config.Customers.get('dbHost'), 'base');
     },
-
-    'And it has the correct prior value': function(err, obj) {
-      assert.equal(obj.oldValue, originalWatchedValue);
+    'A proper exception is thrown on mis-spellings': function(config) {
+      var didThrow = false;
+      try {
+        var topItem = config.get('mis.spelled');
+        didThrow = false;
+      } catch(e) {
+        didThrow = true;
+      }
+      assert.isTrue(didThrow);
     },
-
-    'And it has the correct new value': function(err, obj) {
-      assert.equal(obj.newValue, newWatchedValue);
-    },
-
-    'And the config value was correctly set': function(err, obj) {
-      assert.equal(CONFIG.watchThisValue, newWatchedValue);
+    'An exception is thrown on non-objects': function(config) {
+      var didThrow = false;
+      try {
+        var topItem = config.get('Testmodule.misspelled');
+        didThrow = false;
+      } catch(e) {
+        didThrow = true;
+      }
+      assert.isTrue(didThrow);
     }
-
   },
 
-  'Assuring you can get originalConfig': {
+  'has() tests': {
     topic: function() {
-      return CONFIG.getOriginalConfig();
+      return CONFIG;
     },
-    'The getOriginalConfig() method is available': function() {
-      assert.isFunction(CONFIG.getOriginalConfig);
+    'The function exists': function(config) {
+      assert.isFunction(config.has);
+    },
+    'A top level item can be tested': function(config) {
+      assert.isTrue(config.has('TestModule'));
+    },
+    'A sub level item can be tested': function(config) {
+      assert.isTrue(config.has('Customers.dbHost'));
+    },
+    'has is attached deeply': function(config) {
+      assert.isTrue(config.Customers.has('dbHost'));
+    },
+    'Correctly identifies not having element': function(config) {
+      assert.isTrue(!config.Customers.has('dbHosx'));
+    },
+    'Correctly identifies not having element (deep)': function(config) {
+      assert.isTrue(!config.has('Customers.dbHosx'));
     }
   }
 

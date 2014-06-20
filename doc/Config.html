@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1392660278.24" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1392660278.24" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1403224238.23" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1403224238.23" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1392660278.24"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1392660278.24"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1403224238.23"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1403224238.23"></script>
 </head>
 
 <body id="node-monitor">
@@ -58,9 +58,9 @@
   
 
                     <div class="summary description" property="yui:description">
-                        <p>Runtime Application Configurations</p>
+                        <p>Application Configurations</p>
 <p>
-The config module exports a singleton object representing all runtime
+The config module exports a singleton object representing all
 configurations for this application deployment.
 </p>
 <p>
@@ -133,7 +133,7 @@ the top-level CONFIG object.  It's so you can do this:
 </p>
 <pre>
 var CUST_CONFIG = require('config').Customer;
-CUST_CONFIG.watch(...)
+CUST_CONFIG.get(...)
 </pre>
                                         </div>
 
@@ -453,6 +453,67 @@ replacing individual elements instead.
                                     </div>
                                     <hr />
                                     </div>
+                                    <div class="protected" rel="yui:method" resource="#method__get">
+                                    <h4>
+                                        <a name="method__get">_get</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        mixed
+                                            <strong property="yui:name">_get</strong>
+                                           (
+                                                
+                                                        
+                                                         object
+                                                    
+                                                
+                                                        , 
+                                                         property
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Underlying get mechanism
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">object</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - Object to get the property for</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string | array[string]</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The property name to get (as an array or '.' delimited string)</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        mixed
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">value  - Property value, including undefined if not defined.</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
                                     <div class="" rel="yui:method" resource="#method__getCmdLineArg">
                                     <h4>
                                         <a name="method__getCmdLineArg">_getCmdLineArg</a></h4>
@@ -636,7 +697,7 @@ The argument is an object if it's a JS object, but not an array.
                                          protected 
                                         
                                         
-                                        this
+                                        Object
                                             <strong property="yui:name">_loadFileConfigs</strong>
                                            (
                                             )
@@ -650,8 +711,8 @@ by the file.  The search order is:
 </p>
 <pre>
 default.EXT
-(hostname).EXT
 (deployment).EXT
+(hostname).EXT
 (hostname)-(deployment).EXT
 local.EXT
 local-(deployment).EXT
@@ -684,7 +745,7 @@ manually, or by the application setting a configuration value.
 <p>
 If the $NODE_APP_INSTANCE environment variable (or --NODE_APP_INSTANCE
 command line parameter) is set, then files with this appendage will be loaded.
-See the Multiple Applicstion Instances section of the main documentaion page
+See the Multiple Application Instances section of the main documentaion page
 for more information.
 </p>
                                         </div>
@@ -695,53 +756,13 @@ for more information.
                                                 <dl>
                                                     <dt>Returns:
                                                     <code property="yui:return">
-                                                        this
-                                                    </code></dt>
-                                                    <dd property="yui:returnInfo">The configuration object</dd>
-                                                </dl>
-
-
-             
-
-                                        </div>
-
-                                    </div>
-                                    <hr />
-                                    </div>
-                                    <div class="protected deprecated" rel="yui:method" resource="#method__loadOldStyleEnv">
-                                    <h4>
-                                        <a name="method__loadOldStyleEnv">_loadOldStyleEnv</a></h4>
-                                    <div class="detail" >
-                                        <code>
-                                         protected 
-                                        
-                                        
-                                        Object
-                                            <strong property="yui:name">_loadOldStyleEnv</strong>
-                                           (
-                                            )
-                                        </code>
-                                        
-                                        <div class="description" property="yui:description">
-                                            Check for the old-style environment variable configurations
-                                        </div>
-
-                                        <div class="description">
-
-
-                                                <dl>
-                                                    <dt>Returns:
-                                                    <code property="yui:return">
                                                         Object
                                                     </code></dt>
-                                                    <dd property="yui:returnInfo">old-style configurations from process.env</dd>
+                                                    <dd property="yui:returnInfo">config  The configuration object</dd>
                                                 </dl>
 
 
              
-                                            <div class="deprecated">
-                                                <strong>Deprecated</strong> &#160;
-                                            </div>        
 
                                         </div>
 
@@ -800,60 +821,6 @@ after synchronous module loading.
                                                         configObject
                                                     </code></dt>
                                                     <dd property="yui:returnInfo">The configuration object parsed from the file</dd>
-                                                </dl>
-
-
-             
-
-                                        </div>
-
-                                    </div>
-                                    <hr />
-                                    </div>
-                                    <div class="protected" rel="yui:method" resource="#method__persistConfigsOnChange">
-                                    <h4>
-                                        <a name="method__persistConfigsOnChange">_persistConfigsOnChange</a></h4>
-                                    <div class="detail" >
-                                        <code>
-                                         protected 
-                                        
-                                        
-                                        void
-                                            <strong property="yui:name">_persistConfigsOnChange</strong>
-                                           (
-                                                
-                                                        
-                                                         object
-                                                    
-                                                
-                                            )
-                                        </code>
-                                        
-                                        <div class="description" property="yui:description">
-                                            <p>
-Watch the specified object for a change in properties, and persist changes
-to runtime.json when a change is detected.
-</p>
-                                        </div>
-
-                                        <div class="description">
-
-                                                <dl rel="yui:parameters">
-                                                    <dt>Parameters:</dt>
-                                                        <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">object</span>
-                                                        &lt;<span property="yui:type">object</span>&gt;
-                                                        </code>
-                                                        <span property="yui:description">  - The config object to watch</span>
-                                                        </dd>
-                                                </dl>
-
-                                                <dl>
-                                                    <dt>Returns:
-                                                    <code property="yui:return">
-                                                        void
-                                                    </code></dt>
-                                                    <dd property="yui:returnInfo"></dd>
                                                 </dl>
 
 
@@ -1031,6 +998,62 @@ document.getElementById("showProtected").style.display = "block";
                                     </div>
                                     <hr />
                                     </div>
+                                    <div class="" rel="yui:method" resource="#method_get">
+                                    <h4>
+                                        <a name="method_get">get</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        mixed
+                                            <strong property="yui:name">get</strong>
+                                           (
+                                                
+                                                        
+                                                         property
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            <p>Get a configuration value</p>
+<p>
+This will return the specified property value, throwing an exception if the
+configuration isn't defined.  It is used to assure configurations are defined
+before being used, and to prevent typos.
+</p>
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The configuration property to get. Can include '.' sub-properties.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        mixed
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">value  - The property value</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
                                     <div class="" rel="yui:method" resource="#method_getConfigSources">
                                     <h4>
                                         <a name="method_getConfigSources">getConfigSources</a></h4>
@@ -1074,36 +1097,53 @@ name, original, and parsed elements</dd>
                                     </div>
                                     <hr />
                                     </div>
-                                    <div class="" rel="yui:method" resource="#method_getOriginalConfig">
+                                    <div class="" rel="yui:method" resource="#method_has">
                                     <h4>
-                                        <a name="method_getOriginalConfig">getOriginalConfig</a></h4>
+                                        <a name="method_has">has</a></h4>
                                     <div class="detail" >
                                         <code>
                                         
                                         
                                         
-                                        object
-                                            <strong property="yui:name">getOriginalConfig</strong>
+                                        boolean
+                                            <strong property="yui:name">has</strong>
                                            (
+                                                
+                                                        
+                                                         property
+                                                    
+                                                
                                             )
                                         </code>
                                         
                                         <div class="description" property="yui:description">
-                                            <p>Exposing original Config</p>
-<p>
-This method allows get the original config properties.
-</p>
+                                            Test that a configuration parameter exists
+<pre>
+var config = require('config');
+if (config.has('customer.dbName')) {
+console.log('Customer database name: ' + config.customer.dbName);
+}
+</pre>
                                         </div>
 
                                         <div class="description">
 
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The configuration property to test. Can include '.' sub-properties.</span>
+                                                        </dd>
+                                                </dl>
 
                                                 <dl>
                                                     <dt>Returns:
                                                     <code property="yui:return">
-                                                        object
+                                                        boolean
                                                     </code></dt>
-                                                    <dd property="yui:returnInfo">The original config object is returned</dd>
+                                                    <dd property="yui:returnInfo">isPresent  - True if the property is defined, false if not defined.</dd>
                                                 </dl>
 
 
@@ -1223,36 +1263,39 @@ CONFIG.makeHidden(CONFIG.amazonS3, 'secret_key');
                                                     
                                                 
                                                         , 
-                                                         property
+                                                         [property]
                                                     
                                                 
                                                         , 
-                                                         value
+                                                         [value]
                                                     
                                                 
                                             )
                                         </code>
                                         
                                         <div class="description" property="yui:description">
-                                            <p>Make a configuration property immutable (assuring it cannot be changed
+                                            <p>Make a javascript object property immutable (assuring it cannot be changed
 from the current value).</p>
+<p>
+If the specified property is an object, all attributes of that object are
+made immutable, including properties of contained objects, recursively.
+If a property name isn't supplied, all properties of the object are made
+immutable.
+</p>
+<p>
+</p>
+<p>
+New properties can be added to the object and those properties will not be
+immutable unless this method is called on those new properties.
+</p>
 <p>
 This operation cannot be undone.
 </p>
-<p><i>
-This method was built for disabling runtime changes to configuration values,
-but it can be applied to <u>any</u> javascript object.
-</i></p>
 <p>Example:</p>
 <pre>
-var CONFIG = require('config').customer;
-...
-// Obtain a DB connection using CONFIG parameters
-database.open(CONFIG.db.name, CONFIG.db.port);
-...
-// Don't allow database changes after connect
-CONFIG.makeImmutable(CONFIG.db, 'name');
-CONFIG.makeImmutable(CONFIG.db, 'port');
+var config = require('config');
+var myObject = {hello:'world'};
+config.makeImmutable(myObject);
 </pre>
                                         </div>
 
@@ -1264,19 +1307,22 @@ CONFIG.makeImmutable(CONFIG.db, 'port');
                                                         <code><span property="yui:name">object</span>
                                                         &lt;<span property="yui:type">object</span>&gt;
                                                         </code>
-                                                        <span property="yui:description">  - The object to attach an immutable property into.</span>
+                                                        <span property="yui:description">  - The object to specify immutable properties for</span>
                                                         </dd>
                                                         <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">property</span>
-                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        <code><span property="yui:name">[property]</span>
+                                                        &lt;<span property="yui:type">string | [string]</span>&gt;
                                                         </code>
-                                                        <span property="yui:description">  - The name of the property to make immutable.</span>
+                                                        <span property="yui:description">  - The name of the property (or array of names) to make immutable.
+If not provided, all owned properties of the object are made immutable.</span>
                                                         </dd>
                                                         <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">value</span>
-                                                        &lt;<span property="yui:type">mixed</span>&gt;
+                                                        <code><span property="yui:name">[value]</span>
+                                                        &lt;<span property="yui:type">mixed | [mixed]</span>&gt;
                                                         </code>
-                                                        <span property="yui:description">  - (optional) Set the property value to this (otherwise leave alone)</span>
+                                                        <span property="yui:description">  - Property value (or array of values) to set
+the property to before making immutable. Only used when setting a single
+property. Retained for backward compatibility.</span>
                                                         </dd>
                                                 </dl>
 
@@ -1286,136 +1332,6 @@ CONFIG.makeImmutable(CONFIG.db, 'port');
                                                         object
                                                     </code></dt>
                                                     <dd property="yui:returnInfo">object  - The original object is returned - for chaining.</dd>
-                                                </dl>
-
-
-             
-
-                                        </div>
-
-                                    </div>
-                                    <hr />
-                                    </div>
-                                    <div class="" rel="yui:method" resource="#method_resetRuntime">
-                                    <h4>
-                                        <a name="method_resetRuntime">resetRuntime</a></h4>
-                                    <div class="detail" >
-                                        <code>
-                                        
-                                        
-                                        
-                                        void
-                                            <strong property="yui:name">resetRuntime</strong>
-                                           (
-                                                
-                                                        
-                                                         callback
-                                                    
-                                                
-                                            )
-                                        </code>
-                                        
-                                        <div class="description" property="yui:description">
-                                            <p>Reset Runtime Config</p>
-<p>
-This method allows you to reset the runtime.json generated file.
-</p>
-                                        </div>
-
-                                        <div class="description">
-
-                                                <dl rel="yui:parameters">
-                                                    <dt>Parameters:</dt>
-                                                        <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">callback</span>
-                                                        &lt;<span property="yui:type">function</span>&gt;
-                                                        </code>
-                                                        <span property="yui:description">  An optional callback function</span>
-                                                        </dd>
-                                                </dl>
-
-                                                <dl>
-                                                    <dt>Returns:
-                                                    <code property="yui:return">
-                                                        void
-                                                    </code></dt>
-                                                    <dd property="yui:returnInfo"></dd>
-                                                </dl>
-
-
-             
-
-                                        </div>
-
-                                    </div>
-                                    <hr />
-                                    </div>
-                                    <div class="" rel="yui:method" resource="#method_safeWriteFile">
-                                    <h4>
-                                        <a name="method_safeWriteFile">safeWriteFile</a></h4>
-                                    <div class="detail" >
-                                        <code>
-                                        
-                                        
-                                        
-                                        void
-                                            <strong property="yui:name">safeWriteFile</strong>
-                                           (
-                                                
-                                                        
-                                                         filename
-                                                    
-                                                
-                                                        , 
-                                                         content
-                                                    
-                                                
-                                                        , 
-                                                         callback
-                                                    
-                                                
-                                            )
-                                        </code>
-                                        
-                                        <div class="description" property="yui:description">
-                                            <p>Safely write a file</p>
-<p>
-This method safely overwrites a file by first writing to a temporary file
-and then renaming it. This to ensure no other process reads to file in a
-truncated state.
-</p>
-                                        </div>
-
-                                        <div class="description">
-
-                                                <dl rel="yui:parameters">
-                                                    <dt>Parameters:</dt>
-                                                        <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">filename</span>
-                                                        &lt;<span property="yui:type">String</span>&gt;
-                                                        </code>
-                                                        <span property="yui:description">  Filename to write to.</span>
-                                                        </dd>
-                                                        <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">content</span>
-                                                        &lt;<span property="yui:type">String</span>&gt;
-                                                        </code>
-                                                        <span property="yui:description">   Data to write.</span>
-                                                        </dd>
-                                                        <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">callback</span>
-                                                        &lt;<span property="yui:type">Function</span>&gt;
-                                                        </code>
-                                                        <span property="yui:description">  Callback function.</span>
-                                                        </dd>
-                                                </dl>
-
-                                                <dl>
-                                                    <dt>Returns:
-                                                    <code property="yui:return">
-                                                        void
-                                                    </code></dt>
-                                                    <dd property="yui:returnInfo"></dd>
                                                 </dl>
 
 
@@ -1509,7 +1425,7 @@ object, containing an object with the specified default values.
                                     </div>
                                     <hr />
                                     </div>
-                                    <div class="" rel="yui:method" resource="#method_watch">
+                                    <div class=" deprecated" rel="yui:method" resource="#method_watch">
                                     <h4>
                                         <a name="method_watch">watch</a></h4>
                                     <div class="detail" >
@@ -1541,26 +1457,15 @@ object, containing an object with the specified default values.
                                         </code>
                                         
                                         <div class="description" property="yui:description">
-                                            <p>Monitor a configuration value for runtime changes.</p>
+                                            <p>Monitor a javascript property for runtime changes.</p>
 <p>
-Configuration values can be changed at runtime by the application or by a
-manual change to the config/runtime.json  file.
-This method lets you specify a function to run when a configuration
-value changes.
+This method was built for an earlier version of node-config that allowed
+configuration value mutations.  Since version 1.0.0, node-config no longer
+allows configuration mutations, and is no longer used in node-config.
 </p>
-<p><i>
-This was built for monitoring changes to configuration values,
-but it can be used for watching changes to <u>any</u> javascript object.
-</i></p>
-<p>Example:</p>
-<pre>
-var CONFIG = require('config').customer;
-...
-// Watch for any changes to the customer configuration
-CONFIG.watch(CONFIG, null, function(object, propertyName, priorValue, newValue) {
-&nbsp;console.log("Customer configuration " + propertyName + " changed from " + priorValue + " to " + newValue);
-});
-</pre>
+<p>
+It is deprecated, and will be removed in the next semver incompatible release 2.0.0.
+</p>
                                         </div>
 
                                         <div class="description">
@@ -1606,72 +1511,9 @@ Then all handlers (including this one) will be called again with the newly chang
 
 
              
-
-                                        </div>
-
-                                    </div>
-                                    <hr />
-                                    </div>
-                                    <div class="" rel="yui:method" resource="#method_watchForConfigFileChanges">
-                                    <h4>
-                                        <a name="method_watchForConfigFileChanges">watchForConfigFileChanges</a></h4>
-                                    <div class="detail" >
-                                        <code>
-                                        
-                                        
-                                        
-                                        void
-                                            <strong property="yui:name">watchForConfigFileChanges</strong>
-                                           (
-                                                
-                                                        
-                                                         interval
-                                                    
-                                                
-                                            )
-                                        </code>
-                                        
-                                        <div class="description" property="yui:description">
-                                            Start or stop runtime.json configuration file watching
-<p>
-Node-config automatically monitors and apply changes made to the
-config/runtime.json file.  This paradigm allows for manual changes to running
-application servers, and for multi-node application servers to keep in sync.
-</p>
-<p>
-This method allows you to change the polling interval from the default
-interval (2.5 seconds), or to turn file watching off.  On Linux systems with
-inotify, and in node.js versions 0.6 and above, this interval is ignored.
-</p>
-<p>
-runtime.json file watching can be disabled by setting the NODE_CONFIG_DISABLE_FILE_WATCH
-environment variable or --NODE_CONFIG_DISABLE_FILE_WATCH command line parameter
-to "Y" prior to running your application.
-</p>
-                                        </div>
-
-                                        <div class="description">
-
-                                                <dl rel="yui:parameters">
-                                                    <dt>Parameters:</dt>
-                                                        <dd rel="yui:parameter">
-                                                        <code><span property="yui:name">interval</span>
-                                                        &lt;<span property="yui:type">Integer</span>&gt;
-                                                        </code>
-                                                        <span property="yui:description">  - Polling interval in milliseconds.  Defaults to 2500.</span>
-                                                        </dd>
-                                                </dl>
-
-                                                <dl>
-                                                    <dt>Returns:
-                                                    <code property="yui:return">
-                                                        void
-                                                    </code></dt>
-                                                    <dd property="yui:returnInfo"></dd>
-                                                </dl>
-
-
-             
+                                            <div class="deprecated">
+                                                <strong>Deprecated</strong> &#160;
+                                            </div>        
 
                                         </div>
 
@@ -1728,25 +1570,22 @@ to "Y" prior to running your application.
                                 <li class="protected"><a href="#method__diffDeep" title="_diffDeep">_diffDeep</a></li>
                                 <li class="protected"><a href="#method__equalsDeep" title="_equalsDeep">_equalsDeep</a></li>
                                 <li class="protected"><a href="#method__extendDeep" title="_extendDeep">_extendDeep</a></li>
+                                <li class="protected"><a href="#method__get" title="_get">_get</a></li>
                                 <li class=""><a href="#method__getCmdLineArg" title="_getCmdLineArg">_getCmdLineArg</a></li>
                                 <li class=""><a href="#method__initParam" title="_initParam">_initParam</a></li>
                                 <li class="protected"><a href="#method__isObject" title="_isObject">_isObject</a></li>
                                 <li class="protected"><a href="#method__loadFileConfigs" title="_loadFileConfigs">_loadFileConfigs</a></li>
-                                <li class="protected deprecated"><a href="#method__loadOldStyleEnv" title="_loadOldStyleEnv">_loadOldStyleEnv</a></li>
                                 <li class="protected"><a href="#method__parseFile" title="_parseFile">_parseFile</a></li>
-                                <li class="protected"><a href="#method__persistConfigsOnChange" title="_persistConfigsOnChange">_persistConfigsOnChange</a></li>
                                 <li class="protected"><a href="#method__stripComments" title="_stripComments">_stripComments</a></li>
                                 <li class="protected"><a href="#method__stripYamlComments" title="_stripYamlComments">_stripYamlComments</a></li>
                                 <li class=""><a href="#method_constructor" title="constructor">constructor</a></li>
+                                <li class=""><a href="#method_get" title="get">get</a></li>
                                 <li class=""><a href="#method_getConfigSources" title="getConfigSources">getConfigSources</a></li>
-                                <li class=""><a href="#method_getOriginalConfig" title="getOriginalConfig">getOriginalConfig</a></li>
+                                <li class=""><a href="#method_has" title="has">has</a></li>
                                 <li class=""><a href="#method_makeHidden" title="makeHidden">makeHidden</a></li>
                                 <li class=""><a href="#method_makeImmutable" title="makeImmutable">makeImmutable</a></li>
-                                <li class=""><a href="#method_resetRuntime" title="resetRuntime">resetRuntime</a></li>
-                                <li class=""><a href="#method_safeWriteFile" title="safeWriteFile">safeWriteFile</a></li>
                                 <li class=""><a href="#method_setModuleDefaults" title="setModuleDefaults">setModuleDefaults</a></li>
-                                <li class=""><a href="#method_watch" title="watch">watch</a></li>
-                                <li class=""><a href="#method_watchForConfigFileChanges" title="watchForConfigFileChanges">watchForConfigFileChanges</a></li>
+                                <li class=" deprecated"><a href="#method_watch" title="watch">watch</a></li>
                         </ul>
                     </div>
 
@@ -1758,11 +1597,11 @@ to "Y" prior to running your application.
 	<div id="ft">
         <hr />
 Released on <a href="https://github.com/lorenwest/node-config">github</a> under the <a href="https://github.com/lorenwest/node-config/blob/master/LICENSE">Apache License 2.0</a>
-<span class="subtitle">version 0.4.35</span>
+<span class="subtitle">version 1.0.0</span>
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_getOriginalConfig", "access": "", "host": "Config", "type": "method", "name": "getOriginalConfig"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method__loadOldStyleEnv", "access": "protected", "host": "Config", "type": "method", "name": "_loadOldStyleEnv"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method__persistConfigsOnChange", "access": "protected", "host": "Config", "type": "method", "name": "_persistConfigsOnChange"}, {"url": "Config.html#method_resetRuntime", "access": "", "host": "Config", "type": "method", "name": "resetRuntime"}, {"url": "Config.html#method_safeWriteFile", "access": "", "host": "Config", "type": "method", "name": "safeWriteFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}, {"url": "Config.html#method_watchForConfigFileChanges", "access": "", "host": "Config", "type": "method", "name": "watchForConfigFileChanges"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__get", "access": "protected", "host": "Config", "type": "method", "name": "_get"}, {"url": "Config.html#method_get", "access": "", "host": "Config", "type": "method", "name": "get"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_has", "access": "", "host": "Config", "type": "method", "name": "has"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
 </script>
 </body>
 </html>
