@@ -11,9 +11,9 @@ REPO = 'lorenwest/node-config';
 README_FILE = './README.md';
 
 // HTML template parts
-var TABLE = '<table id="contributors" noborder>{{rows}}</table>';
+var TABLE = '<table id="contributors" border="">{{rows}}</table>';
 var ROW = '<tr>{{people}}</tr>';
-var PERSON = '<td noborder><img src={{avatar_url}}><a href="{{html_url}}">{{login}}</a></td>';
+var PERSON = '<td border=""><img src={{avatar_url}}><a href="{{html_url}}">{{login}}</a></td>';
 var PEOPLE_PER_ROW = 5;
 _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
