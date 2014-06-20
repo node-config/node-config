@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 /**
 * Merge current contributors into the README.md file
 */
@@ -10,9 +11,9 @@ REPO = 'lorenwest/node-config';
 README_FILE = './README.md';
 
 // HTML template parts
-var TABLE = '<table id="contributors">{{rows}}</table>';
+var TABLE = '<table id="contributors" noborder>{{rows}}</table>';
 var ROW = '<tr>{{people}}</tr>';
-var PERSON = '<td style="border:none;"><img src={{avatar_url}} width="32" style="width:32px; margin-right: 10px;"><a href="{{html_url}}">{{login}}</a></td>';
+var PERSON = '<td noborder><img src={{avatar_url}}><a href="{{html_url}}">{{login}}</a></td>';
 var PEOPLE_PER_ROW = 5;
 _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
