@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config   config.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1401848265.51" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1401848265.51" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1403224238.23" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1403224238.23" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1401848265.51"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1401848265.51"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1403224238.23"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1403224238.23"></script>
 </head>
 
 <body id="node-monitor">
@@ -146,20 +146,76 @@
 <span class="kd">var</span> <span class="nx">Config</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
 
-  <span class="c1">// Initialize parameters from command line, environment, or default</span>
-  <span class="nx">NODE_ENV</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;development&#39;</span><span class="p">);</span>
-  <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">CONFIG_DIR</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">CONFIG_DIR</span><span class="p">;</span>
+  <span class="c1">// Merge configurations into this</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_loadFileConfigs</span><span class="p">());</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * &lt;p&gt;Get a configuration value&lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;p&gt;</span>
+<span class="cm"> * This will return the specified property value, throwing an exception if the</span>
+<span class="cm"> * configuration isn&#39;t defined.  It is used to assure configurations are defined</span>
+<span class="cm"> * before being used, and to prevent typos.</span>
+<span class="cm"> * &lt;/p&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @method get</span>
+<span class="cm"> * @param property {string} - The configuration property to get. Can include &#39;.&#39; sub-properties.</span>
+<span class="cm"> * @return value {mixed} - The property value</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+      <span class="nx">value</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">property</span><span class="p">);</span>
+
+  <span class="c1">// Produce an exception if the property doesn&#39;t exist</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Configuration property &quot;&#39;</span> <span class="o">+</span> <span class="nx">property</span> <span class="o">+</span> <span class="s1">&#39;&quot; is not defined&#39;</span><span class="p">);</span>
   <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+<span class="p">};</span>
 
-  <span class="c1">// This is for backward compatibility</span>
-  <span class="nx">RUNTIME_JSON_FILENAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_RUNTIME_JSON&#39;</span><span class="p">,</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">);</span>
-  <span class="nx">APP_INSTANCE</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_APP_INSTANCE&#39;</span><span class="p">);</span>
-  <span class="nx">HOST</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOST&#39;</span><span class="p">);</span>
-  <span class="nx">HOSTNAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOSTNAME&#39;</span><span class="p">);</span>
+<span class="cm">/**</span>
+<span class="cm"> * Test that a configuration parameter exists</span>
+<span class="cm"> *</span>
+<span class="cm"> * &lt;pre&gt;</span>
+<span class="cm"> *    var config = require(&#39;config&#39;);</span>
+<span class="cm"> *    if (config.has(&#39;customer.dbName&#39;)) {</span>
+<span class="cm"> *      console.log(&#39;Customer database name: &#39; + config.customer.dbName);</span>
+<span class="cm"> *    }</span>
+<span class="cm"> * &lt;/pre&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * @method has</span>
+<span class="cm"> * @param property {string} - The configuration property to test. Can include &#39;.&#39; sub-properties.</span>
+<span class="cm"> * @return isPresent {boolean} - True if the property is defined, false if not defined.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">has</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">property</span><span class="p">)</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">);</span>
+<span class="p">};</span>
 
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_loadFileConfigs</span><span class="p">();</span>
+<span class="cm">/**</span>
+<span class="cm"> * Underlying get mechanism</span>
+<span class="cm"> *</span>
+<span class="cm"> * @protected</span>
+<span class="cm"> * @method _get</span>
+<span class="cm"> * @param object {object} - Object to get the property for</span>
+<span class="cm"> * @param property {string | array[string]} - The property name to get (as an array or &#39;.&#39; delimited string)</span>
+<span class="cm"> * @return value {mixed} - Property value, including undefined if not defined.</span>
+<span class="cm"> */</span>
+<span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="nx">property</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+      <span class="nx">elems</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">property</span><span class="p">)</span> <span class="o">?</span> <span class="nx">property</span> <span class="o">:</span> <span class="nx">property</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span>
+      <span class="nx">name</span> <span class="o">=</span> <span class="nx">elems</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+      <span class="nx">value</span> <span class="o">=</span> <span class="nx">object</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">elems</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_get</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">elems</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -548,18 +604,32 @@
 <span class="cm"> * &lt;p&gt;</span>
 <span class="cm"> * If the $NODE_APP_INSTANCE environment variable (or --NODE_APP_INSTANCE</span>
 <span class="cm"> * command line parameter) is set, then files with this appendage will be loaded.</span>
-<span class="cm"> * See the Multiple Applicstion Instances section of the main documentaion page</span>
+<span class="cm"> * See the Multiple Application Instances section of the main documentaion page</span>
 <span class="cm"> * for more information.</span>
 <span class="cm"> * &lt;/p&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> * @protected</span>
 <span class="cm"> * @method _loadFileConfigs</span>
-<span class="cm"> * @return {this} The configuration object</span>
+<span class="cm"> * @return config {Object} The configuration object</span>
 <span class="cm"> */</span>
 <span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_loadFileConfigs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
   <span class="c1">// Initialize</span>
-  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+      <span class="nx">config</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="c1">// Initialize parameters from command line, environment, or default</span>
+  <span class="nx">NODE_ENV</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;development&#39;</span><span class="p">);</span>
+  <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_DIR&#39;</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/config&#39;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">CONFIG_DIR</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">CONFIG_DIR</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">CONFIG_DIR</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">APP_INSTANCE</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_APP_INSTANCE&#39;</span><span class="p">);</span>
+  <span class="nx">HOST</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOST&#39;</span><span class="p">);</span>
+  <span class="nx">HOSTNAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;HOSTNAME&#39;</span><span class="p">);</span>
+
+  <span class="c1">// This is for backward compatibility</span>
+  <span class="nx">RUNTIME_JSON_FILENAME</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_initParam</span><span class="p">(</span><span class="s1">&#39;NODE_CONFIG_RUNTIME_JSON&#39;</span><span class="p">,</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/runtime.json&#39;</span><span class="p">);</span>
 
   <span class="c1">// Determine the host name from the OS module, $HOST, or $HOSTNAME</span>
   <span class="c1">// Remove any . appendages, and default to null if not set</span>
@@ -585,7 +655,7 @@
       <span class="kd">var</span> <span class="nx">fullFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">baseName</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">extName</span><span class="p">;</span>
       <span class="kd">var</span> <span class="nx">configObj</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">configObj</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
+        <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
       <span class="p">}</span>
 
       <span class="c1">// See if the application instance file is available</span>
@@ -593,7 +663,7 @@
         <span class="nx">fullFilename</span> <span class="o">=</span> <span class="nx">CONFIG_DIR</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">baseName</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">APP_INSTANCE</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">extName</span><span class="p">;</span>
         <span class="nx">configObj</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">fullFilename</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">configObj</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
+          <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">configObj</span><span class="p">);</span>
         <span class="p">}</span>
       <span class="p">}</span>
     <span class="p">});</span>
@@ -607,7 +677,7 @@
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;The $NODE_CONFIG environment variable is malformed JSON&#39;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">envConfig</span><span class="p">);</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">envConfig</span><span class="p">);</span>
     <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
       <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;$NODE_CONFIG&quot;</span><span class="p">,</span>
       <span class="nx">parsed</span><span class="o">:</span> <span class="nx">envConfig</span><span class="p">,</span>
@@ -622,7 +692,7 @@
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;The --NODE_CONFIG={json} command line argument is malformed JSON&#39;</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">cmdLineConfig</span><span class="p">);</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">cmdLineConfig</span><span class="p">);</span>
     <span class="nx">configSources</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
       <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;--NODE_CONFIG argument&quot;</span><span class="p">,</span>
       <span class="nx">parsed</span><span class="o">:</span> <span class="nx">cmdLineConfig</span><span class="p">,</span>
@@ -631,16 +701,10 @@
 
   <span class="c1">// Extend the original config with the contents of runtime.json (backwards compatibility)</span>
   <span class="nx">runtimeJson</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_parseFile</span><span class="p">(</span><span class="nx">RUNTIME_JSON_FILENAME</span><span class="p">)</span> <span class="o">||</span> <span class="p">{};</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
-
-  <span class="c1">// Attach the config.prototype to all sub-objects.</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">_attachProtoDeep</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
-
-  <span class="c1">// Make final configs immutable</span>
-  <span class="nx">t</span><span class="p">.</span><span class="nx">makeImmutable</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+  <span class="nx">t</span><span class="p">.</span><span class="nx">_extendDeep</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">runtimeJson</span><span class="p">);</span>
 
   <span class="c1">// Return the configuration object</span>
-  <span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="cm">/**</span>
@@ -1159,6 +1223,13 @@
 <span class="c1">// instance is immediately available on require(), and the prototype methods</span>
 <span class="c1">// aren&#39;t a part of the object namespace when inspected.</span>
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">;</span>
+
+<span class="c1">// Produce warnings if the global config is empty</span>
+<span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">global</span><span class="p">.</span><span class="nx">NODE_CONFIG</span><span class="p">).</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;WARNING: No configurations found in configuration directory:&#39;</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;WARNING: &#39;</span> <span class="o">+</span> <span class="nx">CONFIG_DIR</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;WARNING: See https://www.npmjs.org/package/config for more information.&#39;</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
                     </div>
 			</div>
@@ -1202,7 +1273,7 @@ Released on <a href="https://github.com/lorenwest/node-config">github</a> under 
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__get", "access": "protected", "host": "Config", "type": "method", "name": "_get"}, {"url": "Config.html#method_get", "access": "", "host": "Config", "type": "method", "name": "get"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_has", "access": "", "host": "Config", "type": "method", "name": "has"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
 </script>
 </body>
 </html>

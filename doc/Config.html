@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>config  Config  </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1401848265.51" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1401848265.51" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1403224238.23" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1403224238.23" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1401848265.51"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1401848265.51"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1403224238.23"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1403224238.23"></script>
 </head>
 
 <body id="node-monitor">
@@ -453,6 +453,67 @@ replacing individual elements instead.
                                     </div>
                                     <hr />
                                     </div>
+                                    <div class="protected" rel="yui:method" resource="#method__get">
+                                    <h4>
+                                        <a name="method__get">_get</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        mixed
+                                            <strong property="yui:name">_get</strong>
+                                           (
+                                                
+                                                        
+                                                         object
+                                                    
+                                                
+                                                        , 
+                                                         property
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Underlying get mechanism
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">object</span>
+                                                        &lt;<span property="yui:type">object</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - Object to get the property for</span>
+                                                        </dd>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string | array[string]</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The property name to get (as an array or '.' delimited string)</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        mixed
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">value  - Property value, including undefined if not defined.</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
                                     <div class="" rel="yui:method" resource="#method__getCmdLineArg">
                                     <h4>
                                         <a name="method__getCmdLineArg">_getCmdLineArg</a></h4>
@@ -636,7 +697,7 @@ The argument is an object if it's a JS object, but not an array.
                                          protected 
                                         
                                         
-                                        this
+                                        Object
                                             <strong property="yui:name">_loadFileConfigs</strong>
                                            (
                                             )
@@ -684,7 +745,7 @@ manually, or by the application setting a configuration value.
 <p>
 If the $NODE_APP_INSTANCE environment variable (or --NODE_APP_INSTANCE
 command line parameter) is set, then files with this appendage will be loaded.
-See the Multiple Applicstion Instances section of the main documentaion page
+See the Multiple Application Instances section of the main documentaion page
 for more information.
 </p>
                                         </div>
@@ -695,9 +756,9 @@ for more information.
                                                 <dl>
                                                     <dt>Returns:
                                                     <code property="yui:return">
-                                                        this
+                                                        Object
                                                     </code></dt>
-                                                    <dd property="yui:returnInfo">The configuration object</dd>
+                                                    <dd property="yui:returnInfo">config  The configuration object</dd>
                                                 </dl>
 
 
@@ -937,6 +998,62 @@ document.getElementById("showProtected").style.display = "block";
                                     </div>
                                     <hr />
                                     </div>
+                                    <div class="" rel="yui:method" resource="#method_get">
+                                    <h4>
+                                        <a name="method_get">get</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        mixed
+                                            <strong property="yui:name">get</strong>
+                                           (
+                                                
+                                                        
+                                                         property
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            <p>Get a configuration value</p>
+<p>
+This will return the specified property value, throwing an exception if the
+configuration isn't defined.  It is used to assure configurations are defined
+before being used, and to prevent typos.
+</p>
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The configuration property to get. Can include '.' sub-properties.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        mixed
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">value  - The property value</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
                                     <div class="" rel="yui:method" resource="#method_getConfigSources">
                                     <h4>
                                         <a name="method_getConfigSources">getConfigSources</a></h4>
@@ -970,6 +1087,63 @@ and the parsed source as an object.
                                                     </code></dt>
                                                     <dd property="yui:returnInfo">configSources  - An array of objects containing
 name, original, and parsed elements</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_has">
+                                    <h4>
+                                        <a name="method_has">has</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        boolean
+                                            <strong property="yui:name">has</strong>
+                                           (
+                                                
+                                                        
+                                                         property
+                                                    
+                                                
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Test that a configuration parameter exists
+<pre>
+var config = require('config');
+if (config.has('customer.dbName')) {
+console.log('Customer database name: ' + config.customer.dbName);
+}
+</pre>
+                                        </div>
+
+                                        <div class="description">
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">property</span>
+                                                        &lt;<span property="yui:type">string</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description">  - The configuration property to test. Can include '.' sub-properties.</span>
+                                                        </dd>
+                                                </dl>
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                        boolean
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">isPresent  - True if the property is defined, false if not defined.</dd>
                                                 </dl>
 
 
@@ -1396,6 +1570,7 @@ Then all handlers (including this one) will be called again with the newly chang
                                 <li class="protected"><a href="#method__diffDeep" title="_diffDeep">_diffDeep</a></li>
                                 <li class="protected"><a href="#method__equalsDeep" title="_equalsDeep">_equalsDeep</a></li>
                                 <li class="protected"><a href="#method__extendDeep" title="_extendDeep">_extendDeep</a></li>
+                                <li class="protected"><a href="#method__get" title="_get">_get</a></li>
                                 <li class=""><a href="#method__getCmdLineArg" title="_getCmdLineArg">_getCmdLineArg</a></li>
                                 <li class=""><a href="#method__initParam" title="_initParam">_initParam</a></li>
                                 <li class="protected"><a href="#method__isObject" title="_isObject">_isObject</a></li>
@@ -1404,7 +1579,9 @@ Then all handlers (including this one) will be called again with the newly chang
                                 <li class="protected"><a href="#method__stripComments" title="_stripComments">_stripComments</a></li>
                                 <li class="protected"><a href="#method__stripYamlComments" title="_stripYamlComments">_stripYamlComments</a></li>
                                 <li class=""><a href="#method_constructor" title="constructor">constructor</a></li>
+                                <li class=""><a href="#method_get" title="get">get</a></li>
                                 <li class=""><a href="#method_getConfigSources" title="getConfigSources">getConfigSources</a></li>
+                                <li class=""><a href="#method_has" title="has">has</a></li>
                                 <li class=""><a href="#method_makeHidden" title="makeHidden">makeHidden</a></li>
                                 <li class=""><a href="#method_makeImmutable" title="makeImmutable">makeImmutable</a></li>
                                 <li class=""><a href="#method_setModuleDefaults" title="setModuleDefaults">setModuleDefaults</a></li>
@@ -1424,7 +1601,7 @@ Released on <a href="https://github.com/lorenwest/node-config">github</a> under 
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
+    ALL_YUI_PROPS = [{"url": "Config.html#method__attachProtoDeep", "access": "protected", "host": "Config", "type": "method", "name": "_attachProtoDeep"}, {"url": "Config.html#method__cloneDeep", "access": "protected", "host": "Config", "type": "method", "name": "_cloneDeep"}, {"url": "Config.html#method_constructor", "access": "", "host": "Config", "type": "method", "name": "constructor"}, {"url": "Config.html#method__diffDeep", "access": "protected", "host": "Config", "type": "method", "name": "_diffDeep"}, {"url": "Config.html#method__equalsDeep", "access": "protected", "host": "Config", "type": "method", "name": "_equalsDeep"}, {"url": "Config.html#method__extendDeep", "access": "protected", "host": "Config", "type": "method", "name": "_extendDeep"}, {"url": "Config.html#method__get", "access": "protected", "host": "Config", "type": "method", "name": "_get"}, {"url": "Config.html#method_get", "access": "", "host": "Config", "type": "method", "name": "get"}, {"url": "Config.html#method__getCmdLineArg", "access": "", "host": "Config", "type": "method", "name": "_getCmdLineArg"}, {"url": "Config.html#method_getConfigSources", "access": "", "host": "Config", "type": "method", "name": "getConfigSources"}, {"url": "Config.html#method_has", "access": "", "host": "Config", "type": "method", "name": "has"}, {"url": "Config.html#method__initParam", "access": "", "host": "Config", "type": "method", "name": "_initParam"}, {"url": "Config.html#method__isObject", "access": "protected", "host": "Config", "type": "method", "name": "_isObject"}, {"url": "Config.html#method__loadFileConfigs", "access": "protected", "host": "Config", "type": "method", "name": "_loadFileConfigs"}, {"url": "Config.html#method_makeHidden", "access": "", "host": "Config", "type": "method", "name": "makeHidden"}, {"url": "Config.html#method_makeImmutable", "access": "", "host": "Config", "type": "method", "name": "makeImmutable"}, {"url": "Config.html#method__parseFile", "access": "protected", "host": "Config", "type": "method", "name": "_parseFile"}, {"url": "Config.html#method_setModuleDefaults", "access": "", "host": "Config", "type": "method", "name": "setModuleDefaults"}, {"url": "Config.html#method__stripComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripComments"}, {"url": "Config.html#method__stripYamlComments", "access": "protected", "host": "Config", "type": "method", "name": "_stripYamlComments"}, {"url": "Config.html#method_watch", "access": "", "host": "Config", "type": "method", "name": "watch"}];
 </script>
 </body>
 </html>

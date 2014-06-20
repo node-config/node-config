@@ -1,83 +1,105 @@
 Configure your Node.js Applications
 ===================================
 
-[![NPM](https://nodei.co/npm/config.png?downloads=true&stars=true)](https://nodei.co/npm/config/)
-[![Build Status](https://secure.travis-ci.org/lorenwest/node-config.png?branch=master)](https://travis-ci.org/lorenwest/node-config)
+**Version 1.0** ([release notes](https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x)): Node-config is ready to break out of its pre-1.0 shell since the original release in Oct. 2010.  Version 1.0 preview is in the current master branch, and will be published to npm after a short soaking period. Check out the master branch if you'd like a preview prior to the npm release.
+
+[![NPM](https://nodei.co/npm/config.svg?downloads=true&stars=true)](https://nodei.co/npm/config/)&nbsp;&nbsp;
+[![Build Status](https://secure.travis-ci.org/lorenwest/node-config.svg?branch=master)](https://travis-ci.org/lorenwest/node-config)&nbsp;&nbsp;
+[release notes](https://github.com/lorenwest/node-config/master/History.md)
 
 Introduction
 ------------
 
-Node-config organizes configurations for your Node.js app deployments.
+Node-config organizes configurations for your app deployments.
 
-It lets you define a default set of application parameters,
+Define a set of default parameters,
 and extend them for different deployment environments (development, qa,
 staging, production, etc.).
+
+It provides a consistent interface for accessing configurations in your app modules, and within a [growing list of sub-modules](https://www.npmjs.org/browse/depended/config) using config.
 
 Project Guidelines
 ------------------
 
 * *Simple* - Get started fast
-* *Predictable* - Well tested and stable
 * *Powerful* - For multi-node enterprise deployment
-* *Flexible* - Supporting multiple configuration file formats
+* *Flexible* - Supporting multiple config file formats
 * *Lightweight* - Small file and memory footprint
-* *Stable* - Foundation for module developers
-
-Overview
---------
-
-
+* *Predictable* - Well tested foundation for module and app developers
 
 Quick Start
------------
+---------------
+The following examples are in JSON format, but configurations can be in other [file formats](https://github.com/lorenwest/node-config/wiki/File-Formats-&-Comments).
 
-**In your project directory, install and verify using npm:**
 
-    my-project$ npm install config
-    my-project$ npm test config
+**Install in your app directory, and edit the default config file.**
 
-**Edit the default configuration file (.js, .json, or .yaml):**
+    $ npm install config
+    $ mkdir config
+    $ vi config/default.json
 
-    my-project$ mkdir config
-    my-project$ vi config/default.yaml
+    {
+      // Cusomter module configs
+      "Customer": {
+        "dbConfig": {
+          "host": "localhost",
+          "port": 5984,
+          "dbName": "customers"
+        },
+        "credit": {
+          "initialLimit": 100,
+          // Set low for development
+          "initialDays": 1
+        }
+      }
+    }
 
-    (example default.yaml file):
+**Edit config overrides for production deployment:**
 
-    Customer:
-      dbHost: localhost
-      dbPort: 5984
-      dbName: customers
+    $ vi config/production.json
 
-**Edit the production configuration file:**
+    {
+      "Customer": {
+        "dbConfig": {
+          "host": "prod-db-server"
+        },
+        "credit": {
+          "initialDays": 30
+        }
+      }
+    }
 
-    my-project$ vi config/production.yaml
+**Use configs in your code:**
 
-    (example production.yaml file):
-
-    Customer:
-      dbHost: prod-db-server
-
-**Use the configuration in your code:**
-
-    var CONFIG = require('config').Customer;
+    var config = require('config');
     ...
-    db.connect(CONFIG.dbHost, CONFIG.dbPort, CONFIG.dbName);
+    var dbConfig = config.get('Customer.dbConfig');
+    db.connect(dbConfig, ...);
 
-**Start your application server:**
+**Start your app server:**
 
-    my-project$ export NODE_ENV=production
-    my-project$ node app.js
+    $ export NODE_ENV=production
+    $ node my-app.js
 
-Running in this configuration, CONFIG.dbPort and CONFIG.dbName
-will come from the `default.yaml` file, and CONFIG.dbHost will
-come from the `production.yaml` file.
+Running in this configuration, the `port` and `dbName` elements of `dbConfig`
+will come from the `default.json` file, and the `host` element will
+come from the `production.json` override file.
 
-
-See Also
+Articles
 --------
 
-[config] - Online documentation<br>
-[monitor] - Remote monitoring for Node.js applications
+* [Configuration Files](https://github.com/lorenwest/node-config/wiki/Configuration-Files)
+* [Common Usage](https://github.com/lorenwest/node-config/wiki/Common-Usage)
+* [Environment Variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables)
+* [Reserved Words](https://github.com/lorenwest/node-config/wiki/Reserved-Words)
+* [Command Line Overrides](https://github.com/lorenwest/node-config/wiki/Command-Line-Overrides)
+* [Multiple Node Instances](https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances)
+* [Sub-Module Configuration](https://github.com/lorenwest/node-config/wiki/Sub-Module-Configuration)
+* [Configuring from a DB / External Source](https://github.com/lorenwest/node-config/wiki/Configuring-from-a-DB-/-External-Source)
+* [External Configuration Management Tools](https://github.com/lorenwest/node-config/wiki/External-Configuration-Management-Tools)
+* [Examining Configuration Sources](https://github.com/lorenwest/node-config/wiki/Examining-Configuration-Sources)
+* [Using Config Utilities](https://github.com/lorenwest/node-config/wiki/Using-Config-Utilities)
+* [Upgrading from Config 0.x](https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x)
 
 Contributors
 ------------
@@ -86,13 +108,8 @@ Contributors
 License
 -------
 
-May be freely distributed under the MIT license
-
-See `LICENSE` file.
+May be freely distributed under the [MIT license](https://raw.githubusercontent.com/lorenwest/node-config/master/LICENSE).
 
 Copyright (c) 2010-2014 Loren West
 [and other contributors](https://github.com/lorenwest/node-config/graphs/contributors)
-
-  [config]: http://lorenwest.github.com/node-config/latest
-  [monitor]: https://github.com/lorenwest/node-monitor
 

@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>test   2-config-test.js </title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1401848265.47" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1401848265.47" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1403224238.19" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1403224238.19" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1401848265.47"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1401848265.47"></script>
+    <script type="text/javascript" src="assets/api-js?stamp=1403224238.19"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1403224238.19"></script>
 </head>
 
 <body id="node-monitor">
@@ -235,7 +235,68 @@
     <span class="s1">&#39;Defaults remain intact unless overridden&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">moduleConfig</span><span class="p">.</span><span class="nx">parm2</span><span class="p">,</span> <span class="mi">2000</span><span class="p">);</span>
     <span class="p">}</span>
+  <span class="p">},</span>
 
+  <span class="s1">&#39;get() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">get</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A top level item is returned&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">config</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;TestModule&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A sub level item is returned&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;Customers.dbHost&#39;</span><span class="p">),</span> <span class="s1">&#39;base&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;get is attached deeply&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">equal</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;dbHost&#39;</span><span class="p">),</span> <span class="s1">&#39;base&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A proper exception is thrown on mis-spellings&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">didThrow</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">topItem</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;mis.spelled&#39;</span><span class="p">);</span>
+        <span class="nx">didThrow</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">didThrow</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">didThrow</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;An exception is thrown on non-objects&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">didThrow</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">topItem</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;Testmodule.misspelled&#39;</span><span class="p">);</span>
+        <span class="nx">didThrow</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">didThrow</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">didThrow</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="s1">&#39;has() tests&#39;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">topic</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">CONFIG</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;The function exists&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">has</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A top level item can be tested&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s1">&#39;TestModule&#39;</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;A sub level item can be tested&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s1">&#39;Customers.dbHost&#39;</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;has is attached deeply&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s1">&#39;dbHost&#39;</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Correctly identifies not having element&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="o">!</span><span class="nx">config</span><span class="p">.</span><span class="nx">Customers</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s1">&#39;dbHosx&#39;</span><span class="p">));</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;Correctly identifies not having element (deep)&#39;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">assert</span><span class="p">.</span><span class="nx">isTrue</span><span class="p">(</span><span class="o">!</span><span class="nx">config</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s1">&#39;Customers.dbHosx&#39;</span><span class="p">));</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 
 <span class="p">});</span>
