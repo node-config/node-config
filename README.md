@@ -12,11 +12,11 @@ Introduction
 
 Node-config organizes configurations for your app deployments.
 
-Define a set of default parameters,
-and extend them for different deployment environments (development, qa,
+It lets you define a set of default parameters,
+and extend them for different deployment environments (development, qa, 
 staging, production, etc.).
 
-It provides a consistent interface for accessing configurations in your app modules, and within a [growing list of sub-modules](https://www.npmjs.org/browse/depended/config) using config.
+This gives your application code a consistent configuration interface, shared among a [growing list of npm modules](https://www.npmjs.org/browse/depended/config) currently using node-config.
 
 Project Guidelines
 ------------------
@@ -49,7 +49,7 @@ The following examples are in JSON format, but configurations can be in other [f
         "credit": {
           "initialLimit": 100,
           // Set low for development
-          "initialDays": 1
+          "initialDays": 1 
         }
       }
     }
