@@ -30,8 +30,7 @@ Project Guidelines
 
 Quick Start
 ---------------
-The following examples are in JSON format, but configurations can be in other [file formats](https://github.com/lorenwest/node-config/wiki/Configuration-Files).
-
+The following examples are in JSON format, but configurations can be in other [file formats](https://github.com/lorenwest/node-config/wiki/Configuration-Files#file-formats).
 
 **Install in your app directory, and edit the default config file.**
 
