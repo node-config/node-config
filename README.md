@@ -13,10 +13,11 @@ Introduction
 Node-config organizes configurations for your app deployments.
 
 It lets you define a set of default parameters,
-and extend them for different deployment environments (development, qa, 
+and extend them for different deployment environments (development, qa,
 staging, production, etc.).
 
-This gives your application code a consistent configuration interface, shared among a [growing list of npm modules](https://www.npmjs.org/browse/depended/config) currently using node-config.
+This gives your application code a consistent configuration interface, shared among a
+[growing list of npm modules](https://www.npmjs.org/browse/depended/config) also using node-config.
 
 Project Guidelines
 ------------------
@@ -29,7 +30,7 @@ Project Guidelines
 
 Quick Start
 ---------------
-The following examples are in JSON format, but configurations can be in other [file formats](https://github.com/lorenwest/node-config/wiki/File-Formats-&-Comments).
+The following examples are in JSON format, but configurations can be in other [file formats](https://github.com/lorenwest/node-config/wiki/Configuration-Files).
 
 
 **Install in your app directory, and edit the default config file.**
@@ -39,7 +40,7 @@ The following examples are in JSON format, but configurations can be in other [f
     $ vi config/default.json
 
     {
-      // Cusomter module configs
+      // Customter module configs
       "Customer": {
         "dbConfig": {
           "host": "localhost",
@@ -49,7 +50,7 @@ The following examples are in JSON format, but configurations can be in other [f
         "credit": {
           "initialLimit": 100,
           // Set low for development
-          "initialDays": 1 
+          "initialDays": 1
         }
       }
     }
