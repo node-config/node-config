@@ -122,7 +122,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'The makeHidden() method is available': function() {
-      assert.isFunction(CONFIG.makeHidden);
+      assert.isFunction(CONFIG.util.makeHidden);
     },
 
     'The test object (before hiding) is correct': function(object) {
@@ -130,7 +130,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'The test object (after hiding) is correct': function(object) {
-      CONFIG.makeHidden(object, 'item1');
+      CONFIG.util.makeHidden(object, 'item1');
       assert.isTrue(JSON.stringify(object) == '{"subObject":{"item2":"hello"}}');
     },
 
@@ -144,13 +144,13 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   'Assuring a configuration property can be made immutable': {
     topic: function() {
 
-      CONFIG.makeImmutable(CONFIG.TestModule, 'parm1');
+      CONFIG.util.makeImmutable(CONFIG.TestModule, 'parm1');
       CONFIG.TestModule.parm1 = "setToThis";
       return CONFIG.TestModule.parm1;
     },
 
     'The makeImmutable() method is available': function() {
-      assert.isFunction(CONFIG.makeImmutable);
+      assert.isFunction(CONFIG.util.makeImmutable);
     },
 
     'Correctly unable to change an immutable configuration': function(value) {
@@ -166,13 +166,13 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     topic: function() {
 
       // Set some parameters for the test module
-      return CONFIG.setModuleDefaults("TestModule", {
+      return CONFIG.util.setModuleDefaults("TestModule", {
         parm1: 1000, parm2: 2000, parm3: 3000
       });
     },
 
     'The setModuleDefaults() method is available': function() {
-      assert.isFunction(CONFIG.setModuleDefaults);
+      assert.isFunction(CONFIG.util.setModuleDefaults);
     },
 
     'The module config is in the CONFIG object': function(moduleConfig) {
