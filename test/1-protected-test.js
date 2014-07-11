@@ -40,20 +40,20 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
-  '_isObject() tests': {
+  'isObject() tests': {
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._isObject);
+      assert.isFunction(CONFIG.util.isObject);
     },
     'Correctly identifies objects': function() {
-   	  assert.isTrue(CONFIG.util._isObject({A:"b"}));
+   	  assert.isTrue(CONFIG.util.isObject({A:"b"}));
     },
     'Correctly excludes non-objects': function() {
-   	  assert.isFalse(CONFIG.util._isObject("some string"));
-   	  assert.isFalse(CONFIG.util._isObject(45));
-   	  assert.isFalse(CONFIG.util._isObject([2, 3]));
-   	  assert.isFalse(CONFIG.util._isObject(["a", "b"]));
-   	  assert.isFalse(CONFIG.util._isObject(null));
-   	  assert.isFalse(CONFIG.util._isObject(undefined));
+   	  assert.isFalse(CONFIG.util.isObject("some string"));
+   	  assert.isFalse(CONFIG.util.isObject(45));
+   	  assert.isFalse(CONFIG.util.isObject([2, 3]));
+   	  assert.isFalse(CONFIG.util.isObject(["a", "b"]));
+   	  assert.isFalse(CONFIG.util.isObject(null));
+   	  assert.isFalse(CONFIG.util.isObject(undefined));
     }
   },
 
@@ -70,67 +70,67 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       };
     },
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._cloneDeep);
+      assert.isFunction(CONFIG.util.cloneDeep);
     },
     'Original and copy should test equivalent (deep)': function(orig) {
-      var copy = CONFIG.util._cloneDeep(orig);
+      var copy = CONFIG.util.cloneDeep(orig);
       assert.deepEqual(copy, orig);
     },
     'The objects should be different': function(orig) {
-      var copy = CONFIG.util._cloneDeep(orig);
+      var copy = CONFIG.util.cloneDeep(orig);
       copy.elem1 = false;
       assert.notDeepEqual(copy, orig);
     },
     'Object clones should be objects': function(orig) {
-      assert.isObject(CONFIG.util._cloneDeep({a:1, b:2}));
+      assert.isObject(CONFIG.util.cloneDeep({a:1, b:2}));
     },
     'Array clones should be arrays': function(orig) {
-      assert.isArray(CONFIG.util._cloneDeep(["a", "b", 3]));
+      assert.isArray(CONFIG.util.cloneDeep(["a", "b", 3]));
     },
     'Arrays should be copied by value, not by reference': function(orig) {
-      var copy = CONFIG.util._cloneDeep(orig);
+      var copy = CONFIG.util.cloneDeep(orig);
       assert.deepEqual(copy, orig);
       copy.elem3[0] = 2;
       // If the copy wasn't deep, elem3 would be the same object
       assert.notDeepEqual(copy, orig);
     },
     'Objects should be copied by value, not by reference': function(orig) {
-      var copy = CONFIG.util._cloneDeep(orig);
+      var copy = CONFIG.util.cloneDeep(orig);
       copy.elem5.sub2 = 3;
       assert.notDeepEqual(copy, orig);
-      copy = CONFIG.util._cloneDeep(orig);
+      copy = CONFIG.util.cloneDeep(orig);
       copy.elem5.sub3[1] = 3;
       assert.notDeepEqual(copy, orig);
     }
   },
 
-  '_extendDeep() tests': {
+  'extendDeep() tests': {
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._extendDeep);
+      assert.isFunction(CONFIG.util.extendDeep);
     },
     'Performs normal extend': function() {
       var orig = {elem1:"val1", elem2:"val2"};
       var extWith = {elem3:"val3"};
       var shouldBe = {elem1:"val1", elem2:"val2", elem3:"val3"};
-      assert.deepEqual(CONFIG.util._extendDeep(orig, extWith), shouldBe);
+      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
     },
     'Replaces non-objects': function() {
       var orig = {elem1:"val1", elem2:["val2","val3"],elem3:{sub1:"val4"}};
       var extWith = {elem1:1,elem2:["val4"],elem3:"val3"};
       var shouldBe = {elem1:1, elem2:["val4"],elem3:"val3"};
-      assert.deepEqual(CONFIG.util._extendDeep(orig, extWith), shouldBe);
+      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
     },
     'Merges objects': function() {
       var orig = {e1:"val1", elem2:{sub1:"val4",sub2:"val5"}};
       var extWith = {elem2:{sub2:"val6",sub3:"val7"}};
       var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:"val6",sub3:"val7"}};
-      assert.deepEqual(CONFIG.util._extendDeep(orig, extWith), shouldBe);
+      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
     },
     'Correctly types new objects and arrays': function() {
       var orig = {e1:"val1", e3:["val5"]};
       var extWith = {e2:{elem1:"val1"}, e3:["val6","val7"]};
       var shouldBe = {e1:"val1", e2:{elem1:"val1"}, e3:["val6","val7"]};
-      var ext = CONFIG.util._extendDeep({}, orig, extWith);
+      var ext = CONFIG.util.extendDeep({}, orig, extWith);
       assert.isObject(ext.e2);
       assert.isArray(ext.e3);
     },
@@ -138,99 +138,99 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       var orig     = {e1:"val1", elem2:{sub1:"val4",sub2:"val5"}};
       var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:"val5"}};
       var extWith = {elem3:{sub2:"val6",sub3:"val7"}};
-      CONFIG.util._extendDeep({}, orig, extWith);
+      CONFIG.util.extendDeep({}, orig, extWith);
       assert.deepEqual(orig, shouldBe);
     }
   },
 
-  '_equalsDeep() tests': {
+  'equalsDeep() tests': {
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._equalsDeep);
+      assert.isFunction(CONFIG.util.equalsDeep);
     },
     'Succeeds on two empty objects': function() {
-      assert.isTrue(CONFIG.util._equalsDeep({}, {}));
+      assert.isTrue(CONFIG.util.equalsDeep({}, {}));
     },
     'Succeeds on array comparisons': function() {
-      assert.isTrue(CONFIG.util._equalsDeep([1,'hello',2], [1,'hello',2]));
+      assert.isTrue(CONFIG.util.equalsDeep([1,'hello',2], [1,'hello',2]));
     },
     'Succeeds on the same object': function() {
       var a = {hello:'world'};
-      assert.isTrue(CONFIG.util._equalsDeep(a, a));
+      assert.isTrue(CONFIG.util.equalsDeep(a, a));
     },
     'Succeeds on a regular object': function() {
       var a = {value_3: 14, hello:'world', value_1: 29};
       var b = {value_1: 29, hello:'world', value_3: 14};
-      assert.isTrue(CONFIG.util._equalsDeep(a, b));
+      assert.isTrue(CONFIG.util.equalsDeep(a, b));
     },
     'Succeeds on a deep object': function() {
       var a = {value_3: 14, hello:'world', value_1: 29, value_4:['now','is','the','time']};
       var b = {value_1: 29, hello:'world', value_3: 14, value_4:['now','is','the','time']};
       var c = {creditLimit: 10000, deepValue: a};
       var d = {deepValue: b, creditLimit:10000};
-      assert.isTrue(CONFIG.util._equalsDeep(c, d));
+      assert.isTrue(CONFIG.util.equalsDeep(c, d));
     },
     'Fails if either object is null': function() {
-      assert.isFalse(CONFIG.util._equalsDeep({}, null));
-      assert.isFalse(CONFIG.util._equalsDeep(null, {}));
-      assert.isFalse(CONFIG.util._equalsDeep(null, null));
+      assert.isFalse(CONFIG.util.equalsDeep({}, null));
+      assert.isFalse(CONFIG.util.equalsDeep(null, {}));
+      assert.isFalse(CONFIG.util.equalsDeep(null, null));
     },
     'Fails if either object is undefined': function() {
       var a = {};
-      assert.isFalse(CONFIG.util._equalsDeep({}));
-      assert.isFalse(CONFIG.util._equalsDeep(a['noElement'], {}));
+      assert.isFalse(CONFIG.util.equalsDeep({}));
+      assert.isFalse(CONFIG.util.equalsDeep(a['noElement'], {}));
     },
     'Fails if either object is undefined': function() {
       var a = {};
-      assert.isFalse(CONFIG.util._equalsDeep({}));
-      assert.isFalse(CONFIG.util._equalsDeep(a['noElement'], {}));
+      assert.isFalse(CONFIG.util.equalsDeep({}));
+      assert.isFalse(CONFIG.util.equalsDeep(a['noElement'], {}));
     },
     'Fails if object1 has more elements': function() {
       var a = {value_3: 14, hello:'world', value_1: 29, otherElem: 40};
       var b = {value_1: 29, hello:'world', value_3: 14};
-      assert.isFalse(CONFIG.util._equalsDeep(a, b));
+      assert.isFalse(CONFIG.util.equalsDeep(a, b));
     },
     'Fails if object2 has more elements': function() {
       var a = {value_1: 29, hello:'world', value_3: 14};
       var b = {value_3: 14, hello:'world', value_1: 29, otherElem: 40};
-      assert.isFalse(CONFIG.util._equalsDeep(a, b));
+      assert.isFalse(CONFIG.util.equalsDeep(a, b));
     },
     'Fails if any value is different': function() {
       var a = {value_1: 30, hello:'world', value_3: 14, value_4:['now','is','the','time']};
       var b = {value_1: 29, hello:'world', value_3: 14, value_4:['now','is','the','time']};
-      assert.isFalse(CONFIG.util._equalsDeep(a, b));
+      assert.isFalse(CONFIG.util.equalsDeep(a, b));
       var a = {value_1: 29, hello:'world', value_3: 14, value_4:['now','is','the','time']};
       var b = {value_1: 29, hello:'world', value_3: 14, value_4:['now','isnt','the','time']};
-      assert.isFalse(CONFIG.util._equalsDeep(a, b));
+      assert.isFalse(CONFIG.util.equalsDeep(a, b));
     }
   },
 
-  '_diffDeep() tests': {
+  'diffDeep() tests': {
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._diffDeep);
+      assert.isFunction(CONFIG.util.diffDeep);
     },
     'Returns an empty object if no differences': function() {
       var a = {value_3: 14, hello:'world', value_1: 29};
       var b = {value_1: 29, hello:'world', value_3: 14};
-      assert.equal(typeof(CONFIG.util._diffDeep(a,b)), 'object');
-      assert.isTrue(Object.keys(CONFIG.util._diffDeep(a, b)).length == 0);
+      assert.equal(typeof(CONFIG.util.diffDeep(a,b)), 'object');
+      assert.isTrue(Object.keys(CONFIG.util.diffDeep(a, b)).length == 0);
     },
     'Returns an empty object if no differences (deep)': function() {
       var a = {value_3: 14, hello:'world', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
       var b = {value_1: 29, hello:'world', value_3: 14, value_4:[1,'hello',2], deepObj:{a:22,b:{a:44,c:45}}};
-      assert.equal(typeof(CONFIG.util._diffDeep(a,b)), 'object');
-      assert.isTrue(Object.keys(CONFIG.util._diffDeep(a, b)).length == 0);
+      assert.equal(typeof(CONFIG.util.diffDeep(a,b)), 'object');
+      assert.isTrue(Object.keys(CONFIG.util.diffDeep(a, b)).length == 0);
     },
     'Returns just the diff values': function() {
       var a = {value_3: 14, hello:'wurld', value_1: 29, deepObj:{a:22,b:{c:45,a:44}}};
       var b = {value_1: 29, hello:'world', value_3: 14, deepObj:{a:22,b:{a:44,c:45}}};
-      var diff = CONFIG.util._diffDeep(a,b);
+      var diff = CONFIG.util.diffDeep(a,b);
       assert.equal(Object.keys(diff).length, 1);
       assert.equal(diff.hello, 'world');
     },
     'Returns just the diff values (deep)': function() {
       var a = {value_3: 14, hello:'wurld', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
       var b = {value_1: 29, hello:'wurld', value_3: 14, value_4:[1,'goodbye',2], deepObj:{a:22,b:{a:45,c:44}}};
-      var diff = CONFIG.util._diffDeep(a,b);
+      var diff = CONFIG.util.diffDeep(a,b);
       assert.equal(Object.keys(diff).length, 2);
       assert.equal(Object.keys(diff.deepObj).length, 1);
       assert.equal(Object.keys(diff.deepObj.b).length, 2);
@@ -240,39 +240,39 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
-  '_stripComments() tests': {
+  'stripComments() tests': {
     // Only testing baseline stripComments functionality.
 	// This implementation handles lots of edge cases that aren't in these tests
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._stripComments);
+      assert.isFunction(CONFIG.util.stripComments);
     },
     'Leaves a simple string without comments alone': function() {
    	  var str = "Hello\nWorld";
-   	  assert.equal(CONFIG.util._stripComments(str), str);
+   	  assert.equal(CONFIG.util.stripComments(str), str);
     },
     'Strips out line-type comments': function() {
    	  var str1 = "var a='Hello'; // Comment about the a variable";
    	  var str2 = "var a='Hello'; ";
-   	  assert.equal(CONFIG.util._stripComments(str1), str2);
+   	  assert.equal(CONFIG.util.stripComments(str1), str2);
     },
     'Strips out block-type comments': function() {
    	  var str1 = "var a='Hello';/* Block Comment */ var b=24";
    	  var str2 = "var a='Hello'; var b=24";
-   	  assert.equal(CONFIG.util._stripComments(str1), str2);
+   	  assert.equal(CONFIG.util.stripComments(str1), str2);
     },
     'Strips out multi-line block comments': function() {
    	  var str1 = "var a='Hello';\n/* Block Comment\n  Line 2 comment\n*/\nvar b=24";
    	  var str2 = "var a='Hello';\n\nvar b=24";
-   	  assert.equal(CONFIG.util._stripComments(str1), str2);
+   	  assert.equal(CONFIG.util.stripComments(str1), str2);
     }
   },
 
-  '_parseFile() tests': {
+  'parseFile() tests': {
     topic: function() {
-      return CONFIG.util._parseFile(__dirname + '/config/default.yaml');
+      return CONFIG.util.parseFile(__dirname + '/config/default.yaml');
     },
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._parseFile);
+      assert.isFunction(CONFIG.util.parseFile);
     },
     'An object is returned': function(config) {
       assert.isObject(config);
@@ -286,12 +286,12 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
-  '_loadFileConfigs() tests': {
+  'loadFileConfigs() tests': {
     topic: function() {
-      return CONFIG.util._loadFileConfigs();
+      return CONFIG.util.loadFileConfigs();
     },
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._loadFileConfigs);
+      assert.isFunction(CONFIG.util.loadFileConfigs);
     },
     'An object is returned': function(configs) {
       assert.isObject(configs);
@@ -303,7 +303,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
-  '_attachProtoDeep() tests': {
+  'attachProtoDeep() tests': {
     topic: function() {
       // Create an object that contains other objects to see
       // that the prototype is added to all objects.
@@ -315,22 +315,22 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
           }
         }
       };
-      return CONFIG.util._attachProtoDeep(watchThis);
+      return CONFIG.util.attachProtoDeep(watchThis);
     },
     'The function exists': function() {
-      assert.isFunction(CONFIG.util._attachProtoDeep);
+      assert.isFunction(CONFIG.util.attachProtoDeep);
     },
     'The original object is returned': function(config) {
       assert.isObject(config);
       assert.isTrue(config.subObject.item1 === 23);
       assert.isTrue(config.subObject.subSubObject.item2 === "hello");
     },
-    'The _cloneDeep method is attached to the object': function(config) {
-      assert.isTrue({a:27}.a == config.util._cloneDeep({a:27}).a);
+    'The cloneDeep method is attached to the object': function(config) {
+      assert.isTrue({a:27}.a == config.util.cloneDeep({a:27}).a);
     },
-    'The _cloneDeep method is also attached to sub-objects': function(config) {
-      assert.isTrue({a:27}.a == config.subObject.util._cloneDeep({a:27}).a);
-      assert.isTrue({a:27}.a == config.subObject.subSubObject.util._cloneDeep({a:27}).a);
+    'The cloneDeep method is also attached to sub-objects': function(config) {
+      assert.isTrue({a:27}.a == config.subObject.util.cloneDeep({a:27}).a);
+      assert.isTrue({a:27}.a == config.subObject.subSubObject.util.cloneDeep({a:27}).a);
     },
     'Prototype methods are not exposed in the object': function(config) {
       // This test is here because altering object.__proto__ places the method
@@ -340,7 +340,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
-  '_getCmdLineArg() tests': {
+  'getCmdLineArg() tests': {
     topic: function() {
         // Set process.argv example object
         var testArgv = [
@@ -349,74 +349,30 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
             '--NODE_ENV=staging'
         ];
         process.argv = testArgv;
-        return CONFIG.util._getCmdLineArg('NODE_ENV');
+        return CONFIG.util.getCmdLineArg('NODE_ENV');
     },
     'The function exists': function() {
-        assert.isFunction(CONFIG.util._getCmdLineArg);
+        assert.isFunction(CONFIG.util.getCmdLineArg);
     },
     'NODE_ENV should be staging': function(nodeEnv) {
         assert.equal(nodeEnv, 'staging');
     },
     'Returns false if the argument did not match': function() {
-        assert.isFalse(CONFIG.util._getCmdLineArg('NODE_CONFIG_DIR'));
+        assert.isFalse(CONFIG.util.getCmdLineArg('NODE_CONFIG_DIR'));
     },
     'Returns the argument (alternative syntax)': function() {
         process.argv.push('--NODE_CONFIG_DIR=/etc/nodeConfig');
-        assert.equal(CONFIG.util._getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
+        assert.equal(CONFIG.util.getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
     },
     'Returns always the first matching': function() {
         process.argv.push('--NODE_ENV=test');
-        assert.equal(CONFIG.util._getCmdLineArg('NODE_ENV'), 'staging');
+        assert.equal(CONFIG.util.getCmdLineArg('NODE_ENV'), 'staging');
     },
     'Revert original process aruments': function() {
         assert.notEqual(process.argv, argvOrg);
         process.argv = argvOrg;
         assert.equal(process.argv, argvOrg);
     }
-  },
-
-  '_get() tests': {
-    topic: function() {
-      // Create an object that contains other objects to validate get functionality
-      var getThis = {
-	topItem: true,
-        subObject: {
-          item1: 23,
-          subSubObject: {
-        	item2: "hello",
-		item3: false
-          }
-        }
-      };
-      return CONFIG.util._attachProtoDeep(getThis);
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util._get);
-    },
-    'A top level item is returned': function(config) {
-      assert.isTrue(CONFIG.util._get(config, 'topItem'));
-    },
-    'A sub level item is returned': function(config) {
-      assert.equal(CONFIG.util._get(config, 'subObject.item1'), 23);
-    },
-    'A sub sub level item is returned': function(config) {
-      assert.equal(CONFIG.util._get(config, 'subObject.subSubObject.item2'), "hello");
-      assert.equal(CONFIG.util._get(config, 'subObject.subSubObject.item3'), false);
-    },
-    '_get is attached deeply': function(config) {
-      assert.equal(CONFIG.util._get(config.subObject.subSubObject, 'item2'), "hello");
-    },
-    'Undefined is returned on non-objects': function(config) {
-      assert.isTrue(CONFIG.util._get(config, 'topItem.subSubobject.item2') === undefined);
-    },
-    'Undefined is returned on object mis-spellings': function(config) {
-      assert.isTrue(CONFIG.util._get(config, 'subObject.subSubobject.item2') === undefined);
-    },
-    'Undefined is returned on element mis-spellings': function(config) {
-      assert.isTrue(CONFIG.util._get(config, 'topItrm') === undefined);
-    }
-
   }
-
 
 });
