@@ -19,6 +19,12 @@
   * Exposed config loading for alternate configurations
   * Added config.get() and config.has() methods & tests
   * Removed reliance on global.NODE_CONFIG so older versions can work with 1.x
+  * Fix empty YAML file causing crash with latest js-yaml
+
+0.4.37 / 2014-07-22
+===================
+
+  * Fix empty YAML file causing crash with latest js-yaml
 
 0.4.36 / 2014-05-27
 ===================
