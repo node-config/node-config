@@ -1,8 +1,6 @@
 Configure your Node.js Applications
 ===================================
 
-**Version 1.0** ([release notes](https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x)): Node-config is ready to break out of its pre-1.0 shell since the original release in Oct. 2010.  Version 1.0 preview is in the current master branch, and will be published to npm after a short soaking period. Check out the master branch if you'd like a preview prior to the npm release.
-
 [![NPM](https://nodei.co/npm/config.svg?downloads=true&stars=true)](https://nodei.co/npm/config/)&nbsp;&nbsp;
 [![Build Status](https://secure.travis-ci.org/lorenwest/node-config.svg?branch=master)](https://travis-ci.org/lorenwest/node-config)&nbsp;&nbsp;
 [release notes](https://github.com/lorenwest/node-config/blob/master/History.md)
