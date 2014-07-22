@@ -35,7 +35,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.isObject(CONFIG);
     },
     'Config extensions are included with the library': function() {
-      assert.isFunction(CONFIG._cloneDeep);
+      assert.isFunction(CONFIG.util.cloneDeep);
     }
   },
 
