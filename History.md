@@ -1,3 +1,8 @@
+0.4.37 / 2014-07-22
+===================
+
+  * Fix empty YAML file causing crash with latest js-yaml
+
 0.4.36 / 2014-05-27
 ===================
 
