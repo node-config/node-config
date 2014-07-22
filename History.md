@@ -1,6 +1,8 @@
-1.0.0 / 2014-06-
+1.0.0 / 2014-07-22
 ===================
 
+  * Major revision.  Release notes:
+    https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x
   * Update to semver versioning
   * Change load ordering
       from hostname.EXT --> deployment.EXT
@@ -16,6 +18,7 @@
   * Added error output if no configurations found
   * Exposed config loading for alternate configurations
   * Added config.get() and config.has() methods & tests
+  * Removed reliance on global.NODE_CONFIG so older versions can work with 1.x
 
 0.4.36 / 2014-05-27
 ===================
