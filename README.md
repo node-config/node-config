@@ -14,7 +14,7 @@ It lets you define a set of default parameters,
 and extend them for different deployment environments (development, qa,
 staging, production, etc.).
 
-This gives your application code a consistent configuration interface, shared among a
+This gives your application a consistent configuration interface shared among a
 [growing list of npm modules](https://www.npmjs.org/browse/depended/config) also using node-config.
 
 Project Guidelines
