@@ -1,7 +1,7 @@
 1.0.0 / 2014-07-23
 ===================
 
-  * Major revision.  Release notes:
+  * Major revision.  Upgrade notes:
     https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x
   * Update to semver versioning
   * Change load ordering
@@ -21,6 +21,7 @@
   * Removed reliance on global.NODE_CONFIG so older versions can work with 1.x
   * Fix empty YAML file causing crash with latest js-yaml
   * Added SUPPRESS_NO_CONFIG_WARNING for better sub-module support
+  * Moved all documentation [to the wiki](https://github.com/lorenwest/node-config/wiki).
 
 0.4.37 / 2014-07-22
 ===================
