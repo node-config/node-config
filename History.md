@@ -1,4 +1,4 @@
-1.0.0 / 2014-07-22
+1.0.0 / 2014-07-23
 ===================
 
   * Major revision.  Release notes:
@@ -20,6 +20,7 @@
   * Added config.get() and config.has() methods & tests
   * Removed reliance on global.NODE_CONFIG so older versions can work with 1.x
   * Fix empty YAML file causing crash with latest js-yaml
+  * Added SUPPRESS_NO_CONFIG_WARNING for better sub-module support
 
 0.4.37 / 2014-07-22
 ===================
