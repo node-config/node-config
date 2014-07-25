@@ -93,7 +93,7 @@ Articles
 * [Command Line Overrides](https://github.com/lorenwest/node-config/wiki/Command-Line-Overrides)
 * [Multiple Node Instances](https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances)
 * [Sub-Module Configuration](https://github.com/lorenwest/node-config/wiki/Sub-Module-Configuration)
-* [Configuring from a DB / External Source](https://github.com/lorenwest/node-config/wiki/Configuring-from-a-DB-/-External-Source)
+* [Configuring from a DB / External Source](https://github.com/lorenwest/node-config/wiki/Configuring-from-a-DB)
 * [External Configuration Management Tools](https://github.com/lorenwest/node-config/wiki/External-Configuration-Management-Tools)
 * [Examining Configuration Sources](https://github.com/lorenwest/node-config/wiki/Examining-Configuration-Sources)
 * [Using Config Utilities](https://github.com/lorenwest/node-config/wiki/Using-Config-Utilities)
