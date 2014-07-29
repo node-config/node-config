@@ -1,0 +1,7 @@
+{
+    "customEnvironmentVariables": {
+        "mappedBy": {
+            "json": "CUSTOM_JSON_ENVIRONMENT_VAR"
+        }
+    }
+}
