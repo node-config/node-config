@@ -486,10 +486,11 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
                     parm2: "twenty_two"
                 }
             };
-            return topic;
+            // it seems like vows doesn't refresh topic between tests
+            return CONFIG.util.cloneDeep(topic);
         },
         'Properly inverts a deep Object': function(topic) {
-            var inversion = CONFIG.util.invertDeep(topic);
+            var inversion = CONFIG.util.invertDeep(CONFIG.util.cloneDeep(topic));
             assert.deepEqual(inversion.SOME_TOP_LEVEL, ['TopLevel']);
             assert.deepEqual(inversion.value1, ['TestModule', 'parm1']);
             assert.deepEqual(inversion.base, ['Customers', 'dbHost']);
@@ -512,19 +513,25 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
             });
         },
         'Throws an error for Numeric values': function(topic) {
-            CONFIG.util.invertDeep(topic);
+            topic.Customers.dbHost = 443;
+            assert.throws(function() {
+                CONFIG.util.invertDeep(topic);
+            });
         },
         'Throws an error for null values': function(topic) {
+            topic.Customers.dbHost = null;
             assert.throws(function() {
                 CONFIG.util.invertDeep(topic);
             });
         },
         'Throws an error for Undefined values': function(topic) {
+            topic.Customers.dbHost = undefined;
             assert.throws(function() {
                 CONFIG.util.invertDeep(topic);
             });
         },
         'Throws an error for NaN values': function(topic) {
+            topic.Customers.dbHost = NaN;
             assert.throws(function() {
                 CONFIG.util.invertDeep(topic);
             });
