@@ -512,9 +512,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
             });
         },
         'Throws an error for Numeric values': function(topic) {
-            assert.throws(function() {
-                CONFIG.util.invertDeep(topic);
-            });
+            CONFIG.util.invertDeep(topic);
         },
         'Throws an error for null values': function(topic) {
             assert.throws(function() {
