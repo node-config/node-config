@@ -466,69 +466,69 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
         }
     },
 
-    'invertDeep() tests': {
-        topic: function() {
-            return {
-                TestModule: {
-                    parm1: "value1"
-                },
-                Customers: {
-                    dbHost: 'base',
-                    dbName: 'from_default_js',
-                    oauth: {
-                        key: 'a_api_key',
-                        secret: 'an_api_secret'
-                    }
-                },
-                EnvOverride: {
-                    parm_number_1: "from_default_js",
-                    parm2: 22
-                }
-            };
-        },
-        'Properly inverts a deep Object': function(topic) {
-            var inversion = CONFIG.util.invertDeep(topic);
-            assert.deepEqual(deepLiteral.value1, ['TestModule', 'parm1']);
-            assert.deepEqual(deepLiteral.base, ['Customers', 'dbHost']);
-            assert.deepEqual(deepLiteral.from_default_js, ['Customers', 'dbName']);
-            assert.deepEqual(deepLiteral.a_api_key, ['Customers', 'oauth', 'key']);
-            assert.deepEqual(deepLiteral.an_api_secret, ['Customers', 'oauth', 'secret']);
-            assert.deepEqual(deepLiteral.from_default_js2, ['EnvOverride', 'parm_number_1']);
-            assert.deepEqual(deepLiteral.twenty_two, ['EnvOverride', 'parm2']);
-        },
-        'Throws an error for Array values': function(topic) {
-            assert.throws(function() {
-                CONFIG.util.invertDeep(topic);
-            });
-        },
-        'Throws an error for Boolean values': function(topic) {
-            assert.throws(function() {
-                CONFIG.util.invertDeep(topic);
-            });
-        },
-        'Throws an error for Numeric values': function(topic) {
-            assert.throws(function() {
-                CONFIG.util.invertDeep(topic);
-            });
-        },
-        'Throws an error for null values': function(topic) {
-            assert.throws(function() {
-                CONFIG.util.invertDeep(topic);
-            });
-        },
-        'Throws an error for Undefined values': function(topic) {
-            assert.throws(function() {
-                CONFIG.util.invertDeep(topic);
-            });
-        },
-        'Throws an error for NaN values': function(topic) {
-            assert.throws(function() {
-                CONFIG.util.invertDeep(topic);
-            });
-        }
-    },
+    // 'invertDeep() tests': {
+    //     topic: function() {
+    //         return {
+    //             TestModule: {
+    //                 parm1: "value1"
+    //             },
+    //             Customers: {
+    //                 dbHost: 'base',
+    //                 dbName: 'from_default_js',
+    //                 oauth: {
+    //                     key: 'a_api_key',
+    //                     secret: 'an_api_secret'
+    //                 }
+    //             },
+    //             EnvOverride: {
+    //                 parm_number_1: "from_default_js",
+    //                 parm2: 22
+    //             }
+    //         };
+    //     },
+    //     'Properly inverts a deep Object': function(topic) {
+    //         var inversion = CONFIG.util.invertDeep(topic);
+    //         assert.deepEqual(deepLiteral.value1, ['TestModule', 'parm1']);
+    //         assert.deepEqual(deepLiteral.base, ['Customers', 'dbHost']);
+    //         assert.deepEqual(deepLiteral.from_default_js, ['Customers', 'dbName']);
+    //         assert.deepEqual(deepLiteral.a_api_key, ['Customers', 'oauth', 'key']);
+    //         assert.deepEqual(deepLiteral.an_api_secret, ['Customers', 'oauth', 'secret']);
+    //         assert.deepEqual(deepLiteral.from_default_js2, ['EnvOverride', 'parm_number_1']);
+    //         assert.deepEqual(deepLiteral.twenty_two, ['EnvOverride', 'parm2']);
+    //     },
+    //     'Throws an error for Array values': function(topic) {
+    //         assert.throws(function() {
+    //             CONFIG.util.invertDeep(topic);
+    //         });
+    //     },
+    //     'Throws an error for Boolean values': function(topic) {
+    //         assert.throws(function() {
+    //             CONFIG.util.invertDeep(topic);
+    //         });
+    //     },
+    //     'Throws an error for Numeric values': function(topic) {
+    //         assert.throws(function() {
+    //             CONFIG.util.invertDeep(topic);
+    //         });
+    //     },
+    //     'Throws an error for null values': function(topic) {
+    //         assert.throws(function() {
+    //             CONFIG.util.invertDeep(topic);
+    //         });
+    //     },
+    //     'Throws an error for Undefined values': function(topic) {
+    //         assert.throws(function() {
+    //             CONFIG.util.invertDeep(topic);
+    //         });
+    //     },
+    //     'Throws an error for NaN values': function(topic) {
+    //         assert.throws(function() {
+    //             CONFIG.util.invertDeep(topic);
+    //         });
+    //     }
+    // },
 
-    'setImpl() tests:': {
+    'setPath() tests:': {
         topic: function() {
             return {
                 TestModule: {
@@ -549,21 +549,25 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
             };
         },
         'Ignores null values': function(topic) {
-            CONFIG.util.setImpl(['Customers', 'oauth', 'secret'], null);
+            CONFIG.util.setPath(topic, ['Customers', 'oauth', 'secret'], null);
             assert.equal(topic.Customers.oauth.secret, 'an_api_secret');
         },
-        'Creates keys to set new values': function(topic) {
-            CONFIG.util.setImpl(['TestModule', 'oauth'], 'NEW_VALUE');
+        'Creates toplevel keys to set new values': function(topic) {
+            CONFIG.util.setPath(topic, ['NewKey'], 'NEW_VALUE');
+            assert.equal(topic.NewKey, 'NEW_VALUE');
+        },
+        'Creates subkeys to set new values': function(topic) {
+            CONFIG.util.setPath(topic, ['TestModule', 'oauth'], 'NEW_VALUE');
             assert.equal(topic.TestModule.oauth, 'NEW_VALUE');
         },
         'Creates parents to set new values': function(topic) {
-            CONFIG.util.setImpl(['EnvOverride', 'oauth', 'secret'], 'NEW_VALUE');
+            CONFIG.util.setPath(topic, ['EnvOverride', 'oauth', 'secret'], 'NEW_VALUE');
             assert.equal(topic.EnvOverride.oauth.secret, 'NEW_VALUE');
         },
         'Overwrites existing values': function(topic) {
-            CONFIG.util.setImpl(['Customers'], 'NEW_VALUE');
+            CONFIG.util.setPath(topic, ['Customers'], 'NEW_VALUE');
             assert.equal(topic.Customers, 'NEW_VALUE');
-        },
+        }
     },
 
     'stripComments() tests': {
