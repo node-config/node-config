@@ -466,67 +466,72 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
         }
     },
 
-    // 'invertDeep() tests': {
-    //     topic: function() {
-    //         return {
-    //             TestModule: {
-    //                 parm1: "value1"
-    //             },
-    //             Customers: {
-    //                 dbHost: 'base',
-    //                 dbName: 'from_default_js',
-    //                 oauth: {
-    //                     key: 'a_api_key',
-    //                     secret: 'an_api_secret'
-    //                 }
-    //             },
-    //             EnvOverride: {
-    //                 parm_number_1: "from_default_js",
-    //                 parm2: 22
-    //             }
-    //         };
-    //     },
-    //     'Properly inverts a deep Object': function(topic) {
-    //         var inversion = CONFIG.util.invertDeep(topic);
-    //         assert.deepEqual(deepLiteral.value1, ['TestModule', 'parm1']);
-    //         assert.deepEqual(deepLiteral.base, ['Customers', 'dbHost']);
-    //         assert.deepEqual(deepLiteral.from_default_js, ['Customers', 'dbName']);
-    //         assert.deepEqual(deepLiteral.a_api_key, ['Customers', 'oauth', 'key']);
-    //         assert.deepEqual(deepLiteral.an_api_secret, ['Customers', 'oauth', 'secret']);
-    //         assert.deepEqual(deepLiteral.from_default_js2, ['EnvOverride', 'parm_number_1']);
-    //         assert.deepEqual(deepLiteral.twenty_two, ['EnvOverride', 'parm2']);
-    //     },
-    //     'Throws an error for Array values': function(topic) {
-    //         assert.throws(function() {
-    //             CONFIG.util.invertDeep(topic);
-    //         });
-    //     },
-    //     'Throws an error for Boolean values': function(topic) {
-    //         assert.throws(function() {
-    //             CONFIG.util.invertDeep(topic);
-    //         });
-    //     },
-    //     'Throws an error for Numeric values': function(topic) {
-    //         assert.throws(function() {
-    //             CONFIG.util.invertDeep(topic);
-    //         });
-    //     },
-    //     'Throws an error for null values': function(topic) {
-    //         assert.throws(function() {
-    //             CONFIG.util.invertDeep(topic);
-    //         });
-    //     },
-    //     'Throws an error for Undefined values': function(topic) {
-    //         assert.throws(function() {
-    //             CONFIG.util.invertDeep(topic);
-    //         });
-    //     },
-    //     'Throws an error for NaN values': function(topic) {
-    //         assert.throws(function() {
-    //             CONFIG.util.invertDeep(topic);
-    //         });
-    //     }
-    // },
+    'invertDeep() tests': {
+        topic: function() {
+            var topic = {
+                TopLevel: 'SOME_TOP_LEVEL',
+                TestModule: {
+                    parm1: "value1"
+                },
+                Customers: {
+                    dbHost: 'base',
+                    dbName: 'from_default_js',
+                    oauth: {
+                        key: 'a_api_key',
+                        secret: 'an_api_secret'
+                    }
+                },
+                EnvOverride: {
+                    parm_number_1: "from_default_js2",
+                    parm2: "twenty_two"
+                }
+            };
+            return topic;
+        },
+        'Properly inverts a deep Object': function(topic) {
+            var inversion = CONFIG.util.invertDeep(topic);
+            assert.deepEqual(inversion.SOME_TOP_LEVEL, ['TopLevel']);
+            assert.deepEqual(inversion.value1, ['TestModule', 'parm1']);
+            assert.deepEqual(inversion.base, ['Customers', 'dbHost']);
+            assert.deepEqual(inversion.from_default_js, ['Customers', 'dbName']);
+            assert.deepEqual(inversion.a_api_key, ['Customers', 'oauth', 'key']);
+            assert.deepEqual(inversion.an_api_secret, ['Customers', 'oauth', 'secret']);
+            assert.deepEqual(inversion.from_default_js2, ['EnvOverride', 'parm_number_1']);
+            assert.deepEqual(inversion.twenty_two, ['EnvOverride', 'parm2']);
+        },
+        'Throws an error for Array values': function(topic) {
+            topic.Customers.dbHost = ['a', 'b', 'c'];
+            assert.throws(function() {
+                CONFIG.util.invertDeep(topic);
+            });
+        },
+        'Throws an error for Boolean values': function(topic) {
+            topic.Customers.dbHost = false;
+            assert.throws(function() {
+                CONFIG.util.invertDeep(topic);
+            });
+        },
+        'Throws an error for Numeric values': function(topic) {
+            assert.throws(function() {
+                CONFIG.util.invertDeep(topic);
+            });
+        },
+        'Throws an error for null values': function(topic) {
+            assert.throws(function() {
+                CONFIG.util.invertDeep(topic);
+            });
+        },
+        'Throws an error for Undefined values': function(topic) {
+            assert.throws(function() {
+                CONFIG.util.invertDeep(topic);
+            });
+        },
+        'Throws an error for NaN values': function(topic) {
+            assert.throws(function() {
+                CONFIG.util.invertDeep(topic);
+            });
+        }
+    },
 
     'setPath() tests:': {
         topic: function() {
