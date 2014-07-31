@@ -1,4 +1,4 @@
-1.0.1 / 2014-
+1.0.2 / 2014-07-30
 ===================
 
   * @bradobro - Fixed a variable from leaking into global
