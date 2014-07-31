@@ -1,3 +1,9 @@
+1.0.1 / 2014-
+===================
+
+  * @bradobro - Fixed a variable from leaking into global
+  * @tilfin - Removed un-necessary YAML comment filtering for js-yaml
+
 1.0.1 / 2014-07-25
 ===================
 
