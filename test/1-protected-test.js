@@ -538,6 +538,35 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
         }
     },
 
+    'substituteDeep() tests': {
+        topic: function() {
+            var topic = {
+                TopLevel: 'SOME_TOP_LEVEL',
+                TestModule: {
+                    parm1: "value1"
+                },
+                Customers: {
+                    dbHost: 'base',
+                    dbName: 'from_default_js',
+                    oauth: {
+                        key: 'a_api_key',
+                        secret: 'an_api_secret'
+                    }
+                },
+                EnvOverride: {
+                    parm_number_1: "from_default_js2",
+                    parm2: "twenty_two"
+                }
+            };
+            return topic;
+        },
+        'returns an empty object if the variables mapping is empty': function(topic){
+            vars = {};
+            var substituted = CONFIG.util.substituteDeep(topic,vars);
+            assert.deepEqual(substituted, {});
+        }
+    },
+
     'setPath() tests:': {
         topic: function() {
             return {
