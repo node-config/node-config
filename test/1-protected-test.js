@@ -583,6 +583,50 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
                     }
                 }
             });
+        },
+        // Testing all the things in variable maps that don't make sense because ENV vars are always
+        // strings.
+        'Throws an error for leaf Array values': function(topic) {
+            vars = {NON_EXISTENT_VAR: 'ignore_this'};
+            topic.Customers.dbHost = ['a', 'b', 'c'];
+            assert.throws(function() {
+                CONFIG.util.substituteDeep(topic,vars);
+            });
+        },
+        'Throws an error for leaf Boolean values': function(topic) {
+            vars = {NON_EXISTENT_VAR: 'ignore_this'};
+            topic.Customers.dbHost = false;
+            assert.throws(function() {
+                CONFIG.util.substituteDeep(topic,vars);
+            });
+        },
+        'Throws an error for leaf Numeric values': function(topic) {
+            vars = {NON_EXISTENT_VAR: 'ignore_this'};
+            topic.Customers.dbHost = 443;
+            assert.throws(function() {
+                CONFIG.util.substituteDeep(topic,vars);
+            });
+        },
+        'Throws an error for leaf null values': function(topic) {
+            vars = {NON_EXISTENT_VAR: 'ignore_this'};
+            topic.Customers.dbHost = null;
+            assert.throws(function() {
+                CONFIG.util.substituteDeep(topic,vars);
+            });
+        },
+        'Throws an error for leaf Undefined values': function(topic) {
+            vars = {NON_EXISTENT_VAR: 'ignore_this'};
+            topic.Customers.dbHost = undefined;
+            assert.throws(function() {
+                CONFIG.util.substituteDeep(topic,vars);
+            });
+        },
+        'Throws an error for leaf NaN values': function(topic) {
+            vars = {NON_EXISTENT_VAR: 'ignore_this'};
+            topic.Customers.dbHost = NaN;
+            assert.throws(function() {
+                CONFIG.util.substituteDeep(topic,vars);
+            });
         }
     },
 
