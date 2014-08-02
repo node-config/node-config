@@ -543,19 +543,15 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
             var topic = {
                 TopLevel: 'SOME_TOP_LEVEL',
                 TestModule: {
-                    parm1: "value1"
+                    parm1: "SINGLE_SECOND_LEVEL"
                 },
                 Customers: {
-                    dbHost: 'base',
-                    dbName: 'from_default_js',
+                    dbHost: 'DB_HOST',
+                    dbName: 'DB_NAME',
                     oauth: {
-                        key: 'a_api_key',
-                        secret: 'an_api_secret'
+                        key: 'OAUTH_KEY',
+                        secret: 'OAUTH_SECRET'
                     }
-                },
-                EnvOverride: {
-                    parm_number_1: "from_default_js2",
-                    parm2: "twenty_two"
                 }
             };
             return topic;
@@ -564,6 +560,29 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
             vars = {};
             var substituted = CONFIG.util.substituteDeep(topic,vars);
             assert.deepEqual(substituted, {});
+        },
+        'returns an empty object if none of the variables map to leaf strings': function(topic){
+            vars = {NON_EXISTENT_VAR: 'ignore_this'};
+            var substituted = CONFIG.util.substituteDeep(topic,vars);
+            assert.deepEqual(substituted, {});
+        },
+        'returns an object with keys matching down to mapped existing variables': function(topic){
+            vars = {
+                'SOME_TOP_LEVEL': 5,
+                'DB_NAME': 'production_db',
+                'OAUTH_SECRET': '123456',
+                'PATH': 'ignore other environment variables'
+            };
+            var substituted = CONFIG.util.substituteDeep(topic,vars);
+            assert.deepEqual(substituted, {
+                TopLevel: 5,
+                Customers: {
+                    dbName: 'production_db',
+                    oauth: {
+                        secret: '123456'
+                    }
+                }
+            });
         }
     },
 
