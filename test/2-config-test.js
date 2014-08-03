@@ -11,6 +11,7 @@ process.env.NODE_APP_INSTANCE = '3';
 process.env.NODE_CONFIG = '{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
 process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
 
+// Test Environment Variable Substitution
 var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
 process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
 
@@ -114,6 +115,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Configurations from custom environment variables': {
+        // only testing the `custom-environment-variables.json` now
+        // NOT testing unset environment variable because of module caching (CONFIG would have to be recreated
+        // NOT testing absence of `custom-environment-variables.json` because current tests don't mess with the filesystem
         'FOCUS: Configuration can come from an environment variable mapped in custom_environment_variables.json': function() {
             assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.json'), override);
         }
