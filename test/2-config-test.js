@@ -11,6 +11,9 @@ process.env.NODE_APP_INSTANCE = '3';
 process.env.NODE_CONFIG = '{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
 process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
 
+var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
+
 // Dependencies
 var vows = require('vows');
 assert = require('assert'),
@@ -111,18 +114,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Configurations from custom environment variables': {
-        topic: function() {
-            // write out the custom_environment_variables file? Yaml, Js too?
-            return CONFIG;
-        },
-        'Configuration can come from an environment variable mapped in custom_environment_variables.json': function() {
-            var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
-            process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
-            // assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.json'), override);
-        },
-        'Custom environment variables with no values are simply ignored.': function() {
-            var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
-            // assert.equal(CONFIG.has('customEnvironmentVariables.mappedBy.json'), false);
+        'FOCUS: Configuration can come from an environment variable mapped in custom_environment_variables.json': function() {
+            assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.json'), override);
         }
     },
 

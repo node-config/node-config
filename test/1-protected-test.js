@@ -17,6 +17,9 @@ process.env.NODE_APP_INSTANCE = '3';
 process.env.NODE_CONFIG = '{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
 process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
 
+var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+process.env['CUSTOM_JSON_ENVIRONMENT_VAR'] = override;
+
 // Dependencies
 var CONFIG = require('../lib/config');
 var vows = require('vows');
