@@ -1,3 +1,9 @@
+1.0.3 / 2014-09-03
+==================
+
+  * @bradboro - Custom environment variables
+  * @supersheep - Catch error when requiring visionmedia yaml module
+
 1.0.2 / 2014-07-30
 ===================
 
