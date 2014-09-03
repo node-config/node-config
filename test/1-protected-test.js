@@ -17,6 +17,10 @@ process.env.NODE_APP_INSTANCE='3';
 process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
 process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
 
+// Test Environment Variable Substitution
+var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+process.env['CUSTOM_JSON_ENVIRONMENT_VAR'] = override;
+
 // Dependencies
 var CONFIG = require('../lib/config');
 var vows = require('vows');
@@ -237,6 +241,154 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.equal(diff.deepObj.b.a, 45);
       assert.equal(diff.deepObj.b.c, 44);
       assert.deepEqual(diff.value_4, [1, 'goodbye', 2]);
+    }
+  },
+
+  'substituteDeep() tests': {
+    topic: function () {
+      var topic = {
+        TopLevel: 'SOME_TOP_LEVEL',
+        TestModule: {
+          parm1: "SINGLE_SECOND_LEVEL"
+        },
+        Customers: {
+          dbHost: 'DB_HOST',
+          dbName: 'DB_NAME',
+          oauth: {
+            key: 'OAUTH_KEY',
+            secret: 'OAUTH_SECRET'
+          }
+        }
+      };
+      return topic;
+    },
+    'returns an empty object if the variables mapping is empty': function (topic) {
+      vars = {};
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {});
+    },
+    'returns an empty object if none of the variables map to leaf strings': function (topic) {
+      vars = {
+        NON_EXISTENT_VAR: 'ignore_this'
+      };
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {});
+    },
+    'returns an object with keys matching down to mapped existing variables': function (topic) {
+      vars = {
+        'SOME_TOP_LEVEL': 5,
+        'DB_NAME': 'production_db',
+        'OAUTH_SECRET': '123456',
+        'PATH': 'ignore other environment variables'
+      };
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {
+        TopLevel: 5,
+        Customers: {
+          dbName: 'production_db',
+          oauth: {
+            secret: '123456'
+          }
+        }
+      });
+    },
+    // Testing all the things in variable maps that don't make sense because ENV vars are always
+    // strings.
+    'Throws an error for leaf Array values': function (topic) {
+      vars = {
+        NON_EXISTENT_VAR: 'ignore_this'
+      };
+      topic.Customers.dbHost = ['a', 'b', 'c'];
+      assert.throws(function () {
+        CONFIG.util.substituteDeep(topic, vars);
+      });
+    },
+    'Throws an error for leaf Boolean values': function (topic) {
+      vars = {
+        NON_EXISTENT_VAR: 'ignore_this'
+      };
+      topic.Customers.dbHost = false;
+      assert.throws(function () {
+        CONFIG.util.substituteDeep(topic, vars);
+      });
+    },
+    'Throws an error for leaf Numeric values': function (topic) {
+      vars = {
+        NON_EXISTENT_VAR: 'ignore_this'
+      };
+      topic.Customers.dbHost = 443;
+      assert.throws(function () {
+        CONFIG.util.substituteDeep(topic, vars);
+      });
+    },
+    'Throws an error for leaf null values': function (topic) {
+      vars = {
+        NON_EXISTENT_VAR: 'ignore_this'
+      };
+      topic.Customers.dbHost = null;
+      assert.throws(function () {
+        CONFIG.util.substituteDeep(topic, vars);
+      });
+    },
+    'Throws an error for leaf Undefined values': function (topic) {
+      vars = {
+        NON_EXISTENT_VAR: 'ignore_this'
+      };
+      topic.Customers.dbHost = undefined;
+      assert.throws(function () {
+        CONFIG.util.substituteDeep(topic, vars);
+      });
+    },
+    'Throws an error for leaf NaN values': function (topic) {
+      vars = {
+        NON_EXISTENT_VAR: 'ignore_this'
+      };
+      topic.Customers.dbHost = NaN;
+      assert.throws(function () {
+        CONFIG.util.substituteDeep(topic, vars);
+      });
+    }
+  },
+
+  'setPath() tests:': {
+    topic: function () {
+      return {
+        TestModule: {
+          parm1: "value1"
+        },
+        Customers: {
+          dbHost: 'base',
+          dbName: 'from_default_js',
+          oauth: {
+            key: 'a_api_key',
+            secret: 'an_api_secret'
+          }
+        },
+        EnvOverride: {
+          parm_number_1: "from_default_js",
+          parm2: 22
+        }
+      };
+    },
+    'Ignores null values': function (topic) {
+      CONFIG.util.setPath(topic, ['Customers', 'oauth', 'secret'], null);
+      assert.equal(topic.Customers.oauth.secret, 'an_api_secret');
+    },
+    'Creates toplevel keys to set new values': function (topic) {
+      CONFIG.util.setPath(topic, ['NewKey'], 'NEW_VALUE');
+      assert.equal(topic.NewKey, 'NEW_VALUE');
+    },
+    'Creates subkeys to set new values': function (topic) {
+      CONFIG.util.setPath(topic, ['TestModule', 'oauth'], 'NEW_VALUE');
+      assert.equal(topic.TestModule.oauth, 'NEW_VALUE');
+    },
+    'Creates parents to set new values': function (topic) {
+      CONFIG.util.setPath(topic, ['EnvOverride', 'oauth', 'secret'], 'NEW_VALUE');
+      assert.equal(topic.EnvOverride.oauth.secret, 'NEW_VALUE');
+    },
+    'Overwrites existing values': function (topic) {
+      CONFIG.util.setPath(topic, ['Customers'], 'NEW_VALUE');
+      assert.equal(topic.Customers, 'NEW_VALUE');
     }
   },
 
