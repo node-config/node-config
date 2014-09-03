@@ -1,4 +1,4 @@
-1.0.3 / 2014-09-03
+1.1.0 / 2014-09-03
 ==================
 
   * @bradboro - Custom environment variables
