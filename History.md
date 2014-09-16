@@ -1,3 +1,11 @@
+1.2.0 / 2014-09-15
+==================
+
+  * Feature release
+  * Delaying immutability until after first get() - for external configs
+  * Allowing immutability override with $ALLOW_CONFIG_MUTATIONS=Y
+
+
 1.1.1 / 2014-09-03
 ==================
 
@@ -6,6 +14,7 @@
 1.1.0 / 2014-09-03
 ==================
 
+  * Feature release
   * @bradboro - Custom environment variables
   * @supersheep - Catch error when requiring visionmedia yaml module
 

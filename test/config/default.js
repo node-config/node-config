@@ -10,5 +10,6 @@ module.exports = {
   EnvOverride: {
     parm_number_1: "from_default_js",
     parm2: 22
-  }
+  },
+  MuteThis: 'hello'
 };

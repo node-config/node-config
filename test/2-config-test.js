@@ -84,6 +84,27 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
   },
 
+  'Immutability': {
+    topic: function() {
+      return CONFIG;
+    },
+
+    'Correct mute setup var': function () {
+      assert.equal(CONFIG.MuteThis, 'hello');
+    },
+
+    'Mutation sticks': function () {
+      CONFIG.MuteThis = 'world';
+      assert.equal(CONFIG.MuteThis, 'world');
+    },
+
+    'No mutation after the first get()': function () {
+      assert.equal(CONFIG.get('MuteThis'), 'world');
+      CONFIG.MuteThis = 'backToHello';
+      assert.equal(CONFIG.MuteThis, 'world');
+    }
+  },
+
   'Configurations from the $NODE_CONFIG environment variable': {
     topic: function() {
       return CONFIG;

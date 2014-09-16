@@ -11,13 +11,13 @@ REPO = 'lorenwest/node-config';
 README_FILE = './README.md';
 
 // HTML template parts
-var TABLE = '<table id="contributors">{{rows}}</table>';
-var ROW = '<tr>{{people}}</tr>';
-var PERSON = '<td><img src={{avatar_url}}><a href="{{html_url}}">{{login}}</a></td>';
-var PEOPLE_PER_ROW = 6;
 _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
 };
+var TABLE_TEMPLATE = _.template('<table id="contributors">{{rows}}</table>');
+var ROW_TEMPLATE = _.template('<tr>{{people}}</tr>');
+var PERSON_TEMPLATE = _.template('<td><img src={{avatar_url}}><a href="{{html_url}}">{{login}}</a></td>');
+var PEOPLE_PER_ROW = 6;
 
 // Read the contributor list from github, return as an HTML table
 function getContributorTable(callback) {
@@ -48,15 +48,15 @@ function getContributorTable(callback) {
     for (var contributorNum in contributors) {
       var contributor = contributors[contributorNum];
       if (row.length === PEOPLE_PER_ROW) {
-        rows.push(_.template(ROW, {people:row.join('')}));
+        rows.push(ROW_TEMPLATE({people:row.join('')}));
         row = [];
       }
-      row.push(_.template(PERSON, contributor));
+      row.push(PERSON_TEMPLATE(contributor));
     }
 
     // Add the last row and return the table
-    rows.push(_.template(ROW, {people:row.join('')}));
-    callback(null, _.template(TABLE, {rows: rows.join('')}));
+    rows.push(ROW_TEMPLATE({people:row.join('')}));
+    callback(null, TABLE_TEMPLATE({rows: rows.join('')}));
   });
 };
 
