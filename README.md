@@ -14,6 +14,9 @@ It lets you define a set of default parameters,
 and extend them for different deployment environments (development, qa,
 staging, production, etc.).
 
+Configurations are stored in files, and can be overridden with environment variables
+and command line parameters.
+
 This gives your application a consistent configuration interface shared among a
 [growing list of npm modules](https://www.npmjs.org/browse/depended/config) also using node-config.
 
