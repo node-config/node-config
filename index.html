@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Node-config by lorenwest</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Node-config</h1>
+        <p>Node.js Application Configuration</p>
+
+        <p class="view"><a href="https://github.com/lorenwest/node-config">View the Project on GitHub <small>lorenwest/node-config</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/lorenwest/node-config/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/lorenwest/node-config/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/lorenwest/node-config">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="configure-your-nodejs-applications" class="anchor" href="#configure-your-nodejs-applications"><span class="octicon octicon-link"></span></a>Configure your Node.js Applications</h1>
+
+<p><a href="https://nodei.co/npm/config/"><img src="https://nodei.co/npm/config.svg?downloads=true&amp;downloadRank=true" alt="NPM"></a>  
+<a href="https://travis-ci.org/lorenwest/node-config"><img src="https://secure.travis-ci.org/lorenwest/node-config.svg?branch=master" alt="Build Status"></a>  
+<a href="https://github.com/lorenwest/node-config/blob/master/History.md">release notes</a></p>
+
+<h2>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>Node-config organizes hierarchical configurations for your app deployments.</p>
+
+<p>It lets you define a set of default parameters,
+and extend them for different deployment environments (development, qa,
+staging, production, etc.).</p>
+
+<p>Configurations are stored in <a href="https://github.com/lorenwest/node-config/wiki/Configuration-Files">configuration files</a> within your application, and can be overridden and extended by <a href="https://github.com/lorenwest/node-config/wiki/Environment-Variables">environment variables</a>,
+ <a href="https://github.com/lorenwest/node-config/wiki/Command-Line-Overrides">command line parameters</a>, or <a href="https://github.com/lorenwest/node-config/wiki/Configuring-from-an-External-Source">external sources</a>.</p>
+
+<p>This gives your application a consistent configuration interface shared among a
+<a href="https://www.npmjs.org/browse/depended/config">growing list of npm modules</a> also using node-config.</p>
+
+<h2>
+<a name="project-guidelines" class="anchor" href="#project-guidelines"><span class="octicon octicon-link"></span></a>Project Guidelines</h2>
+
+<ul>
+<li>
+<em>Simple</em> - Get started fast</li>
+<li>
+<em>Powerful</em> - For multi-node enterprise deployment</li>
+<li>
+<em>Flexible</em> - Supporting multiple config file formats</li>
+<li>
+<em>Lightweight</em> - Small file and memory footprint</li>
+<li>
+<em>Predictable</em> - Well tested foundation for module and app developers</li>
+</ul><h2>
+<a name="quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick Start</h2>
+
+<p>The following examples are in JSON format, but configurations can be in other <a href="https://github.com/lorenwest/node-config/wiki/Configuration-Files#file-formats">file formats</a>.</p>
+
+<p><strong>Install in your app directory, and edit the default config file.</strong></p>
+
+<pre><code>$ npm install config
+$ mkdir config
+$ vi config/default.json
+
+{
+  // Customter module configs
+  "Customer": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": 5984,
+      "dbName": "customers"
+    },
+    "credit": {
+      "initialLimit": 100,
+      // Set low for development
+      "initialDays": 1
+    }
+  }
+}
+</code></pre>
+
+<p><strong>Edit config overrides for production deployment:</strong></p>
+
+<pre><code>$ vi config/production.json
+
+{
+  "Customer": {
+    "dbConfig": {
+      "host": "prod-db-server"
+    },
+    "credit": {
+      "initialDays": 30
+    }
+  }
+}
+</code></pre>
+
+<p><strong>Use configs in your code:</strong></p>
+
+<pre><code>var config = require('config');
+...
+var dbConfig = config.get('Customer.dbConfig');
+db.connect(dbConfig, ...);
+</code></pre>
+
+<p><strong>Start your app server:</strong></p>
+
+<pre><code>$ export NODE_ENV=production
+$ node my-app.js
+</code></pre>
+
+<p>Running in this configuration, the <code>port</code> and <code>dbName</code> elements of <code>dbConfig</code>
+will come from the <code>default.json</code> file, and the <code>host</code> element will
+come from the <code>production.json</code> override file.</p>
+
+<h2>
+<a name="articles" class="anchor" href="#articles"><span class="octicon octicon-link"></span></a>Articles</h2>
+
+<ul>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Configuration-Files">Configuration Files</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Common-Usage">Common Usage</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Environment-Variables">Environment Variables</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Reserved-Words">Reserved Words</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Command-Line-Overrides">Command Line Overrides</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances">Multiple Node Instances</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Sub-Module-Configuration">Sub-Module Configuration</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Configuring-from-an-External-Source">Configuring from a DB / External Source</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/External-Configuration-Management-Tools">External Configuration Management Tools</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Examining-Configuration-Sources">Examining Configuration Sources</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Using-Config-Utilities">Using Config Utilities</a></li>
+<li><a href="https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x">Upgrading from Config 0.x</a></li>
+</ul><h2>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h2>
+
+<table>
+<tr>
+<td>
+<img src="https://avatars.githubusercontent.com/u/373538?v=2"><a href="https://github.com/lorenwest">lorenwest</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/791137?v=2"><a href="https://github.com/josx">josx</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/133277?v=2"><a href="https://github.com/enyo">enyo</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/1656140?v=2"><a href="https://github.com/eheikes">eheikes</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/138707?v=2"><a href="https://github.com/th507">th507</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/842998?v=2"><a href="https://github.com/nsabovic">nsabovic</a>
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://avatars.githubusercontent.com/u/506460?v=2"><a href="https://github.com/Osterjour">Osterjour</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/145742?v=2"><a href="https://github.com/jberrisch">jberrisch</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/1918551?v=2"><a href="https://github.com/nitzan-shaked">nitzan-shaked</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/3058150?v=2"><a href="https://github.com/Alaneor">Alaneor</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/498929?v=2"><a href="https://github.com/roncli">roncli</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/125062?v=2"><a href="https://github.com/keis">keis</a>
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://avatars.githubusercontent.com/u/157303?v=2"><a href="https://github.com/cmcculloh">cmcculloh</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/16861?v=2"><a href="https://github.com/abh">abh</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/28898?v=2"><a href="https://github.com/DMajrekar">DMajrekar</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/2533984?v=2"><a href="https://github.com/jonjonsonjr">jonjonsonjr</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/157474?v=2"><a href="https://github.com/k-j-kleist">k-j-kleist</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/12112?v=2"><a href="https://github.com/GUI">GUI</a>
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://avatars.githubusercontent.com/u/811927?v=2"><a href="https://github.com/bolgovr">bolgovr</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/672821?v=2"><a href="https://github.com/Askelkana">Askelkana</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/941125?v=2"><a href="https://github.com/hisayan">hisayan</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/937179?v=2"><a href="https://github.com/Esya">Esya</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/865153?v=2"><a href="https://github.com/eiriksm">eiriksm</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/1087986?v=2"><a href="https://github.com/jscharlach">jscharlach</a>
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://avatars.githubusercontent.com/u/3645924?v=2"><a href="https://github.com/mmoczulski">mmoczulski</a>
+</td>
+<td>
+<img src="https://avatars.githubusercontent.com/u/430817?v=2"><a href="https://github.com/supersheep">supersheep</a>
+</td>
+</tr>
+</table><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>May be freely distributed under the <a href="https://raw.githubusercontent.com/lorenwest/node-config/master/LICENSE">MIT license</a>.</p>
+
+<p>Copyright (c) 2010-2014 Loren West
+<a href="https://github.com/lorenwest/node-config/graphs/contributors">and other contributors</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/lorenwest">lorenwest</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
