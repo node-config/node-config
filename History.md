@@ -1,3 +1,9 @@
+1.2.1 / 2014-09-23
+==================
+
+  * Wrote test to prove setModuleDefaults() was broken in 1.2.0
+  * Fixed setModuleDefaults() to not rely on immutable configs
+
 1.2.0 / 2014-09-15
 ==================
 

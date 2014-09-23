@@ -175,27 +175,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
   },
 
-  'Assuring a configuration property can be made immutable': {
-    topic: function() {
-
-      CONFIG.util.makeImmutable(CONFIG.TestModule, 'parm1');
-      CONFIG.TestModule.parm1 = "setToThis";
-      return CONFIG.TestModule.parm1;
-    },
-
-    'The makeImmutable() method is available': function() {
-      assert.isFunction(CONFIG.util.makeImmutable);
-    },
-
-    'Correctly unable to change an immutable configuration': function(value) {
-      assert.isTrue(value != "setToThis");
-    },
-
-    'Left the original value intact after attempting the change': function(value) {
-      assert.equal(value, "value1");
-    }
-  },
-
   'Configuration for module developers': {
     topic: function() {
 
@@ -220,6 +199,27 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
     'Defaults remain intact unless overridden': function(moduleConfig) {
       assert.equal(moduleConfig.parm2, 2000);
+    }
+  },
+
+  'Assuring a configuration property can be made immutable': {
+    topic: function() {
+
+      CONFIG.util.makeImmutable(CONFIG.TestModule, 'parm1');
+      CONFIG.TestModule.parm1 = "setToThis";
+      return CONFIG.TestModule.parm1;
+    },
+
+    'The makeImmutable() method is available': function() {
+      assert.isFunction(CONFIG.util.makeImmutable);
+    },
+
+    'Correctly unable to change an immutable configuration': function(value) {
+      assert.isTrue(value != "setToThis");
+    },
+
+    'Left the original value intact after attempting the change': function(value) {
+      assert.equal(value, "value1");
     }
   },
 
