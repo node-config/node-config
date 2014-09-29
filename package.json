@@ -9,6 +9,7 @@
   "directories": {"lib": "./lib"},
   "licenses": ["MIT"],
   "dependencies": {
+    "lodash": ">=2.4.1"
   },
   "devDependencies": {
     "js-yaml" : "2.1.x",

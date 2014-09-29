@@ -70,7 +70,8 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
         elem2:2,
         elem3:[1,2,3],
         elem4:function(){return "hello";},
-        elem5:{sub1:"sub 1",sub2:2,sub3:[1,2,3]}
+        elem5:{sub1:"sub 1",sub2:2,sub3:[1,2,3]},
+        elem6: {date: new Date, regexp: /test/i}
       };
     },
     'The function exists': function() {
@@ -105,6 +106,11 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       copy = CONFIG.util.cloneDeep(orig);
       copy.elem5.sub3[1] = 3;
       assert.notDeepEqual(copy, orig);
+    },
+    'Regexps and dates are preserved': function (orig) {
+      var copy = CONFIG.util.cloneDeep(orig);
+      assert.equal(copy.elem6.date.constructor.name, 'Date');
+      assert.equal(copy.elem6.regexp.toString(), '/test/i');
     }
   },
 
