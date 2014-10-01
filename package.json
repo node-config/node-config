@@ -8,9 +8,7 @@
   "keywords": ["conf","config","configuration","node-config","config-node","env","environment"],
   "directories": {"lib": "./lib"},
   "licenses": ["MIT"],
-  "dependencies": {
-    "lodash": ">=2.4.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "js-yaml" : "2.1.x",
     "coffee-script" : ">=1.7.0",
