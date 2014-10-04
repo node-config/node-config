@@ -1,3 +1,8 @@
+1.2.2 / 2014-10-03
+==================
+
+  * Added support for regexp and date configurations (@diversario)
+
 1.2.1 / 2014-09-23
 ==================
 
