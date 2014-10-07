@@ -175,33 +175,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
 
   },
 
-  'Configuration for module developers': {
-    topic: function() {
-
-      // Set some parameters for the test module
-      return CONFIG.util.setModuleDefaults("TestModule", {
-        parm1: 1000, parm2: 2000, parm3: 3000
-      });
-    },
-
-    'The setModuleDefaults() method is available': function() {
-      assert.isFunction(CONFIG.util.setModuleDefaults);
-    },
-
-    'The module config is in the CONFIG object': function(moduleConfig) {
-      assert.isTrue(typeof(CONFIG.TestModule) != "undefined");
-      assert.deepEqual(CONFIG.TestModule, moduleConfig);
-    },
-
-    'Local configurations are mixed in': function(moduleConfig) {
-      assert.equal(moduleConfig.parm1, "value1");
-    },
-
-    'Defaults remain intact unless overridden': function(moduleConfig) {
-      assert.equal(moduleConfig.parm2, 2000);
-    }
-  },
-
   'Assuring a configuration property can be made immutable': {
     topic: function() {
 
@@ -283,6 +256,33 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'Correctly identifies not having element (deep)': function(config) {
       assert.isTrue(!config.has('Customers.dbHosx'));
     }
-  }
+  },
+
+  'Configuration for module developers': {
+    topic: function() {
+
+      // Set some parameters for the test module
+      return CONFIG.util.setModuleDefaults("TestModule", {
+        parm1: 1000, parm2: 2000, parm3: 3000
+      });
+    },
+
+    'The setModuleDefaults() method is available': function() {
+      assert.isFunction(CONFIG.util.setModuleDefaults);
+    },
+
+    'The module config is in the CONFIG object': function(moduleConfig) {
+      assert.isTrue(typeof(CONFIG.TestModule) != "undefined");
+      assert.deepEqual(CONFIG.TestModule, moduleConfig);
+    },
+
+    'Local configurations are mixed in': function(moduleConfig) {
+      assert.equal(moduleConfig.parm1, "value1");
+    },
+
+    'Defaults remain intact unless overridden': function(moduleConfig) {
+      assert.equal(moduleConfig.parm2, 2000);
+    }
+  },
 
 });

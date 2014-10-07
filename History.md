@@ -1,3 +1,9 @@
+1.2.3 / 2014-10-03
+==================
+
+  * Changed test suite to verify a bug in util.setModuleDefaults()
+  * Fixed util.setModuleDefaults() to work after a get() (and pass the new test)
+
 1.2.2 / 2014-10-03
 ==================
 
