@@ -1,3 +1,8 @@
+1.2.4 / 2014-10-10
+==================
+
+  * Repaired the 1.2.3 fix to work both before and after the first get()
+
 1.2.3 / 2014-10-03
 ==================
 
