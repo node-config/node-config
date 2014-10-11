@@ -40,7 +40,7 @@ The following examples are in JSON format, but configurations can be in other [f
     $ vi config/default.json
 
     {
-      // Customter module configs
+      // Customer module configs
       "Customer": {
         "dbConfig": {
           "host": "localhost",
