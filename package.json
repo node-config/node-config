@@ -12,7 +12,8 @@
   "devDependencies": {
     "js-yaml" : "2.1.x",
     "coffee-script" : ">=1.7.0",
-    "vows" : ">=0.5.13"
+    "vows" : ">=0.5.13",
+    "cson" : "1.4.0"
   },
   "repository": {
     "type" : "git",

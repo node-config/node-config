@@ -69,6 +69,10 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.equal(CONFIG.AnotherModule.parm3, 'value3');
     },
 
+    'Loading configurations from a CSON file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm4, 'value4');
+    },
+
     'Loading configurations from an environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPort, '5999');
     },

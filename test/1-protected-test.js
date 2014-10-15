@@ -444,6 +444,26 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
+  'CSON parse tests': {
+    topic: function() {
+      return CONFIG.util.parseFile(__dirname + '/config/default.cson');
+    },
+    'The function exists': function() {
+      assert.isFunction(CONFIG.util.parseFile);
+    },
+    'An object is returned': function(config) {
+      assert.isObject(config);
+    },
+    'The correct object is returned': function(config) {
+      assert.isObject(config.Customers);
+      assert.isTrue(config.Customers.dbName == 'from_default_cson');
+      assert.isTrue(config.Customers.dbPassword == 'password will be overwritten.');
+      assert.isObject(config.AnotherModule);
+      assert.isTrue(config.AnotherModule.parm4 == "value4");
+      assert.isObject(config.Customers.lang);
+    }
+  },
+
   'loadFileConfigs() tests': {
     topic: function() {
       return CONFIG.util.loadFileConfigs();

@@ -1,0 +1,20 @@
+{
+  #comment
+  Customers: {
+    dbName: 'from_default_cson'
+    dbPassword: 'password will be overwritten.'
+    dbPassword2: 'password will be overwritten.'
+    lang: [
+      'en'
+      'es'
+    ]
+  },
+  AnotherModule: {
+    parm4: "value4"
+  },
+  staticArray: [
+    2
+    1
+    3
+  ]
+}
