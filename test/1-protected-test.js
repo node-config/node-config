@@ -464,6 +464,26 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     }
   },
 
+  '.properties parse tests': {
+    topic: function() {
+      return CONFIG.util.parseFile(__dirname + '/config/default.properties');
+    },
+    'The function exists': function() {
+      assert.isFunction(CONFIG.util.parseFile);
+    },
+    'An object is returned': function(config) {
+      assert.isObject(config);
+    },
+    'The correct object is returned': function(config) {
+      assert.isObject(config.AnotherModule);
+      assert.isTrue(config.AnotherModule.parm5 == "value5");
+      assert.isObject(config['key with spaces']);
+      assert.isTrue(config['key with spaces'].another_key == 'hello');
+      assert.isUndefined(config.ignore_this_please);
+      assert.isUndefined(config.i_am_a_comment);
+    }
+  },
+
   'loadFileConfigs() tests': {
     topic: function() {
       return CONFIG.util.loadFileConfigs();
