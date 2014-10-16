@@ -1,3 +1,8 @@
+1.3.0 / 2014-10-15
+==================
+
+  * Added support for CSON configuration files (@superoven)
+
 1.2.4 / 2014-10-10
 ==================
 
