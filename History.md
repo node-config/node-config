@@ -1,3 +1,8 @@
+1.4.0 / 2014-10-16
+==================
+
+  * Added support for .properties config files (@superoven)
+
 1.3.0 / 2014-10-15
 ==================
 
