@@ -77,6 +77,10 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.equal(CONFIG.AnotherModule.parm5, 'value5');
     },
 
+    'Loading configurations from a JSON5 file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm6, 'value6');
+    },
+
     'Loading configurations from an environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPort, '5999');
     },
