@@ -224,6 +224,18 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     'get is attached deeply': function(config) {
       assert.equal(config.Customers.get('dbHost'), 'base');
     },
+    'An extended property accessor remains a getter': function(config) {
+      assert.equal(config.get('customerDbPort'), '5999');
+    },
+    'A cloned property accessor remains a getter': function(config) {
+      assert.equal(config.Customers.get('dbString'), 'override_from_runtime_json:5999');
+    },
+    'A cloned property accessor is made immutable': function(config) {
+      var random1 = config.Customers.get('random'),
+          random2 = config.Customers.get('random');
+
+      assert.equal(random1, random2);
+    },
     'A proper exception is thrown on mis-spellings': function(config) {
       var didThrow = false;
       try {
