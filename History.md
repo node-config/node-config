@@ -1,3 +1,8 @@
+1.5.0 / 2014-10-20
+==================
+
+  * Added support for .json5 config files (@bertrandom) 
+
 1.4.0 / 2014-10-16
 ==================
 
