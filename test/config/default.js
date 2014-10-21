@@ -9,6 +9,9 @@ module.exports = {
     dbPort: 'this_is_overridden',
     get dbString() {
       return '' + this.dbName + ':' + this.dbPort;
+    },
+    get random() {
+      return Math.random();
     }
   },
   EnvOverride: {
