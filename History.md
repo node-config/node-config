@@ -1,3 +1,8 @@
+1.6.0 / 2014-10-22
+==================
+
+  * Added support for property accessors in configs (@jaylynch)
+
 1.5.0 / 2014-10-20
 ==================
 
