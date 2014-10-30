@@ -481,6 +481,13 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
       assert.isTrue(config['key with spaces'].another_key == 'hello');
       assert.isUndefined(config.ignore_this_please);
       assert.isUndefined(config.i_am_a_comment);
+    },
+    'Variable replacements are working': function(config) {
+      assert.isTrue(config.replacement.param == "foobar")
+    },
+    'Sections are supported': function(config) {
+      assert.isDefined(config.section.param);
+      assert.isUndefined(config.param);
     }
   },
 
