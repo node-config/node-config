@@ -1,3 +1,8 @@
+1.7.0 / 2014-10-30
+==================
+
+  * Added variable substitution in .properties files (@ncuillery)
+
 1.6.0 / 2014-10-22
 ==================
 
