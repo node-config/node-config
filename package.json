@@ -5,24 +5,38 @@
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
   "homepage": "http://lorenwest.github.com/node-config",
-  "keywords": ["conf","config","configuration","node-config","config-node","env","environment"],
-  "directories": {"lib": "./lib"},
-  "licenses": ["MIT"],
+  "keywords": [
+    "conf",
+    "config",
+    "configuration",
+    "node-config",
+    "config-node",
+    "env",
+    "environment"
+  ],
+  "directories": {
+    "lib": "./lib"
+  },
+  "licenses": [
+    "MIT"
+  ],
   "dependencies": {},
   "devDependencies": {
-    "js-yaml" : "2.1.x",
-    "coffee-script" : ">=1.7.0",
-    "vows" : ">=0.5.13",
-    "cson" : "~1.4.0",
-    "properties" : "~1.2.1",
-    "json5" : "~0.2.0"
+    "coffee-script": ">=1.7.0",
+    "cson": "~1.4.0",
+    "js-yaml": "^3.2.2",
+    "json5": "~0.2.0",
+    "properties": "~1.2.1",
+    "vows": ">=0.5.13"
   },
   "repository": {
-    "type" : "git",
-    "url" : "http://github.com/lorenwest/node-config.git"
+    "type": "git",
+    "url": "http://github.com/lorenwest/node-config.git"
   },
-  "engines": {"node": ">0.4.x"},
+  "engines": {
+    "node": ">0.4.x"
+  },
   "scripts": {
-    "test" : "./node_modules/vows/bin/vows test/*.js --spec"
+    "test": "./node_modules/vows/bin/vows test/*.js --spec"
   }
 }
