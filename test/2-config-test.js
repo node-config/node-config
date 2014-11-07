@@ -49,7 +49,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Loading configurations from a JS module is correct': function() {
-      assert.equal(CONFIG.Customers.dbHost, 'base');
+      assert.equal(CONFIG.Customers.dbPort, 3);
       assert.equal(CONFIG.TestModule.parm1, 'value1');
     },
 
@@ -82,7 +82,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
     },
 
     'Loading configurations from an environment file is correct': function() {
-      assert.equal(CONFIG.Customers.dbPort, '5999');
+      assert.equal(CONFIG.Customers.dbHost, 'YamlHost');
     },
 
     'Loading configurations from the local file is correct': function() {
@@ -219,16 +219,20 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.isTrue(typeof config.get('TestModule') === 'object');
     },
     'A sub level item is returned': function(config) {
-      assert.equal(config.get('Customers.dbHost'), 'base');
+      assert.equal(config.get('Customers.dbHost'), 'YamlHost');
     },
     'get is attached deeply': function(config) {
-      assert.equal(config.Customers.get('dbHost'), 'base');
+      assert.equal(config.Customers.get('dbHost'), 'YamlHost');
     },
     'An extended property accessor remains a getter': function(config) {
-      assert.equal(config.get('customerDbPort'), '5999');
+      assert.equal(config.get('customerDbPort'), '3');
     },
     'A cloned property accessor remains a getter': function(config) {
-      assert.equal(config.Customers.get('dbString'), 'override_from_runtime_json:5999');
+      assert.equal(config.Customers.get('dbString'), 'override_from_runtime_json:3');
+    },
+    // Same test as above, but with a second label because it tests two things
+    'A getter references the overridden value, not the original value': function(config) {
+      assert.equal(config.Customers.get('dbString'), 'override_from_runtime_json:3');
     },
     'A cloned property accessor is made immutable': function(config) {
       var random1 = config.Customers.get('random'),

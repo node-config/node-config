@@ -503,7 +503,7 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
     },
     'The correct object is returned': function(config) {
       assert.isObject(config.Customers);
-      assert.isTrue(config.Customers.dbHost == 'base');
+      assert.isTrue(config.Customers.dbHost == 'YamlHost');
       assert.isTrue(config.Customers.dbName == 'override_from_runtime_json');
     }
   },
