@@ -1,5 +1,5 @@
 language: node_js
-before_script:
+before_install:
   - npm update -g npm
 node_js:
   - "0.10"
