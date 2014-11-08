@@ -1,4 +1,6 @@
 language: node_js
+before_script:
+  - npm update -g npm
 node_js:
   - "0.10"
   - "0.8"
