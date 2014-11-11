@@ -1,3 +1,5 @@
+  * Bumped js-yaml dependency (@markstos)
+
 1.7.0 / 2014-10-30
 ==================
 
