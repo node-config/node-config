@@ -1,4 +1,5 @@
 # This is loaded if $NODE_ENV=test
 
 Customers:
+  dbHost: 'YamlHost'
   dbPort: 5999
