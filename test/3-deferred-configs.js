@@ -39,6 +39,12 @@ exports.DeferredTest = vows.describe('Tests for deferred values').addBatch({
         // If this had been treated as a deferred config value it would blow-up.
         assert.equal(CONFIG.welcomeEmail.aFunc(), 'Still just a function.');
     },
+
+    // This defer function didn't use args, but relied 'this' being bound to the main config object
+    "defer functions can simply refer to 'this'" : function () {
+        assert.equal(CONFIG.welcomeEmail.justThis, 'Welcome to this New Instance!');
+    }
+
   }
 });
 
