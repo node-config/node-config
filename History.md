@@ -7,6 +7,7 @@
   * new defer sub-module introduced in 1.8.0 can now be accessed by require('config/defer')
     For usage, see: https://github.com/lorenwest/node-config/wiki/Configuration-Files#javascript-module---js
   * Add test coverage for array merging cases. (@markstos)
+  * Bump dependency on cson package to 1.6.1 (@markstos)
 
 1.8.0 / 2014-11-13
 ==================
