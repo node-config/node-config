@@ -1,5 +1,5 @@
 
-var defer = require('../../lib/config/defer').deferConfig;
+var defer = require('../../defer').deferConfig;
 
 var config = {
   siteTitle : 'Site title',
@@ -15,7 +15,13 @@ config.welcomeEmail = {
   // A plain function should be not disturbed.
   aFunc  : function () {
     return "Still just a function.";
-  }
+  },
+
+  // Look ma, no arg passing. The main config object is bound to 'this'
+  justThis: defer(function () {
+    return "Welcome to this "+this.siteTitle;
+  }),
+
 };
 
 module.exports = config;

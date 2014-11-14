@@ -1,7 +1,19 @@
+
+1.8.1 / 2014-11-14
+==================
+
+  * Simplify syntax for defer() functions. The 'this' value in the functions is now bound
+    to the main configuration object, so it doesn't have to be passed into the function. (@markstos)
+  * new defer sub-module introduced in 1.8.0 can now be accessed by require('config/defer')
+    For usage, see: https://github.com/lorenwest/node-config/wiki/Configuration-Files#javascript-module---js
+  * Add test coverage for array merging cases. (@markstos)
+  * Bump dependency on cson package to 1.6.1 (@markstos)
+
 1.8.0 / 2014-11-13
 ==================
 
-  * Added deferred function for evaluating configs after load
+  * Added deferred function for evaluating configs after load (@markstos)
+    For details, see: https://github.com/lorenwest/node-config/wiki/Configuration-Files#javascript-module---js
   * Bumped js-yaml dependency (@markstos)
 
 1.7.0 / 2014-10-30

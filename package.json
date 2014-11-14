@@ -1,6 +1,6 @@
 {
   "name": "config",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
@@ -23,7 +23,7 @@
   "dependencies": {},
   "devDependencies": {
     "coffee-script": ">=1.7.0",
-    "cson": "~1.4.0",
+    "cson": "^1.6.1",
     "js-yaml": "^3.2.2",
     "json5": "~0.2.0",
     "properties": "~1.2.1",
