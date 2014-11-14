@@ -1,5 +1,5 @@
 
-var defer = require('../../lib/config/defer').deferConfig;
+var defer = require('../../defer').deferConfig;
 
 var config = {
   siteTitle : 'Site title',

@@ -3,7 +3,9 @@
 ==================
 
   * Simplify syntax for defer() functions. The 'this' value in the functions is now bound
-    to the main configuration object, so it doesn't have to be passed into the function.
+    to the main configuration object, so it doesn't have to be passed into the function. (@markstos)
+  * new defer sub-module introduced in 1.8.0 can now be accessed by require('config/defer')
+    For usage, see: https://github.com/lorenwest/node-config/wiki/Configuration-Files#javascript-module---js
 
 1.8.0 / 2014-11-13
 ==================
