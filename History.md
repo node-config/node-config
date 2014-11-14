@@ -1,3 +1,7 @@
+1.8.0 / 2014-11-13
+==================
+
+  * Added deferred function for evaluating configs after load
   * Bumped js-yaml dependency (@markstos)
 
 1.7.0 / 2014-10-30
