@@ -29,7 +29,6 @@ exports.DeferredTest = vows.describe('Tests for merging arrays').addBatch({
     },
 
     'An empty array replaced by a full array should be replaced': function() {
-        console.dir(CONFIG.arrayMerging);
         assert.deepEqual(CONFIG.arrayMerging.emptyArray, ['not empty anymore']);
     },
 
