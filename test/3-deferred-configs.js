@@ -1,12 +1,8 @@
 
 // Test declaring deferred values.
-// The key config files involved here are:
-//      test/config/default-defer.js
-//      test/config/local-defer.js
-
 
 // Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
+process.env.NODE_CONFIG_DIR = __dirname + '/3-config';
 
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
@@ -24,10 +20,6 @@ var vows = require('vows'),
 
 exports.DeferredTest = vows.describe('Tests for deferred values').addBatch({
   'Configuration file Tests': {
-    topic: function() {
-      return CONFIG;
-    },
-
     'Using deferConfig() in a config file causes value to be evaluated at the end': function() {
         // The deferred function was declared in default-defer.js
         // Then local-defer.js is located which overloads the siteTitle mentioned in the function
@@ -43,7 +35,11 @@ exports.DeferredTest = vows.describe('Tests for deferred values').addBatch({
     // This defer function didn't use args, but relied 'this' being bound to the main config object
     "defer functions can simply refer to 'this'" : function () {
         assert.equal(CONFIG.welcomeEmail.justThis, 'Welcome to this New Instance!');
-    }
+    },
+
+    "defer functions which return objects should still be treated as a single value." : function () {
+      assert.deepEqual(CONFIG.get('map.centerPoint'), { lat: 3, lon: 4 });
+    },
 
   }
 });
