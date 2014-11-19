@@ -20,10 +20,6 @@ var vows = require('vows'),
 
 exports.DeferredTest = vows.describe('Tests for deferred values').addBatch({
   'Configuration file Tests': {
-    topic: function() {
-      return CONFIG;
-    },
-
     'Using deferConfig() in a config file causes value to be evaluated at the end': function() {
         // The deferred function was declared in default-defer.js
         // Then local-defer.js is located which overloads the siteTitle mentioned in the function
