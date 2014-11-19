@@ -35,7 +35,11 @@ exports.DeferredTest = vows.describe('Tests for deferred values').addBatch({
     // This defer function didn't use args, but relied 'this' being bound to the main config object
     "defer functions can simply refer to 'this'" : function () {
         assert.equal(CONFIG.welcomeEmail.justThis, 'Welcome to this New Instance!');
-    }
+    },
+
+    "defer functions which return objects should still be treated as a single value." : function () {
+      assert.deepEqual(CONFIG.get('map.centerPoint'), { lat: 3, lon: 4 });
+    },
 
   }
 });

@@ -3,6 +3,9 @@ var defer = require('../../defer').deferConfig;
 
 var config = {
   siteTitle : 'Site title',
+  latitude  : 1,
+  longitude : 2,
+
 };
 
 // Set up a default value which refers to another value.
@@ -21,7 +24,12 @@ config.welcomeEmail = {
   justThis: defer(function () {
     return "Welcome to this "+this.siteTitle;
   }),
+};
 
+config.map = {
+  centerPoint : defer(function () {
+    return { lat: this.latitude, lon: this.longitude };
+  }),
 };
 
 module.exports = config;
