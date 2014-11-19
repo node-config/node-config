@@ -1,12 +1,8 @@
 
 // Test declaring deferred values.
-// The key config files involved here are:
-//      test/config/default-defer.js
-//      test/config/local-defer.js
-
 
 // Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
+process.env.NODE_CONFIG_DIR = __dirname + '/3-config';
 
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
