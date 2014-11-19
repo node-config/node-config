@@ -77,6 +77,14 @@ The following examples are in JSON format, but configurations can be in other [f
     var dbConfig = config.get('Customer.dbConfig');
     db.connect(dbConfig, ...);
 
+    if (config.has('optionalFeature.detail')) {
+      var detail = config.get('optionalFeature.detail');
+      ...
+    }
+
+`config.get()` will throw an exception for undefined keys to help catch typos and missing values.
+Use `config.has()` to test if a configuration value is defined.
+
 **Start your app server:**
 
     $ export NODE_ENV=production
