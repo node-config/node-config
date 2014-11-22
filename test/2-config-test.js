@@ -1,25 +1,8 @@
-// Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
-
-// Hardcode $NODE_ENV=test for testing
-process.env.NODE_ENV='test';
-
-// Test for multi-instance applications
-process.env.NODE_APP_INSTANCE='3';
-
-// Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
-process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
-process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
-
-// Test Environment Variable Substitution
-var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
-process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
 
 // Dependencies
-var vows = require('vows');
+var vows = require('vows'),
     assert = require('assert'),
-    CONFIG = require('../lib/config'),
-    FileSystem = require('fs'),
+    FileSystem = require('fs');
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
@@ -29,8 +12,34 @@ var vows = require('vows');
  *
  * @class ConfigTest
  */
-exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
+
+var CONFIG, override;
+exports.ConfigTest = vows.describe('Test suite for node-config')
+.addBatch({
   'Library initialization': {
+    topic : function () {
+      // Change the configuration directory for testing
+      process.env.NODE_CONFIG_DIR = __dirname + '/config';
+
+      // Hardcode $NODE_ENV=test for testing
+      process.env.NODE_ENV='test';
+
+      // Test for multi-instance applications
+      process.env.NODE_APP_INSTANCE='3';
+
+      // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
+      process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
+      process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
+
+      // Test Environment Variable Substitution
+      override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+      process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
+
+      CONFIG = requireUncached('../lib/config');
+
+      return CONFIG;
+
+    },
     'Config library is available': function() {
       assert.isObject(CONFIG);
     },
@@ -38,12 +47,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.isFunction(CONFIG.util.cloneDeep);
     }
   },
-
+})
+.addBatch({
   'Configuration file Tests': {
-    topic: function() {
-      return CONFIG;
-    },
-
     'Loading configurations from a JS module is correct': function() {
       assert.equal(CONFIG.Customers.dbHost, 'base');
       assert.equal(CONFIG.TestModule.parm1, 'value1');
@@ -306,3 +312,12 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   },
 
 });
+
+//
+// Because require'ing config creates and caches a global singleton,
+// We have to invalidate the cache to build new object based on the environment variables above
+function requireUncached(module){
+   delete require.cache[require.resolve(module)];
+   return require(module);
+}
+

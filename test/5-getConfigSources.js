@@ -1,6 +1,4 @@
 
-// Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
 
 // Dependencies
 var vows = require('vows'),
@@ -9,6 +7,10 @@ var vows = require('vows'),
 exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBatch({
   'tests with NODE_CONFIG env set, and --NODE_CONFIG command line flag': {
     topic: function () {
+     // Change the configuration directory for testing
+     process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
+
+      process.env.NODE_ENV='test';
       process.env.NODE_CONFIG = '{}';
       process.argv = ["node","path/to/some.js","--NODE_CONFIG='{}'"];
       var config = requireUncached('../lib/config');
@@ -28,6 +30,9 @@ exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBa
 
   'tests without NODE_ENV set': {
     topic: function () {
+      // Change the configuration directory for testing
+      process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
+
       process.env.NODE_ENV = undefined;
       delete process.env.NODE_CONFIG;
       process.argv = [];
@@ -48,6 +53,9 @@ exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBa
 
   'tests with NODE_ENV set': {
     topic: function () {
+      // Change the configuration directory for testing
+      process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
+
       process.env.NODE_ENV='test';
       delete process.env.NODE_CONFIG;
       process.argv = [];
