@@ -4,25 +4,6 @@
  * @module test
  */
 
-// Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
-
-// Hardcode $NODE_ENV=test for testing
-process.env.NODE_ENV='test';
-
-// Test for multi-instance applications
-process.env.NODE_APP_INSTANCE='3';
-
-// Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
-process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
-process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
-
-// Test Environment Variable Substitution
-var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
-process.env['CUSTOM_JSON_ENVIRONMENT_VAR'] = override;
-
-// Dependencies
-var CONFIG = require('../lib/config');
 var vows = require('vows');
 var assert = require('assert');
 
@@ -37,13 +18,44 @@ var argvOrg = process.argv;
  *
  * @class ProtectedTest
  */
-exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBatch({
-  'Library initialization': {
-    'Library is available': function() {
-      assert.isObject(CONFIG);
-    }
-  },
 
+var CONFIG;
+exports.PrivateTest = vows.describe('Protected (hackable) utilities test')
+.addBatch({
+  // We initialize the object in a batch so that the globals get changed at /run-time/ not /require-time/,
+  // avoiding conflicts with other tests.
+  // We initialize in our own /batch/ because batches are run in serial, while individual contexts run in parallel. 
+  'Library initialization': {
+    topic : function () {
+      // Change the configuration directory for testing
+      process.env.NODE_CONFIG_DIR = __dirname + '/config';
+
+      // Hardcode $NODE_ENV=test for testing
+      process.env.NODE_ENV='test';
+
+      // Test for multi-instance applications
+      process.env.NODE_APP_INSTANCE='3';
+
+      // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
+      process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
+      process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
+
+      // Test Environment Variable Substitution
+      var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+      process.env['CUSTOM_JSON_ENVIRONMENT_VAR'] = override;
+
+      // Dependencies
+      CONFIG = requireUncached('../lib/config');
+
+      return CONFIG;
+
+    },
+    'Library is available': function(config) {
+      assert.isObject(config);
+    }
+  }
+})
+.addBatch({
   'isObject() tests': {
     'The function exists': function() {
       assert.isFunction(CONFIG.util.isObject);
@@ -581,3 +593,12 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test').addBa
   }
 
 });
+
+
+//
+// Because require'ing config creates and caches a global singleton,
+// We have to invalidate the cache to build new object based on the environment variables above
+function requireUncached(module){
+   delete require.cache[require.resolve(module)];
+   return require(module);
+}

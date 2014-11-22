@@ -1,29 +1,8 @@
-// Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
-
-// Hardcode $NODE_ENV=test for testing
-process.env.NODE_ENV='test';
-
-// Test for multi-instance applications
-process.env.NODE_APP_INSTANCE='3';
-
-// Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
-process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}'
-process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
-
-// Test Environment Variable Substitution
-var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
-process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
 
 // Dependencies
-var vows = require('vows');
+var vows = require('vows'),
     assert = require('assert'),
-    CONFIG = require('../lib/config'),
-    FileSystem = require('fs'),
-    originalWatchedValue = CONFIG.watchThisValue,
-    newWatchedValue = Math.floor(Math.random() * 100000),
-    originalDynamicArray = CONFIG.dynamicArray,
-    newDynamicArray = [Math.floor(Math.random() * 100000), Math.floor(Math.random() * 100000)];
+    FileSystem = require('fs');
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
@@ -33,8 +12,34 @@ var vows = require('vows');
  *
  * @class ConfigTest
  */
-exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
+
+var CONFIG, override;
+exports.ConfigTest = vows.describe('Test suite for node-config')
+.addBatch({
   'Library initialization': {
+    topic : function () {
+      // Change the configuration directory for testing
+      process.env.NODE_CONFIG_DIR = __dirname + '/config';
+
+      // Hardcode $NODE_ENV=test for testing
+      process.env.NODE_ENV='test';
+
+      // Test for multi-instance applications
+      process.env.NODE_APP_INSTANCE='3';
+
+      // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
+      process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
+      process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
+
+      // Test Environment Variable Substitution
+      override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+      process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
+
+      CONFIG = requireUncached('../lib/config');
+
+      return CONFIG;
+
+    },
     'Config library is available': function() {
       assert.isObject(CONFIG);
     },
@@ -42,12 +47,9 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
       assert.isFunction(CONFIG.util.cloneDeep);
     }
   },
-
+})
+.addBatch({
   'Configuration file Tests': {
-    topic: function() {
-      return CONFIG;
-    },
-
     'Loading configurations from a JS module is correct': function() {
       assert.equal(CONFIG.Customers.dbHost, 'base');
       assert.equal(CONFIG.TestModule.parm1, 'value1');
@@ -97,10 +99,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   },
 
   'Immutability': {
-    topic: function() {
-      return CONFIG;
-    },
-
     'Correct mute setup var': function () {
       assert.equal(CONFIG.MuteThis, 'hello');
     },
@@ -118,10 +116,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   },
 
   'Configurations from the $NODE_CONFIG environment variable': {
-    topic: function() {
-      return CONFIG;
-    },
-
     'Configuration can come from the $NODE_CONFIG environment': function() {
       assert.equal(CONFIG.EnvOverride.parm3, 'overridden from $NODE_CONFIG');
     },
@@ -133,10 +127,6 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   },
 
   'Configurations from the --NODE_CONFIG command line': {
-    topic: function() {
-      return CONFIG;
-    },
-
     'Configuration can come from the --NODE_CONFIG command line argument': function() {
       assert.equal(CONFIG.EnvOverride.parm5, 'overridden from --NODE_CONFIG');
     },
@@ -209,47 +199,44 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   },
 
   'get() tests': {
-    topic: function() {
-      return CONFIG;
+    'The function exists': function() {
+      assert.isFunction(CONFIG.get);
     },
-    'The function exists': function(config) {
-      assert.isFunction(config.get);
+    'A top level item is returned': function() {
+      assert.isTrue(typeof CONFIG.get('TestModule') === 'object');
     },
-    'A top level item is returned': function(config) {
-      assert.isTrue(typeof config.get('TestModule') === 'object');
+    'A sub level item is returned': function() {
+      assert.equal(CONFIG.get('Customers.dbHost'), 'base');
     },
-    'A sub level item is returned': function(config) {
-      assert.equal(config.get('Customers.dbHost'), 'base');
+    'get is attached deeply': function() {
+      assert.equal(CONFIG.Customers.get('dbHost'), 'base');
     },
-    'get is attached deeply': function(config) {
-      assert.equal(config.Customers.get('dbHost'), 'base');
+    'An extended property accessor remains a getter': function() {
+      assert.equal(CONFIG.get('customerDbPort'), '5999');
     },
-    'An extended property accessor remains a getter': function(config) {
-      assert.equal(config.get('customerDbPort'), '5999');
+    'A cloned property accessor remains a getter': function() {
+      assert.equal(CONFIG.Customers.get('dbString'), 'override_from_runtime_json:5999');
     },
-    'A cloned property accessor remains a getter': function(config) {
-      assert.equal(config.Customers.get('dbString'), 'override_from_runtime_json:5999');
-    },
-    'A cloned property accessor is made immutable': function(config) {
-      var random1 = config.Customers.get('random'),
-          random2 = config.Customers.get('random');
+    'A cloned property accessor is made immutable': function() {
+      var random1 = CONFIG.Customers.get('random'),
+          random2 = CONFIG.Customers.get('random');
 
       assert.equal(random1, random2);
     },
-    'A proper exception is thrown on mis-spellings': function(config) {
+    'A proper exception is thrown on mis-spellings': function(c) {
       var didThrow = false;
       try {
-        var topItem = config.get('mis.spelled');
+        var topItem = CONFIG.get('mis.spelled');
         didThrow = false;
       } catch(e) {
         didThrow = true;
       }
       assert.isTrue(didThrow);
     },
-    'An exception is thrown on non-objects': function(config) {
+    'An exception is thrown on non-objects': function() {
       var didThrow = false;
       try {
-        var topItem = config.get('Testmodule.misspelled');
+        var topItem = CONFIG.get('Testmodule.misspelled');
         didThrow = false;
       } catch(e) {
         didThrow = true;
@@ -259,26 +246,23 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   },
 
   'has() tests': {
-    topic: function() {
-      return CONFIG;
+    'The function exists': function() {
+      assert.isFunction(CONFIG.has);
     },
-    'The function exists': function(config) {
-      assert.isFunction(config.has);
+    'A top level item can be tested': function() {
+      assert.isTrue(CONFIG.has('TestModule'));
     },
-    'A top level item can be tested': function(config) {
-      assert.isTrue(config.has('TestModule'));
+    'A sub level item can be tested': function() {
+      assert.isTrue(CONFIG.has('Customers.dbHost'));
     },
-    'A sub level item can be tested': function(config) {
-      assert.isTrue(config.has('Customers.dbHost'));
+    'has is attached deeply': function() {
+      assert.isTrue(CONFIG.Customers.has('dbHost'));
     },
-    'has is attached deeply': function(config) {
-      assert.isTrue(config.Customers.has('dbHost'));
+    'Correctly identifies not having element': function() {
+      assert.isTrue(!CONFIG.Customers.has('dbHosx'));
     },
-    'Correctly identifies not having element': function(config) {
-      assert.isTrue(!config.Customers.has('dbHosx'));
-    },
-    'Correctly identifies not having element (deep)': function(config) {
-      assert.isTrue(!config.has('Customers.dbHosx'));
+    'Correctly identifies not having element (deep)': function() {
+      assert.isTrue(!CONFIG.has('Customers.dbHosx'));
     }
   },
 
@@ -310,3 +294,12 @@ exports.ConfigTest = vows.describe('Test suite for node-config').addBatch({
   },
 
 });
+
+//
+// Because require'ing config creates and caches a global singleton,
+// We have to invalidate the cache to build new object based on the environment variables above
+function requireUncached(module){
+   delete require.cache[require.resolve(module)];
+   return require(module);
+}
+
