@@ -20,10 +20,6 @@ var vows = require('vows');
     assert = require('assert'),
     CONFIG = require('../lib/config'),
     FileSystem = require('fs'),
-    originalWatchedValue = CONFIG.watchThisValue,
-    newWatchedValue = Math.floor(Math.random() * 100000),
-    originalDynamicArray = CONFIG.dynamicArray,
-    newDynamicArray = [Math.floor(Math.random() * 100000), Math.floor(Math.random() * 100000)];
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
