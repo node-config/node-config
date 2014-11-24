@@ -27,7 +27,7 @@
     "js-yaml": "^3.2.2",
     "json5": "~0.2.0",
     "properties": "~1.2.1",
-    "vows": ">=0.5.13"
+    "vows": ">=0.8.1"
   },
   "repository": {
     "type": "git",
