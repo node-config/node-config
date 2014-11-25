@@ -19,13 +19,13 @@ exports.DeferredTest = vows.describe('Tests for strict mode').addBatch({
   "NODE_ENV=default throws exception: reserved word": _expectException({
     NODE_ENV         : 'default',
     APP_INSTANCE     : 'valid-instance',
-    exceptionMessage :"FATAL configuration problem. NODE_ENV value of 'default' is not allowed due to ambiguity.",
+    exceptionMessage :"FATAL configuration problem. NODE_ENV value of 'default' is ambiguous.",
   }),
 
   "NODE_ENV=local throws exception: reserved word": _expectException({
     NODE_ENV         : 'local',
     APP_INSTANCE     : 'valid-instance',
-    exceptionMessage :"FATAL configuration problem. NODE_ENV value of 'local' is not allowed due to ambiguity.",
+    exceptionMessage :"FATAL configuration problem. NODE_ENV value of 'local' is ambiguous.",
   }),
 
 
