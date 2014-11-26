@@ -7,25 +7,37 @@ exports.DeferredTest = vows.describe('Tests for strict mode').addBatch({
   "Specifying an unused NODE_ENV value and valid NODE_APP_INSTANCE value throws an exception": _expectException({
     NODE_ENV         : 'BOOM',
     APP_INSTANCE     : 'valid-instance',
-    exceptionMessage : "FATAL configuration problem. NODE_ENV value of 'BOOM' did match any deployment config file names.",
+    exceptionMessage : "FATAL: NODE_ENV value of 'BOOM' did match any deployment config file names. "
+                     + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+  }),
+
+
+  // Because NODE_ENV=development = default
+  "Specifying NODE_ENV=development with no development file does not throw an exception. ": _expectException({
+    NODE_ENV         : 'development',
+    APP_INSTANCE     : 'valid-instance',
+    exceptionMessage : null,
   }),
 
   "Specifying an unused NODE_APP_INSTANCE and valid NODE_ENV value throws an exception": _expectException({
     NODE_ENV         : 'valid-deployment',
     APP_INSTANCE     : 'BOOM',
-    exceptionMessage :"FATAL configuration problem. NODE_APP_INSTANCE value of 'BOOM' did match any instance config file names.",
+    exceptionMessage : "FATAL: NODE_APP_INSTANCE value of 'BOOM' did match any instance config file names. "
+                     + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
   "NODE_ENV=default throws exception: reserved word": _expectException({
     NODE_ENV         : 'default',
     APP_INSTANCE     : 'valid-instance',
-    exceptionMessage :"FATAL configuration problem. NODE_ENV value of 'default' is ambiguous.",
+    exceptionMessage :"FATAL: NODE_ENV value of 'default' is ambiguous. "
+                     +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
   "NODE_ENV=local throws exception: reserved word": _expectException({
     NODE_ENV         : 'local',
     APP_INSTANCE     : 'valid-instance',
-    exceptionMessage :"FATAL configuration problem. NODE_ENV value of 'local' is ambiguous.",
+    exceptionMessage :"FATAL: NODE_ENV value of 'local' is ambiguous. "
+                     +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
 
@@ -55,11 +67,20 @@ function _expectException (opts) {
     },
 
     'Exception is an error object': function(error) {
-        assert.instanceOf(error,Error);
+        // Allow case for exceptionMessage=null to indicate no error
+        if (opts.exceptionMessage) {
+          assert.instanceOf(error,Error);
+        }
     },
 
     'Exception contains expected string': function (error) {
-      assert.equal(error.message, opts.exceptionMessage );
+      // This conditional allows to test for error===null
+      if (error) {
+        assert.equal(error.message, opts.exceptionMessage );
+      }
+      else {
+        assert.equal(error, opts.exceptionMessage );
+      }
     }
   };
 }

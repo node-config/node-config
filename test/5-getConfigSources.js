@@ -11,8 +11,9 @@ exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBa
      // Change the configuration directory for testing
      process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
 
-      process.env.NODE_ENV='test';
+      delete process.env.NODE_ENV;
       process.env.NODE_CONFIG = '{}';
+      delete process.env.NODE_APP_INSTANCE;
       process.argv = ["node","path/to/some.js","--NODE_CONFIG='{}'"];
       var config = requireUncached('../lib/config');
       return config.util.getConfigSources();
@@ -34,8 +35,9 @@ exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBa
       // Change the configuration directory for testing
       process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
 
-      process.env.NODE_ENV = undefined;
+      delete process.env.NODE_ENV;
       delete process.env.NODE_CONFIG;
+      delete process.env.NODE_APP_INSTANCE;
       process.argv = [];
       var config = requireUncached('../lib/config');
       return config.util.getConfigSources();
@@ -59,6 +61,7 @@ exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBa
 
       process.env.NODE_ENV='test';
       delete process.env.NODE_CONFIG;
+      delete process.env.NODE_APP_INSTANCE;
       process.argv = [];
       var config = requireUncached('../lib/config');
       return config.util.getConfigSources();
@@ -81,6 +84,7 @@ exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBa
 
       process.env.NODE_ENV='empty';
       delete process.env.NODE_CONFIG;
+      delete process.env.NODE_APP_INSTANCE;
       process.argv = [];
       var config = requireUncached('../lib/config');
       return config.util.getConfigSources();
