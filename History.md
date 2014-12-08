@@ -1,6 +1,11 @@
 1.9.0 / 2014-12-08
 ==================
 
+  * New strictness checks have been added to ensure the expected configuration has been loaded. Warnings are now thrown in these cases. If NODE_CONFIG_STRICT_MODE is set, exceptions are thrown instead. (@markstos)
+    * There must be an explicit config file matching `NODE_ENV` if `NODE_ENV` is set.
+    * There must be an explicit config file matching `NODE_APP_INSTANCE` if `NODE_APP_INSTANCE` is set
+    * `NODE_ENV` must not match 'default' or 'local' to avoid ambiguity.
+
   * Added .iced extension support (@arthanzel)
 
   * Highlight `config.has()` in the README. Use it to check to if a value exists, since `config.get()`
