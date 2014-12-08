@@ -6,7 +6,7 @@
   * Highlight `config.has()` in the README. Use it to check to if a value exists, since `config.get()`
     throws exceptions on undefined values. (@markstos)
 
-  * API Change: getConfigSources() now starts to return data on config files are are valid-but-empty. (@markstos)
+  * API Change: getConfigSources() now starts to return data on config files that are valid-but-empty. (@markstos)
 
 1.8.1 / 2014-11-14
 ==================
