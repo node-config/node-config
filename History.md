@@ -1,4 +1,7 @@
+1.9.0 / 2014-12-08
+==================
 
+  * Added .iced extension support (@arthanzel)
 
   * Highlight `config.has()` in the README. Use it to check to if a value exists, since `config.get()`
     throws exceptions on undefined values. (@markstos)
