@@ -1,3 +1,8 @@
+
+  * New Strict Mode added in 1.9.0 is now documented. (@markstos)
+  * has() now returns false when given an undefined or null key to look up. Previously it threw an exception. (@markstos)
+  * When get() is given an undefined or null key to look up, it now throws a more helpful diagnostic (@robludwig, @markstos)
+
 1.9.0 / 2014-12-08
 ==================
 
