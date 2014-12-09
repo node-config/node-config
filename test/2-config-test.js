@@ -273,7 +273,16 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
     },
     'Correctly identifies not having element (deep)': function() {
       assert.isTrue(!CONFIG.has('Customers.dbHosx'));
-    }
+    },
+    'has(undefined) returns false': function() {
+      assert.isFalse(CONFIG.has(undefined));
+    },
+    "has(null) returns false": function() {
+      assert.isFalse(CONFIG.has(null));
+    },
+    "has('') returns false": function() {
+      assert.isFalse(CONFIG.has(''));
+    },
   },
 
   'Configuration for module developers': {
