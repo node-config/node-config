@@ -223,25 +223,17 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
 
       assert.equal(random1, random2);
     },
-    'A proper exception is thrown on mis-spellings': function(c) {
-      var didThrow = false;
-      try {
-        var topItem = CONFIG.get('mis.spelled');
-        didThrow = false;
-      } catch(e) {
-        didThrow = true;
-      }
-      assert.isTrue(didThrow);
+    'A proper exception is thrown on mis-spellings': function() {
+      assert.throws( 
+        function () { CONFIG.get('mis.spelled'); }, 
+        /Configuration property "mis.spelled" is not defined/
+      );
     },
     'An exception is thrown on non-objects': function() {
-      var didThrow = false;
-      try {
-        var topItem = CONFIG.get('Testmodule.misspelled');
-        didThrow = false;
-      } catch(e) {
-        didThrow = true;
-      }
-      assert.isTrue(didThrow);
+      assert.throws(
+          function () { CONFIG.get('Testmodule.misspelled'); },
+          /Configuration property "Testmodule.misspelled" is not defined/
+      );
     }
   },
 
