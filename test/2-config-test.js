@@ -238,13 +238,13 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
     'get(undefined) throws an exception': function() {
       assert.throws(
           function () { CONFIG.get(undefined); },
-          /Configuration property "undefined" is not defined/
+          /Calling config.get with null or undefined argument/
       );
     },
     'get(null) throws an exception': function() {
       assert.throws(
           function () { CONFIG.get(null); },
-          /Configuration property "null" is not defined/
+          /Calling config.get with null or undefined argument/
       );
     },
     "get('') throws an exception": function() {
