@@ -234,7 +234,25 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
           function () { CONFIG.get('Testmodule.misspelled'); },
           /Configuration property "Testmodule.misspelled" is not defined/
       );
-    }
+    },
+    'get(undefined) throws an exception': function() {
+      assert.throws(
+          function () { CONFIG.get(undefined); },
+          /Configuration property "undefined" is not defined/
+      );
+    },
+    'get(null) throws an exception': function() {
+      assert.throws(
+          function () { CONFIG.get(null); },
+          /Configuration property "null" is not defined/
+      );
+    },
+    "get('') throws an exception": function() {
+      assert.throws(
+          function () { CONFIG.get(''); },
+          /Configuration property "" is not defined/
+      );
+    },
   },
 
   'has() tests': {
