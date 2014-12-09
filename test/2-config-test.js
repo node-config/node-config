@@ -223,26 +223,36 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
 
       assert.equal(random1, random2);
     },
-    'A proper exception is thrown on mis-spellings': function(c) {
-      var didThrow = false;
-      try {
-        var topItem = CONFIG.get('mis.spelled');
-        didThrow = false;
-      } catch(e) {
-        didThrow = true;
-      }
-      assert.isTrue(didThrow);
+    'A proper exception is thrown on mis-spellings': function() {
+      assert.throws( 
+        function () { CONFIG.get('mis.spelled'); }, 
+        /Configuration property "mis.spelled" is not defined/
+      );
     },
     'An exception is thrown on non-objects': function() {
-      var didThrow = false;
-      try {
-        var topItem = CONFIG.get('Testmodule.misspelled');
-        didThrow = false;
-      } catch(e) {
-        didThrow = true;
-      }
-      assert.isTrue(didThrow);
-    }
+      assert.throws(
+          function () { CONFIG.get('Testmodule.misspelled'); },
+          /Configuration property "Testmodule.misspelled" is not defined/
+      );
+    },
+    'get(undefined) throws an exception': function() {
+      assert.throws(
+          function () { CONFIG.get(undefined); },
+          /Calling config.get with null or undefined argument/
+      );
+    },
+    'get(null) throws an exception': function() {
+      assert.throws(
+          function () { CONFIG.get(null); },
+          /Calling config.get with null or undefined argument/
+      );
+    },
+    "get('') throws an exception": function() {
+      assert.throws(
+          function () { CONFIG.get(''); },
+          /Configuration property "" is not defined/
+      );
+    },
   },
 
   'has() tests': {
@@ -263,7 +273,16 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
     },
     'Correctly identifies not having element (deep)': function() {
       assert.isTrue(!CONFIG.has('Customers.dbHosx'));
-    }
+    },
+    'has(undefined) returns false': function() {
+      assert.isFalse(CONFIG.has(undefined));
+    },
+    "has(null) returns false": function() {
+      assert.isFalse(CONFIG.has(null));
+    },
+    "has('') returns false": function() {
+      assert.isFalse(CONFIG.has(''));
+    },
   },
 
   'Configuration for module developers': {
