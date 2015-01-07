@@ -87,6 +87,10 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
       assert.equal(CONFIG.AnotherModule.parm7, 'value7');
     },
 
+    'Loading configurations from a Hjson file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm8, 'value8');
+    },
+
     'Loading configurations from an environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPort, '5999');
     },

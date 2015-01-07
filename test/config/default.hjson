@@ -1,0 +1,14 @@
+{
+  # Comment to test comment ignoring
+  // Comment to test comment ignoring
+  /* Comment to test comment ignoring */
+
+  Customers:
+  {
+    dbName: from_default_hjson
+  }
+  AnotherModule:
+  {
+    parm8: value8
+  }
+}
