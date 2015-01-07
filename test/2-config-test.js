@@ -83,6 +83,10 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
       assert.equal(CONFIG.AnotherModule.parm6, 'value6');
     },
 
+    'Loading configurations from a TOML file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm7, 'value7');
+    },
+
     'Loading configurations from an environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPort, '5999');
     },
@@ -224,8 +228,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
       assert.equal(random1, random2);
     },
     'A proper exception is thrown on mis-spellings': function() {
-      assert.throws( 
-        function () { CONFIG.get('mis.spelled'); }, 
+      assert.throws(
+        function () { CONFIG.get('mis.spelled'); },
         /Configuration property "mis.spelled" is not defined/
       );
     },
