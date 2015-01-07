@@ -1,4 +1,9 @@
+1.10.0 / 2015-01-06
+===================
 
+  * Added TOML support (@jasonhansel)
+  * Another year - changed copyright messages for 2015
+  * Updated contributors list
   * New Strict Mode added in 1.9.0 is now documented. (@markstos)
   * has() now returns false when given an undefined or null key to look up. Previously it threw an exception. (@markstos)
   * When get() is given an undefined or null key to look up, it now throws a more helpful diagnostic (@robludwig, @markstos)
