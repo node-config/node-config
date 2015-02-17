@@ -148,6 +148,12 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test')
       var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:"val6",sub3:"val7"}};
       assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
     },
+    'Merges dates': function() {
+      var orig = {e1:"val1", elem2:{sub1:"val4",sub2:new Date(2015, 0, 1)}};
+      var extWith = {elem2:{sub2:new Date(2015, 0, 2),sub3:"val7"}};
+      var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:new Date(2015, 0, 2),sub3:"val7"}};
+      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
+    },
     'Correctly types new objects and arrays': function() {
       var orig = {e1:"val1", e3:["val5"]};
       var extWith = {e2:{elem1:"val1"}, e3:["val6","val7"]};
