@@ -18,7 +18,7 @@ var CONFIG = requireUncached('../lib/config');
 var vows = require('vows'),
     assert = require('assert');
 
-exports.DeferredTest = vows.describe('Tests for deferred values').addBatch({
+vows.describe('Tests for deferred values').addBatch({
   'Configuration file Tests': {
     'Using deferConfig() in a config file causes value to be evaluated at the end': function() {
         // The deferred function was declared in default-defer.js
@@ -42,7 +42,8 @@ exports.DeferredTest = vows.describe('Tests for deferred values').addBatch({
     },
 
   }
-});
+})
+.export(module);
 
 
 function requireUncached(module){

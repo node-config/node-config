@@ -14,7 +14,7 @@ var vows = require('vows'),
  */
 
 var CONFIG, override;
-exports.ConfigTest = vows.describe('Test suite for node-config')
+vows.describe('Test suite for node-config')
 .addBatch({
   'Library initialization': {
     topic : function () {
@@ -307,7 +307,7 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
     },
 
     'The module config is in the CONFIG object': function(moduleConfig) {
-      assert.isTrue(typeof(CONFIG.TestModule) != "undefined");
+      assert.isObject(CONFIG.TestModule);
       assert.deepEqual(CONFIG.TestModule, moduleConfig);
     },
 
@@ -319,8 +319,8 @@ exports.ConfigTest = vows.describe('Test suite for node-config')
       assert.equal(moduleConfig.parm2, 2000);
     }
   },
-
-});
+})
+.export(module);
 
 //
 // Because require'ing config creates and caches a global singleton,

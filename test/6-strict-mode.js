@@ -2,7 +2,7 @@
 var vows = require('vows'),
     assert = require('assert');
 
-exports.DeferredTest = vows.describe('Tests for strict mode').addBatch({
+vows.describe('Tests for strict mode').addBatch({
 
   "Specifying an unused NODE_ENV value and valid NODE_APP_INSTANCE value throws an exception": _expectException({
     NODE_ENV         : 'BOOM',
@@ -39,9 +39,8 @@ exports.DeferredTest = vows.describe('Tests for strict mode').addBatch({
     exceptionMessage :"FATAL: NODE_ENV value of 'local' is ambiguous. "
                      +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
-
-
-});
+})
+.export(module);
 
 
 // helper function to create similar tests

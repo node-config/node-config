@@ -5,7 +5,7 @@ var vows   = require('vows'),
     assert = require('assert'),
     Path   = require('path');
 
-exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBatch({
+vows.describe('Tests config.util.getConfigSources').addBatch({
   'tests with NODE_CONFIG env set, and --NODE_CONFIG command line flag': {
     topic: function () {
      // Change the configuration directory for testing
@@ -99,10 +99,8 @@ exports.DeferredTest = vows.describe('Tests config.util.getConfigSources').addBa
     },
 
  }
-
-
-
-});
+})
+.export(module);
 
 //
 // Because require'ing config creates and caches a global singleton,

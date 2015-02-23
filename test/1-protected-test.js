@@ -20,7 +20,7 @@ var argvOrg = process.argv;
  */
 
 var CONFIG;
-exports.PrivateTest = vows.describe('Protected (hackable) utilities test')
+vows.describe('Protected (hackable) utilities test')
 .addBatch({
   // We initialize the object in a batch so that the globals get changed at /run-time/ not /require-time/,
   // avoiding conflicts with other tests.
@@ -598,7 +598,8 @@ exports.PrivateTest = vows.describe('Protected (hackable) utilities test')
     }
   }
 
-});
+})
+.export(module);
 
 
 //

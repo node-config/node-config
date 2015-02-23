@@ -22,7 +22,7 @@ var CONFIG = requireUncached('../lib/config');
 var vows = require('vows'),
     assert = require('assert');
 
-exports.DeferredTest = vows.describe('Tests for merging arrays').addBatch({
+vows.describe('Tests for merging arrays').addBatch({
   'Array merging tests Tests': {
     topic: function() {
       return CONFIG;
@@ -41,7 +41,8 @@ exports.DeferredTest = vows.describe('Tests for merging arrays').addBatch({
     }
 
   }
-});
+})
+.export(module);
 
 
 function requireUncached(module){
