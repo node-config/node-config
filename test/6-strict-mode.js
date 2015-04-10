@@ -7,7 +7,7 @@ vows.describe('Tests for strict mode').addBatch({
   "Specifying an unused NODE_ENV value and valid NODE_APP_INSTANCE value throws an exception": _expectException({
     NODE_ENV         : 'BOOM',
     APP_INSTANCE     : 'valid-instance',
-    exceptionMessage : "FATAL: NODE_ENV value of 'BOOM' did match any deployment config file names. "
+    exceptionMessage : "FATAL: NODE_ENV value of 'BOOM' did not match any deployment config file names. "
                      + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
@@ -22,7 +22,7 @@ vows.describe('Tests for strict mode').addBatch({
   "Specifying an unused NODE_APP_INSTANCE and valid NODE_ENV value throws an exception": _expectException({
     NODE_ENV         : 'valid-deployment',
     APP_INSTANCE     : 'BOOM',
-    exceptionMessage : "FATAL: NODE_APP_INSTANCE value of 'BOOM' did match any instance config file names. "
+    exceptionMessage : "FATAL: NODE_APP_INSTANCE value of 'BOOM' did not match any instance config file names. "
                      + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
