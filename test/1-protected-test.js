@@ -303,6 +303,7 @@ vows.describe('Protected (hackable) utilities test')
         'SOME_TOP_LEVEL': 5,
         'DB_NAME': 'production_db',
         'OAUTH_SECRET': '123456',
+        'DB_HOST': '{"port":"3306","host":"example.com"}',
         'PATH': 'ignore other environment variables'
       };
       var substituted = CONFIG.util.substituteDeep(topic, vars);
@@ -310,6 +311,10 @@ vows.describe('Protected (hackable) utilities test')
         TopLevel: 5,
         Customers: {
           dbName: 'production_db',
+          dbHost: {
+            port: '3306',
+            host: 'example.com'
+          },
           oauth: {
             secret: '123456'
           }
