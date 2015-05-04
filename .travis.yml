@@ -2,5 +2,6 @@ language: node_js
 before_install:
   - npm update -g npm
 node_js:
+  - "0.12"
   - "0.10"
   - "0.8"
