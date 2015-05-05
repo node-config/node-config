@@ -23,7 +23,7 @@
   "dependencies": {},
   "devDependencies": {
     "coffee-script": ">=1.7.0",
-    "cson": "^1.6.1",
+    "cson": "^3.0.1",
     "hjson": "^1.2.0",
     "js-yaml": "^3.2.2",
     "json5": "~0.2.0",

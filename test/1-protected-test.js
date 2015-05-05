@@ -478,7 +478,7 @@ vows.describe('Protected (hackable) utilities test')
       assert.isTrue(config.Customers.dbPassword == 'password will be overwritten.');
       assert.isObject(config.AnotherModule);
       assert.isTrue(config.AnotherModule.parm4 == "value4");
-      assert.isObject(config.Customers.lang);
+      assert.isArray(config.Customers.lang);
     }
   },
 
