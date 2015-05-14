@@ -1,0 +1,12 @@
+﻿{
+  "Customers": {
+    "dbName":"from_default_json",
+    "dbPassword":"password will be overwritten.",
+    "dbPassword2":"password will be overwritten.",
+    "lang":["en","es"]
+  },
+  "AnotherModule": {
+    "parm1":"value1"
+  },
+  "staticArray": [2,1,3]
+}
