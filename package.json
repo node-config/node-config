@@ -17,9 +17,7 @@
   "directories": {
     "lib": "./lib"
   },
-  "licenses": [
-    "MIT"
-  ],
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "coffee-script": ">=1.7.0",
