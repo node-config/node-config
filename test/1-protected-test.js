@@ -316,6 +316,32 @@ vows.describe('Protected (hackable) utilities test')
         }
       });
     },
+    'returns an object with keys matching down to mapped existing variables with JSON content': function (topic) {
+      vars = {
+        'DB_HOST': '{"port":"3306","host":"example.com"}'
+      };
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {
+        Customers: {
+          dbHost: '{"port":"3306","host":"example.com"}'
+        }
+      });
+    },
+    'returns an object with keys matching down to mapped and JSON-parsed existing variabls': function (topic) {
+      vars = {
+        'DB_HOST': '{"port":"3306","host":"example.com"}'
+      };
+      topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {
+        Customers: {
+          dbHost: {
+            port: '3306',
+            host: 'example.com'
+          }
+        }
+      });
+    },
     // Testing all the things in variable maps that don't make sense because ENV vars are always
     // strings.
     'Throws an error for leaf Array values': function (topic) {
