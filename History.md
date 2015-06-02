@@ -1,3 +1,9 @@
+1.14.0 / 2015-06-02
+===================
+
+  * Added JSON parsing to custom environment variables @leachiM2k
+  * Handle unicode BOM characters @johndkane
+
 1.13.0 / 2015-05-05
 ===================
 
