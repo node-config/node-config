@@ -1,3 +1,8 @@
+1.15.0 / 2015-07-30
+===================
+
+  * Added full hostname in addition to first segment @vicary
+
 1.14.0 / 2015-06-02
 ===================
 
