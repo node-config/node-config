@@ -298,7 +298,11 @@ vows.describe('Test suite for node-config')
 
       // Set some parameters for the test module
       return CONFIG.util.setModuleDefaults("TestModule", {
-        parm1: 1000, parm2: 2000, parm3: 3000
+        parm1: 1000, parm2: 2000, parm3: 3000,
+        nested: {
+          param4: 4000,
+          param5: 5000
+        }
       });
     },
 
@@ -317,6 +321,22 @@ vows.describe('Test suite for node-config')
 
     'Defaults remain intact unless overridden': function(moduleConfig) {
       assert.equal(moduleConfig.parm2, 2000);
+    },
+
+    'Prototypes are applied by setModuleDefaults even if no previous config exists for the module': function() {
+      var BKTestModuleDefaults = {
+        parm1: 1000, parm2: 2000, parm3: 3000,
+        nested: {
+          param4: 4000,
+          param5: 5000
+        }
+      };
+
+      CONFIG.util.setModuleDefaults("BKTestModule", BKTestModuleDefaults);
+
+      var testModuleConfig = CONFIG.get('BKTestModule');
+
+      assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'));
     }
   },
 })
