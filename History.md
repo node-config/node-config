@@ -1,3 +1,9 @@
+1.16.0 / 2015-09-03
+===================
+
+  * Change == to === to tighten equality tests #242 @wgpsutherland
+  * Fix attachProtoDeep for setModuleDefaults #243 @benkroeger
+
 1.15.0 / 2015-07-30
 ===================
 
