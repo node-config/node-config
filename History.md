@@ -1,3 +1,8 @@
+NEXT / YYYY-MM-DD
+==================
+
+ * Update warning about missing configuration files to mention how to disable the warning #245 @markstos 
+
 1.16.0 / 2015-09-03
 ===================
 
