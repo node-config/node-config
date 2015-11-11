@@ -8,5 +8,7 @@
   "AnotherModule": {
     "parm1":"value1"
   },
-  "staticArray": [2,1,3]
+  "staticArray": [2,1,3],
+  // Some comment
+  "Inline": {"a": "", "b": "1"}
 }
