@@ -59,6 +59,7 @@ vows.describe('Test suite for node-config')
       assert.equal(CONFIG.AnotherModule.parm1, 'value1');
       assert.equal(CONFIG.Inline.a, '');
       assert.equal(CONFIG.Inline.b, '1');
+      assert.equal(CONFIG.ContainsQuote, '"this has a quote"');
     },
 
     'Loading configurations from a .yaml YAML file is correct': function() {
