@@ -1,7 +1,9 @@
-NEXT / YYYY-MM-DD
-==================
+1.17.0 / 2015-09-14
+===================
 
  * Update warning about missing configuration files to mention how to disable the warning #245 @markstos 
+ * Upgrade to run CI with travis containers @lorenwest
+ * Fixed bug with comments and inline json @elliotttf
 
 1.16.0 / 2015-09-03
 ===================
