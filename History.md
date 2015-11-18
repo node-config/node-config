@@ -1,4 +1,9 @@
-1.17.0 / 2015-09-14
+1.17.0 / 2015-11-17
+===================
+
+ * Patch release for regex bugfix
+ 
+1.17.1 / 2015-11-17
 ===================
 
  * Update warning about missing configuration files to mention how to disable the warning #245 @markstos 
