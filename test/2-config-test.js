@@ -45,8 +45,16 @@ vows.describe('Test suite for node-config')
     },
     'Config extensions are included with the library': function() {
       assert.isFunction(CONFIG.util.cloneDeep);
+    },
+    'Config default file was loaded': function() {
+      process.env.NODE_DEFAULT_CONFIG_FILENAME='otherDefault';
+
+      var config = requireUncached('../lib/config');
+      assert.equal(config.get('OtherDefaultVal'), 'newDefaultFileVal');
+
+      delete process.env.NODE_DEFAULT_CONFIG_FILENAME;
     }
-  },
+  }
 })
 .addBatch({
   'Configuration file Tests': {
