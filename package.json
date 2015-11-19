@@ -18,13 +18,14 @@
     "lib": "./lib"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "json5": "0.4.0"
+  },
   "devDependencies": {
     "coffee-script": ">=1.7.0",
     "cson": "^3.0.1",
     "hjson": "^1.2.0",
     "js-yaml": "^3.2.2",
-    "json5": "~0.2.0",
     "properties": "~1.2.1",
     "toml": "^2.0.6",
     "vows": ">=0.8.1"
