@@ -1,14 +1,19 @@
+1.18.0 / 2015-11-17
+===================
+
+  * More robust handling of JSON @elliotttf
+
 1.17.1 / 2015-11-17
 ===================
 
- * Patch release for regex bugfix
+  * Patch release for regex bugfix
  
 1.17.0 / 2015-11-17
 ===================
 
- * Update warning about missing configuration files to mention how to disable the warning #245 @markstos 
- * Upgrade to run CI with travis containers @lorenwest
- * Fixed bug with comments and inline json @elliotttf
+  * Update warning about missing configuration files to mention how to disable the warning #245 @markstos 
+  * Upgrade to run CI with travis containers @lorenwest
+  * Fixed bug with comments and inline json @elliotttf
 
 1.16.0 / 2015-09-03
 ===================
