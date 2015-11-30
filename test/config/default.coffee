@@ -1,5 +1,5 @@
 module.exports = 
   AnotherModule:
-    parm3: "value3"
+    watch: false
   Customers:
     dbName: "from_default_coffee"
