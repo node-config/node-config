@@ -71,7 +71,7 @@ vows.describe('Test suite for node-config')
     },
 
     'Loading configurations from a Coffee-Script file is correct': function() {
-      assert.equal(CONFIG.AnotherModule.parm3, 'value3');
+      assert.equal(CONFIG.AnotherModule.watch, false);
     },
 
     'Loading configurations from a CSON file is correct': function() {
