@@ -12,7 +12,7 @@ process.env.NODE_CONFIG_DIR = __dirname + '/config';
 process.env.NODE_ENV='test';
 
 // Test for multi-instance applications
-process.env.NODE_APP_INSTANCE='array-merge';
+process.env.NODE_CONFIG_APP_INSTANCE='array-merge';
 
 // Because require'ing config creates and caches a global singleton,
 // We have to invalidate the cache to build new object based on the environment variables above

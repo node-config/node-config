@@ -4,7 +4,7 @@ var vows = require('vows'),
 
 vows.describe('Tests for strict mode').addBatch({
 
-  "Specifying an unused NODE_ENV value and valid NODE_APP_INSTANCE value throws an exception": _expectException({
+  "Specifying an unused NODE_ENV value and valid NODE_CONFIG_APP_INSTANCE value throws an exception": _expectException({
     NODE_ENV         : 'BOOM',
     APP_INSTANCE     : 'valid-instance',
     exceptionMessage : "FATAL: NODE_ENV value of 'BOOM' did not match any deployment config file names. "
@@ -19,10 +19,10 @@ vows.describe('Tests for strict mode').addBatch({
     exceptionMessage : null,
   }),
 
-  "Specifying an unused NODE_APP_INSTANCE and valid NODE_ENV value throws an exception": _expectException({
+  "Specifying an unused NODE_CONFIG_APP_INSTANCE and valid NODE_ENV value throws an exception": _expectException({
     NODE_ENV         : 'valid-deployment',
     APP_INSTANCE     : 'BOOM',
-    exceptionMessage : "FATAL: NODE_APP_INSTANCE value of 'BOOM' did not match any instance config file names. "
+    exceptionMessage : "FATAL: NODE_CONFIG_APP_INSTANCE value of 'BOOM' did not match any instance config file names. "
                      + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
@@ -51,7 +51,7 @@ function _expectException (opts) {
       // Change the configuration directory for testing
       process.env.NODE_CONFIG_DIR         = __dirname + '/6-config';
       process.env.NODE_CONFIG_STRICT_MODE = 1;
-      process.env.NODE_APP_INSTANCE       = opts.APP_INSTANCE;
+      process.env.NODE_CONFIG_APP_INSTANCE       = opts.APP_INSTANCE;
       process.env.NODE_ENV                = opts.NODE_ENV;
       delete process.env.NODE_CONFIG;
       try { 

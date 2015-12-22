@@ -18,7 +18,7 @@ vows.describe('Tests for Unicode situations')
             process.env.NODE_ENV = 'test';
 
             // Test for multi-instance applications
-            process.env.NODE_APP_INSTANCE = '7';
+            process.env.NODE_CONFIG_APP_INSTANCE = '7';
 
             // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
             process.env.NODE_CONFIG = '{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
