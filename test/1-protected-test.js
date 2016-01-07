@@ -34,7 +34,7 @@ vows.describe('Protected (hackable) utilities test')
       process.env.NODE_ENV='test';
 
       // Test for multi-instance applications
-      process.env.NODE_APP_INSTANCE='3';
+      process.env.NODE_CONFIG_APP_INSTANCE='3';
 
       // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
       process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
