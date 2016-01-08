@@ -1,3 +1,9 @@
+1.19.0 / 2016-01-08
+===================
+
+  * Resolve defered values in predictable order for consistent results. 
+    Fixes #265 @elliotttf @markstos
+
 1.18.0 / 2015-11-17
 ===================
 
