@@ -276,6 +276,10 @@ vows.describe('Test suite for node-config')
     'A sub level item can be tested': function() {
       assert.isTrue(CONFIG.has('Customers.dbHost'));
     },
+    'A missing sub level item can be tested': function() {
+      assert.isTrue(CONFIG.has('Customers.emptySub'));
+      assert.isFalse(CONFIG.has('Customers.emptySub.foo'));
+    },
     'has is attached deeply': function() {
       assert.isTrue(CONFIG.Customers.has('dbHost'));
     },
