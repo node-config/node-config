@@ -98,6 +98,18 @@ vows.describe('Test suite for node-config')
       assert.equal(CONFIG.Customers.dbPort, '5999');
     },
 
+    'Loading configurations from an environment instance file is correct': function() {
+      assert.equal(CONFIG.EnvironmentInstance, 'test-3');
+    },
+
+    'Loading configurations from an environment directory file is correct': function() {
+      assert.equal(CONFIG.DirectoryLoadingEnvironment, 'environment');
+    },
+
+    'Loading configurations from an environment directory file is correct': function() {
+      assert.equal(CONFIG.DirectoryLoadingEnvironmentInstance, 'instance');
+    },
+
     'Loading configurations from the local file is correct': function() {
       assert.equal(CONFIG.Customers.dbPassword, 'real password');
     },
