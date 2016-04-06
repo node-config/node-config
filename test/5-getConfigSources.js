@@ -14,6 +14,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       delete process.env.NODE_ENV;
       process.env.NODE_CONFIG = '{}';
       delete process.env.NODE_APP_INSTANCE;
+      process.env.NODE_CONFIG_STRICT_MODE=0;
       process.argv = ["node","path/to/some.js","--NODE_CONFIG='{}'"];
       var config = requireUncached('../lib/config');
       return config.util.getConfigSources();
@@ -38,6 +39,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       delete process.env.NODE_ENV;
       delete process.env.NODE_CONFIG;
       delete process.env.NODE_APP_INSTANCE;
+      process.env.NODE_CONFIG_STRICT_MODE=0;
       process.argv = [];
       var config = requireUncached('../lib/config');
       return config.util.getConfigSources();
