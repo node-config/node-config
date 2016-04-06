@@ -41,6 +41,12 @@ vows.describe('Tests for deferred values').addBatch({
       assert.deepEqual(CONFIG.get('map.centerPoint'), { lat: 3, lon: 4 });
     },
 
+    // With this naming them, there is a risk the resolution order will be wrong and the values won't be deferred.
+   "defer functions which refer config keys that also have deferred value work if you refer to them by name" : function () {
+     assert.equal(CONFIG.welcomeEmail.doubleDefer,'refers to justThis: Welcome to this New Instance!');
+   },
+
+
   }
 })
 .export(module);

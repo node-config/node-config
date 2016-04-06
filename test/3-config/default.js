@@ -24,6 +24,12 @@ config.welcomeEmail = {
   justThis: defer(function () {
     return "Welcome to this "+this.siteTitle;
   }),
+
+  doubleDefer: defer(function () {
+    return "refers to justThis: "+this.welcomeEmail.justThis;
+  }, 'welcomeEmail.justThis')
+
+
 };
 
 config.map = {
