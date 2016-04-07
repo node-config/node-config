@@ -1,3 +1,14 @@
+1.20.0 / 2016-04-06
+===================
+
+  * Typo fix @jchip
+  * Handle null sub-object @wmertens
+  * Bug fix for NODE_CONFIG_STRICT_MODE check @markstos
+  * Ran node security check on 4/6/2016 with the following output
+
+    $ nsp check
+    (+) No known vulnerabilities found
+
 1.19.0 / 2016-01-08
 ===================
 
