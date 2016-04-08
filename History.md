@@ -1,3 +1,8 @@
+1.20.1 / 2016-04-08
+===================
+
+  * Simplify truthiness check - @markstos
+  * Remove errant console.log - @markstos
 
 1.20.0 / 2016-04-06
 ===================
