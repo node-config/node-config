@@ -3,8 +3,7 @@ var defer = require('../../defer').deferConfig
 var config = {
   siteTitle: 'Site title',
   latitude: 1,
-  longitude: 2,
-
+  longitude: 2
 }
 
 // Set up a default value which refers to another value.
@@ -22,13 +21,13 @@ config.welcomeEmail = {
   // Look ma, no arg passing. The main config object is bound to 'this'
   justThis: defer(function () {
     return 'Welcome to this ' + this.siteTitle
-  }),
+  })
 }
 
 config.map = {
   centerPoint: defer(function () {
     return { lat: this.latitude, lon: this.longitude }
-  }),
+  })
 }
 
 module.exports = config

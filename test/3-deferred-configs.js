@@ -1,7 +1,8 @@
+var path = require('path')
 // Test declaring deferred values.
 
 // Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/3-config'
+process.env.NODE_CONFIG_DIR = path.join(__dirname, '/3-config')
 
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV = 'test'
@@ -14,34 +15,34 @@ process.env.NODE_APP_INSTANCE = 'defer'
 var CONFIG = requireUncached('../lib/config')
 
 // Dependencies
-var vows = require('vows'),
-  assert = require('assert')
+var vows = require('vows')
+var assert = require('assert')
 
-vows.describe('Tests for deferred values').addBatch({
-  'Configuration file Tests': {
-    'Using deferConfig() in a config file causes value to be evaluated at the end': function () {
-      // The deferred function was declared in default-defer.js
-      // Then local-defer.js is located which overloads the siteTitle mentioned in the function
-      // Finally the deferred configurations, now referencing the 'local' siteTitle
-      assert.equal(CONFIG.welcomeEmail.subject, 'Welcome to New Instance!')
-    },
+vows.describe('Tests for deferred values')
+  .addBatch({
+    'Configuration file Tests': {
+      'Using deferConfig() in a config file causes value to be evaluated at the end': function () {
+        // The deferred function was declared in default-defer.js
+        // Then local-defer.js is located which overloads the siteTitle mentioned in the function
+        // Finally the deferred configurations, now referencing the 'local' siteTitle
+        assert.equal(CONFIG.welcomeEmail.subject, 'Welcome to New Instance!')
+      },
 
-    'values which are functions remain untouched unless they are instance of DeferredConfig': function () {
-      // If this had been treated as a deferred config value it would blow-up.
-      assert.equal(CONFIG.welcomeEmail.aFunc(), 'Still just a function.')
-    },
+      'values which are functions remain untouched unless they are instance of DeferredConfig': function () {
+        // If this had been treated as a deferred config value it would blow-up.
+        assert.equal(CONFIG.welcomeEmail.aFunc(), 'Still just a function.')
+      },
 
-    // This defer function didn't use args, but relied 'this' being bound to the main config object
-    "defer functions can simply refer to 'this'": function () {
-      assert.equal(CONFIG.welcomeEmail.justThis, 'Welcome to this New Instance!')
-    },
+      // This defer function didn't use args, but relied 'this' being bound to the main config object
+      "defer functions can simply refer to 'this'": function () {
+        assert.equal(CONFIG.welcomeEmail.justThis, 'Welcome to this New Instance!')
+      },
 
-    'defer functions which return objects should still be treated as a single value.': function () {
-      assert.deepEqual(CONFIG.get('map.centerPoint'), { lat: 3, lon: 4 })
-    },
-
-  }
-})
+      'defer functions which return objects should still be treated as a single value.': function () {
+        assert.deepEqual(CONFIG.get('map.centerPoint'), {lat: 3, lon: 4})
+      }
+    }
+  })
   .export(module)
 
 function requireUncached (module) {

@@ -1,9 +1,9 @@
 var config = {
-  siteName: 'default site name',
+  siteName: 'default site name'
 }
 
 config.email = {
-  subject: 'default subject',
+  subject: 'default subject'
 }
 
 module.exports = config

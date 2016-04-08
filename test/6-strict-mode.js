@@ -1,43 +1,41 @@
 // Dependencies
-var vows = require('vows'),
-  assert = require('assert')
+var vows = require('vows')
+var assert = require('assert')
+var path = require('path')
 
-vows.describe('Tests for strict mode').addBatch({
-  'Specifying an unused NODE_ENV value and valid NODE_APP_INSTANCE value throws an exception': _expectException({
-    NODE_ENV: 'BOOM',
-    APP_INSTANCE: 'valid-instance',
-    exceptionMessage: "FATAL: NODE_ENV value of 'BOOM' did not match any deployment config file names. "
-      + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode',
-  }),
+vows.describe('Tests for strict mode')
+  .addBatch({
+    'Specifying an unused NODE_ENV value and valid NODE_APP_INSTANCE value throws an exception': _expectException({
+      NODE_ENV: 'BOOM',
+      APP_INSTANCE: 'valid-instance',
+      exceptionMessage: "FATAL: NODE_ENV value of 'BOOM' did not match any deployment config file names. " + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode'
+    }),
 
-  // Because NODE_ENV=development = default
-  'Specifying NODE_ENV=development with no development file does not throw an exception. ': _expectException({
-    NODE_ENV: 'development',
-    APP_INSTANCE: 'valid-instance',
-    exceptionMessage: null,
-  }),
+    // Because NODE_ENV=development = default
+    'Specifying NODE_ENV=development with no development file does not throw an exception. ': _expectException({
+      NODE_ENV: 'development',
+      APP_INSTANCE: 'valid-instance',
+      exceptionMessage: null
+    }),
 
-  'Specifying an unused NODE_APP_INSTANCE and valid NODE_ENV value throws an exception': _expectException({
-    NODE_ENV: 'valid-deployment',
-    APP_INSTANCE: 'BOOM',
-    exceptionMessage: "FATAL: NODE_APP_INSTANCE value of 'BOOM' did not match any instance config file names. "
-      + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode',
-  }),
+    'Specifying an unused NODE_APP_INSTANCE and valid NODE_ENV value throws an exception': _expectException({
+      NODE_ENV: 'valid-deployment',
+      APP_INSTANCE: 'BOOM',
+      exceptionMessage: "FATAL: NODE_APP_INSTANCE value of 'BOOM' did not match any instance config file names. " + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode'
+    }),
 
-  'NODE_ENV=default throws exception: reserved word': _expectException({
-    NODE_ENV: 'default',
-    APP_INSTANCE: 'valid-instance',
-    exceptionMessage: "FATAL: NODE_ENV value of 'default' is ambiguous. "
-      + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode',
-  }),
+    'NODE_ENV=default throws exception: reserved word': _expectException({
+      NODE_ENV: 'default',
+      APP_INSTANCE: 'valid-instance',
+      exceptionMessage: "FATAL: NODE_ENV value of 'default' is ambiguous. " + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode'
+    }),
 
-  'NODE_ENV=local throws exception: reserved word': _expectException({
-    NODE_ENV: 'local',
-    APP_INSTANCE: 'valid-instance',
-    exceptionMessage: "FATAL: NODE_ENV value of 'local' is ambiguous. "
-      + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode',
-  }),
-})
+    'NODE_ENV=local throws exception: reserved word': _expectException({
+      NODE_ENV: 'local',
+      APP_INSTANCE: 'valid-instance',
+      exceptionMessage: "FATAL: NODE_ENV value of 'local' is ambiguous. " + 'See https://github.com/lorenwest/node-config/wiki/Strict-Mode'
+    })
+  })
   .export(module)
 
 // helper function to create similar tests
@@ -46,13 +44,13 @@ function _expectException (opts) {
   return {
     topic: function () {
       // Change the configuration directory for testing
-      process.env.NODE_CONFIG_DIR = __dirname + '/6-config'
+      process.env.NODE_CONFIG_DIR = path.join(__dirname, '/6-config')
       process.env.NODE_CONFIG_STRICT_MODE = 1
       process.env.NODE_APP_INSTANCE = opts.APP_INSTANCE
       process.env.NODE_ENV = opts.NODE_ENV
       delete process.env.NODE_CONFIG
       try {
-        var config = requireUncached('../lib/config')
+        requireUncached('../lib/config')
       } catch (e) {
         return e
       }

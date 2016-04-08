@@ -1,14 +1,14 @@
 #!/usr/local/bin/node
 /**
-* Merge current contributors into the README.md file
-*/
-var request = require('request'),
-  _ = require('underscore'),
-  fs = require('fs')
+ * Merge current contributors into the README.md file
+ */
+var request = require('request')
+var _ = require('underscore')
+var fs = require('fs')
 
 // Constants
-REPO = 'lorenwest/node-config'
-README_FILE = './README.md'
+var REPO = 'lorenwest/node-config'
+var README_FILE = './README.md'
 
 // HTML template parts
 _.templateSettings = {

@@ -1,10 +1,10 @@
 // Dependencies
-var vows = require('vows'),
-  assert = require('assert'),
-  path = require('path')
+var vows = require('vows')
+var assert = require('assert')
+var path = require('path')
 
 // Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/7-config'
+process.env.NODE_CONFIG_DIR = path.join(__dirname, '/7-config')
 
 // Hardcode $NODE_ENV=test for testing
 delete process.env.NODE_ENV
@@ -20,19 +20,17 @@ vows.describe('Tests for Unicode situations')
   .addBatch({
     'Parsing of BOM related files': {
       'A standard config file having no BOM should continue to parse without error': function () {
-        var result = null,
-          standardNoBomConfigFile = process.env.NODE_CONFIG_DIR + path.sep + 'defaultNoBOM.json'
+        var standardNoBomConfigFile = process.env.NODE_CONFIG_DIR + path.sep + 'defaultNoBOM.json'
 
         assert.doesNotThrow(function () {
-          result = CONFIG.util.parseFile(standardNoBomConfigFile)
+          CONFIG.util.parseFile(standardNoBomConfigFile)
         }, 'standard config file with no BOM has a parse error')
       },
       'A config file with a BOM should parse without error': function () {
-        var result = null,
-          configFileWithBom = process.env.NODE_CONFIG_DIR + path.sep + 'defaultWithUnicodeBOM.json'
+        var configFileWithBom = process.env.NODE_CONFIG_DIR + path.sep + 'defaultWithUnicodeBOM.json'
 
         assert.doesNotThrow(function () {
-          result = CONFIG.util.parseFile(configFileWithBom)
+          CONFIG.util.parseFile(configFileWithBom)
         }, 'config file with BOM has a parse error')
       }
     }

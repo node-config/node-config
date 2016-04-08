@@ -7,10 +7,10 @@ module.exports = {
     dbHost: 'base',
     dbName: 'from_default_js',
     dbPort: 'this_is_overridden',
-    get dbString() {
+    get dbString () {
       return '' + this.dbName + ':' + this.dbPort
     },
-    get random() {
+    get random () {
       return Math.random()
     }
   },
@@ -19,7 +19,7 @@ module.exports = {
     parm2: 22
   },
   MuteThis: 'hello',
-  get customerDbPort() {
+  get customerDbPort () {
     return '' + this.Customers.dbPort
   }
 }

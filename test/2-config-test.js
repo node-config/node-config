@@ -1,7 +1,7 @@
 // Dependencies
-var vows = require('vows'),
-  assert = require('assert'),
-  FileSystem = require('fs')
+var vows = require('vows')
+var assert = require('assert')
+var path = require('path')
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
@@ -18,7 +18,7 @@ vows.describe('Test suite for node-config')
     'Library initialization': {
       topic: function () {
         // Change the configuration directory for testing
-        process.env.NODE_CONFIG_DIR = __dirname + '/config'
+        process.env.NODE_CONFIG_DIR = path.join(__dirname, '/config')
 
         // Hardcode $NODE_ENV=test for testing
         process.env.NODE_ENV = 'test'
@@ -44,7 +44,7 @@ vows.describe('Test suite for node-config')
       'Config extensions are included with the library': function () {
         assert.isFunction(CONFIG.util.cloneDeep)
       }
-    },
+    }
   })
   .addBatch({
     'Configuration file Tests': {
@@ -171,17 +171,17 @@ vows.describe('Test suite for node-config')
       },
 
       'The test object (before hiding) is correct': function (object) {
-        assert.isTrue(JSON.stringify(object) == '{"item1":23,"subObject":{"item2":"hello"}}')
+        assert.isTrue(JSON.stringify(object) === '{"item1":23,"subObject":{"item2":"hello"}}')
       },
 
       'The test object (after hiding) is correct': function (object) {
         CONFIG.util.makeHidden(object, 'item1')
-        assert.isTrue(JSON.stringify(object) == '{"subObject":{"item2":"hello"}}')
+        assert.isTrue(JSON.stringify(object) === '{"subObject":{"item2":"hello"}}')
       },
 
       'The hidden property is readable, and has not changed': function (object) {
-        assert.isTrue(JSON.stringify(object) == '{"subObject":{"item2":"hello"}}')
-        assert.isTrue(object.item1 == 23)
+        assert.isTrue(JSON.stringify(object) === '{"subObject":{"item2":"hello"}}')
+        assert.isTrue(object.item1 === 23)
       }
 
     },
@@ -198,7 +198,7 @@ vows.describe('Test suite for node-config')
       },
 
       'Correctly unable to change an immutable configuration': function (value) {
-        assert.isTrue(value != 'setToThis')
+        assert.isTrue(value !== 'setToThis')
       },
 
       'Left the original value intact after attempting the change': function (value) {
@@ -226,41 +226,51 @@ vows.describe('Test suite for node-config')
         assert.equal(CONFIG.Customers.get('dbString'), 'override_from_runtime_json:5999')
       },
       'A cloned property accessor is made immutable': function () {
-        var random1 = CONFIG.Customers.get('random'),
-          random2 = CONFIG.Customers.get('random')
+        var random1 = CONFIG.Customers.get('random')
+        var random2 = CONFIG.Customers.get('random')
 
         assert.equal(random1, random2)
       },
       'A proper exception is thrown on mis-spellings': function () {
         assert.throws(
-          function () { CONFIG.get('mis.spelled'); },
+          function () {
+            CONFIG.get('mis.spelled')
+          },
           /Configuration property "mis.spelled" is not defined/
         )
       },
       'An exception is thrown on non-objects': function () {
         assert.throws(
-          function () { CONFIG.get('Testmodule.misspelled'); },
+          function () {
+            CONFIG.get('Testmodule.misspelled')
+          },
           /Configuration property "Testmodule.misspelled" is not defined/
         )
       },
       'get(undefined) throws an exception': function () {
         assert.throws(
-          function () { CONFIG.get(undefined); },
+          function () {
+            CONFIG.get(undefined)
+          },
           /Calling config.get with null or undefined argument/
         )
       },
       'get(null) throws an exception': function () {
         assert.throws(
-          function () { CONFIG.get(null); },
+          function () {
+            CONFIG.get(null)
+          },
           /Calling config.get with null or undefined argument/
         )
       },
       "get('') throws an exception": function () {
         assert.throws(
-          function () { CONFIG.get(''); },
+          function () {
+            CONFIG.get('')
+          },
           /Configuration property "" is not defined/
         )
-      },
+      }
     },
 
     'has() tests': {
@@ -294,7 +304,7 @@ vows.describe('Test suite for node-config')
       },
       "has('') returns false": function () {
         assert.isFalse(CONFIG.has(''))
-      },
+      }
     },
 
     'Configuration for module developers': {
@@ -341,7 +351,7 @@ vows.describe('Test suite for node-config')
 
         assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'))
       }
-    },
+    }
   })
   .export(module)
 
