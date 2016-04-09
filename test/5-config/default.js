@@ -1,10 +1,9 @@
-
 var config = {
-  siteName : 'default site name',
-};
-
-config.email = {
-    subject : 'default subject',
+  siteName: 'default site name'
 }
 
-module.exports = config;
+config.email = {
+  subject: 'default subject'
+}
+
+module.exports = config
