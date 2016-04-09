@@ -27,7 +27,6 @@
     "hjson": "^1.2.0",
     "js-yaml": "^3.2.2",
     "properties": "~1.2.1",
-    "snazzy": "^3.0.0",
     "standard": "^6.0.8",
     "toml": "^2.0.6",
     "vows": ">=0.8.1"
@@ -41,6 +40,6 @@
   },
   "scripts": {
     "test": "./node_modules/vows/bin/vows test/*.js --spec",
-    "lint": "standard | snazzy"
+    "lint": "standard"
   }
 }
