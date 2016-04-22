@@ -35,60 +35,71 @@ The following examples are in JSON format, but configurations can be in other [f
 
 **Install in your app directory, and edit the default config file.**
 
-    $ npm install config
-    $ mkdir config
-    $ vi config/default.json
-
-    {
-      // Customer module configs
-      "Customer": {
-        "dbConfig": {
-          "host": "localhost",
-          "port": 5984,
-          "dbName": "customers"
-        },
-        "credit": {
-          "initialLimit": 100,
-          // Set low for development
-          "initialDays": 1
-        }
-      }
+```shell
+$ npm install config
+$ mkdir config
+$ vi config/default.json
+```
+```js
+{
+  // Customer module configs
+  "Customer": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": 5984,
+      "dbName": "customers"
+    },
+    "credit": {
+      "initialLimit": 100,
+      // Set low for development
+      "initialDays": 1
     }
+  }
+}
+```
 
 **Edit config overrides for production deployment:**
 
-    $ vi config/production.json
+```shell
+ $ vi config/production.json
+```
 
-    {
-      "Customer": {
-        "dbConfig": {
-          "host": "prod-db-server"
-        },
-        "credit": {
-          "initialDays": 30
-        }
-      }
+```json
+{
+  "Customer": {
+    "dbConfig": {
+      "host": "prod-db-server"
+    },
+    "credit": {
+      "initialDays": 30
     }
+  }
+}
+```
 
 **Use configs in your code:**
 
-    var config = require('config');
-    ...
-    var dbConfig = config.get('Customer.dbConfig');
-    db.connect(dbConfig, ...);
+```js
+var config = require('config');
+//...
+var dbConfig = config.get('Customer.dbConfig');
+db.connect(dbConfig, ...);
 
-    if (config.has('optionalFeature.detail')) {
-      var detail = config.get('optionalFeature.detail');
-      ...
-    }
+if (config.has('optionalFeature.detail')) {
+  var detail = config.get('optionalFeature.detail');
+  //...
+}
+```
 
 `config.get()` will throw an exception for undefined keys to help catch typos and missing values.
 Use `config.has()` to test if a configuration value is defined.
 
 **Start your app server:**
 
-    $ export NODE_ENV=production
-    $ node my-app.js
+```shell
+$ export NODE_ENV=production
+$ node my-app.js
+```
 
 Running in this configuration, the `port` and `dbName` elements of `dbConfig`
 will come from the `default.json` file, and the `host` element will
