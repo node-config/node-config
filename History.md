@@ -1,3 +1,10 @@
+
+1.20.2 / 2016-04-27
+===================
+
+  *node v6 compatiblity: remove deprecated __lookupGetter__ use - @thetalecrafter
+  *node v6 compatiblity: handle different SyntaxError format - @pwwolf
+
 1.20.1 / 2016-04-08
 ===================
 
