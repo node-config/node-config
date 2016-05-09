@@ -33,10 +33,14 @@ config.map = {
   }),
 };
 
-config.name = defer(cfg => ({
-  first: 'Robert',
-  nickname: defer(cfg => cfg.name.first == 'Robert' ? 'Bob' : 'Bruce'),
-}));
+config.name = defer(function(cfg) {
+  return {
+    first: 'Robert',
+    nickname: defer(function(cfg) { 
+      return cfg.name.first == 'Robert' ? 'Bob' : 'Bruce'; 
+    }),
+  };
+});
 
 // Here's one way you could do dependency injection.
 // Define a class to provide the default implementation of a service adapter.
@@ -49,7 +53,9 @@ config.service = {
     mock: MockServiceAdapter,
   },
   name: 'mock',
-  active: defer(cfg => cfg.service.registry[cfg.service.name]),
+  active: defer(function(cfg) {
+    return cfg.service.registry[cfg.service.name];
+  }),
 };
 
 // "stress test" of the deferred function. Some of this data is here, and some in local.js.
@@ -68,24 +74,34 @@ var stressConfig = {
   // For a1 - h2: see local.js
 
   // deferreds that resolve to trees
-  i0: defer(cfg => ({
-    a: { a: 21, b: 9, },
-    b: [ 9, 'snorky', defer(cfg => cfg.a1)]
-  })),
+  i0: defer(function(cfg) {
+    return {
+      a: { a: 21, b: 9, },
+      b: [ 9, 'snorky', defer(function (cfg) { return cfg.a1; })]
+    }
+  }),
 
   // deferreds within deferreds
-  i1: defer(cfg => ({
-    ic: cfg.h1,  // .h1 has a deferred in it
-    id: defer(cfg => defer(cfg => cfg.h1)),
-  })),
+  i1: defer(function(cfg) {
+    return {
+      ic: cfg.h1,  // .h1 has a deferred in it
+      id: defer(function(cfg) { 
+        return defer(function(cfg) { return cfg.h1; });
+      }),
+    };
+  }),
 
   // referencing nested items
-  i2: defer(cfg => ({
-    z: 5,
-    a: { a: cfg.i0.b[1], b: cfg.i0.b[2], },
-    b: [ -2, cfg.i0.b, ],
-    c: defer((cfg) => cfg.i2.b[1][1]),   //=> 'snorky'; references a sibling in the same subtree
-  })),
+  i2: defer(function(cfg) {
+    return {
+      z: 5,
+      a: { a: cfg.i0.b[1], b: cfg.i0.b[2], },
+      b: [ -2, cfg.i0.b, ],
+      c: defer(function(cfg) { 
+        return cfg.i2.b[1][1];  //=> 'snorky'; from a sib in the same subtree
+      }), 
+    };
+  }),
 
   // For a2 - e2: see local.js
 
@@ -93,7 +109,7 @@ var stressConfig = {
   f2: {
     fa: {
       a: {
-        a: defer(cfg => cfg.a1),
+        a: defer(function(cfg) { return cfg.a1; }),
       }
     },
     fb: {
@@ -101,7 +117,7 @@ var stressConfig = {
         5,
         'blue',
         { a: {
-          a: defer(cfg => cfg.c1),
+          a: defer(function(cfg) { return cfg.c1; }),
           b: 'orange',
         },
         },
