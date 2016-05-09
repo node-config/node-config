@@ -1,4 +1,5 @@
 // See resolver.md for some notes about how this works.
+var deferredCount = 0;
 
 // Class that wraps special functions that are evaluated after all config 
 // overrides are in place.
@@ -8,6 +9,7 @@ function DeferredConfig () {}
 // values that depend on others. This returns a DeferredConfig object that
 // wraps the function (refered to simply as "the deferred").
 function deferConfig(func) {
+  deferredCount++;
   var obj = Object.create(DeferredConfig.prototype);
   obj.resolve = func;
   return obj;
@@ -16,6 +18,7 @@ function deferConfig(func) {
 // The main function that resolves the entire config tree, evaluating and
 // replacing all deferreds.
 function resolve(mainConfig) {
+  if (!deferredCount) return;
   var main = new Resolver(mainConfig);
   main.resolve();
 }
@@ -119,4 +122,5 @@ module.exports = {
   deferConfig: deferConfig,
   DeferredConfig: DeferredConfig,
   resolve: resolve,
+  deferredCount: deferredCount,   // export this in case it's useful
 };
