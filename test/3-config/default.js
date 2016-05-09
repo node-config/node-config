@@ -1,6 +1,4 @@
-
 var defer = require('../../defer').deferConfig;
-var process = require('process');
 
 var config = {
   siteTitle : 'Site title',
