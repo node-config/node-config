@@ -1,9 +1,14 @@
-
-1.20.2 / 2016-04-27
+1.20.3 / 2016-05-18
 ===================
 
-  *node v6 compatiblity: remove deprecated __lookupGetter__ use - @thetalecrafter
-  *node v6 compatiblity: handle different SyntaxError format - @pwwolf
+  * Fixed a regression with 1.20.2 @kgoerlitz
+  * Added test to prevent this in the future @kgoerlitz
+
+1.20.2 / 2016-05-17
+===================
+
+  * node v6 compatiblity: remove deprecated __lookupGetter__ use - @thetalecrafter
+  * node v6 compatiblity: handle different SyntaxError format - @pwwolf
 
 1.20.1 / 2016-04-08
 ===================
