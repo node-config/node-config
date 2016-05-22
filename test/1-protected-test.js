@@ -168,6 +168,11 @@ vows.describe('Protected (hackable) utilities test')
       var extWith = {elem3:{sub2:"val6",sub3:"val7"}};
       CONFIG.util.extendDeep({}, orig, extWith);
       assert.deepEqual(orig, shouldBe);
+    },
+    'Keeps prototype methods intact': function() {
+      var orig = Object.create({has: function() {}});
+      var result = CONFIG.util.extendDeep({}, orig, {});
+      assert.isFunction(result.has);
     }
   },
 
