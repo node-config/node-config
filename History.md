@@ -1,3 +1,8 @@
+1.20.4 / 2016-05-23
+===================
+
+  * Fixed a regression with extending prototype methods @tahoemph
+
 1.20.3 / 2016-05-18
 ===================
 
