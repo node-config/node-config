@@ -19,19 +19,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "deasync": "^0.1.7",
-    "json5": "0.4.0",
-    "xml2js": "^0.4.16"
+    "json5": "0.4.0"
   },
   "devDependencies": {
     "coffee-script": ">=1.7.0",
     "cson": "^3.0.1",
+    "deasync": "^0.1.7",
     "hjson": "^1.2.0",
     "js-yaml": "^3.2.2",
     "properties": "~1.2.1",
     "toml": "^2.0.6",
     "underscore": "^1.8.3",
-    "vows": ">=0.8.1"
+    "vows": ">=0.8.1",
+    "xml2js": "^0.4.16"
   },
   "repository": {
     "type": "git",
