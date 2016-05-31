@@ -1,0 +1,10 @@
+<config>
+  <Customers>
+    <dbName>from_default_xml</dbName>
+    <lang>en</lang>
+    <lang>es</lang>
+  </Customers>
+  <AnotherModule>
+    <parm9>value9</parm9>
+  </AnotherModule>
+</config>
