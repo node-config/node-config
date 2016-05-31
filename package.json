@@ -19,7 +19,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "json5": "0.4.0"
+    "deasync": "^0.1.7",
+    "json5": "0.4.0",
+    "xml2js": "^0.4.16"
   },
   "devDependencies": {
     "coffee-script": ">=1.7.0",

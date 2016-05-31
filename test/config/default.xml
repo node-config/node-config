@@ -1,0 +1,8 @@
+<config>
+  <Customers>
+    <dbName>from_default_xml</dbName>
+  </Customers>
+  <AnotherModule>
+    <parm9>value9</parm9>
+  </AnotherModule>
+</config>

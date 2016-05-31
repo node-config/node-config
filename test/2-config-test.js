@@ -94,6 +94,10 @@ vows.describe('Test suite for node-config')
       assert.equal(CONFIG.AnotherModule.parm8, 'value8');
     },
 
+    'Loading configurations from a XML file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm9, 'value9');
+    },
+
     'Loading configurations from an environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPort, '5999');
     },
