@@ -30,7 +30,7 @@
     "toml": "^2.0.6",
     "underscore": "^1.8.3",
     "vows": ">=0.8.1",
-    "xml2json": "^0.9.1"
+    "x2js": "^2.0.1"
   },
   "repository": {
     "type": "git",
