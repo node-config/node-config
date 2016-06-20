@@ -1,4 +1,6 @@
 {
+  "conf": {"key": "value"},
+  "overrideConf": {"key": "override value"},
   "Customers": {
     "dbName":"from_default_json",
     "dbPassword":"password will be overwritten.",
