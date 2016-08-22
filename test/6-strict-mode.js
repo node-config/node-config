@@ -8,7 +8,7 @@ vows.describe('Tests for strict mode').addBatch({
     NODE_ENV         : 'BOOM',
     APP_INSTANCE     : 'valid-instance',
     exceptionMessage : "FATAL: NODE_ENV value of 'BOOM' did not match any deployment config file names. "
-                     + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+                     + "Strict mode is on, aborting. See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
 
@@ -23,21 +23,21 @@ vows.describe('Tests for strict mode').addBatch({
     NODE_ENV         : 'valid-deployment',
     APP_INSTANCE     : 'BOOM',
     exceptionMessage : "FATAL: NODE_APP_INSTANCE value of 'BOOM' did not match any instance config file names. "
-                     + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+                     + "Strict mode is on, aborting. See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
   "NODE_ENV=default throws exception: reserved word": _expectException({
     NODE_ENV         : 'default',
     APP_INSTANCE     : 'valid-instance',
     exceptionMessage :"FATAL: NODE_ENV value of 'default' is ambiguous. "
-                     +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+                     +"Strict mode is on, aborting. See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
   "NODE_ENV=local throws exception: reserved word": _expectException({
     NODE_ENV         : 'local',
     APP_INSTANCE     : 'valid-instance',
     exceptionMessage :"FATAL: NODE_ENV value of 'local' is ambiguous. "
-                     +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+                     +"Strict mode is on, aborting. See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 })
 .export(module);
@@ -54,7 +54,7 @@ function _expectException (opts) {
       process.env.NODE_APP_INSTANCE       = opts.APP_INSTANCE;
       process.env.NODE_ENV                = opts.NODE_ENV;
       delete process.env.NODE_CONFIG;
-      try { 
+      try {
         var config = requireUncached('../lib/config');
       }
       catch (e) {
