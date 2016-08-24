@@ -71,6 +71,14 @@ vows.describe('Tests for strict mode').addBatch({
     canBeSuppressed  : true
   }),
 
+  "NODE_ENV=default shows warnings when strict mode is off: reserved word": _verifyConsoleOutput({
+    NODE_ENV         : 'default',
+    APP_INSTANCE     : 'valid-instance',
+    warningMessage   : "WARNING: NODE_ENV value of 'default' is ambiguous.",
+    tryToSuppress    : false,
+    canBeSuppressed  : false
+  }),
+
   "NODE_ENV=default warning message cannot be suppressed": _verifyConsoleOutput({
     NODE_ENV         : 'default',
     APP_INSTANCE     : 'valid-instance',
