@@ -1,6 +1,7 @@
 
 var config = {
   siteName : 'default site name',
+  number : 5,
 };
 
 config.email = {
