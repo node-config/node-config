@@ -32,4 +32,14 @@ config.map = {
   }),
 };
 
+config.original = {
+  // An original value passed to deferred function
+  original: "an original value",
+
+  // A deferred function "skipped" by next deferred function
+  deferredOriginal: defer(function(cfg, original) {
+    return "this will not be used";
+  }),
+};
+
 module.exports = config;
