@@ -1,3 +1,10 @@
+1.22.0 / 2016-10-25
+===================
+
+  * original/previous value for deferredConfig @simon-scherzinger
+  * util.loadFileConfigs: support optional source dir @wmertens
+  * Adding raw wrapper to prevent object modification in config @patrickpilch
+
 1.21.0 / 2016-06-01
 ===================
 
