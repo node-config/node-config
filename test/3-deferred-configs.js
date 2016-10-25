@@ -41,6 +41,13 @@ vows.describe('Tests for deferred values').addBatch({
       assert.deepEqual(CONFIG.get('map.centerPoint'), { lat: 3, lon: 4 });
     },
 
+    "defer function return original value." : function () {
+      assert.equal(CONFIG.original.original, 'an original value');
+    },
+
+    "second defer function return original value." : function () {
+      assert.equal(CONFIG.original.deferredOriginal, undefined);
+    },
   }
 })
 .export(module);
