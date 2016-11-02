@@ -1,3 +1,8 @@
+1.24.0 / 2016-11-02
+===================
+
+  * Prevent accidental publish to private repository
+
 1.23.0 / 2016-11-02
 ===================
 
