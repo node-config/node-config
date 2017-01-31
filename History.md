@@ -1,3 +1,8 @@
+1.25.0 / 2017-01-31
+===================
+
+  * Add support for configuration files stored with git-crypt @cunneen
+
 1.24.0 / 2016-11-02
 ===================
 
