@@ -116,6 +116,7 @@ Articles
 * [Multiple Node Instances](https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances)
 * [Sub-Module Configuration](https://github.com/lorenwest/node-config/wiki/Sub-Module-Configuration)
 * [Configuring from a DB / External Source](https://github.com/lorenwest/node-config/wiki/Configuring-from-an-External-Source)
+* [Securing Production Config Files](https://github.com/lorenwest/node-config/wiki/Securing-Production-Config-Files)
 * [External Configuration Management Tools](https://github.com/lorenwest/node-config/wiki/External-Configuration-Management-Tools)
 * [Examining Configuration Sources](https://github.com/lorenwest/node-config/wiki/Examining-Configuration-Sources)
 * [Using Config Utilities](https://github.com/lorenwest/node-config/wiki/Using-Config-Utilities)
