@@ -91,7 +91,13 @@ if (config.has('optionalFeature.detail')) {
 }
 ```
 
-`config.get()` will throw an exception for undefined keys to help catch typos and missing values.
+**Default values:**
+
+    var config = require('config');
+    ...
+    app.listen(config.get('server.port', 9000));
+
+`config.get()` will throw an exception for undefined keys to help catch typos and missing values unless a second, `defaultValue` argument is specified, in which case, the default value will be returned instead.
 Use `config.has()` to test if a configuration value is defined.
 
 **Start your app server:**
@@ -131,6 +137,5 @@ License
 
 May be freely distributed under the [MIT license](https://raw.githubusercontent.com/lorenwest/node-config/master/LICENSE).
 
-Copyright (c) 2010-2015 Loren West 
+Copyright (c) 2010-2015 Loren West
 [and other contributors](https://github.com/lorenwest/node-config/graphs/contributors)
-

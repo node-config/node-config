@@ -250,6 +250,9 @@ vows.describe('Test suite for node-config')
           /Configuration property "Testmodule.misspelled" is not defined/
       );
     },
+    'The default value is returned if specified': function() {
+      assert.equal(CONFIG.Customers.get('non.existant', null), null);
+    },
     'get(undefined) throws an exception': function() {
       assert.throws(
           function () { CONFIG.get(undefined); },
@@ -360,4 +363,3 @@ function requireUncached(module){
    delete require.cache[require.resolve(module)];
    return require(module);
 }
-
