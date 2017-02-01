@@ -1,3 +1,8 @@
+1.25.1 / 2017-02-01
+===================
+
+  * Fixed undefined CONFIG_SKIP_GITCRYPT variable @lorenwest
+
 1.25.0 / 2017-01-31
 ===================
 
