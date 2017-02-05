@@ -244,6 +244,9 @@ vows.describe('Test suite for node-config')
         /Configuration property "mis.spelled" is not defined/
       );
     },
+    'A default value is returned on mis-spellings': function() {
+      assert.equal(CONFIG.get('mis.spelled', 'itsundayafternoon'), 'itsundayafternoon');
+    },
     'An exception is thrown on non-objects': function() {
       assert.throws(
           function () { CONFIG.get('Testmodule.misspelled'); },
