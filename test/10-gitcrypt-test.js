@@ -41,21 +41,16 @@ vows.describe('Test git-crypt integration')
   },
 })
 .addBatch({
-  'initialization with encrypted files without CONFIG_SKIP_GITCRYPT': {
-    'An exception is thrown if CONFIG_SKIP_GITCRYPT is not set': function() {
+  'initialization with encrypted files with CONFIG_SKIP_GITCRYPT = 0': {
+    'An error log will be of "initialization with encrypted files without CONFIG_SKIP_GITCRYPT"': function() {
       // Hardcode $NODE_ENV=encrypted for testing
       process.env.NODE_ENV='encrypted';
 
       // Test Environment Variable Substitution
       process.env.CONFIG_SKIP_GITCRYPT = 0;
-      delete process.env["CONFIG_SKIP_GITCRYPT"];
 
-      assert.throws(
-        function () { 
-          CONFIG = requireUncached('../lib/config');
-        },
-        /Cannot parse config file/
-      );
+      CONFIG = requireUncached('../lib/config');
+      assert.equal(CONFIG.Customers.dbPassword, 'password will be overwritten.');
     }
   }
 })
