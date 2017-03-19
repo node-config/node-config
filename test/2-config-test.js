@@ -1,3 +1,4 @@
+var requireUncached = require('./_utils/requireUncached');
 
 // Dependencies
 var vows = require('vows'),
@@ -35,7 +36,7 @@ vows.describe('Test suite for node-config')
       override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
       process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
 
-      CONFIG = requireUncached('../lib/config');
+      CONFIG = requireUncached(__dirname + '/../lib/config');
 
       return CONFIG;
 
@@ -352,12 +353,3 @@ vows.describe('Test suite for node-config')
   },
 })
 .export(module);
-
-//
-// Because require'ing config creates and caches a global singleton,
-// We have to invalidate the cache to build new object based on the environment variables above
-function requireUncached(module){
-   delete require.cache[require.resolve(module)];
-   return require(module);
-}
-

@@ -1,3 +1,5 @@
+var requireUncached = require('./_utils/requireUncached');
+
 // Dependencies
 var vows = require('vows'),
     assert = require('assert');
@@ -55,7 +57,7 @@ function _expectException (opts) {
       process.env.NODE_ENV                = opts.NODE_ENV;
       delete process.env.NODE_CONFIG;
       try { 
-        var config = requireUncached('../lib/config');
+        var config = requireUncached(__dirname + '/../lib/config');
       }
       catch (e) {
         return e;
@@ -82,13 +84,4 @@ function _expectException (opts) {
       }
     }
   };
-}
-
-
-//
-// Because require'ing config creates and caches a global singleton,
-// We have to invalidate the cache to build new object based on the environment variables above
-function requireUncached(module){
-   delete require.cache[require.resolve(module)];
-   return require(module);
 }

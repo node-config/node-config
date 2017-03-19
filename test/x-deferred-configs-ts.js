@@ -1,9 +1,14 @@
 var requireUncached = require('./_utils/requireUncached');
+var isSupportedVersion = require('./_utils/isSupportedVersion');
+
+if(!isSupportedVersion('4.0.0'))  {
+    return false;
+}
 
 // Test declaring deferred values.
 
 // Change the configuration directory for testing
-process.env.NODE_CONFIG_DIR = __dirname + '/3-config';
+process.env.NODE_CONFIG_DIR = __dirname + '/x-config-ts';
 
 // Hardcode $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
@@ -19,7 +24,7 @@ var CONFIG = requireUncached(__dirname + '/../lib/config');
 var vows = require('vows'),
     assert = require('assert');
 
-vows.describe('Tests for deferred values - JavaScript').addBatch({
+vows.describe('Tests for deferred values - TypeScript').addBatch({
   'Configuration file Tests': {
     'Using deferConfig() in a config file causes value to be evaluated at the end': function() {
         // The deferred function was declared in default-defer.js

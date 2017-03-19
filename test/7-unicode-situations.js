@@ -1,3 +1,4 @@
+var requireUncached = require('./_utils/requireUncached');
 
 // Dependencies
 var vows = require('vows'),
@@ -15,7 +16,7 @@ delete process.env.NODE_APP_INSTANCE;
 
 process.env.NODE_CONFIG_STRICT_MODE = false;
 
-var CONFIG = requireUncached('../lib/config');
+var CONFIG = requireUncached(__dirname + '/../lib/config');
 
 
 vows.describe('Tests for Unicode situations')
@@ -44,12 +45,3 @@ vows.describe('Tests for Unicode situations')
     }
 })
 .export(module);
-
-//
-// Because require'ing config creates and caches a global singleton,
-// We have to invalidate the cache to build new object based on the environment variables above
-function requireUncached(module) {
-    delete require.cache[require.resolve(module)];
-    return require(module);
-}
-
