@@ -154,6 +154,16 @@ vows.describe('Protected (hackable) utilities test')
       var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:new Date(2015, 0, 2),sub3:"val7"}};
       assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
     },
+    'Creates partial objects when mixing objects and non-objects': function () {
+      var orig = {elem1: {sub1: 5}};
+      var ext1 = {elem1: {sub2: 7}};
+      var ext2 = {elem1: 7};
+      var ext3 = {elem1: {sub3: 13}};
+      // When we get to ext2, the 7 clears all memories of sub1 and sub3. Then, when
+      // we merge with ext3, the 7 is replaced by the new object.
+      var expected = {elem1: {sub3: 13}};
+      assert.deepEqual(CONFIG.util.extendDeep(orig, ext1, ext2, ext3), expected);
+    },
     'Correctly types new objects and arrays': function() {
       var orig = {e1:"val1", e3:["val5"]};
       var extWith = {e2:{elem1:"val1"}, e3:["val6","val7"]};
