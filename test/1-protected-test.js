@@ -161,6 +161,7 @@ vows.describe('Protected (hackable) utilities test')
       var ext = CONFIG.util.extendDeep({}, orig, extWith);
       assert.isObject(ext.e2);
       assert.isArray(ext.e3);
+      assert.deepEqual(ext, shouldBe);
     },
     'Keeps non-merged objects intact': function() {
       var orig     = {e1:"val1", elem2:{sub1:"val4",sub2:"val5"}};
