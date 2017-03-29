@@ -19,15 +19,20 @@
   },
   "license": "MIT",
   "dependencies": {
-    "json5": "0.4.0"
+    "json5": "0.4.0",
+    "os-homedir": "1.0.2"
   },
   "devDependencies": {
+    "@types/node": "^7.0.8",
     "coffee-script": ">=1.7.0",
     "cson": "^3.0.1",
     "hjson": "^1.2.0",
     "js-yaml": "^3.2.2",
     "properties": "~1.2.1",
+    "semver": "5.3.0",
     "toml": "^2.0.6",
+    "ts-node": "^2.1.0",
+    "typescript": "^2.2.1",
     "underscore": "^1.8.3",
     "vows": ">=0.8.1",
     "x2js": "^2.0.1"

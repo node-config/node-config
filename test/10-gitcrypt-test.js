@@ -1,3 +1,4 @@
+var requireUncached = require('./_utils/requireUncached');
 
 // Dependencies
 var vows = require('vows'),
@@ -27,7 +28,7 @@ vows.describe('Test git-crypt integration')
       delete process.env["NODE_CONFIG"]
       delete process.env["CUSTOM_JSON_ENVIRONMENT_VAR"];
 
-      CONFIG = requireUncached('../lib/config');
+      CONFIG = requireUncached(__dirname + '/../lib/config');
 
       return CONFIG;
 
@@ -52,7 +53,7 @@ vows.describe('Test git-crypt integration')
 
       assert.throws(
         function () { 
-          CONFIG = requireUncached('../lib/config');
+          CONFIG = requireUncached(__dirname + '/../lib/config');
         },
         /Cannot parse config file/
       );
@@ -60,12 +61,3 @@ vows.describe('Test git-crypt integration')
   }
 })
 .export(module);
-
-//
-// Because require'ing config creates and caches a global singleton,
-// We have to invalidate the cache to build new object based on the environment variables above
-function requireUncached(module){
-   delete require.cache[require.resolve(module)];
-   return require(module);
-}
-

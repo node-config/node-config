@@ -1,3 +1,4 @@
+var requireUncached = require('./_utils/requireUncached');
 
 // Test declaring deferred values.
 // The key config files involved here are:
@@ -16,7 +17,7 @@ process.env.NODE_APP_INSTANCE='array-merge';
 
 // Because require'ing config creates and caches a global singleton,
 // We have to invalidate the cache to build new object based on the environment variables above
-var CONFIG = requireUncached('../lib/config');
+var CONFIG = requireUncached(__dirname + '/../lib/config');
 
 // Dependencies
 var vows = require('vows'),
@@ -43,9 +44,3 @@ vows.describe('Tests for merging arrays').addBatch({
   }
 })
 .export(module);
-
-
-function requireUncached(module){
-   delete require.cache[require.resolve(module)];
-   return require(module);
-}

@@ -1,10 +1,12 @@
+var requireUncached = require('./_utils/requireUncached');
+
 'use strict';
 
 process.env.NODE_CONFIG_DIR = __dirname + '/9-config';
 process.env.NODE_ENV='test';
 process.env.NODE_APP_INSTANCE='raw';
 
-var CONFIG = requireUncached('../lib/config');
+var CONFIG = requireUncached(__dirname + '/../lib/config');
 
 // Dependencies
 var vows = require('vows'),
@@ -20,9 +22,3 @@ vows.describe('Tests for raw config values').addBatch({
   }
 })
 .export(module);
-
-
-function requireUncached(module){
-   delete require.cache[require.resolve(module)];
-   return require(module);
-}

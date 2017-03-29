@@ -1,4 +1,4 @@
-
+var requireUncached = require('./_utils/requireUncached');
 
 // Dependencies
 var vows   = require('vows'),
@@ -16,7 +16,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       delete process.env.NODE_APP_INSTANCE;
       process.env.NODE_CONFIG_STRICT_MODE=0;
       process.argv = ["node","path/to/some.js","--NODE_CONFIG='{}'"];
-      var config = requireUncached('../lib/config');
+      var config = requireUncached(__dirname + '/../lib/config');
       return config.util.getConfigSources();
     },
 
@@ -41,7 +41,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       delete process.env.NODE_APP_INSTANCE;
       process.env.NODE_CONFIG_STRICT_MODE=0;
       process.argv = [];
-      var config = requireUncached('../lib/config');
+      var config = requireUncached(__dirname + '/../lib/config');
       return config.util.getConfigSources();
     },
 
@@ -65,7 +65,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       delete process.env.NODE_CONFIG;
       delete process.env.NODE_APP_INSTANCE;
       process.argv = [];
-      var config = requireUncached('../lib/config');
+      var config = requireUncached(__dirname + '/../lib/config');
       return config.util.getConfigSources();
     },
 
@@ -88,7 +88,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       delete process.env.NODE_CONFIG;
       delete process.env.NODE_APP_INSTANCE;
       process.argv = [];
-      var config = requireUncached('../lib/config');
+      var config = requireUncached(__dirname + '/../lib/config');
       return config.util.getConfigSources();
     },
 
@@ -103,11 +103,3 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
  }
 })
 .export(module);
-
-//
-// Because require'ing config creates and caches a global singleton,
-// We have to invalidate the cache to build new object based on the environment variables above
-function requireUncached(module){
-   delete require.cache[require.resolve(module)];
-   return require(module);
-}
