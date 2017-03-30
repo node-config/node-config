@@ -1,3 +1,10 @@
+1.26.0 / 2017-03-30
+===================
+
+  * Added tests for extendDeep @IvanVergiliev
+  * Added TypeScript support @cypherq
+  * Update config.js with correctly cased type def @ScionOfBytes
+
 1.25.1 / 2017-02-01
 ===================
 
