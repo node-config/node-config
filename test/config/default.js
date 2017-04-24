@@ -21,5 +21,9 @@ module.exports = {
   MuteThis: 'hello',
   get customerDbPort() {
     return '' + this.Customers.dbPort;
+  },
+  SomeMore: {
+    regexp1: /This is a Regexp/g,
+    regexp2: /This is another/g
   }
 };
