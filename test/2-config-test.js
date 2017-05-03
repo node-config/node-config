@@ -32,6 +32,8 @@ vows.describe('Test suite for node-config')
       process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
       process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
 
+      process.env.NO_CUSTOM_ENV=''
+
       // Test Environment Variable Substitution
       override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
       process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
