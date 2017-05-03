@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/env node
 /**
 * Merge current contributors into the README.md file
 */
