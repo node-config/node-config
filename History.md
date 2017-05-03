@@ -1,3 +1,9 @@
+1.26.1 / 2017-05-03
+===================
+
+  * Fix: failed while merging from RegExp @XadillaX
+  * Chore: reduce package size. @evilebottnawi
+
 1.26.0 / 2017-03-30
 ===================
 
