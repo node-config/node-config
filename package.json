@@ -42,7 +42,7 @@
     "url": "http://github.com/lorenwest/node-config.git"
   },
   "engines": {
-    "node": ">0.4.x"
+    "node": ">= 4.0.0"
   },
   "scripts": {
     "test": "./node_modules/vows/bin/vows test/*.js --spec"
