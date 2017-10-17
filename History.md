@@ -1,3 +1,9 @@
+1.27.0 / 2017-10-17
+===================
+
+  * Add method to output plain JS object - willsoto
+  * Updated Node versions in Travis CI - lorenwest
+
 1.26.2 / 2017-08-11
 ===================
 
