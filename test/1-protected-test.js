@@ -26,7 +26,7 @@ vows.describe('Protected (hackable) utilities test')
 .addBatch({
   // We initialize the object in a batch so that the globals get changed at /run-time/ not /require-time/,
   // avoiding conflicts with other tests.
-  // We initialize in our own /batch/ because batches are run in serial, while individual contexts run in parallel. 
+  // We initialize in our own /batch/ because batches are run in serial, while individual contexts run in parallel.
   'Library initialization': {
     topic : function () {
       // Change the configuration directory for testing
@@ -640,7 +640,36 @@ vows.describe('Protected (hackable) utilities test')
         process.argv = argvOrg;
         assert.equal(process.argv, argvOrg);
     }
-  }
+  },
 
+  'toObject() tests': {
+    topic: function() {
+      return CONFIG.util.loadFileConfigs();
+    },
+    'The function exists': function() {
+      assert.isFunction(CONFIG.util.toObject);
+    },
+    'Returns a serialized version of the current instance if no argument is provided': function() {
+      assert.notDeepStrictEqual(CONFIG.util.toObject(), CONFIG);
+    },
+    'Returns a POJO': function() {
+      assert.ok(!(CONFIG.util.toObject() instanceof CONFIG.constructor));
+    },
+    'Returns a serialized version of whatever argument is provided': function() {
+      assert.notDeepStrictEqual(CONFIG.get('Customers'), {
+        dbHost: 'base',
+        dbName: 'override_from_runtime_json',
+        dbPort: 5999,
+        dbString: 'override_from_runtime_json:5999',
+        random: 0.08624527123827352,
+        dbPassword: 'real password',
+        dbPassword2: 'another password',
+        lang: ['en','de','es'],
+        altDbPort: 4400,
+        altDbPort1: 2209,
+        emptySub: null
+      });
+    }
+  }
 })
 .export(module);
