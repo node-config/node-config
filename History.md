@@ -1,3 +1,8 @@
+1.28.0 / 2017-11-07
+===================
+
+  * allow overrides of `NODE_ENV` with `NODE_CONFIG_ENV` - jfelge
+
 1.27.0 / 2017-10-17
 ===================
 
