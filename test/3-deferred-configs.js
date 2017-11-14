@@ -49,6 +49,12 @@ vows.describe('Tests for deferred values - JavaScript').addBatch({
     "second defer function return original value." : function () {
       assert.equal(CONFIG.original.deferredOriginal, undefined);
     },
+
+    "native promise can be subscribed to" : function () {
+      return CONFIG.nativePromise.then(val => {
+        assert.equal(val, 'A native promise value')
+      })
+    }
   }
 })
 .export(module);

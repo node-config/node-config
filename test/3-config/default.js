@@ -5,7 +5,7 @@ var config = {
   siteTitle : 'Site title',
   latitude  : 1,
   longitude : 2,
-
+  nativePromise: Promise.resolve('A native promise value')
 };
 
 // Set up a default value which refers to another value.
