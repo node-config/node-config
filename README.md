@@ -109,6 +109,7 @@ Articles
 --------
 
 * [Configuration Files](https://github.com/lorenwest/node-config/wiki/Configuration-Files)
+  * [Special features for JavaScript configuration files](https://github.com/lorenwest/node-config/wiki/Special-features-for-JavaScript-configuration-files)
 * [Common Usage](https://github.com/lorenwest/node-config/wiki/Common-Usage)
 * [Environment Variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables)
 * [Reserved Words](https://github.com/lorenwest/node-config/wiki/Reserved-Words)
