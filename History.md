@@ -1,3 +1,33 @@
+
+  * Update docs for JavaScript-formatted config files and link them from the README - markstos
+
+1.28.1 / 2017-11-09
+===================
+
+  * add nodejs9 to travisci - jfelege
+
+1.28.0 / 2017-11-07
+===================
+
+  * allow overrides of `NODE_ENV` with `NODE_CONFIG_ENV` - jfelege
+
+1.27.0 / 2017-10-17
+===================
+
+  * Add method to output plain JS object - willsoto
+  * Updated Node versions in Travis CI - lorenwest
+
+1.26.2 / 2017-08-11
+===================
+
+  * Update supported nodejs platforms - jfelege
+
+1.26.1 / 2017-05-03
+===================
+
+  * Fix: failed while merging from RegExp @XadillaX
+  * Chore: reduce package size. @evilebottnawi
+
 1.26.0 / 2017-03-30
 ===================
 
