@@ -122,6 +122,15 @@ Articles
 * [Examining Configuration Sources](https://github.com/lorenwest/node-config/wiki/Examining-Configuration-Sources)
 * [Using Config Utilities](https://github.com/lorenwest/node-config/wiki/Using-Config-Utilities)
 * [Upgrading from Config 0.x](https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x)
+* [Webpack usage](https://github.com/lorenwest/node-config/wiki/Webpack-Usage)
+
+Further Information
+---------------------
+If you still don't see what you are looking for, here more resources to check: 
+
+ * The [wiki may have more pages](https://github.com/lorenwest/node-config/wiki) which are not directly linked from here.
+ * Review [questions tagged with node-config](https://stackexchange.com/filters/207096/node-config) on StackExchange. These are monitored by `node-config` contributors.
+ * [Search the issue tracker](https://github.com/lorenwest/node-config/issues). Hundreds of issues have already been discussed and resolved there.
 
 Contributors
 ------------
