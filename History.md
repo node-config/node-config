@@ -1,5 +1,9 @@
+1.29.0 / 2017-12-26
+===================
 
   * Update docs for JavaScript-formatted config files and link them from the README - markstos
+  * Fixed 'hostname' value selection when there is no environment variable for that - wmangelardo
+
 
 1.28.1 / 2017-11-09
 ===================
