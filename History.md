@@ -1,3 +1,9 @@
+1.29.1 / 2018-01-07
+===================
+
+  * Prevent re-registration of ts-node - electroma
+  * Fixed bug in contributor table tool - lorenwest
+
 1.29.0 / 2017-12-26
 ===================
 

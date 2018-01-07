@@ -69,14 +69,21 @@ getContributorTable(function(error, htmlTable) {
   }
 
   // Replace the contributor table
+  var replacing = false;
   var fileLines = fs.readFileSync(README_FILE).toString().split('\n');
-  for (var i in fileLines) {
+  for (var i = 0; i < fileLines.length; i++) {
     if (fileLines[i].indexOf('<table id="contributors"') === 0) {
       fileLines[i] = htmlTable;
-      fs.writeFileSync(README_FILE, fileLines.join('\n'));
-      console.log('Contributor table replaced.');
-      process.exit(0);
+      replacing = true;
+      continue;
+    }
+    if (replacing) {
+      if (fileLines[i].indexOf('</tr></table>') === 0) {
+        replacing = false;
+      }
+      fileLines.splice(i--,1);
     }
   }
-  console.error('Error: No contributors table found to replace');
+  fs.writeFileSync(README_FILE, fileLines.join('\n'));
+  console.log('Contributor table replaced.');
 });
