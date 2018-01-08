@@ -24,12 +24,12 @@ vows.describe('Test suite for node-config TypeScript support')
 .addBatch({
   'Library initialization with TypeScript config files': {
     topic : function () {
-      
+
       // Clear after previous tests
       process.env.NODE_APP_INSTANCE = '';
       process.env.NODE_ENV = '';
       process.env.NODE_CONFIG = '';
-      
+
       // Change the configuration directory for testing
       process.env.NODE_CONFIG_DIR = __dirname + '/x-config-ts';
 
@@ -53,6 +53,16 @@ vows.describe('Test suite for node-config TypeScript support')
     }
   },
 })
+.addBatch({
+    'Start in the environment with existing .ts extension handler': {
+      'Library reuses existing .ts file handler': function() {
+        var existingHandler = require.extensions['.ts'];
+        assert.ok(existingHandler, 'Existing handler is defined by the environment');
+        CONFIG = requireUncached(__dirname + '/../lib/config');
+        assert.strictEqual(require.extensions['.ts'], existingHandler, 'Should not overwrite existing handler');
+      }
+    },
+  })
 .export(module);
 
 
