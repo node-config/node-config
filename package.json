@@ -1,10 +1,10 @@
 {
-  "name": "config",
-  "version": "1.29.2",
+  "name": "config-dot",
+  "version": "1.29.3",
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
-  "author": "Loren West <open_source@lorenwest.com>",
-  "homepage": "http://lorenwest.github.com/node-config",
+  "author": "Loren West <vifirde@gmail.com>",
+  "homepage": "https://github.com/vifird/node-config",
   "keywords": [
     "conf",
     "config",
@@ -39,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/lorenwest/node-config.git"
+    "url": "git@github.com:vifird/node-config.git"
   },
   "engines": {
     "node": ">= 4.0.0"
