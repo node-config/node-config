@@ -274,6 +274,9 @@ vows.describe('Test suite for node-config')
         function() { CONFIG.get('config.no_value', 3) }
       );
     },
+    'Correct config value returned regardless of default': function() {
+      assert.equal(CONFIG.get('customerDbPort', 123), '5999');
+    },
     'Default value returned when no config found and default given': function() {
       assert.equal(CONFIG.get('config.no_value', 3), 3);
     },
