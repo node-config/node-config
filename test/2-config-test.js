@@ -269,6 +269,17 @@ vows.describe('Test suite for node-config')
           /Configuration property "" is not defined/
       );
     },
+    'No exception is thrown when default value provided': function() {
+      assert.doesNotThrow(
+        function() { CONFIG.get('config.no_value', 3) }
+      );
+    },
+    'Correct config value returned regardless of default': function() {
+      assert.equal(CONFIG.get('customerDbPort', 123), '5999');
+    },
+    'Default value returned when no config found and default given': function() {
+      assert.equal(CONFIG.get('config.no_value', 3), 3);
+    },
   },
 
   'has() tests': {
