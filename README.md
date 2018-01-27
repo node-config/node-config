@@ -105,6 +105,10 @@ Running in this configuration, the `port` and `dbName` elements of `dbConfig`
 will come from the `default.json` file, and the `host` element will
 come from the `production.json` override file.
 
+**IntelliJ-plugin:**
+
+ Install `NodeConfig` from the IntelliJ [plugin-repository](https://plugins.jetbrains.com/plugin/10381-nodeconfig).
+
 Articles
 --------
 
