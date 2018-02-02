@@ -11,7 +11,7 @@ vows.describe("CONFIG_RC: Tests for configrc' file")
     "Tests for .configrc": {
         topic: function() {
 
-          let pre = process.argv;
+          var pre = process.argv;
           process.argv.pop(process.argv.length-1);
           
           delete process.env.NODE_CONFIG;
@@ -22,7 +22,7 @@ vows.describe("CONFIG_RC: Tests for configrc' file")
 
 
           requireUncached(`${__dirname}/../lib/config`);
-          let config = require('../lib/config');
+          var config = require('../lib/config');
           requireUncached(`${__dirname}/../lib/config`);
 
           delete process.env.USE_CONFIG_RC;
