@@ -1,3 +1,8 @@
+1.29.3 / 2018-02-03
+===================
+
+  * Added soft dependencies so transpilers don't include everything - gewentao
+
 1.29.2 / 2018-01-12
 ===================
 
