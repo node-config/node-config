@@ -131,6 +131,24 @@ vows.describe('Test suite for node-config')
     }
   },
 
+  'Extensibility': {
+    'Correct ExtendThis setup var': function () {
+      assert.deepEqual(CONFIG.ExtendThis, {});
+    },
+
+    'Added props sticks': function () {
+      CONFIG.ExtendThis.hello = 'world';
+      assert.equal(CONFIG.ExtendThis.hello, 'world');
+    },
+
+    'No mutation after the first get()': function () {
+      assert.equal(CONFIG.get('ExtendThis.hello'), 'world');
+      CONFIG.ExtendThis.newProp = 'shouldNotStick';
+      assert.equal(CONFIG.ExtendThis.hello, 'world');
+      assert.equal(typeof CONFIG.ExtendThis.newProp, 'undefined');
+    }
+  },
+
   'Configurations from the $NODE_CONFIG environment variable': {
     'Configuration can come from the $NODE_CONFIG environment': function() {
       assert.equal(CONFIG.EnvOverride.parm3, 'overridden from $NODE_CONFIG');
