@@ -162,8 +162,8 @@ Contributors
 <td><img src=https://avatars2.githubusercontent.com/u/54934?v=4><a href="https://github.com/wmertens">wmertens</a></td>
 <td><img src=https://avatars3.githubusercontent.com/u/2842176?v=4><a href="https://github.com/XadillaX">XadillaX</a></td>
 <td><img src=https://avatars1.githubusercontent.com/u/4425455?v=4><a href="https://github.com/ncuillery">ncuillery</a></td>
+<td><img src=https://avatars0.githubusercontent.com/u/2015295?v=4><a href="https://github.com/patrickpilch">patrickpilch</a></td>
 <td><img src=https://avatars1.githubusercontent.com/u/618330?v=4><a href="https://github.com/adityabansod">adityabansod</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/270632?v=4><a href="https://github.com/thetalecrafter">thetalecrafter</a></td>
 </tr></table>
 
 License

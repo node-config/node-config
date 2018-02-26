@@ -1,3 +1,8 @@
+1.30.0 / 2018-02-26
+===================
+
+  * Support for nested raw() in javascript configurations - patrickpilch
+
 1.29.4 / 2018-02-03
 ===================
 
