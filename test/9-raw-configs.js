@@ -15,9 +15,18 @@ var vows = require('vows'),
 vows.describe('Tests for raw config values').addBatch({
   'Configuration file Tests': {
     'Objects wrapped with raw should be unmodified': function() {
-        assert.equal(CONFIG.get('circularReference'), process.stdout);
-        assert.deepEqual(CONFIG.get('testObj'), { foo: 'bar' })
-        assert.isFunction(CONFIG.get('yell'));
+      assert.equal(CONFIG.get('circularReference'), process.stdout);
+      assert.deepEqual(CONFIG.get('testObj'), { foo: 'bar' })
+      assert.isFunction(CONFIG.get('yell'));
+    },
+    'Inner configuration objects wrapped with raw should be unmodified': function() {
+      assert.equal(CONFIG.get('innerRaw').innerCircularReference, process.stdout);
+      assert.equal(CONFIG.get('innerRaw.innerCircularReference'), process.stdout);
+    },
+    'Supports multiple levels of nesting': function() {
+      assert.equal(CONFIG.get('nestedRaw').nested.test, process.stdout);
+      assert.equal(CONFIG.get('nestedRaw.nested').test, process.stdout);
+      assert.equal(CONFIG.get('nestedRaw.nested.test'), process.stdout);
     }
   }
 })
