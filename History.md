@@ -1,3 +1,8 @@
+1.31.0 / 2018-05-22
+===================
+
+  * Load new coffeescript module instead of coffee-script - bastbijl
+
 1.30.0 / 2018-02-26
 ===================
 
