@@ -13,12 +13,18 @@ vows.describe('Tests for strict mode').addBatch({
                      + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
 
-
   // Because NODE_ENV=development = default
   "Specifying NODE_ENV=development with no development file does not throw an exception. ": _expectException({
     NODE_ENV         : 'development',
     APP_INSTANCE     : 'valid-instance',
     exceptionMessage : null,
+  }),
+
+  "Specifying NODE_ENV=production,cloud with no cloud file throws an exception. ": _expectException({
+    NODE_ENV         : 'production,cloud',
+    APP_INSTANCE     : 'valid-instance',
+    exceptionMessage : "FATAL: NODE_ENV value of 'cloud' did not match any deployment config file names. "
+                     + "See https://github.com/lorenwest/node-config/wiki/Strict-Mode"
   }),
 
   "Specifying an unused NODE_APP_INSTANCE and valid NODE_ENV value throws an exception": _expectException({
@@ -30,6 +36,13 @@ vows.describe('Tests for strict mode').addBatch({
 
   "NODE_ENV=default throws exception: reserved word": _expectException({
     NODE_ENV         : 'default',
+    APP_INSTANCE     : 'valid-instance',
+    exceptionMessage :"FATAL: NODE_ENV value of 'default' is ambiguous. "
+                     +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+  }),
+
+  "NODE_ENV=production,default throws exception: reserved word": _expectException({
+    NODE_ENV         : 'production,default',
     APP_INSTANCE     : 'valid-instance',
     exceptionMessage :"FATAL: NODE_ENV value of 'default' is ambiguous. "
                      +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
