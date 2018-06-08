@@ -19,8 +19,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "json5": "0.4.0",
-    "os-homedir": "1.0.2"
+    "json5": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^7.0.8",
