@@ -214,6 +214,25 @@ vows.describe('Test suite for node-config')
     }
   },
 
+  'Assuring a configuration array property can be made immutable': {
+    'Correctly unable to change an immutable configuration': function() {
+      CONFIG.util.makeImmutable(CONFIG.TestModule, 'arr1');
+      CONFIG.TestModule.arr1 = ['bad value'];
+      assert.isTrue(CONFIG.TestModule.arr1[0] == 'arrValue1');
+    },
+
+    'Correctly unable to add values to immutable array': function() {
+      CONFIG.util.makeImmutable(CONFIG.TestModule, 'arr1');
+      try {
+        CONFIG.TestModule.arr1.push('bad value');
+      } catch (err) {
+        assert.isTrue(err.name == 'TypeError');
+      }
+
+      assert.isTrue(!CONFIG.TestModule.arr1.includes('bad value'));
+    }
+  },
+
   'get() tests': {
     'The function exists': function() {
       assert.isFunction(CONFIG.get);
