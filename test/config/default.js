@@ -1,7 +1,8 @@
 // Common configuration parameters
 module.exports = {
   TestModule: {
-    parm1:"value1"
+    parm1:"value1",
+    arr1: ["arrValue1"]
   },
   Customers: {
     dbHost:'base',
