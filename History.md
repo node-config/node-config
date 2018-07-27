@@ -1,3 +1,14 @@
+2.0.0 / 2018-07-26
+==================
+
+Potential for backward incompatibility requiring a major version bump.
+
+Safe to upgrade to major version 2 if you're using a recent NodeJS version
+and you're not trying to mutate config arrays.
+
+  * Added array immutability - jacobemerick
+  * Removed Node V.4 support
+
 1.31.0 / 2018-05-22
 ===================
 
