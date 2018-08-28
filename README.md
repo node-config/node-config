@@ -171,6 +171,6 @@ License
 
 May be freely distributed under the [MIT license](https://raw.githubusercontent.com/lorenwest/node-config/master/LICENSE).
 
-Copyright (c) 2010-2015 Loren West 
+Copyright (c) 2010-2018 Loren West 
 [and other contributors](https://github.com/lorenwest/node-config/graphs/contributors)
 
