@@ -362,12 +362,22 @@ vows.describe('Test suite for node-config')
           param5: 5000
         }
       };
+      var OtherTestModuleDefaults = {
+        parm6: 6000, parm7: 7000,
+        other: {
+          param8: 8000,
+          param9: 9000
+        }
+      };
 
-      CONFIG.util.setModuleDefaults("BKTestModule", BKTestModuleDefaults);
+      CONFIG.util.setModuleDefaults('BKTestModule', BKTestModuleDefaults);
+      CONFIG.util.setModuleDefaults('services.OtherTestModule', OtherTestModuleDefaults);
 
       var testModuleConfig = CONFIG.get('BKTestModule');
+      var testSubModuleConfig = CONFIG.get('services');
 
       assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'));
+      assert.deepEqual(OtherTestModuleDefaults.other, testSubModuleConfig.OtherTestModule.other);
     }
   },
 })
