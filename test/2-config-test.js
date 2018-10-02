@@ -14,7 +14,7 @@ var vows = require('vows'),
  * @class ConfigTest
  */
 
-var CONFIG, override;
+var CONFIG, MODULE_CONFIG, override;
 vows.describe('Test suite for node-config')
 .addBatch({
   'Library initialization': {
@@ -326,9 +326,10 @@ vows.describe('Test suite for node-config')
 
   'Configuration for module developers': {
     topic: function() {
+      MODULE_CONFIG = requireUncached(__dirname + '/../lib/config');
 
       // Set some parameters for the test module
-      return CONFIG.util.setModuleDefaults("TestModule", {
+      return MODULE_CONFIG.util.setModuleDefaults("TestModule", {
         parm1: 1000, parm2: 2000, parm3: 3000,
         nested: {
           param4: 4000,
@@ -338,12 +339,12 @@ vows.describe('Test suite for node-config')
     },
 
     'The setModuleDefaults() method is available': function() {
-      assert.isFunction(CONFIG.util.setModuleDefaults);
+      assert.isFunction(MODULE_CONFIG.util.setModuleDefaults);
     },
 
     'The module config is in the CONFIG object': function(moduleConfig) {
-      assert.isObject(CONFIG.TestModule);
-      assert.deepEqual(CONFIG.TestModule, moduleConfig);
+      assert.isObject(MODULE_CONFIG.TestModule);
+      assert.deepEqual(MODULE_CONFIG.TestModule, moduleConfig);
     },
 
     'Local configurations are mixed in': function(moduleConfig) {
@@ -370,11 +371,11 @@ vows.describe('Test suite for node-config')
         }
       };
 
-      CONFIG.util.setModuleDefaults('BKTestModule', BKTestModuleDefaults);
-      CONFIG.util.setModuleDefaults('services.OtherTestModule', OtherTestModuleDefaults);
+      MODULE_CONFIG.util.setModuleDefaults('BKTestModule', BKTestModuleDefaults);
+      MODULE_CONFIG.util.setModuleDefaults('services.OtherTestModule', OtherTestModuleDefaults);
 
-      var testModuleConfig = CONFIG.get('BKTestModule');
-      var testSubModuleConfig = CONFIG.get('services');
+      var testModuleConfig = MODULE_CONFIG.get('BKTestModule');
+      var testSubModuleConfig = MODULE_CONFIG.get('services');
 
       assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'));
       assert.deepEqual(OtherTestModuleDefaults.other, testSubModuleConfig.OtherTestModule.other);
