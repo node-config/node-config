@@ -1,3 +1,11 @@
+3.0.0 / 2018-11-20
+==================
+
+   * Ensure config array items and objects are sealed @fgheorghe
+     - This required a major version bump in case someone
+     - relied on the ability to mutate non-sealed data.
+
+
 2.0.2 / 2018-08-28
 ==================
 
