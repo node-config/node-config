@@ -1,3 +1,9 @@
+2.0.2 / 2018-08-28
+==================
+
+   * Added dot notation to setModuleDefaults - bertho-zero
+   * Updated copyright year - JemiloII
+
 2.0.1 / 2018-07-26
 ==================
 
