@@ -1,3 +1,8 @@
+3.0.1 / 2018-12-16
+==================
+
+  * Fixed bug where dot notation extended own key @exogen
+
 3.0.0 / 2018-11-20
 ==================
 
