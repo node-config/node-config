@@ -80,13 +80,13 @@ $ vi config/default.json
 **Use configs in your code:**
 
 ```js
-var config = require('config');
+const config = require('config');
 //...
-var dbConfig = config.get('Customer.dbConfig');
+const dbConfig = config.get('Customer.dbConfig');
 db.connect(dbConfig, ...);
 
 if (config.has('optionalFeature.detail')) {
-  var detail = config.get('optionalFeature.detail');
+  const detail = config.get('optionalFeature.detail');
   //...
 }
 ```
