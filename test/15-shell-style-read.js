@@ -14,9 +14,10 @@ vows
 function _expectSuccess(appInstance) {
   return {
     topic: function() {
+      delete process.env.NODE_ENV;
       delete process.env.NODE_CONFIG;
-      process.env.NODE_ENV = 'test';
       process.env.NODE_APP_INSTANCE = appInstance;
+      process.env.NODE_CONFIG_SHELL_STYLE_READ = 'Y';
       process.env.NODE_CONFIG_DIR = __dirname + '/15-config';
       return requireUncached(__dirname + '/../lib/config');
     },
