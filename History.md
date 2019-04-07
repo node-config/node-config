@@ -1,3 +1,8 @@
+3.1.0 / 2019-04-07
+==================
+
+  * Support of module.exports syntax for TS config files @keenondrums
+
 3.0.1 / 2018-12-16
 ==================
 
