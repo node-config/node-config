@@ -1,7 +1,13 @@
-var resolveAsyncConfigs = require('../async').resolveAsyncConfigs;
 var requireUncached = require('./_utils/requireUncached');
+var isSupportedVersion = require('./_utils/isSupportedVersion');
 
-// Test declaring deferred values.
+if(!isSupportedVersion('7.6.0'))  {
+  return false;
+}
+
+var resolveAsyncConfigs = require('../async').resolveAsyncConfigs;
+
+// Test declaring async values.
 
 // Change the configuration directory for testing
 process.env.NODE_CONFIG_DIR = __dirname + '/15-config';
@@ -31,18 +37,15 @@ vows.describe('Tests for async values - JavaScript').addBatch({
     },
 
     'Using asyncConfig() in a config file causes value to be evaluated by resolveAsyncConfigs': function() {
-      // The deferred function was declared in default-defer.js
-      // Then local-defer.js is located which overloads the siteTitle mentioned in the function
-      // Finally the deferred configurations, now referencing the 'local' siteTitle
       assert.equal(CONFIG.welcomeEmail.subject, 'Welcome to New Instance!');
     },
 
     'values which are functions remain untouched unless they are instance of AsyncConfig': function() {
-      // If this had been treated as a deferred config value it would blow-up.
+      // If this had been treated as a async config value it would blow-up.
       assert.equal(CONFIG.welcomeEmail.aFunc(), 'Still just a function.');
     },
 
-    // This defer function didn't use args, but relied 'this' being bound to the main config object
+    // This async function didn't use args, but relied 'this' being bound to the main config object
     "async functions can simply refer to 'this'" : function () {
       assert.equal(CONFIG.welcomeEmail.justThis, 'Welcome to this New Instance!');
     },
