@@ -49,6 +49,10 @@ vows.describe('Tests for deferred values - JavaScript').addBatch({
     "second defer function return original value." : function () {
       assert.equal(CONFIG.original.deferredOriginal, undefined);
     },
+
+    "validate double-defer bug is fixed" : function () {
+      assert.equal(CONFIG.a, 'value!');
+    },
   }
 })
 .export(module);

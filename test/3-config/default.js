@@ -5,7 +5,12 @@ var config = {
   siteTitle : 'Site title',
   latitude  : 1,
   longitude : 2,
-
+  a: defer(function (cfg) {
+    return cfg.b.then(b => b);
+  }),
+  b: defer(function () {
+    return 'value!';
+  }),
 };
 
 // Set up a default value which refers to another value.
