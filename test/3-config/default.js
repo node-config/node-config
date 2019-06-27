@@ -15,6 +15,9 @@ var config = {
   c: defer(function (cfg) {
     return this.a+' '+cfg.b;
   }),
+  fromList: defer(function() {
+    return this.list[2]+2;
+  }),
   list: [
     1,
     'b',

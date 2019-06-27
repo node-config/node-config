@@ -52,6 +52,7 @@ vows.describe('Tests for deferred values - JavaScript').addBatch({
 
     "defer functions resolved within an array" : function () {
       assert.equal(CONFIG.list[2], 3);
+      assert.equal(CONFIG.fromList, 5);
     },
 
     "defer functions execution order resolves when accessing other defer functions" : function () {
