@@ -14,9 +14,13 @@ var vows = require('vows'),
 
 vows.describe('Tests for raw config values').addBatch({
   'Configuration file Tests': {
+    topic: function() {
+      try { CONFIG.get('aPromise').then(val => this.callback(null, val)); }
+      catch(err) { this.callback(); }
+    },
     'Objects wrapped with raw should be unmodified': function() {
       assert.equal(CONFIG.get('circularReference'), process.stdout);
-      assert.deepEqual(CONFIG.get('testObj'), { foo: 'bar' })
+      assert.deepEqual(CONFIG.get('testObj'), { foo: 'bar' });
       assert.isFunction(CONFIG.get('yell'));
     },
     'Inner configuration objects wrapped with raw should be unmodified': function() {
@@ -27,6 +31,9 @@ vows.describe('Tests for raw config values').addBatch({
       assert.equal(CONFIG.get('nestedRaw').nested.test, process.stdout);
       assert.equal(CONFIG.get('nestedRaw.nested').test, process.stdout);
       assert.equal(CONFIG.get('nestedRaw.nested.test'), process.stdout);
+    },
+    'Supports keeping promises raw by default': function(err, val) {
+      assert.equal(val, 'this is a promise result');
     }
   }
 })
