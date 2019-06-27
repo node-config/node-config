@@ -50,8 +50,9 @@ vows.describe('Tests for deferred values - JavaScript').addBatch({
       assert.equal(CONFIG.original.deferredOriginal, undefined);
     },
 
-    "validate double-defer bug is fixed" : function () {
-      assert.equal(CONFIG.a, 'value!');
+    "defer functions execution order resolves when accessing other defer functions" : function () {
+      assert.equal(CONFIG.a, 'my value!');
+      assert.equal(CONFIG.c, 'my value! value!');
     },
   }
 })

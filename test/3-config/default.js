@@ -7,10 +7,13 @@ var config = {
   latitude  : 1,
   longitude : 2,
   a: defer(function (cfg) {
-    return cfg.b;
+    return 'my '+cfg.b;
   }),
   b: defer(function () {
     return this.value;
+  }),
+  c: defer(function (cfg) {
+    return this.a+' '+cfg.b;
   }),
 };
 
