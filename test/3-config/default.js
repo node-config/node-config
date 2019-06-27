@@ -15,6 +15,13 @@ var config = {
   c: defer(function (cfg) {
     return this.a+' '+cfg.b;
   }),
+  list: [
+    1,
+    'b',
+    defer(function (cfg) {
+      return cfg.latitude+cfg.longitude;
+    })
+  ]
 };
 
 // Set up a default value which refers to another value.

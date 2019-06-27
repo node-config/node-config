@@ -50,6 +50,10 @@ vows.describe('Tests for deferred values - JavaScript').addBatch({
       assert.equal(CONFIG.original.deferredOriginal, undefined);
     },
 
+    "defer functions resolved within an array" : function () {
+      assert.equal(CONFIG.list[2], 3);
+    },
+
     "defer functions execution order resolves when accessing other defer functions" : function () {
       assert.equal(CONFIG.a, 'my value!');
       assert.equal(CONFIG.c, 'my value! value!');
