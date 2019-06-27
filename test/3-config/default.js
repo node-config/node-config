@@ -6,7 +6,7 @@ var config = {
   latitude  : 1,
   longitude : 2,
   a: defer(function (cfg) {
-    return cfg.b.then(b => b);
+    return cfg.b;
   }),
   b: defer(function () {
     return 'value!';
