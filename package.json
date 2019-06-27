@@ -19,8 +19,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "json5": "^1.0.1",
-    "synchronous-promise": "^2.0.9"
+    "json5": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^7.0.8",
