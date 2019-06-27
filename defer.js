@@ -5,7 +5,7 @@ DeferredConfig.prototype.resolve = function() {};
 // Accept a function that we'll use to resolve this value later and return a 'deferred' configuration value to resolve it later.
 function deferConfig(func) {
   var obj = Object.create(DeferredConfig.prototype);
-  obj.observe = function(config, prop, property) {
+  obj.prepare = function(config, prop, property) {
     var original = prop[property]._original;
     obj.resolve = function() {
       var value = func.call(config, config, original);
