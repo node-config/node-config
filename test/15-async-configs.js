@@ -61,5 +61,9 @@ vows.describe('Tests for async values - JavaScript').addBatch({
     "second async promise return local value." : function () {
       assert.equal(CONFIG.original.originalPromise, 'not an original value');
     },
+
+    "verify deferred functionality plays nicely with AsyncConfig." : function () {
+      assert.equal(CONFIG.promiseSubject, 'New Instance! Welcome to New Instance!');
+    },
   }
 }).export(module);
