@@ -1,0 +1,4 @@
+file-type: custom
+file-name: my-custom-awesome-dsl
+parser: custom-awesomeness
+   custom-key   :     wow!

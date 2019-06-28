@@ -1,0 +1,4 @@
+file:
+  type: yaml
+  name: default.yaml
+parser: js-yaml
