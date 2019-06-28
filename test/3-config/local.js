@@ -2,6 +2,12 @@ var defer = require('../../defer').deferConfig;
 
 var config = {
  siteTitle : 'New Instance!',
+  b: defer(function () {
+    return 'this is '+this.fromList+'!';
+  }),
+  fromList: defer(function() {
+    return this.list[2]*2;
+  }),
 };
 
 config.map = {

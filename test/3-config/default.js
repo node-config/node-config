@@ -2,7 +2,7 @@
 var defer = require('../../defer').deferConfig;
 
 var config = {
-  value: 'value!',
+  value: 'value',
   siteTitle : 'Site title',
   latitude  : 1,
   longitude : 2,
