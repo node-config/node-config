@@ -1,8 +1,8 @@
 var Parser = require('../../_utils/requireUncached')(__dirname + '/../../../parser');
 
 // change parser order
-Parser.setParserOrder('yaml', 0);
-Parser.setParserOrder('yml', 1);
+Parser.setFilesOrder('yaml', 0);
+Parser.setFilesOrder('yml', 1);
 
 Parser.setParser('custom', function(filename, content) {
   return content.split(/\n/g).reduce(function(res, line) {

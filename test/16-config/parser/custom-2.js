@@ -16,7 +16,7 @@ Parser.setParser('custom', function(filename, content) {
 });
 
 // change parser order
-Parser.setParserOrder(['custom', 'json5', 'json', 'yml']);
+Parser.setFilesOrder(['custom', 'json5', 'json', 'yml']);
 
 
 module.exports = Parser;

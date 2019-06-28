@@ -309,37 +309,23 @@ Parser.setParser = function(name, parser) {
   }
 };
 
-Parser.getParserOrder = function(name) {
+Parser.getFilesOrder = function(name) {
   if (name) {
     return order.indexOf(name);
   }
   return order;
 };
 
-Parser.setParserOrder = function(name, newIndex) {
+Parser.setFilesOrder = function(name, newIndex) {
   if (Array.isArray(name)) {
     return order = name;
   }
-  var index = order.indexOf(name);
   if (typeof newIndex === 'number') {
-    order.splice(newIndex, 0, name);
-  } else {
-    newIndex = order.push(name) -1;
-  }
-  if (index > -1) {
-    order.splice(index >= newIndex ? index +1 : index, 1);
-  }
-  return order;
-};
-
-Parser.unsetParserOrder = function(name) {
-  if (name) {
     var index = order.indexOf(name);
+    order.splice(newIndex, 0, name);
     if (index > -1) {
-      order.splice(index, 1);
+      order.splice(index >= newIndex ? index +1 : index, 1);
     }
-  } else {
-    order = [];
   }
   return order;
 };
