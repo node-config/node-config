@@ -65,6 +65,10 @@ vows.describe('Tests for a custom parser provided by NODE_CONFIG_PARSER')
         assert.equal(CONFIG.get('parser'), 'json5');
         assert.equal(CONFIG.get('custom.key'), 'json5 rules!');
       },
+    },
+    teardown : function (topic) {
+      delete process.env.NODE_CONFIG_PARSER;
+      requireUncached(__dirname + '/../parser');
     }
   })
   .export(module);
