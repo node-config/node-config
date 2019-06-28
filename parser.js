@@ -298,48 +298,48 @@ var definitions = {
   yml: Parser.yamlParser,
 };
 
-Parser.getOrder = function(name) {
+Parser.getParser = function(name) {
+  return definitions[name];
+};
+
+Parser.setParser = function(name, parser) {
+  definitions[name] = parser;
+  if (order.indexOf(name) === -1) {
+    order.push(name);
+  }
+};
+
+Parser.getParserOrder = function(name) {
   if (name) {
     return order.indexOf(name);
   }
   return order;
 };
 
-Parser.setOrder = function(name, index) {
+Parser.setParserOrder = function(name, newIndex) {
   if (Array.isArray(name)) {
-    order = name;
-    return order;
+    return order = name;
   }
-  var curIndex = order.indexOf(name);
-  order.splice(index, 0, name);
-  order.splice(curIndex >= index ? curIndex +1 : curIndex, 1);
+  var index = order.indexOf(name);
+  if (typeof newIndex === 'number') {
+    order.splice(newIndex, 0, name);
+  } else {
+    newIndex = order.push(name) -1;
+  }
+  if (index > -1) {
+    order.splice(index >= newIndex ? index +1 : index, 1);
+  }
   return order;
 };
 
-Parser.unsetOrder = function(name) {
-  order.splice(order.indexOf(name), 1);
-  return order;
-};
-
-Parser.getParser = function(name) {
-  return definitions[name];
-};
-
-Parser.setParser = function(name, parser) {
-  if (!definitions[name]) {
-    order.push(name);
-  }
-  definitions[name] = parser;
-};
-
-Parser.unsetParser = function(name) {
+Parser.unsetParserOrder = function(name) {
   if (name) {
-    if (definitions[name]) {
-      order.splice(order.indexOf(name), 1);
+    var index = order.indexOf(name);
+    if (index > -1) {
+      order.splice(index, 1);
     }
-    delete definitions[name];
   } else {
     order = [];
-    definitions = {};
   }
+  return order;
 };
