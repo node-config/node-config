@@ -2,10 +2,29 @@
 var defer = require('../../defer').deferConfig;
 
 var config = {
+  value: 'value',
   siteTitle : 'Site title',
   latitude  : 1,
   longitude : 2,
-
+  a: defer(function (cfg) {
+    return 'my '+cfg.b;
+  }),
+  b: defer(function () {
+    return this.value;
+  }),
+  c: defer(function (cfg) {
+    return this.a+' '+cfg.b;
+  }),
+  fromList: defer(function() {
+    return this.list[2]+2;
+  }),
+  list: [
+    1,
+    'b',
+    defer(function (cfg) {
+      return cfg.latitude+cfg.longitude;
+    })
+  ]
 };
 
 // Set up a default value which refers to another value.
