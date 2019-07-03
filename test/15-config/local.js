@@ -1,7 +1,11 @@
 var asyncConfig = require('../../async').asyncConfig;
 
 var config = {
- siteTitle : 'New Instance!',
+  siteTitle : 'New Instance!',
+  promiseSubject: asyncConfig(async function(cfg) {
+    var subject = await cfg.welcomeEmail.subject;
+    return this.siteTitle+' '+subject;
+  })
 };
 
 config.map = {
