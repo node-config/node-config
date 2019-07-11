@@ -146,7 +146,7 @@ Contributors
 <td><img src=https://avatars3.githubusercontent.com/u/138707?v=4><a href="https://github.com/th507">th507</a></td>
 <td><img src=https://avatars2.githubusercontent.com/u/506460?v=4><a href="https://github.com/Osterjour">Osterjour</a></td>
 <td><img src=https://avatars0.githubusercontent.com/u/842998?v=4><a href="https://github.com/nsabovic">nsabovic</a></td>
-</tr><tr><td><img src=https://avatars0.githubusercontent.com/u/5138570?v=4><a href="https://github.com/ScionOfBytes">ScionOfBytes</a></td>
+</tr><tr><td><img src=https://avatars0.githubusercontent.com/u/5138570?v=4><a href="https://github.com/BadgerBadgerBadgerBadger">BadgerBadgerBadgerBadger</a></td>
 <td><img src=https://avatars2.githubusercontent.com/u/2529835?v=4><a href="https://github.com/simon-scherzinger">simon-scherzinger</a></td>
 <td><img src=https://avatars1.githubusercontent.com/u/175627?v=4><a href="https://github.com/axelhzf">axelhzf</a></td>
 <td><img src=https://avatars3.githubusercontent.com/u/7782055?v=4><a href="https://github.com/benkroeger">benkroeger</a></td>

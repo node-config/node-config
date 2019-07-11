@@ -1,3 +1,10 @@
+3.2.0 / 2019-07-11
+==================
+
+  * Asynchronous configs - iMoses
+  * Multiple config directories - @iMoses
+  * Improved parser support - @iMoses
+
 3.1.0 / 2019-04-07
 ==================
 
