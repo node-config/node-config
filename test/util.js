@@ -50,6 +50,44 @@ vows.describe('Tests for config util functions')
           assert.strictEqual(result.number, 5);
           process.env.NODE_CONFIG = prev;
         },
+    },
+    'Tests for util.isPromise': {
+      'It can identify a new Promise': function () {
+        assert.isTrue(config.util.isPromise(new Promise(() => {})));
+      },
+      'It can identify a resolved Promise': function () {
+        assert.isTrue(config.util.isPromise(Promise.resolve()));
+      },
+      'It can identify a rejected Promise': function () {
+        // Use .catch to avoid `UnhandledPromiseRejectionWarning`, DO NOT REMOVE
+        assert.isTrue(config.util.isPromise(Promise.reject().catch(function () {})));
+      },
+      'It can identify other things different as no promises': function () {
+        var testCases = [
+          new Function(),
+          function () {},
+          true,
+          false,
+          new Boolean(),
+          class {},
+          '',
+          new String(),
+          [],
+          {},
+          Object.create(null),
+          new Map(),
+          null,
+          undefined,
+          NaN,
+          Infinity,
+          0,
+          1.1
+          -1,
+        ];
+        testCases.forEach(function (testCase) {
+          assert.isFalse(config.util.isPromise(testCase));
+        });
+      }
     }
 })
 .export(module);
