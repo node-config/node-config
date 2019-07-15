@@ -74,6 +74,8 @@ vows.describe('Tests for config util functions')
           new String(),
           [],
           {},
+          Object.create(null),
+          new Map(),
           null,
           undefined,
           NaN,
