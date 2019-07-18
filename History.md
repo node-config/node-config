@@ -1,7 +1,12 @@
+3.2.1 / 2019-07-18
+==================
+
+  * Fixed TypeError: obj.toString is not a function - @leosuncin
+
 3.2.0 / 2019-07-11
 ==================
 
-  * Asynchronous configs - iMoses
+  * Asynchronous configs - @iMoses
   * Multiple config directories - @iMoses
   * Improved parser support - @iMoses
 
