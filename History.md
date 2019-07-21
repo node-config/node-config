@@ -1,3 +1,8 @@
+3.2.2 / 2019-07-20
+==================
+
+  * Fixed delimiter bug in configDirs to match O/S delimiter - @iMoses
+
 3.2.1 / 2019-07-18
 ==================
 
