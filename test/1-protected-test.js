@@ -374,12 +374,13 @@ vows.describe('Protected (hackable) utilities test')
     // strings.
     'Throws an error for leaf Array values': function (topic) {
       vars = {
-        NON_EXISTENT_VAR: 'ignore_this'
+        Customers: {
+          dbHost: ['a', 'b', 'c']
+        }
       };
       topic.Customers.dbHost = ['a', 'b', 'c'];
-      assert.throws(function () {
-        CONFIG.util.substituteDeep(topic, vars);
-      });
+      const substituted = CONFIG.util.substituteDeep(topic, vars) 
+      assert.deepEqual(substituted, vars)
     },
     'Throws an error for leaf Boolean values': function (topic) {
       vars = {
