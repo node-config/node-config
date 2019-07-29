@@ -373,11 +373,7 @@ vows.describe('Protected (hackable) utilities test')
     // Testing all the things in variable maps that don't make sense because ENV vars are always
     // strings.
     'Throws an error for leaf Array values': function (topic) {
-      vars = {
-        Customers: {
-          dbHost: ['a', 'b', 'c']
-        }
-      };
+      vars = {};
       topic.Customers.dbHost = ['a', 'b', 'c'];
       const substituted = CONFIG.util.substituteDeep(topic, vars) 
       assert.deepEqual(substituted, vars)
