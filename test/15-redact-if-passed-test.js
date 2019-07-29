@@ -91,17 +91,9 @@ vows
           } 
         })
       },
-      'DO NOT substitute if present ENV VARIABLE is not present': function(topic) {
+      'DO NOT substitute ENV VARIABLE is not present': function(topic) {
         const substitute = CONFIG.util.substituteDeep(topic, {});
-        assert.deepEqual(substitute, {
-          TestArrayToReplace: {
-            urls: [
-              "https://{{DOMAIN_NAME}}/index.html",
-              "https://{{DOMAIN_NAME}}/ashish.html",
-              "https://{{DOMAIN_NAME}}/home.html"
-            ]
-          } 
-        })
+        assert.deepEqual(substitute, {});
       }
     }
   })
