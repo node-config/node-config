@@ -631,9 +631,9 @@ vows.describe('Protected (hackable) utilities test')
         process.argv.push('--NODE_CONFIG_DIR=/etc/nodeConfig');
         assert.equal(CONFIG.util.getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
     },
-    'Returns always the first matching': function() {
+    'Returns always the last matching': function() {
         process.argv.push('--NODE_ENV=test');
-        assert.equal(CONFIG.util.getCmdLineArg('NODE_ENV'), 'staging');
+        assert.equal(CONFIG.util.getCmdLineArg('NODE_ENV'), 'test');
     },
     'Revert original process aruments': function() {
         assert.notEqual(process.argv, argvOrg);

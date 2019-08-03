@@ -252,11 +252,10 @@ vows.describe('Test suite for node-config')
     'A cloned property accessor remains a getter': function() {
       assert.equal(CONFIG.Customers.get('dbString'), 'override_from_runtime_json:5999');
     },
-    'A cloned property accessor is made immutable': function() {
+    'A cloned property accessor keeps its getter': function() {
       var random1 = CONFIG.Customers.get('random'),
           random2 = CONFIG.Customers.get('random');
-
-      assert.equal(random1, random2);
+      assert.notEqual(random1, random2);
     },
     'A proper exception is thrown on mis-spellings': function() {
       assert.throws(

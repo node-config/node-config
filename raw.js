@@ -1,15 +1,3 @@
-/**
- * This is meant to wrap configuration objects that should be left as is,
- * meaning that the object or its protoype will not be modified in any way
- */
-function RawConfig () {
-}
-
-function raw(rawObj) {
-  var obj = Object.create(RawConfig.prototype);
-  obj.resolve = function () { return rawObj; }
-  return obj;
-}
-
-module.exports.RawConfig = RawConfig;
-module.exports.raw = raw;
+console.warn(`WARNING: config/raw is deprecated and will be removed in the next versions.\n` +
+  `This method is obsolete and no longer needed, simply remove any usage of it.`);
+module.exports.raw = val => val;
