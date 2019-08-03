@@ -114,6 +114,27 @@ vows.describe(`Configuration utilities`)
         }
       },
     },
+    'utils.isPlainObject()': {
+      'identifies plain-objects correctly': function() {
+        const values = [{key: 'val'}];
+        for (let val of values) {
+          assert.isTrue(utils.isPlainObject(val));
+        }
+      },
+      'identifies non-plain-objects correctly': function() {
+        function F() { this.key = 'val'; }
+        const values = [
+          () => {}, NaN, Infinity, null, undefined,
+          'string', 42, [4, 2], ['some', 'strings'],
+          new Map, new F,
+          process.argv, process.env, process.stdout,
+          new Promise(res => res), Promise.resolve({}),
+        ];
+        for (let val of values) {
+          assert.isFalse(utils.isPlainObject(val));
+        }
+      },
+    },
     'utils.isPromise()': {
       'identifies promises correctly': function() {
         const values = [
