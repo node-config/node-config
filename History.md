@@ -1,3 +1,30 @@
+3.2.3 / 2019-10-03
+==================
+
+  * Fixed strict mode warning #460 - @fedulovivan
+
+3.2.2 / 2019-07-20
+==================
+
+  * Fixed delimiter bug in configDirs to match O/S delimiter - @iMoses
+
+3.2.1 / 2019-07-18
+==================
+
+  * Fixed TypeError: obj.toString is not a function - @leosuncin
+
+3.2.0 / 2019-07-11
+==================
+
+  * Asynchronous configs - @iMoses
+  * Multiple config directories - @iMoses
+  * Improved parser support - @iMoses
+
+3.1.0 / 2019-04-07
+==================
+
+  * Support of module.exports syntax for TS config files @keenondrums
+
 3.0.1 / 2018-12-16
 ==================
 

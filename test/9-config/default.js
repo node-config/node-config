@@ -6,6 +6,7 @@ module.exports = {
   yell: raw(function(input) {
     return input + '!';
   }),
+  aPromise: Promise.resolve('this is a promise result'),
   innerRaw: {
     innerCircularReference: raw(process.stdout)
   },

@@ -388,4 +388,48 @@ vows.describe('Test suite for node-config')
     }
   },
 })
+  .addBatch({
+    'Library initialization from multiple directories': {
+      topic : function () {
+        // Change the configuration directory for testing
+        process.env.NODE_CONFIG_DIR = __dirname + '/config:' + __dirname + '/x-config';
+
+        // Hardcode $NODE_ENV=test for testing
+        process.env.NODE_ENV='test';
+
+        // Test for multi-instance applications
+        process.env.NODE_APP_INSTANCE='3';
+
+        // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
+        process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
+        process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
+
+        // Test Environment Variable Substitution
+        override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+        process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
+
+        CONFIG = requireUncached(__dirname + '/../lib/config');
+
+        return CONFIG;
+
+      },
+      'Config library is available': function() {
+        assert.isObject(CONFIG);
+      },
+      'Config extensions are included with the library': function() {
+        assert.isFunction(CONFIG.util.cloneDeep);
+      }
+    },
+    'Multiple config direcoties': {
+      'Verify first directory loaded': function() {
+        assert.equal(CONFIG.get('Customers.dbName'), 'from_default_xml');
+      },
+      'Verify second directory loaded': function() {
+        assert.equal(CONFIG.get('different.dir'), true);
+      },
+      'Verify correct resolution order': function() {
+        assert.equal(CONFIG.get('AnotherModule.parm4'), 'x_config_4_win');
+      },
+    }
+  })
 .export(module);
