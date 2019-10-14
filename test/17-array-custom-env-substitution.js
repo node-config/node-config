@@ -23,7 +23,7 @@ var argvOrg = process.argv;
 
 var CONFIG;
 vows
-  .describe("Custom Array Redacted if needed tests")
+  .describe("Array Substitution in custom-env-variables")
   .addBatch({
     // We initialize the object in a batch so that the globals get changed at /run-time/ not /require-time/,
     // avoiding conflicts with other tests.
@@ -75,7 +75,7 @@ vows
         };
         return topic;
       },
-      'Substitute if present ENV VARIABLE': function(topic) {
+      'Substitute if present in ENV VARIABLE': function(topic) {
         const vars = {
           DOMAIN_NAME: "localhost"
         };
@@ -91,7 +91,7 @@ vows
           } 
         })
       },
-      'DO NOT substitute ENV VARIABLE is not present': function(topic) {
+      'DO NOT substitute ENV VARIABLE if not present': function(topic) {
         const substitute = CONFIG.util.substituteDeep(topic, {});
         assert.deepEqual(substitute, {});
       }
