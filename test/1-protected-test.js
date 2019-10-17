@@ -415,6 +415,19 @@ vows.describe('Protected (hackable) utilities test')
       assert.throws(function () {
         CONFIG.util.substituteDeep(topic, vars);
       });
+    },
+    'Throws an error with message describing variables name that throw a parser error': function(topic) {
+      var JSON_WITH_SYNTAX_ERROR = '{"port":"3306","host" "example.com"}'
+      vars = {
+        'DB_HOST': JSON_WITH_SYNTAX_ERROR
+      };
+      topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+      try {
+        CONFIG.util.substituteDeep(topic, vars);
+        assert.isTrue(false);
+      } catch(err) {
+        assert.match(err.message, /__format parser error in DB_HOST: /);
+      }
     }
   },
 
