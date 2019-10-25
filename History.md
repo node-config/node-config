@@ -1,3 +1,8 @@
+3.2.4 / 2019-10-25
+==================
+
+  * Improved error handling of env variables value parse - @leonardovillela
+
 3.2.3 / 2019-10-03
 ==================
 
