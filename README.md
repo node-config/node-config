@@ -126,7 +126,7 @@ Articles
 
 Further Information
 ---------------------
-If you still don't see what you are looking for, here more resources to check: 
+If you still don't see what you are looking for, here are some more resources to check: 
 
  * The [wiki may have more pages](https://github.com/lorenwest/node-config/wiki) which are not directly linked from here.
  * Review [questions tagged with node-config](https://stackexchange.com/filters/207096/node-config) on StackExchange. These are monitored by `node-config` contributors.
