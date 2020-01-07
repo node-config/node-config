@@ -281,8 +281,9 @@ Parser.stripYamlComments = function(fileStr) {
   return fileStr.replace(/^\s*#.*/mg,'').replace(/^\s*[\n|\r]+/mg,'');
 };
 
-var order = ['js', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml'];
+var order = ['js', 'cjs', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml'];
 var definitions = {
+  cjs: Parser.jsParser,
   coffee: Parser.coffeeParser,
   cson: Parser.csonParser,
   hjson: Parser.hjsonParser,
