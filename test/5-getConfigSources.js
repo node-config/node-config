@@ -9,7 +9,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
   'tests with NODE_CONFIG env set, and --NODE_CONFIG command line flag': {
     topic: function () {
      // Change the configuration directory for testing
-     process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
+     process.env.NODE_CONFIG_DIR = [__dirname + '/5-config', __dirname + '/5-extra-config'].join(Path.delimiter);
 
       delete process.env.NODE_ENV;
       process.env.NODE_CONFIG = '{}';
@@ -21,7 +21,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
     },
 
     'Two files plus NODE_CONFIG in env and as command line args should result in four entries': function(topic) {
-        assert.equal(topic.length,4);
+        assert.equal(topic.length,6);
     },
 
     "The environment variable and command line args are the last two overrides": function (topic) {
@@ -46,7 +46,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
     },
 
     'Two files should result in two entries': function(topic) {
-        assert.equal(topic.length,2);
+        assert.equal(topic.length,3);
     },
 
     "The keys for each object are 'name', 'original', and 'parsed'": function(topic) {
@@ -70,7 +70,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
     },
 
     'Two files should result in two entries': function(topic) {
-        assert.equal(topic.length,2);
+        assert.equal(topic.length,3);
     },
 
     "The keys for each object are 'name', 'original', and 'parsed'": function(topic) {
@@ -93,7 +93,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
     },
 
     'Three files should result in 3 entries': function(topic) {
-        assert.equal(topic.length,3);
+        assert.equal(topic.length,4);
     },
 
     'Second file is named empty': function (topic) {
