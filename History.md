@@ -1,3 +1,8 @@
+3.2.5 / 2020-01-16
+==================
+
+  * Fixed issue with getCustomEnvVars and multiple config dirs #585 - @dekelev
+
 3.2.4 / 2019-10-25
 ==================
 
