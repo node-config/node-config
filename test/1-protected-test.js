@@ -334,6 +334,27 @@ vows.describe('Protected (hackable) utilities test')
         }
       });
     },
+    'Returns an object with keys matching down to mapped existing and defined variables': function (topic) {
+      vars = {
+        'SOME_TOP_LEVEL': 0,
+        'DB_HOST': undefined,
+        'DB_NAME': '',
+        'OAUTH_SECRET': 'false',
+        'OAUTH_KEY': 'null',
+        'PATH': ''
+      };
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {
+        TopLevel: 0,
+        Customers: {
+          dbName: '',
+          oauth: {
+            key: 'null',
+            secret: 'false'
+          }
+        }
+      });
+    },
     'returns an object with keys matching down to mapped existing variables with JSON content': function (topic) {
       vars = {
         'DB_HOST': '{"port":"3306","host":"example.com"}'
@@ -342,6 +363,26 @@ vows.describe('Protected (hackable) utilities test')
       assert.deepEqual(substituted, {
         Customers: {
           dbHost: '{"port":"3306","host":"example.com"}'
+        }
+      });
+    },
+    'Returns an object with keys matching down to mapped existing and defined variables with JSON content': function (topic) {
+      var dbHostObject = {
+        param1WithZero: 0,
+        param2WithFalse: false,
+        param3WithNull: null,
+        param4WithEmptyObject: {},
+        param5WithEmptyArray: [],
+        param6WithEmptyString: ''
+      };
+      var dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
+      vars = {
+        'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
+      };
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {
+        Customers: {
+          dbHost: JSON.stringify(dbHostObject)
         }
       });
     },
@@ -357,6 +398,27 @@ vows.describe('Protected (hackable) utilities test')
             port: '3306',
             host: 'example.com'
           }
+        }
+      });
+    },
+    'Returns an object with keys matching down to mapped and JSON-parsed existing and defined variables': function (topic) {
+      var dbHostObject = {
+        param1WithZero: 0,
+        param2WithFalse: false,
+        param3WithNull: null,
+        param4WithEmptyObject: {},
+        param5WithEmptyArray: [],
+        param6WithEmptyString: ''
+      };
+      var dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
+      vars = {
+        'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
+      };
+      topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      assert.deepEqual(substituted, {
+        Customers: {
+          dbHost: dbHostObject
         }
       });
     },
