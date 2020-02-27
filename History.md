@@ -1,3 +1,8 @@
+3.3.0 / 2020-02-26
+==================
+
+  * Allow all defined values in `substituteDeep` - @fostyfost
+
 3.2.6 / 2020-02-21
 ==================
 
