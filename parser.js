@@ -199,6 +199,14 @@ Parser.propertiesParser = function(filename, content) {
   return PPARSER.parse(content, { namespaces: true, variables: true, sections: true });
 };
 
+Parser.numberParser = function(filename, content) {
+    return Number(content);
+}
+
+Parser.booleanParser = function(filename, content) {
+    return ('' + content === 'true');
+}
+
 /**
  * Strip all Javascript type comments from the string.
  *
@@ -281,7 +289,7 @@ Parser.stripYamlComments = function(fileStr) {
   return fileStr.replace(/^\s*#.*/mg,'').replace(/^\s*[\n|\r]+/mg,'');
 };
 
-var order = ['js', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml'];
+var order = ['js', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml', 'number', 'boolean'];
 var definitions = {
   coffee: Parser.coffeeParser,
   cson: Parser.csonParser,
@@ -296,6 +304,8 @@ var definitions = {
   xml: Parser.xmlParser,
   yaml: Parser.yamlParser,
   yml: Parser.yamlParser,
+  number: Parser.numberParser,
+  boolean: Parser.booleanParser
 };
 
 Parser.getParser = function(name) {

@@ -14,7 +14,7 @@ var vows = require('vows'),
  * @class ConfigTest
  */
 
-var CONFIG, MODULE_CONFIG, override;
+var CONFIG, MODULE_CONFIG, override, overrideBoolean, overrideNumber;
 vows.describe('Test suite for node-config')
 .addBatch({
   'Library initialization': {
@@ -35,6 +35,14 @@ vows.describe('Test suite for node-config')
       // Test Environment Variable Substitution
       override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
       process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
+      
+      overrideBoolean = "true";
+      process.env.CUSTOM_JSON_BOOLEAN_ENVIRONMENT_VAR = overrideBoolean;
+      
+      overrideNumber = "2";
+      process.env.CUSTOM_JSON_NUMBER_ENVIRONMENT_VAR = overrideNumber;
+      
+
 
       CONFIG = requireUncached(__dirname + '/../lib/config');
 
@@ -159,7 +167,15 @@ vows.describe('Test suite for node-config')
     // NOT testing absence of `custom-environment-variables.json` because current tests don't mess with the filesystem
     'Configuration can come from an environment variable mapped in custom_environment_variables.json': function () {
       assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.json'), override);
-    }
+    },
+
+    'Configuration loaded via environment variable is mapped as boolean if format specified': function () {
+        assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.types.boolean'), Boolean(overrideBoolean));
+    },
+
+    'Configuration loaded via environment variable is mapped as number if format specified': function () {
+        assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.types.number'), Number(overrideNumber));
+    },
   },
 
  'Assuring a configuration property can be hidden': {

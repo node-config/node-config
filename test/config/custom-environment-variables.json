@@ -2,7 +2,17 @@
   // With a comment
   "customEnvironmentVariables": {
     "mappedBy": {
-      "json": "CUSTOM_JSON_ENVIRONMENT_VAR"
+      "json": "CUSTOM_JSON_ENVIRONMENT_VAR",
+      "types": {
+        "boolean": {
+            "__name": "CUSTOM_JSON_BOOLEAN_ENVIRONMENT_VAR",
+            "__format": "boolean"
+        },
+        "number": {
+            "__name": "CUSTOM_JSON_NUMBER_ENVIRONMENT_VAR",
+            "__format": "number"
+        }
+      }
     }
   }
 }
