@@ -1,3 +1,8 @@
+3.3.1 / 2020-03-25
+==================
+
+  * Fix security vulnerability in json5 dependency - @twkel
+
 3.3.0 / 2020-02-26
 ==================
 
