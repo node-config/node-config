@@ -2,7 +2,37 @@
   // With a comment
   "customEnvironmentVariables": {
     "mappedBy": {
-      "json": "CUSTOM_JSON_ENVIRONMENT_VAR"
+      "json": "CUSTOM_JSON_ENVIRONMENT_VAR",
+      "formats": {
+        "booleanTrue": {
+          "__name": "CUSTOM_BOOLEAN_TRUE_ENVIRONMENT_VAR",
+          "__format": "boolean"
+        },
+        "booleanFalse": {
+          "__name": "CUSTOM_BOOLEAN_FALSE_ENVIRONMENT_VAR",
+          "__format": "boolean"
+        },
+        "notProperBoolean": {
+          "__name": "CUSTOM_BOOLEAN_ERROR_ENVIRONMENT_VAR",
+          "__format": "boolean"
+        },
+        "numberInteger": {
+          "__name": "CUSTOM_NUMBER_INTEGER_ENVIRONMENT_VAR",
+          "__format": "number"
+        },
+        "numberFloat": {
+          "__name": "CUSTOM_NUMBER_FLOAT_ENVIRONMENT_VAR",
+          "__format": "number"
+        },
+        "numberEmpty": {
+          "__name": "CUSTOM_NUMBER_EMPTY_ENVIRONMENT_VAR",
+          "__format": "number"
+        },
+        "numberString": {
+          "__name": "CUSTOM_NUMBER_STRING_ENVIRONMENT_VAR",
+          "__format": "number"
+        }
+      }
     }
   }
 }
