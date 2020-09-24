@@ -281,7 +281,31 @@ Parser.stripYamlComments = function(fileStr) {
   return fileStr.replace(/^\s*#.*/mg,'').replace(/^\s*[\n|\r]+/mg,'');
 };
 
-var order = ['js', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml'];
+/**
+ * Parses the environment variable to the boolean equivalent.
+ * Defaults to false
+ *
+ * @param {String} content - Environment variable value
+ * @return {boolean} - Boolean value fo the passed variable value
+ */
+Parser.booleanParser = function(filename, content) {
+  return content === 'true';
+};
+
+/**
+ * Parses the environment variable to the number equivalent.
+ * Defaults to undefined
+ *
+ * @param {String} content - Environment variable value
+ * @return {Number} - Number value fo the passed variable value
+ */
+Parser.numberParser = function(filename, content) {
+  const numberValue = Number(content);
+  return Number.isNaN(numberValue) ? undefined : numberValue;
+};
+
+var order = ['js', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml',
+  'boolean', 'number'];
 var definitions = {
   coffee: Parser.coffeeParser,
   cson: Parser.csonParser,
@@ -296,6 +320,8 @@ var definitions = {
   xml: Parser.xmlParser,
   yaml: Parser.yamlParser,
   yml: Parser.yamlParser,
+  boolean: Parser.booleanParser,
+  number: Parser.numberParser
 };
 
 Parser.getParser = function(name) {

@@ -14,7 +14,7 @@ var vows = require('vows'),
  * @class ConfigTest
  */
 
-var CONFIG, MODULE_CONFIG, override;
+var CONFIG, MODULE_CONFIG, override, numberInteger, numberFloat;
 vows.describe('Test suite for node-config')
 .addBatch({
   'Library initialization': {
@@ -35,6 +35,19 @@ vows.describe('Test suite for node-config')
       // Test Environment Variable Substitution
       override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
       process.env.CUSTOM_JSON_ENVIRONMENT_VAR = override;
+
+      // Test Environment variable substitution of boolean values
+      process.env.CUSTOM_BOOLEAN_TRUE_ENVIRONMENT_VAR = 'true';
+      process.env.CUSTOM_BOOLEAN_FALSE_ENVIRONMENT_VAR = 'false';
+      process.env.CUSTOM_BOOLEAN_ERROR_ENVIRONMENT_VAR = 'notProperBoolean';
+
+      // Test Environment variable substitution of numeric values
+      numberInteger = 1001;
+      numberFloat = 3.14
+      process.env.CUSTOM_NUMBER_INTEGER_ENVIRONMENT_VAR = numberInteger;
+      process.env.CUSTOM_NUMBER_FLOAT_ENVIRONMENT_VAR = numberFloat;
+      process.env.CUSTOM_NUMBER_EMPTY_ENVIRONMENT_VAR = '';
+      process.env.CUSTOM_NUMBER_STRING_ENVIRONMENT_VAR = 'String';
 
       CONFIG = requireUncached(__dirname + '/../lib/config');
 
@@ -159,7 +172,37 @@ vows.describe('Test suite for node-config')
     // NOT testing absence of `custom-environment-variables.json` because current tests don't mess with the filesystem
     'Configuration can come from an environment variable mapped in custom_environment_variables.json': function () {
       assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.json'), override);
-    }
+    },
+
+    'Environment variables specified as boolean true': function () {
+      assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.formats.booleanTrue'), true);
+    },
+
+    'Environment variables specified as boolean false': function () {
+      assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.formats.booleanFalse'), false);
+    },
+
+    'Environment variables not specified as a proper boolean value': function () {
+      assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.formats.notProperBoolean'), false);
+    },
+
+    'Environment variables specified as an integer number': function () {
+      assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.formats.numberInteger'), numberInteger);
+    },
+
+    'Environment variables specified as a floating number': function () {
+      assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.formats.numberFloat'), numberFloat);
+    },
+
+    'Environment variables specified as a number but empty string passed': function () {
+      assert.equal(CONFIG.get('customEnvironmentVariables.mappedBy.formats.numberEmpty'), 0);
+    },
+
+    'Environment variables specified as a number but alphanumeric string passed': function () {
+      assert.throws(function () { CONFIG.get('customEnvironmentVariables.mappedBy.formats.numberString'); },
+        /Configuration property "customEnvironmentVariables.mappedBy.formats.numberString" is not defined/
+      )
+    },
   },
 
  'Assuring a configuration property can be hidden': {
