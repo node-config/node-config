@@ -1,3 +1,9 @@
+3.3.2 / 2020-09-24
+==================
+
+* Fixed issue with Buffers in config throwing error in util.makeImmutable (#608) - Michal Wadas
+* Added boolean and numeric types to custom environment variables - Ankur Narkhede @ankurnarkhede
+
 3.3.1 / 2020-03-25
 ==================
 
