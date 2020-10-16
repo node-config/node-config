@@ -3,7 +3,7 @@ module.exports = {
   TestModule: {
     parm1:"value1",
     arr1: ["arrValue1"],
-    buffer: new Buffer([1,2,3,4,5]),
+    buffer: Buffer.from([1,2,3,4,5]),
   },
   Customers: {
     dbHost:'base',
