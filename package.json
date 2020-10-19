@@ -19,7 +19,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "json5": "^2.1.1"
+    "json5": "^2.1.1",
+    "md5": "^2.3.0"
   },
   "devDependencies": {
     "@types/node": "^7.0.8",
