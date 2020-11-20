@@ -54,6 +54,20 @@ vows.describe('Tests for strict mode').addBatch({
     exceptionMessage :"FATAL: NODE_ENV value of 'local' is ambiguous. "
                      +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
   }),
+
+  "Specifying reserved word for NODE_CONFIG_ENV throws reserved word exception with appropriate wording": _expectException({
+    NODE_CONFIG_ENV  : 'local',
+    APP_INSTANCE     : 'valid-instance',
+    exceptionMessage :"FATAL: NODE_CONFIG_ENV value of 'local' is ambiguous. "
+                     +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+  }),
+
+  "Specifying NODE_CONFIG_ENV=production,cloud with no cloud file throws an exception with appropriate wording": _expectException({
+    NODE_CONFIG_ENV  : 'cloud',
+    APP_INSTANCE     : 'valid-instance',
+    exceptionMessage :"FATAL: NODE_CONFIG_ENV value of 'cloud' did not match any deployment config file names. "
+                     +"See https://github.com/lorenwest/node-config/wiki/Strict-Mode",
+  }),
 })
 .export(module);
 
@@ -67,9 +81,17 @@ function _expectException (opts) {
       process.env.NODE_CONFIG_DIR         = __dirname + '/6-config';
       process.env.NODE_CONFIG_STRICT_MODE = 1;
       process.env.NODE_APP_INSTANCE       = opts.APP_INSTANCE;
-      process.env.NODE_ENV                = opts.NODE_ENV;
+
+      if (!!opts.NODE_ENV) {
+        process.env.NODE_ENV              = opts.NODE_ENV;
+      }
+
+      if (!!opts.NODE_CONFIG_ENV) {
+        process.env.NODE_CONFIG_ENV       = opts.NODE_CONFIG_ENV;
+      }
+
       delete process.env.NODE_CONFIG;
-      try { 
+      try {
         var config = requireUncached(__dirname + '/../lib/config');
       }
       catch (e) {
