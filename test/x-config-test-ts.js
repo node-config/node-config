@@ -1,9 +1,4 @@
 var requireUncached = require('./_utils/requireUncached');
-var isSupportedVersion = require('./_utils/isSupportedVersion');
-
-if(!isSupportedVersion('4.0.0'))  {
-    return false;
-}
 
 // Dependencies
 var vows = require('vows'),
