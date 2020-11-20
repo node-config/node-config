@@ -1,9 +1,4 @@
 var requireUncached = require('./_utils/requireUncached');
-var isSupportedVersion = require('./_utils/isSupportedVersion');
-
-if(!isSupportedVersion('7.6.0'))  {
-  return false;
-}
 
 var resolveAsyncConfigs = require('../async').resolveAsyncConfigs;
 
