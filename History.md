@@ -1,3 +1,11 @@
+3.3.3 / 2020-11-26
+==================
+
+* FIX #460 - Strict mode warning refer to appropriate env variable @iCodeOkay
+* Use Buffer.alloc and Buffer.from instead of contrsuctor @Fcmam5
+* Add support for experimental .cjs modules @lenkan
+
+
 3.3.2 / 2020-09-24
 ==================
 
