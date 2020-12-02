@@ -12,7 +12,7 @@ var resolveAsyncConfigs = require('../async').resolveAsyncConfigs;
 // Change the configuration directory for testing
 process.env.NODE_CONFIG_DIR = __dirname + '/15-config';
 
-// Hardcode $NODE_ENV=test for testing
+// Hard-code $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
 // Test for multi-instance applications

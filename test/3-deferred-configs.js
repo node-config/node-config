@@ -5,7 +5,7 @@ var requireUncached = require('./_utils/requireUncached');
 // Change the configuration directory for testing
 process.env.NODE_CONFIG_DIR = __dirname + '/3-config';
 
-// Hardcode $NODE_ENV=test for testing
+// Hard-code $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
 // Test for multi-instance applications

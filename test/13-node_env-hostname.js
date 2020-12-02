@@ -24,7 +24,7 @@ vows.describe('Tests for HOSTNAME and HOST environment variables')
     }
 })
 .addBatch({
-  'When HOSTNAME env is setted': {
+  'When HOSTNAME env is set': {
     topic: function() {
       // Test HOST and HOSTNAME
       delete process.env.HOST;
@@ -38,7 +38,7 @@ vows.describe('Tests for HOSTNAME and HOST environment variables')
   }
 })
 .addBatch({
-  'When HOST env is setted': {
+  'When HOST env is set': {
     topic: function() {
       // Test HOST and HOSTNAME
       delete process.env.HOSTNAME;

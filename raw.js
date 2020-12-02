@@ -1,6 +1,6 @@
 /**
  * This is meant to wrap configuration objects that should be left as is,
- * meaning that the object or its protoype will not be modified in any way
+ * meaning that the object or its prototype will not be modified in any way
  */
 function RawConfig () {
 }

@@ -22,7 +22,7 @@ vows.describe('Test suite for node-config')
       // Change the configuration directory for testing
       process.env.NODE_CONFIG_DIR = __dirname + '/config';
 
-      // Hardcode $NODE_ENV=test for testing
+      // Hard-code $NODE_ENV=test for testing
       process.env.NODE_ENV='test';
 
       // Test for multi-instance applications
@@ -437,7 +437,7 @@ vows.describe('Test suite for node-config')
         // Change the configuration directory for testing
         process.env.NODE_CONFIG_DIR = __dirname + '/config:' + __dirname + '/x-config';
 
-        // Hardcode $NODE_ENV=test for testing
+        // Hard-code $NODE_ENV=test for testing
         process.env.NODE_ENV='test';
 
         // Test for multi-instance applications
@@ -463,7 +463,7 @@ vows.describe('Test suite for node-config')
         assert.isFunction(CONFIG.util.cloneDeep);
       }
     },
-    'Multiple config direcoties': {
+    'Multiple config directories': {
       'Verify first directory loaded': function() {
         assert.equal(CONFIG.get('Customers.dbName'), 'from_default_xml');
       },
