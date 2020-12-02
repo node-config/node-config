@@ -20,7 +20,7 @@ vows.describe('Test git-crypt integration')
 
       process.env.NODE_CONFIG_STRICT_MODE = false;
 
-      // Hardcode $NODE_ENV=encrypted for testing
+      // Hard-code $NODE_ENV=encrypted for testing
       process.env.NODE_ENV='encrypted';
 
       // Test Environment Variable Substitution
@@ -44,7 +44,7 @@ vows.describe('Test git-crypt integration')
 .addBatch({
   'initialization with encrypted files without CONFIG_SKIP_GITCRYPT': {
     'An exception is thrown if CONFIG_SKIP_GITCRYPT is not set': function() {
-      // Hardcode $NODE_ENV=encrypted for testing
+      // Hard-code $NODE_ENV=encrypted for testing
       process.env.NODE_ENV='encrypted';
 
       // Test Environment Variable Substitution

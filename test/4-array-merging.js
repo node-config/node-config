@@ -9,7 +9,7 @@ var requireUncached = require('./_utils/requireUncached');
 // Change the configuration directory for testing
 process.env.NODE_CONFIG_DIR = __dirname + '/config';
 
-// Hardcode $NODE_ENV=test for testing
+// Hard-code $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
 // Test for multi-instance applications
@@ -33,7 +33,7 @@ vows.describe('Tests for merging arrays').addBatch({
         assert.deepEqual(CONFIG.arrayMerging.emptyArray, ['not empty anymore']);
     },
 
-    'An array with one value should be replaced wholeshole': function() {
+    'An array with one value should be replaced wholesale': function() {
         assert.deepEqual(CONFIG.arrayMerging.oneItem, ['replaced']);
     },
 

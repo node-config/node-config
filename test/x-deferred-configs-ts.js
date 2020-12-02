@@ -10,7 +10,7 @@ if(!isSupportedVersion('4.0.0'))  {
 // Change the configuration directory for testing
 process.env.NODE_CONFIG_DIR = __dirname + '/x-config-ts';
 
-// Hardcode $NODE_ENV=test for testing
+// Hard-code $NODE_ENV=test for testing
 process.env.NODE_ENV='test';
 
 // Test for multi-instance applications

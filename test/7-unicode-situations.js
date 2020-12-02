@@ -8,7 +8,7 @@ var vows = require('vows'),
 // Change the configuration directory for testing
 process.env.NODE_CONFIG_DIR = __dirname + '/7-config';
 
-// Hardcode $NODE_ENV=test for testing
+// Hard-code $NODE_ENV=test for testing
 delete process.env.NODE_ENV;
 
 // Test for multi-instance applications

@@ -36,7 +36,7 @@ function getContributorTable(callback) {
     try {
       contributors = JSON.parse(body);
     } catch (e) {
-      console.error('Error loading contribtor list: ' + body);
+      console.error('Error loading contributor list: ' + body);
     }
 
     // Un-comment to show what github spits out

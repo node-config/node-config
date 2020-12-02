@@ -32,7 +32,7 @@ vows.describe('Protected (hackable) utilities test')
       // Change the configuration directory for testing
       process.env.NODE_CONFIG_DIR = __dirname + '/config';
 
-      // Hardcode $NODE_ENV=test for testing
+      // Hard-code $NODE_ENV=test for testing
       process.env.NODE_ENV='test';
 
       // Test for multi-instance applications
@@ -386,7 +386,7 @@ vows.describe('Protected (hackable) utilities test')
         }
       });
     },
-    'returns an object with keys matching down to mapped and JSON-parsed existing variabls': function (topic) {
+    'returns an object with keys matching down to mapped and JSON-parsed existing variables': function (topic) {
       vars = {
         'DB_HOST': '{"port":"3306","host":"example.com"}'
       };
@@ -517,11 +517,11 @@ vows.describe('Protected (hackable) utilities test')
       CONFIG.util.setPath(topic, ['Customers', 'oauth', 'secret'], null);
       assert.equal(topic.Customers.oauth.secret, 'an_api_secret');
     },
-    'Creates toplevel keys to set new values': function (topic) {
+    'Creates top-level keys to set new values': function (topic) {
       CONFIG.util.setPath(topic, ['NewKey'], 'NEW_VALUE');
       assert.equal(topic.NewKey, 'NEW_VALUE');
     },
-    'Creates subkeys to set new values': function (topic) {
+    'Creates sub-keys to set new values': function (topic) {
       CONFIG.util.setPath(topic, ['TestModule', 'oauth'], 'NEW_VALUE');
       assert.equal(topic.TestModule.oauth, 'NEW_VALUE');
     },
@@ -710,7 +710,7 @@ vows.describe('Protected (hackable) utilities test')
         process.argv.push('--NODE_ENV=test');
         assert.equal(CONFIG.util.getCmdLineArg('NODE_ENV'), 'staging');
     },
-    'Revert original process aruments': function() {
+    'Revert original process arguments': function() {
         assert.notEqual(process.argv, argvOrg);
         process.argv = argvOrg;
         assert.equal(process.argv, argvOrg);
