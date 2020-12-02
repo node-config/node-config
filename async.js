@@ -43,7 +43,7 @@ function resolveAsyncConfigs(config) {
   (function iterate(prop) {
     var propsToSort = [];
     for (var property in prop) {
-      if (prop.hasOwnProperty(property) && prop[property] != null) {
+      if (Object.hasOwnProperty.call(prop, property) && prop[property] != null) {
         propsToSort.push(property);
       }
     }
