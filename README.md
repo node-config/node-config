@@ -134,36 +134,36 @@ If you still don't see what you are looking for, here are some more resources to
 
 Contributors
 ------------
-<table id="contributors"><tr><td><img src=https://avatars2.githubusercontent.com/u/373538?v=4><a href="https://github.com/lorenwest">lorenwest</a></td>
-<td><img src=https://avatars1.githubusercontent.com/u/25829?v=4><a href="https://github.com/markstos">markstos</a></td>
-<td><img src=https://avatars1.githubusercontent.com/u/1083065?v=4><a href="https://github.com/iMoses">iMoses</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/447151?v=4><a href="https://github.com/elliotttf">elliotttf</a></td>
-<td><img src=https://avatars1.githubusercontent.com/u/8839447?v=4><a href="https://github.com/jfelege">jfelege</a></td>
-<td><img src=https://avatars0.githubusercontent.com/u/66902?v=4><a href="https://github.com/leachiM2k">leachiM2k</a></td>
-</tr><tr><td><img src=https://avatars1.githubusercontent.com/u/791137?v=4><a href="https://github.com/josx">josx</a></td>
-<td><img src=https://avatars2.githubusercontent.com/u/133277?v=4><a href="https://github.com/enyo">enyo</a></td>
-<td><img src=https://avatars1.githubusercontent.com/u/4307697?v=4><a href="https://github.com/leosuncin">leosuncin</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/1077378?v=4><a href="https://github.com/arthanzel">arthanzel</a></td>
-<td><img src=https://avatars2.githubusercontent.com/u/1656140?v=4><a href="https://github.com/eheikes">eheikes</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/138707?v=4><a href="https://github.com/th507">th507</a></td>
-</tr><tr><td><img src=https://avatars2.githubusercontent.com/u/506460?v=4><a href="https://github.com/Osterjour">Osterjour</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/1751645?v=4><a href="https://github.com/cunneen">cunneen</a></td>
-<td><img src=https://avatars0.githubusercontent.com/u/842998?v=4><a href="https://github.com/nsabovic">nsabovic</a></td>
-<td><img src=https://avatars0.githubusercontent.com/u/5138570?v=4><a href="https://github.com/BadgerBadgerBadgerBadger">BadgerBadgerBadgerBadger</a></td>
-<td><img src=https://avatars2.githubusercontent.com/u/2529835?v=4><a href="https://github.com/simon-scherzinger">simon-scherzinger</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/8650543?v=4><a href="https://github.com/leonardovillela">leonardovillela</a></td>
-</tr><tr><td><img src=https://avatars1.githubusercontent.com/u/175627?v=4><a href="https://github.com/axelhzf">axelhzf</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/7782055?v=4><a href="https://github.com/benkroeger">benkroeger</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/1872824?v=4><a href="https://github.com/fgheorghe">fgheorghe</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/1443067?v=4><a href="https://github.com/IvanVergiliev">IvanVergiliev</a></td>
-<td><img src=https://avatars0.githubusercontent.com/u/1736957?v=4><a href="https://github.com/jpwilliams">jpwilliams</a></td>
-<td><img src=https://avatars2.githubusercontent.com/u/1246875?v=4><a href="https://github.com/jaylynch">jaylynch</a></td>
-</tr><tr><td><img src=https://avatars1.githubusercontent.com/u/145742?v=4><a href="https://github.com/jberrisch">jberrisch</a></td>
-<td><img src=https://avatars1.githubusercontent.com/u/9355665?v=4><a href="https://github.com/kgoerlitz">kgoerlitz</a></td>
-<td><img src=https://avatars0.githubusercontent.com/u/8525267?v=4><a href="https://github.com/bertho-zero">bertho-zero</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/1918551?v=4><a href="https://github.com/nitzan-shaked">nitzan-shaked</a></td>
-<td><img src=https://avatars3.githubusercontent.com/u/3058150?v=4><a href="https://github.com/robertrossmann">robertrossmann</a></td>
-<td><img src=https://avatars2.githubusercontent.com/u/498929?v=4><a href="https://github.com/roncli">roncli</a></td>
+<table id="contributors"><tr><td><img src=https://avatars.githubusercontent.com/u/373538?v=4><a href="https://github.com/lorenwest">lorenwest</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/25829?v=4><a href="https://github.com/markstos">markstos</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1083065?v=4><a href="https://github.com/iMoses">iMoses</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/447151?v=4><a href="https://github.com/elliotttf">elliotttf</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/8839447?v=4><a href="https://github.com/jfelege">jfelege</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/66902?v=4><a href="https://github.com/leachiM2k">leachiM2k</a></td>
+</tr><tr><td><img src=https://avatars.githubusercontent.com/u/791137?v=4><a href="https://github.com/josx">josx</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/133277?v=4><a href="https://github.com/enyo">enyo</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/4307697?v=4><a href="https://github.com/leosuncin">leosuncin</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1077378?v=4><a href="https://github.com/arthanzel">arthanzel</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1656140?v=4><a href="https://github.com/eheikes">eheikes</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/138707?v=4><a href="https://github.com/th507">th507</a></td>
+</tr><tr><td><img src=https://avatars.githubusercontent.com/u/506460?v=4><a href="https://github.com/Osterjour">Osterjour</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1751645?v=4><a href="https://github.com/cunneen">cunneen</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/842998?v=4><a href="https://github.com/nsabovic">nsabovic</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/5138570?v=4><a href="https://github.com/BadgerBadgerBadgerBadger">BadgerBadgerBadgerBadger</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/2529835?v=4><a href="https://github.com/simon-scherzinger">simon-scherzinger</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/8650543?v=4><a href="https://github.com/leonardovillela">leonardovillela</a></td>
+</tr><tr><td><img src=https://avatars.githubusercontent.com/u/175627?v=4><a href="https://github.com/axelhzf">axelhzf</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/7782055?v=4><a href="https://github.com/benkroeger">benkroeger</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1872824?v=4><a href="https://github.com/fgheorghe">fgheorghe</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1443067?v=4><a href="https://github.com/IvanVergiliev">IvanVergiliev</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1736957?v=4><a href="https://github.com/jpwilliams">jpwilliams</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1246875?v=4><a href="https://github.com/jaylynch">jaylynch</a></td>
+</tr><tr><td><img src=https://avatars.githubusercontent.com/u/145742?v=4><a href="https://github.com/jberrisch">jberrisch</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/9355665?v=4><a href="https://github.com/kgoerlitz">kgoerlitz</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/8525267?v=4><a href="https://github.com/bertho-zero">bertho-zero</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/6686044?v=4><a href="https://github.com/NguyenMatthieu">NguyenMatthieu</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1918551?v=4><a href="https://github.com/nitzan-shaked">nitzan-shaked</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/3058150?v=4><a href="https://github.com/robertrossmann">robertrossmann</a></td>
 </tr></table>
 
 License

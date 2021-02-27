@@ -1,3 +1,8 @@
+3.3.4 / 2021-02-26
+==================
+
+* FIX #517 0 loadFileConfigs incorrectly adds to getConfigSources @NguyenMatthieu
+
 3.3.3 / 2020-11-26
 ==================
 
