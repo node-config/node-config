@@ -1,3 +1,8 @@
+3.3.5 / 2021-03-05
+==================
+
+* FIX [#628](https://github.com/lorenwest/node-config/issues/628) Uncaught ReferenceError: node_env_var_name is not defined @prnake
+
 3.3.4 / 2021-02-26
 ==================
 
