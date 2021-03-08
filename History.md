@@ -1,3 +1,8 @@
+3.3.6 / 2021-03-08
+==================
+
+* Added publishConfig element to package.json to prevent publishing to the wrong repository - @lorenwest
+
 3.3.5 / 2021-03-05
 ==================
 
