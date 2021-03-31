@@ -136,7 +136,10 @@ Parser.yamlParser = function(filename, content) {
     // The yaml library doesn't like strings that have newlines but don't
     // end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13
     content += '\n';
-    return VisionmediaYaml.eval(Parser.stripYamlComments(content));
+    if (typeof VisionmediaYaml.eval === 'function') {
+      return VisionmediaYaml.eval(Parser.stripYamlComments(content));
+    }
+    return VisionmediaYaml.parse(Parser.stripYamlComments(content));
   }
   else {
     console.error('No YAML parser loaded.  Suggest adding js-yaml dependency to your package.json file.')
