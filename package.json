@@ -4,7 +4,7 @@
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
-  "homepage": "http://lorenwest.github.com/node-config",
+  "homepage": "http://lorenwest.github.io/node-config",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
