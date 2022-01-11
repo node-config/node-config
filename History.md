@@ -1,3 +1,9 @@
+3.3.7 / 2022-01-11
+==================
+
+ * No new changes. 3.3.6 was not published to NPM in versioning mix-up.
+ * Release notes are moving to Github Releas page going forward.
+
 3.3.6 / 2021-03-08
 ==================
 
