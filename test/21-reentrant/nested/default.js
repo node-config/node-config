@@ -1,0 +1,3 @@
+module.exports = {
+  loaded: true
+};
