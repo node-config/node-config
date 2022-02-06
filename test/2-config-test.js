@@ -388,14 +388,14 @@ vows.describe('Test suite for node-config')
     },
 
     'The module config is in the CONFIG object': function(moduleConfig) {
-      assert.isObject(MODULE_CONFIG.TestModule);
-      assert.deepEqual(MODULE_CONFIG.TestModule, moduleConfig);
+      assert.isObject(MODULE_CONFIG.get('TestModule'));
+      assert.deepEqual(MODULE_CONFIG.get('TestModule'), moduleConfig);
     },
 
     // Regression test for https://github.com/lorenwest/node-config/issues/518
     'The module config did not extend itself with its own name': function(moduleConfig) {
       assert.isFalse('TestModule' in moduleConfig);
-      assert.isFalse('TestModule' in MODULE_CONFIG.TestModule);
+      assert.isFalse('TestModule' in MODULE_CONFIG.get('TestModule'));
     },
 
     'Local configurations are mixed in': function(moduleConfig) {
