@@ -2,7 +2,7 @@
 
 Before submitting a bug report, please search the issue tracker the wiki first. Many issues have already been discussed.
 
-The wiki is located at: https://github.com/lorenwest/node-config/wiki
+The wiki is located at: https://github.com/node-config/node-config/wiki
 
 ### I'm submitting a ... 
   - [  ] bug report

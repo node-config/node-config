@@ -28,7 +28,7 @@ yuiversion=3
 
 # The project and URL
 project="Node.js Configuration"
-project_url="https://github.com/lorenwest/node-config"
+project_url="https://github.com/node-config/node-config"
 
 ##############################################################################
 # add -s to the end of the line to show items marked private

@@ -12,7 +12,7 @@
 3.3.5 / 2021-03-05
 ==================
 
-* FIX [#628](https://github.com/lorenwest/node-config/issues/628) Uncaught ReferenceError: node_env_var_name is not defined @prnake
+* FIX [#628](https://github.com/node-config/node-config/issues/628) Uncaught ReferenceError: node_env_var_name is not defined @prnake
 
 3.3.4 / 2021-02-26
 ==================
@@ -344,7 +344,7 @@ and you're not trying to mutate config arrays.
   * Simplify syntax for defer() functions. The 'this' value in the functions is now bound
     to the main configuration object, so it doesn't have to be passed into the function. (@markstos)
   * new defer sub-module introduced in 1.8.0 can now be accessed by require('config/defer')
-    For usage, see: https://github.com/lorenwest/node-config/wiki/Configuration-Files#javascript-module---js
+    For usage, see: https://github.com/node-config/node-config/wiki/Configuration-Files#javascript-module---js
   * Add test coverage for array merging cases. (@markstos)
   * Bump dependency on cson package to 1.6.1 (@markstos)
 
@@ -352,7 +352,7 @@ and you're not trying to mutate config arrays.
 ==================
 
   * Added deferred function for evaluating configs after load (@markstos)
-    For details, see: https://github.com/lorenwest/node-config/wiki/Configuration-Files#javascript-module---js
+    For details, see: https://github.com/node-config/node-config/wiki/Configuration-Files#javascript-module---js
   * Bumped js-yaml dependency (@markstos)
 
 1.7.0 / 2014-10-30
@@ -437,7 +437,7 @@ and you're not trying to mutate config arrays.
 ===================
 
   * Major revision.  Upgrade notes:
-    https://github.com/lorenwest/node-config/wiki/Upgrading-From-Config-0.x
+    https://github.com/node-config/node-config/wiki/Upgrading-From-Config-0.x
   * Update to semver versioning
   * Change load ordering
       from hostname.EXT --> deployment.EXT
@@ -456,7 +456,7 @@ and you're not trying to mutate config arrays.
   * Removed reliance on global.NODE_CONFIG so older versions can work with 1.x
   * Fix empty YAML file causing crash with latest js-yaml
   * Added SUPPRESS_NO_CONFIG_WARNING for better sub-module support
-  * Moved all documentation [to the wiki](https://github.com/lorenwest/node-config/wiki).
+  * Moved all documentation [to the wiki](https://github.com/node-config/node-config/wiki).
 
 0.4.37 / 2014-07-22
 ===================

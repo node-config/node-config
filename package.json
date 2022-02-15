@@ -4,7 +4,7 @@
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
-  "homepage": "http://github.com/lorenwest/node-config.git",
+  "homepage": "http://github.com/node-config/node-config.git",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -41,7 +41,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/lorenwest/node-config.git"
+    "url": "http://github.com/node-config/node-config.git"
   },
   "engines": {
     "node": ">= 10.0.0"

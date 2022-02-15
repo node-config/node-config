@@ -63,7 +63,7 @@ Parser.tsParser = function(filename, content) {
   }
 
   // Imports config if it is exported via module.exports = ...
-  // See https://github.com/lorenwest/node-config/issues/524
+  // See https://github.com/node-config/node-config/issues/524
   var configObject = require(filename);
 
   // Because of ES6 modules usage, `default` is treated as named export (like any other)

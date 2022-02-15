@@ -392,7 +392,7 @@ vows.describe('Test suite for node-config')
       assert.deepEqual(MODULE_CONFIG.TestModule, moduleConfig);
     },
 
-    // Regression test for https://github.com/lorenwest/node-config/issues/518
+    // Regression test for https://github.com/node-config/node-config/issues/518
     'The module config did not extend itself with its own name': function(moduleConfig) {
       assert.isFalse('TestModule' in moduleConfig);
       assert.isFalse('TestModule' in MODULE_CONFIG.TestModule);
