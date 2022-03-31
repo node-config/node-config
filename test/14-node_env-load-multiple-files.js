@@ -25,7 +25,7 @@ vows.describe('Tests for load multiple config files that match NODE_ENV values')
     }
 })
 .addBatch({
-  'When there is \'cloud\' and \'bare-metal\' values in NODE_ENV and HOST is \'test\'': {
+  'When there is \'bare-metal\' and \'development\' values in NODE_ENV and HOST is \'test\'': {
     topic: function() {
       process.env.NODE_ENV = 'development,bare-metal'
       process.env.NODE_CONFIG_DIR = __dirname + '/14-config'
@@ -36,6 +36,20 @@ vows.describe('Tests for load multiple config files that match NODE_ENV values')
     'Values ​​of the corresponding files with host prefix are loaded': function(CONFIG) {
       assert.equal(CONFIG.get('host.os'), 'linux');
       assert.equal(CONFIG.get('host.arch'), 'x86_64');
+    }
+  }
+})
+.addBatch({
+  'When there is \'bare-metal\' and \'development\' values in NODE_ENV and HOST is \'test.api\'': {
+    topic: function() {
+      process.env.NODE_ENV = 'development'
+      process.env.NODE_CONFIG_DIR = __dirname + '/14-config'
+      process.env.HOST = 'test.api'
+
+      return requireUncached(__dirname + '/../lib/config');
+    },
+    'Values ​​of the corresponding files with multiple host prefix are loaded': function(CONFIG) {
+      assert.equal(CONFIG.get('api'), true);
     }
   }
 })
