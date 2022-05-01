@@ -2,7 +2,7 @@
 ==================
 
  * No new changes. 3.3.6 was not published to NPM in versioning mix-up.
- * Release notes are moving to Github Releas page going forward.
+ * Release notes are moving to Github Releases page going forward.
 
 3.3.6 / 2021-03-08
 ==================
