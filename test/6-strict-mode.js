@@ -178,7 +178,6 @@ function _verifyConsoleOutput (opts) {
 
   var tests = {
     topic: function() {
-
       process.env.NODE_CONFIG_DIR             = __dirname + '/6-config';
       process.env.NODE_CONFIG_STRICT_MODE     = 0;
       process.env.NODE_APP_INSTANCE           = opts.APP_INSTANCE;
@@ -206,12 +205,10 @@ function _verifyConsoleOutput (opts) {
       }
 
       return messages;
-
     }
   };
 
   if (!opts.tryToSuppress) {
-
     tests['Expected warning messages are shown when strict mode is off'] = function(messages) {
       var expectedMessages = [opts.warningMessage, strictModeNotice]
       if (opts.canBeSuppressed) {
@@ -222,7 +219,6 @@ function _verifyConsoleOutput (opts) {
 
 
   } else if (opts.tryToSuppress) {
-
     tests['Warning messages are suppressed when strict mode is off and SUPPRESS_NO_CONFIG_WARNING is set'] = function(messages) {
       assert.equal(messages.length, 0);
     }
@@ -230,13 +226,4 @@ function _verifyConsoleOutput (opts) {
   }
 
   return tests;
-
-}
-
-//
-// Because require'ing config creates and caches a global singleton,
-// We have to invalidate the cache to build new object based on the environment variables above
-function requireUncached(module){
-   delete require.cache[require.resolve(module)];
-   return require(module);
 }
