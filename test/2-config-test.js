@@ -100,6 +100,10 @@ vows.describe('Test suite for node-config')
       assert.equal(CONFIG.AnotherModule.parm6, 'value6');
     },
 
+    'Loading configurations from a JSONC file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm62, 'value62');
+    },
+
     'Loading configurations from a TOML file is correct': function() {
       assert.equal(CONFIG.AnotherModule.parm7, 'value7');
     },

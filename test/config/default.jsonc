@@ -1,0 +1,15 @@
+{
+  /*
+    Multiline comment within main object
+  */
+  "Customers": {
+    "dbName":"from_default_json",
+    "dbPassword":"password will be overwritten.",
+    "dbPassword2":"password will be overwritten.",
+    "lang":["en","es"]
+  },
+  "AnotherModule": {
+    // Single line comment in object
+    "parm62":"value62"
+  }
+}

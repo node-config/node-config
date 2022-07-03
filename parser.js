@@ -6,6 +6,7 @@ var Yaml = null,
     CSON = null,
     PPARSER = null,
     JSON5 = null,
+    JSONC = null,
     TOML = null,
     HJSON = null,
     XML = null;
@@ -17,6 +18,7 @@ var COFFEE_2_DEP = 'coffeescript',
     JS_YAML_DEP = 'js-yaml',
     YAML_DEP = 'yaml',
     JSON5_DEP = 'json5',
+    JSONC_DEP = 'jsonc',
     HJSON_DEP = 'hjson',
     TOML_DEP = 'toml',
     CSON_DEP = 'cson',
@@ -171,6 +173,13 @@ Parser.json5Parser = function(filename, content) {
   return JSON5.parse(content);
 };
 
+Parser.jsoncParser = function(filename, content) {
+  if (!JSONC) {
+    JSONC = require(JSONC_DEP);
+  }
+  return JSONC.parse(content);
+};
+
 Parser.hjsonParser = function(filename, content) {
   if (!HJSON) {
     HJSON = require(HJSON_DEP);
@@ -308,7 +317,7 @@ Parser.numberParser = function(filename, content) {
   return Number.isNaN(numberValue) ? undefined : numberValue;
 };
 
-var order = ['js', 'cjs', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml',
+var order = ['js', 'cjs', 'ts', 'json', 'json5', 'jsonc', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml',
   'boolean', 'number'];
 var definitions = {
   cjs: Parser.jsParser,
@@ -319,6 +328,7 @@ var definitions = {
   js: Parser.jsParser,
   json: Parser.jsonParser,
   json5: Parser.json5Parser,
+  jsonc: Parser.jsoncParser,
   properties: Parser.propertiesParser,
   toml: Parser.tomlParser,
   ts: Parser.tsParser,
