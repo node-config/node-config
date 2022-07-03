@@ -161,8 +161,11 @@ Parser.jsonParser = function(filename, content) {
     }
     if (!JSON5) {
       JSON5 = require(JSON5_DEP);
+      return JSON5.parse(content);
+    } else {
+      JSONC = require(JSONC_DEP)
+      return JSONC.parse(content);
     }
-    return JSON5.parse(content);
   }
 };
 
