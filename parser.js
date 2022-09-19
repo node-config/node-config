@@ -1,4 +1,5 @@
 // External libraries are lazy-loaded only if these file types exist.
+const util = require("util");
 var Yaml = null,
     VisionmediaYaml = null,
     Coffee = null,
@@ -48,7 +49,12 @@ Parser.xmlParser = function(filename, content) {
 };
 
 Parser.jsParser = function(filename, content) {
-  return require(filename);
+  var configObject = require(filename);
+
+  if (configObject.__esModule && util.isObject(configObject.default)) {
+    return configObject.default
+  }
+  return configObject;
 };
 
 Parser.tsParser = function(filename, content) {
