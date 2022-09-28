@@ -1,6 +1,6 @@
-**Note: for support questions, please use [StackOverflow](https://stackoverflow.com/questions/tagged/node-config) and tag your question with `node-config`**. *This repository's issues are reserved for feature requests and bug reports.*
+**Note: for support questions, please use [Github Discussions](https://github.com/node-config/node-config/discussions).
 
-Before submitting a bug report, please search the issue tracker the wiki first. Many issues have already been discussed.
+Before submitting a bug report, please search the project first. Many issues have already been discussed.
 
 The wiki is located at: https://github.com/node-config/node-config/wiki
 
