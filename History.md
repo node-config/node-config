@@ -1,3 +1,9 @@
+Beyond 3.3.7
+============
+We've moved this content to [Github Releases](https://github.com/node-config/node-config/releases).
+
+Future release notes are managed there.
+
 3.3.7 / 2022-01-11
 ==================
 
