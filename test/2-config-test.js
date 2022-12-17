@@ -112,6 +112,10 @@ vows.describe('Test suite for node-config')
       assert.equal(CONFIG.AnotherModule.parm9, 'value9');
     },
 
+    'Loading configurations from a JSONC file is correct': function() {
+      assert.equal(CONFIG.AnotherModule.parm10, 'value10');
+    },
+
     'Loading configurations from an environment file is correct': function() {
       assert.equal(CONFIG.Customers.dbPort, '5999');
     },

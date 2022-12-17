@@ -1,0 +1,15 @@
+{
+
+  // Comment to test comment ignoring
+
+  "Customers": {
+    "dbName":"from_default_jsonc"
+  },
+  "AnotherModule": {
+    /*
+      Another multiline comment
+    */
+    "parm10":"value10"
+  }
+  
+}
