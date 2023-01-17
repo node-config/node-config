@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "json5": "^2.2.2"
+    "json5": "^2.2.3"
   },
   "devDependencies": {
     "@types/node": "^7.0.8",
