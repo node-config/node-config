@@ -1,0 +1,4 @@
+# Example of the baseline configuration in YAML
+
+Stooge:
+  smart: true
