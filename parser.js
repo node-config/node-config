@@ -58,15 +58,6 @@ Parser.jsParser = function(filename, content) {
 };
 
 Parser.tsParser = function(filename, content) {
-  if (!require.extensions['.ts']) {
-    require(TS_DEP).register({
-      lazy: true,
-      transpileOnly: true,
-      compilerOptions: {
-        allowJs: true,
-      }
-    });
-  }
 
   // Imports config if it is exported via module.exports = ...
   // See https://github.com/node-config/node-config/issues/524
