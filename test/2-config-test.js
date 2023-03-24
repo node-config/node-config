@@ -361,11 +361,8 @@ vows.describe('Test suite for node-config')
           /Calling config.tryGet with null or undefined argument/
       );
     },
-    "tryGet('') throws an exception": function() {
-      assert.throws(
-          function () { CONFIG.tryGet(''); },
-          /Empty string is not valid when using tryGet/
-      );
+    "tryGet('') returns undefined": function() {
+      assert.equal(CONFIG.tryGet(''), undefined);
     },
   },
 
