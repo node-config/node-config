@@ -339,6 +339,36 @@ vows.describe('Test suite for node-config')
     },
   },
 
+  'tryGet() tests': {
+    'The function exists': function() {
+      assert.isFunction(CONFIG.tryGet);
+    },
+    'No exception is thrown on mis-spellings': function() {
+      assert.doesNotThrow(function () { CONFIG.tryGet('mis.spelled'); });
+    },
+    'No exception is thrown on non-objects': function() {
+      assert.doesNotThrow(function () { CONFIG.tryGet('Testmodule.misspelled'); });
+    },
+    'tryGet(undefined) throws an exception': function() {
+      assert.throws(
+          function () { CONFIG.tryGet(undefined); },
+          /Calling config.tryGet with null or undefined argument/
+      );
+    },
+    'tryGet(null) throws an exception': function() {
+      assert.throws(
+          function () { CONFIG.tryGet(null); },
+          /Calling config.tryGet with null or undefined argument/
+      );
+    },
+    "tryGet('') throws an exception": function() {
+      assert.throws(
+          function () { CONFIG.tryGet(''); },
+          /Empty string is not valid when using tryGet/
+      );
+    },
+  },
+
   'has() tests': {
     'The function exists': function() {
       assert.isFunction(CONFIG.has);
