@@ -160,7 +160,7 @@ Parser.jsonParser = function(filename, content) {
   catch (e) {
     // All JS Style comments will begin with /, so all JSON parse errors that
     // encountered a syntax error will complain about this character.
-    if (e.name !== 'SyntaxError' || e.message.indexOf('Unexpected token /') !== 0) {
+    if (e.name !== 'SyntaxError') {
       throw e;
     }
     if (!JSON5) {
