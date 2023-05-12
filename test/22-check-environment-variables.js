@@ -82,6 +82,14 @@ vows.describe('Testing check environment variables from custom environment varia
                 assert.strictEqual(topic.error.stack.startsWith("Error: Missing environment variable(s): SERVICE_NAME"), true);
             },
         },
+        teardown: function () {
+            // Cleanup environment variables
+            Reflect.deleteProperty(process.env, "NODE_CONFIG_CHECK_ENV_VARS");
+            Reflect.deleteProperty(process.env, "SERVICE_NAME");
+            Reflect.deleteProperty(process.env, "SERVICE_PORT");
+            Reflect.deleteProperty(process.env, "SERVICE_CORS");
+            Reflect.deleteProperty(process.env, "REQUESTS_HEADERS");
+        }
     },
 })
 .export(module);
