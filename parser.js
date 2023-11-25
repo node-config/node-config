@@ -221,7 +221,7 @@ Parser.propertiesParser = function(filename, content) {
  * @return {string} The string with comments stripped.
  */
 Parser.stripComments = function(fileStr, stringRegex) {
-  stringRegex = stringRegex || /(['"])(\\\1|[a-z0-9 _\/\{\}\?\=\<\>\:\.]|)+?\1/gi;
+  stringRegex = stringRegex || /"((?:[^"\\]|\\.)*)"/g;
 
   var uid = '_' + +new Date(),
     primitives = [],
