@@ -155,20 +155,14 @@ Parser.yamlParser = function(filename, content) {
 };
 
 Parser.jsonParser = function(filename, content) {
-  try {
-    return JSON.parse(content);
-  }
-  catch (e) {
-    // All JS Style comments will begin with /, so all JSON parse errors that
-    // encountered a syntax error will complain about this character.
-    if (e.name !== 'SyntaxError' || e.message.indexOf('Unexpected token /') !== 0) {
-      throw e;
-    }
-    if (!JSON5) {
-      JSON5 = require(JSON5_DEP);
-    }
-    return JSON5.parse(content);
-  }
+  /**
+   * Default JSON parsing to JSON5 parser.
+   * This is due to issues with removing supported comments.
+   * More information can be found here: https://github.com/node-config/node-config/issues/715
+   */
+    JSON5 = require(JSON5_DEP);
+
+    return JSON5.parse(Parser.stripComments(content));
 };
 
 Parser.json5Parser = function(filename, content) {
@@ -227,7 +221,7 @@ Parser.propertiesParser = function(filename, content) {
  * @return {string} The string with comments stripped.
  */
 Parser.stripComments = function(fileStr, stringRegex) {
-  stringRegex = stringRegex || /(['"])(\\\1|.)+?\1/g;
+  stringRegex = stringRegex || /(['"])(\\\1|[a-z0-9 _\/\{\}\?\=\<\>\:\.]|)+?\1/gi;
 
   var uid = '_' + +new Date(),
     primitives = [],
