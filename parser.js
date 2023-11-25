@@ -162,7 +162,7 @@ Parser.jsonParser = function(filename, content) {
    */
     JSON5 = require(JSON5_DEP);
 
-    return JSON5.parse(Parser.stripComments(content));
+    return JSON5.parse(content);
 };
 
 Parser.json5Parser = function(filename, content) {
@@ -192,9 +192,9 @@ Parser.csonParser = function(filename, content) {
   }
   // Allow comments in CSON files
   if (typeof CSON.parseSync === 'function') {
-    return CSON.parseSync(Parser.stripComments(content));
+    return CSON.parseSync(content);
   }
-  return CSON.parse(Parser.stripComments(content));
+  return CSON.parse(content);
 };
 
 Parser.propertiesParser = function(filename, content) {
