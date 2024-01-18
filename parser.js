@@ -1,12 +1,22 @@
 // External libraries are lazy-loaded only if these file types exist.
 const util = require("util");
+
+// webpack can't solve dynamic module
+// @see https://github.com/node-config/node-config/issues/755
+// @see https://webpack.js.org/guides/dependency-management/#require-with-expression
+const JSON5Module = require('json5');
+
+// webpack resolves json5 with module field out of the box which lead to this usage
+// @see https://github.com/node-config/node-config/issues/755
+// @see https://github.com/json5/json5/issues/240
+const JSON5 = JSON5Module.default || JSON5Module;
+
 var Yaml = null,
     VisionmediaYaml = null,
     Coffee = null,
     Iced = null,
     CSON = null,
     PPARSER = null,
-    JSON5 = null,
     TOML = null,
     HJSON = null,
     XML = null;
@@ -160,15 +170,10 @@ Parser.jsonParser = function(filename, content) {
    * This is due to issues with removing supported comments.
    * More information can be found here: https://github.com/node-config/node-config/issues/715
    */
-    JSON5 = require(JSON5_DEP);
-
-    return JSON5.parse(content);
+  return JSON5.parse(content);
 };
 
 Parser.json5Parser = function(filename, content) {
-  if (!JSON5) {
-    JSON5 = require(JSON5_DEP);
-  }
   return JSON5.parse(content);
 };
 
