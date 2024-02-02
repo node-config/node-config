@@ -1,5 +1,5 @@
 {
-  "name": "config",
+  "name": "@docmattman/config",
   "version": "3.3.11",
   "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
