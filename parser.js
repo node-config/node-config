@@ -1,5 +1,4 @@
 // External libraries are lazy-loaded only if these file types exist.
-const util = require("util");
 
 // webpack can't solve dynamic module
 // @see https://github.com/node-config/node-config/issues/755
@@ -61,7 +60,7 @@ Parser.xmlParser = function(filename, content) {
 Parser.jsParser = function(filename, content) {
   var configObject = require(filename);
 
-  if (configObject.__esModule && util.isObject(configObject.default)) {
+  if (configObject.__esModule && isObject(configObject.default)) {
     return configObject.default
   }
   return configObject;
@@ -366,3 +365,7 @@ Parser.setFilesOrder = function(name, newIndex) {
   }
   return order;
 };
+
+function isObject(arg) {
+  return (arg !== null) && (typeof arg === 'object');
+}
