@@ -434,8 +434,16 @@ vows.describe('Test suite for node-config')
 
       assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'));
       assert.deepEqual(OtherTestModuleDefaults.other, testSubModuleConfig.OtherTestModule.other);
+    },
+
+    'Prototypes do not mask values provided to setModuleDefaults': function() {
+      MODULE_CONFIG = requireUncached(__dirname + '/../lib/config');
+      MODULE_CONFIG.util.setModuleDefaults("ModuleWithDefaults", { nested: { get: { default: true } } });
+
+      assert.deepEqual(MODULE_CONFIG.ModuleWithDefaults.nested.value, { overridden: true });
+      assert.deepEqual(MODULE_CONFIG.ModuleWithDefaults.nested.get, { default: true });
     }
-  },
+  }
 })
   .addBatch({
     'Library initialization from multiple directories': {
