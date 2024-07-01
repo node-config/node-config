@@ -17,6 +17,11 @@ vows.describe('Tests for regexp').addBatch({
       return CONFIG;
     },
 
+    'A regexp should not be proxified': function() {
+      const regExp = CONFIG.get('SomeMore.regexp1')
+      assert(regExp instanceof RegExp && !require('util').types.isProxy(regExp))
+    },
+
     'A regexp should not be replaced': function() {
       assert.deepEqual(CONFIG.SomeMore.regexp1, /This is a Regexp/g);
     },
