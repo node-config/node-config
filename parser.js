@@ -32,7 +32,7 @@ var COFFEE_2_DEP = 'coffeescript',
     CSON_DEP = 'cson',
     PPARSER_DEP = 'properties',
     XML_DEP = 'x2js',
-    TS_DEP = 'ts-node';
+    TS_DEP = 'tsx/cjs/api';
 
 var Parser = module.exports;
 
