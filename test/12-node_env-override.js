@@ -91,6 +91,25 @@ vows.describe('Tests for NODE_*_ENV load order')
   }
 })
 .addBatch({
+  'Verify behavior of specified var in NODE_CONFIG_ENV_VAR_NAME overriding NODE_ENV': {
+    topic: function() {
+      process.env.NODE_CONFIG_ENV_VAR_NAME = 'STAND_ENV';
+      process.env.STAND_ENV = 'apollo';
+      process.env.NODE_ENV = 'mercury';
+
+      return requireUncached(__dirname + '/../lib/config');
+    },
+    'NODE_CONFIG_ENV value should be used': function(CONFIG) {
+      assert.equal(CONFIG.get('deploymentUsed'), 'node-config-env-provided');
+    },
+    'Revert process runtime changes': function() {
+      delete process.env.NODE_CONFIG_ENV_VAR_NAME;
+      delete process.env.STAND_ENV;
+      delete process.env.NODE_ENV;
+    }
+  }
+})
+.addBatch({
   'Library destructor': {
     'Revert process runtime changes': function() {
       delete process.env.NODE_CONFIG_DIR;
