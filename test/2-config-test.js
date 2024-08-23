@@ -471,7 +471,7 @@ vows.describe('Test suite for node-config')
     },
     'Multiple config directories': {
       'Verify first directory loaded': function() {
-        assert.equal(CONFIG.get('Customers.dbName'), 'from_default_xml');
+        assert.equal(CONFIG.get('Customers.dbName'), 'override_from_runtime_json');
       },
       'Verify second directory loaded': function() {
         assert.equal(CONFIG.get('different.dir'), true);
