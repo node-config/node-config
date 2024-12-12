@@ -26,8 +26,7 @@ module.exports = {
   },
   SomeMore: {
     regexp1: /This is a Regexp/g,
-    regexp2: /This is another/g,
-    date1: new Date(),
+    regexp2: /This is another/g
   },
 
 };
