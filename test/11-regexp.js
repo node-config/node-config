@@ -45,7 +45,7 @@ vows.describe('Tests for regexp').addBatch({
     },
 
     'A regexp should be the replaced app instance value': function(config) {
-      assert.deepEqual(config.SomeMore.regexp2.source, /This is the replaced/g.source);
+      assert.equal(config.SomeMore.regexp2.source, /This is the replaced/g.source);
     }
   }
 })
