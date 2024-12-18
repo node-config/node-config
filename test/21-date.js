@@ -2,7 +2,6 @@
 
 process.env.NODE_CONFIG_DIR = __dirname + '/config';
 process.env.NODE_ENV = 'test';
-process.env.NODE_APP_INSTANCE = 'date';
 
 var requireUncached = require('./_utils/requireUncached');
 
@@ -17,9 +16,25 @@ vows.describe('Tests for date').addBatch({
       return CONFIG;
     },
 
-    'A date should not be proxified': function() {
-      const date1 = CONFIG.get('SomeMore.date1')
-      assert(date1 instanceof Date && !require('util').types.isProxy(date1))
+    'A date should be immutable': function(config) {
+      assert.throws(() => {
+        const SomeMore = config.get('SomeMore');
+        SomeMore.date1 = new Date()
+      }, /Can not update runtime configuration/)
+    },
+
+    'A date should be able to call Date methods': function(config) {
+      assert.doesNotThrow(() => {
+        /** @type {Date} */
+        const date1 = config.get('SomeMore.date1');
+        date1.toISOString();
+      })
+    },
+
+    'A date should be the correct value': function(config) {
+      /** @type {Date} */
+      const date1 = config.get('SomeMore.date1');
+      assert.equal(date1.toISOString(), '2024-12-18T04:54:56.118Z');
     },
   }
 })

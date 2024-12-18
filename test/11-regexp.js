@@ -17,17 +17,35 @@ vows.describe('Tests for regexp').addBatch({
       return CONFIG;
     },
 
-    'A regexp should not be proxified': function() {
-      const regExp = CONFIG.get('SomeMore.regexp1')
-      assert(regExp instanceof RegExp && !require('util').types.isProxy(regExp))
+    'A regexp should be immutable': function(config) {
+      assert.throws(() => {
+        const SomeMore = config.get('SomeMore');
+        SomeMore.regexp1 = /new value/
+      }, /Can not update runtime configuration/)
     },
 
-    'A regexp should not be replaced': function() {
-      assert.deepEqual(CONFIG.SomeMore.regexp1, /This is a Regexp/g);
+    'A regexp should be able to call RegExp methods': function(config) {
+      assert.doesNotThrow(() => {
+        /** @type {RegExp} */
+        const regExp = config.get('SomeMore.regexp1');
+        regExp.exec();
+      })
     },
 
-    'A regexp should be replaced': function() {
-      assert.deepEqual(CONFIG.SomeMore.regexp2, /This is the replaced/g);
+    'A regexp should be able to access own props': function(config) {
+      assert.doesNotThrow(() => {
+        /** @type {RegExp} */
+        const regExp = config.get('SomeMore.regexp1')
+        assert.ok(regExp.source)
+      })
+    },
+
+    'A regexp should be the correct source': function(config) {
+      assert.equal(config.SomeMore.regexp1.source, /This is a Regexp/g.source);
+    },
+
+    'A regexp should be the replaced app instance value': function(config) {
+      assert.equal(config.SomeMore.regexp2.source, /This is the replaced/g.source);
     }
   }
 })
