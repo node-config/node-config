@@ -27,7 +27,7 @@ module.exports = {
   SomeMore: {
     regexp1: /This is a Regexp/g,
     regexp2: /This is another/g,
-    date1: new Date()
+    date1: new Date('2024-12-18T04:54:56.118Z'),
   },
 
 };
