@@ -47,6 +47,7 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "test": "./node_modules/vows/bin/vows test/*.js --spec"
+    "test": "./node_modules/vows/bin/vows test/*.js --spec",
+    "vows": "./node_modules/vows/bin/vows"
   }
 }
