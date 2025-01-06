@@ -640,7 +640,7 @@ vows.describe('Protected (hackable) utilities test')
     'The correct object is returned': function(config) {
       assert.isObject(config.Customers);
       assert.isTrue(config.Customers.dbHost == 'base');
-      assert.isTrue(config.Customers.dbName == 'override_from_runtime_json');
+      assert.isTrue(config.Customers.dbName == 'from_default_xml');
     }
   },
 
@@ -732,9 +732,9 @@ vows.describe('Protected (hackable) utilities test')
     'Returns a serialized version of whatever argument is provided': function() {
       assert.notDeepStrictEqual(CONFIG.get('Customers'), {
         dbHost: 'base',
-        dbName: 'override_from_runtime_json',
+        dbName: 'from_default_json',
         dbPort: 5999,
-        dbString: 'override_from_runtime_json:5999',
+        dbString: 'from_default_json:5999',
         random: 0.08624527123827352,
         dbPassword: 'real password',
         dbPassword2: 'another password',

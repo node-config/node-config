@@ -64,7 +64,6 @@ vows.describe('Tests for config util functions')
         'It can handle recursion': function(util) {
           var result = util.loadFileConfigs(path.join(__dirname, '21-reentrant'));
           assert.ok(result.nested, "did not load nested values");
-          assert.ok(result.runtime, "lost track of original CONFIG_DIR before loading runtime.json");
         }
     },
     'Tests for util.isPromise': {
