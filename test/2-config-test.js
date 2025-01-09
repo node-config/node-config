@@ -299,7 +299,7 @@ vows.describe('Test suite for node-config')
       assert.equal(CONFIG.get('customerDbPort'), '5999');
     },
     'A cloned property accessor remains a getter': function() {
-      assert.equal(CONFIG.Customers.get('dbString'), 'override_from_runtime_json:5999');
+      assert.equal(CONFIG.Customers.get('dbString'), 'from_default_xml:5999');
     },
     'A cloned property accessor is made immutable': function() {
       var random1 = CONFIG.Customers.get('random'),
