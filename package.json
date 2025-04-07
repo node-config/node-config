@@ -30,6 +30,7 @@
     "cson": "^3.0.1",
     "hjson": "^1.2.0",
     "js-yaml": "^3.2.2",
+    "nyc": "^15.1.0",
     "properties": "~1.2.1",
     "semver": "5.3.0",
     "toml": "^2.0.6",
@@ -46,8 +47,19 @@
   "engines": {
     "node": ">= 10.0.0"
   },
+  "nyc": {
+    "include": [
+      "*.js",
+      "lib/**/*.js"
+    ],
+    "extension": [
+      ".js"
+    ],
+    "report-dir": "./coverage",
+    "reporter": "lcov"
+  },
   "scripts": {
-    "test": "vows test/*.js --spec",
-    "vows": "vows"
+    "test": "nyc vows test/*.js --spec",
+    "vows": "nyc vows"
   }
 }
