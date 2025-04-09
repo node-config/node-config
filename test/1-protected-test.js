@@ -558,6 +558,22 @@ vows.describe('Protected (hackable) utilities test')
    	  var str1 = "var a='Hello';\n/* Block Comment\n  Line 2 comment\n*/\nvar b=24";
    	  var str2 = "var a='Hello';\n\nvar b=24";
    	  assert.equal(CONFIG.util.stripComments(str1), str2);
+    },
+    'Preserves comment-like text in strings': function() {
+      var str = "var a=\"//Comment in text\"";
+      assert.equal(CONFIG.util.stripComments(str), str);
+    },
+    'Preserves regexp': function() {
+      var str = "var a=/.//g";
+      assert.equal(CONFIG.util.stripComments(str), str);
+    }
+  },
+
+  'stripYamlComments() tests': {
+    'Strips out comment lines': function() {
+      var input = "# This is a single line comment\nname: Foo";
+      var expected = "name: Foo";
+      assert.equal(CONFIG.util.stripYamlComments(input), expected);
     }
   },
 
