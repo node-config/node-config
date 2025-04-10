@@ -41,12 +41,11 @@ function resolveAsyncConfigs(config) {
   var promises = [];
   var resolvers = [];
   (function iterate(prop) {
-    var propsToSort = [];
-    for (var property in prop) {
-      if (Object.hasOwnProperty.call(prop, property) && prop[property] != null) {
-        propsToSort.push(property);
-      }
+    if (prop.constructor === String) {
+      return;
     }
+
+    var propsToSort = Object.keys(prop).filter((property) => prop[property] != null);
     propsToSort.sort().forEach(function(property) {
       if (prop[property].constructor === Object) {
         iterate(prop[property]);
@@ -54,7 +53,7 @@ function resolveAsyncConfigs(config) {
       else if (prop[property].constructor === Array) {
         prop[property].forEach(iterate);
       }
-      else if (prop[property] && prop[property].async === asyncSymbol) {
+      else if (prop[property].async === asyncSymbol) {
         resolvers.push(prop[property].prepare(config, prop, property));
         promises.push(prop[property]);
       }
