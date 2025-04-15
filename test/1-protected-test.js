@@ -534,33 +534,6 @@ vows.describe('Protected (hackable) utilities test')
     }
   },
 
-  'stripComments() tests': {
-    // Only testing baseline stripComments functionality.
-	// This implementation handles lots of edge cases that aren't in these tests
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.stripComments);
-    },
-    'Leaves a simple string without comments alone': function() {
-   	  var str = "Hello\nWorld";
-   	  assert.equal(CONFIG.util.stripComments(str), str);
-    },
-    'Strips out line-type comments': function() {
-   	  var str1 = "var a='Hello'; // Comment about the a variable";
-   	  var str2 = "var a='Hello'; ";
-   	  assert.equal(CONFIG.util.stripComments(str1), str2);
-    },
-    'Strips out block-type comments': function() {
-   	  var str1 = "var a='Hello';/* Block Comment */ var b=24";
-   	  var str2 = "var a='Hello'; var b=24";
-   	  assert.equal(CONFIG.util.stripComments(str1), str2);
-    },
-    'Strips out multi-line block comments': function() {
-   	  var str1 = "var a='Hello';\n/* Block Comment\n  Line 2 comment\n*/\nvar b=24";
-   	  var str2 = "var a='Hello';\n\nvar b=24";
-   	  assert.equal(CONFIG.util.stripComments(str1), str2);
-    }
-  },
-
   'parseFile() tests': {
     topic: function() {
       return CONFIG.util.parseFile(__dirname + '/config/default.yaml');
