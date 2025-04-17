@@ -45,7 +45,7 @@
     "url": "http://github.com/node-config/node-config.git"
   },
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 20.0.0"
   },
   "nyc": {
     "include": [
