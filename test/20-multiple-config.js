@@ -56,4 +56,17 @@ vows.describe('Tests for multiple config')
 
   }
 })
+.addBatch({
+  'Empty string should not blow up': function () {
+    process.env.NODE_CONFIG_DIR =  [
+      './test/20-config',
+      ''
+    ].join(path.delimiter)
+
+    assert.doesNotThrow(function () {
+      const CONFIG = requireUncached(__dirname + '/../lib/config');
+    }, 'Adding an empty string does not result in an error');
+
+  }
+})
 .export(module);
