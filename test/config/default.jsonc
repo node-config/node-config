@@ -1,0 +1,12 @@
+{
+
+  // Comment to test comment ignoring
+
+  "Customers": {
+    "dbName":"from_default_jsonc" // Line comment to test comment ignoring
+  },
+  "AnotherModule": {
+    "parm1jsonc":"value1-jsonc"
+  }
+  
+}
