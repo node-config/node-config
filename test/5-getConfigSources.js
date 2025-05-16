@@ -15,7 +15,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       process.env.NODE_CONFIG = '{}';
       delete process.env.NODE_APP_INSTANCE;
       process.env.NODE_CONFIG_STRICT_MODE=0;
-      process.argv = ["node","path/to/some.js","--NODE_CONFIG='{}'"];
+      process.argv = ["node","path/to/some.js","--NODE_CONFIG='{}'"]; //TODO: This is a parse error so not testing the right thing
       var config = requireUncached(__dirname + '/../lib/config');
       return config.util.getConfigSources();
     },
@@ -45,7 +45,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       return config.util.getConfigSources();
     },
 
-    'Two files should result in two entries': function(topic) {
+    'Three files should result in three entries': function(topic) {
         assert.equal(topic.length,3);
     },
 
@@ -69,7 +69,7 @@ vows.describe('Tests config.util.getConfigSources').addBatch({
       return config.util.getConfigSources();
     },
 
-    'Two files should result in two entries': function(topic) {
+    'Three files should result in three entries': function(topic) {
         assert.equal(topic.length,3);
     },
 
