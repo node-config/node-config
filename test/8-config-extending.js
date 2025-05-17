@@ -29,7 +29,7 @@ vows.describe('Tests for config extending')
             CONFIG.util.attachProtoDeep(base_config);
 
             assert.doesNotThrow(function () {
-                result = CONFIG.util.extendDeep(base_config, CONFIG);
+                let result = CONFIG.util.extendDeep(base_config, CONFIG);
             }, 'Extending a configuration with another configuration has an error');
 
         }
