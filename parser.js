@@ -34,6 +34,9 @@ var COFFEE_2_DEP = 'coffeescript',
     XML_DEP = 'x2js',
     TS_DEP = 'ts-node';
 
+/**
+ * @typedef Parser {Object}
+ */
 var Parser = module.exports;
 
 Parser.parse = function(filename, content) {
