@@ -5,4 +5,5 @@ export interface Config {
   welcomeEmail?: object;
   map?: object;
   original?: object;
+  arrayWithNull?: any[];
 };
