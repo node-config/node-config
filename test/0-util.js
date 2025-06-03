@@ -495,7 +495,18 @@ vows.describe('Tests for util functions')
 
         assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
       },
-      'can be called multiple times for the same key': function (loadInfo) {
+      'does not overwrite existing values': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
+        loadInfo.setModuleDefaults("foo", { field1: 'override', field2: 'another'});
+
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
+      },
+      'can be called multiple times for the same key': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
         loadInfo.setModuleDefaults("foo", { field2: 'another'});
         loadInfo.setModuleDefaults("foo", { field3: 'additional'});
 
@@ -509,6 +520,22 @@ vows.describe('Tests for util functions')
           {
             name: 'Module Defaults',
             parsed: { foo: { field2: 'another' } }
+          }
+        ]);
+      },
+      'tracks multiple calls in a deterministic order': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field4: "1"});
+        loadInfo.setModuleDefaults("foo", { field3: 'additional', field4: "2"});
+
+        // this is probably a bug (#822) but at least the sources and the config now agree with each other.
+        assert.deepEqual(loadInfo.config, { foo: { field2: 'another', field3: 'additional', field4: '1'}});
+
+        assert.deepEqual(loadInfo.getSources(), [
+          {
+            name: 'Module Defaults',
+            parsed: { foo: { field2: 'another', field3: 'additional', field4: '1' } }
           }
         ]);
       }
