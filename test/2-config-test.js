@@ -418,6 +418,25 @@ vows.describe('Test suite for node-config')
       assert.equal(moduleConfig.parm2, 2000);
     },
 
+    'Config.get() before setModuleDefaults() can see updates': function() {
+      process.env.ALLOW_CONFIG_MUTATIONS = true;
+
+      const mutableConfig = requireUncached(__dirname + '/../lib/config');
+
+      let defaults = {
+        someValue: "default"
+      };
+
+      try {
+        let customers = mutableConfig.get('Customers');
+
+        mutableConfig.util.setModuleDefaults('Customers', defaults);
+
+        assert.equal(customers.get("someValue"), "default");
+      } finally {
+        delete process.env.ALLOW_CONFIG_MUTATIONS;
+      }
+    },
     'Prototypes are applied by setModuleDefaults even if no previous config exists for the module': function() {
       var BKTestModuleDefaults = {
         parm1: 1000, parm2: 2000, parm3: 3000,
