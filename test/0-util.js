@@ -788,15 +788,6 @@ vows.describe('Tests for util functions')
         let expected = 'CUSTOM VALUE FROM JSON ENV MAPPING';
         process.env.CUSTOM_JSON_ENVIRONMENT_VAR = expected;
 
-        let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
-        loadInfo.loadCustomEnvVars();
-        assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables, { "mappedBy": { "json": expected } });
-      },
-      'should override from the environment variables': function () {
-        // Test Environment Variable Substitution
-        let expected = 'CUSTOM VALUE FROM JSON ENV MAPPING';
-        process.env.CUSTOM_JSON_ENVIRONMENT_VAR = expected;
-
         try {
           let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
           loadInfo.loadCustomEnvVars();
@@ -838,6 +829,57 @@ vows.describe('Tests for util functions')
         assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
         assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy.formats,
           { "numberInteger": 1001, "numberFloat": 3.14, "numberString": undefined });
+      }
+    },
+  })
+  .addBatch({
+    'Util.resolveDeferredConfigs()': {
+      'The function exists': function () {
+        assert.isFunction(util.resolveDeferredConfigs);
+      },
+      'expands values': function() {
+        let data = {
+          deferreds: {
+            foo: '3',
+            bar: deferConfig(() => {
+              return 4;
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: '3', bar: 4});
+      },
+      'works for arrays': function() {
+        let data = {
+          deferreds: {
+            foo: 2,
+            bar: [deferConfig(() => {
+              return 4;
+            })]
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 2, bar: [4]});
+      },
+      'handles recursive expansion': function() {
+        let data = {
+          deferreds: {
+            foo: deferConfig(() => {
+              return 4;
+            }),
+            bar: deferConfig((config) => {
+              return `${config.deferreds.foo} interpolated`
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
       }
     },
   })
