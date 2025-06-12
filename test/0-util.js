@@ -405,6 +405,10 @@ vows.describe('Tests for util functions')
         util.setPath(topic, 'EnvOverride.oauth.secret', 'ANOTHER');
         assert.equal(topic.EnvOverride.oauth.secret, 'ANOTHER');
       },
+      'returns the given value': function (topic) {
+        let input = { foo: "3"};
+        assert.equal(util.setPath(topic, 'some.path', input), input);
+      }
     },
   })
   .addBatch({
@@ -508,10 +512,10 @@ vows.describe('Tests for util functions')
         let loadInfo = new LoadInfo({});
 
         loadInfo.addConfig("first", { foo: { field1: 'set'}});
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-        loadInfo.setModuleDefaults("foo", { field3: 'additional'});
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field3: 'one'});
+        loadInfo.setModuleDefaults("foo", { field3: 'two'});
 
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'additional' } });
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'two' } });
       },
       'tracks the sources': function () {
         let loadInfo = new LoadInfo({});
@@ -536,15 +540,15 @@ vows.describe('Tests for util functions')
         loadInfo.setModuleDefaults("foo", { field2: 'another', field4: "1"});
         loadInfo.setModuleDefaults("foo", { field3: 'additional', field4: "2"});
 
-        // this is probably a bug (#822) but at least the sources and the config now agree with each other.
-        assert.deepEqual(loadInfo.config, { foo: { field2: 'another', field3: 'additional', field4: '1'}});
-
+        const expected = { foo: { field2: 'another', field3: 'additional', field4: '2' }};
         assert.deepEqual(loadInfo.getSources(), [
           {
             name: 'Module Defaults',
-            parsed: { foo: { field2: 'another', field3: 'additional', field4: '1' } }
+            parsed: expected
           }
         ]);
+
+        assert.deepEqual(loadInfo.config, expected);
       }
     },
     'LoadInfo.loadFile()': {
