@@ -68,6 +68,31 @@ vows.describe('Testing custom environment variable overrides')
                 assert.deepStrictEqual(topic.config.testJSONValue,topic.jsonValue);
             },
         },
+        'getCustomEnvVars()': {
+            topic: function () {
+                const testValue = 'from env1';
+                const jsonValue = {
+                    fromJS: false,
+                    type: 'stringified JSON'
+                }
+                process.env.TEST_VALUE = testValue;
+                process.env.TEST_JSON_VALUE = JSON.stringify(jsonValue);
+
+                // Change the configuration directory for testing
+                process.env.NODE_CONFIG_DIR = __dirname + '/config';
+                var config = requireUncached(__dirname + '/../lib/config');
+                return {
+                     config,
+                     testValue,
+                     jsonValue
+                 };
+            },
+            'should override from the environment variables': function(topic) {
+                let results = topic.config.util.getCustomEnvVars(__dirname + '/19-config')
+                assert.strictEqual(results.testValue, topic.testValue);
+                assert.deepStrictEqual(results.testJSONValue, topic.jsonValue);
+            },
+        },
     },
 })
 .export(module);
