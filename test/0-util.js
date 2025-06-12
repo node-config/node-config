@@ -500,10 +500,10 @@ vows.describe('Tests for util functions')
         assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
       },
       'can be called multiple times for the same key': function (loadInfo) {
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-        loadInfo.setModuleDefaults("foo", { field3: 'additional'});
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field3: 'one'});
+        loadInfo.setModuleDefaults("foo", { field3: 'two'});
 
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'additional' } });
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'two' } });
       },
       'tracks the sources': function () {
         let loadInfo = new LoadInfo({});
