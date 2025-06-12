@@ -404,6 +404,10 @@ vows.describe('Tests for util functions')
         util.setPath(topic, 'EnvOverride.oauth.secret', 'ANOTHER');
         assert.equal(topic.EnvOverride.oauth.secret, 'ANOTHER');
       },
+      'returns the given value': function (topic) {
+        let input = { foo: "3"};
+        assert.equal(util.setPath(topic, 'some.path', input), input);
+      }
     },
   })
   .addBatch({
