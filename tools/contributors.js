@@ -14,10 +14,12 @@ README_FILE = './README.md';
 _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
 };
+
 var TABLE_TEMPLATE = _.template('<table id="contributors">{{rows}}</table>');
 var ROW_TEMPLATE = _.template('<tr>{{people}}</tr>');
-var PERSON_TEMPLATE = _.template('<td><img src={{avatar_url}}><a href="{{html_url}}">{{login}}</a></td>\n');
+var PERSON_TEMPLATE = _.template('<td><img src={{avatar_url}}><a href="{{html_url}}">{{name}}</a></td>\n');
 var PEOPLE_PER_ROW = 6;
+
 
 // Read the contributor list from github, return as an HTML table
 function getContributorTable(callback) {
@@ -47,6 +49,8 @@ function getContributorTable(callback) {
     var row = [];
     for (var contributorNum in contributors) {
       var contributor = contributors[contributorNum];
+      contributor.name = contributor.login.split(/(?=[A-Z])/).join('&shy;');
+
       if (row.length === PEOPLE_PER_ROW) {
         rows.push(ROW_TEMPLATE({people:row.join('')}));
         row = [];
