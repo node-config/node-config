@@ -486,65 +486,6 @@ vows.describe('Tests for util functions')
         ]);
       }
     },
-    'LoadInfo.setModuleDefaults()': {
-      topic: function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo.addConfig("first", { foo: { field1: 'set'}});
-        return loadInfo;
-      },
-      'The function exists': function (loadInfo) {
-        assert.isFunction(loadInfo.setModuleDefaults);
-      },
-      'adds new defaults': function (loadInfo) {
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
-      },
-      'does not overwrite existing values': function () {
-        let loadInfo = new LoadInfo({});
-
-        loadInfo.addConfig("first", { foo: { field1: 'set'}});
-        loadInfo.setModuleDefaults("foo", { field1: 'override', field2: 'another'});
-
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
-      },
-      'can be called multiple times for the same key': function () {
-        let loadInfo = new LoadInfo({});
-
-        loadInfo.addConfig("first", { foo: { field1: 'set'}});
-        loadInfo.setModuleDefaults("foo", { field2: 'another', field3: 'one'});
-        loadInfo.setModuleDefaults("foo", { field3: 'two'});
-
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'two' } });
-      },
-      'tracks the sources': function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-
-        assert.deepEqual(loadInfo.getSources(), [
-          {
-            name: 'Module Defaults',
-            parsed: { foo: { field2: 'another' } }
-          }
-        ]);
-      },
-      'getSources() and LoadInfo.config are consistent with each other': function () {
-        let loadInfo = new LoadInfo({});
-
-        loadInfo.setModuleDefaults("foo", { field2: 'another', field4: "1"});
-        loadInfo.setModuleDefaults("foo", { field3: 'additional', field4: "2"});
-
-        const expected = { foo: { field2: 'another', field3: 'additional', field4: '2' }};
-        assert.deepEqual(loadInfo.getSources(), [
-          {
-            name: 'Module Defaults',
-            parsed: expected
-          }
-        ]);
-
-        assert.deepEqual(loadInfo.config, expected);
-      }
-    },
     'LoadInfo.loadFile()': {
       topic: function () {
         return new LoadInfo({configDir: './config'});
@@ -687,6 +628,78 @@ vows.describe('Tests for util functions')
         util.resolveDeferredConfigs(data);
 
         assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
+      }
+    },
+  })
+  .addBatch({
+    'LoadInfo.setModuleDefaults()': {
+      topic: function () {
+        let loadInfo = new LoadInfo({});
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
+        return loadInfo;
+      },
+      'The function exists': function (loadInfo) {
+        assert.isFunction(loadInfo.setModuleDefaults);
+      },
+      'adds new defaults': function (loadInfo) {
+        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
+      },
+      'does not overwrite existing values': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
+        loadInfo.setModuleDefaults("foo", { field1: 'override', field2: 'another'});
+
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
+      },
+      'can be called multiple times for the same key': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field3: 'one'});
+        loadInfo.setModuleDefaults("foo", { field3: 'two'});
+
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'two' } });
+      },
+      'tracks the sources': function () {
+        let loadInfo = new LoadInfo({});
+        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+
+        assert.deepEqual(loadInfo.getSources(), [
+          {
+            name: 'Module Defaults',
+            parsed: { foo: { field2: 'another' } }
+          }
+        ]);
+      },
+      'getSources() and LoadInfo.config are consistent with each other': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field4: "1"});
+        loadInfo.setModuleDefaults("foo", { field3: 'additional', field4: "2"});
+
+        const expected = { foo: { field2: 'another', field3: 'additional', field4: '2' }};
+        assert.deepEqual(loadInfo.getSources(), [
+          {
+            name: 'Module Defaults',
+            parsed: expected
+          }
+        ]);
+
+        assert.deepEqual(loadInfo.config, expected);
+      },
+      'handles deferred values': function() {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("settings", { foo: { key: 'baz' }});
+        loadInfo.setModuleDefaults("foo", { namespace: 'a.b', key: "baz", name: deferConfig(function (config) {
+            return `${this.foo.namespace}.${config.foo.key}`;
+          })
+         });
+
+        assert.equal(loadInfo.config.foo.name, "a.b.baz");
       }
     },
   })
