@@ -993,6 +993,8 @@ vows.describe('Tests for util functions')
         assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
       }
     },
+  })
+  .addBatch({
     'Util.loadFileConfigs()': {
       'The function exists': function () {
         assert.isFunction(util.loadFileConfigs);
