@@ -1,0 +1,66 @@
+#! /usr/bin/env node
+const path = require('path');
+const fs = require('fs');
+const {LoadInfo } = require(path.join(__dirname, '..', 'lib/util.js'));
+
+function usage () {
+  console.log(`
+    usage:
+      node-config check [environments...]
+      node-config dump [target] 
+      
+      commands can be:
+      
+      check:        used to verify config files
+      dump:         output the NODE_ENV/NODE_CONFIG_ENV config to a json file
+  `);
+}
+
+function load(environment) {
+  let loadInfo = LoadInfo.fromEnvironment(environment);
+
+  loadInfo.load();
+
+  return loadInfo.config;
+}
+
+function check(...environments) {
+  if (environments.length === 0) {
+    environments = ['production'];
+  }
+
+  for (let environment of environments) {
+    console.log(`Verifying ${environment}`);
+
+    load(environment);
+
+    console.log(`No errors for ${environment}`);
+  }
+}
+
+function dump(target) {
+  const env = process.env.CONFIG_NODE_ENV || process.env.NODE_ENV || 'default';
+
+  if (target === undefined) {
+    target = `${env}.json`;
+  }
+
+  console.log(`${env} -> ${target}`);
+
+  let config = load();
+
+  fs.writeFileSync(target, JSON.stringify(config, null, 2));
+}
+
+const args = process.argv.slice(2);
+const command = args.shift();
+
+if (command === 'check') {
+  check(...args);
+} else if (command === 'dump') {
+  dump(...args);
+} else {
+  usage();
+  process.exit(1);
+}
+

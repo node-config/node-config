@@ -9,6 +9,7 @@ const assert = require('assert');
 const Path = require('path');
 const util = require('../lib/util.js').Util;
 const LoadInfo = require('../lib/util.js').LoadInfo;
+const deferConfig = require('../defer').deferConfig;
 
 vows.describe('Tests for util functions')
   .addBatch({
@@ -404,6 +405,10 @@ vows.describe('Tests for util functions')
         util.setPath(topic, 'EnvOverride.oauth.secret', 'ANOTHER');
         assert.equal(topic.EnvOverride.oauth.secret, 'ANOTHER');
       },
+      'returns the given value': function (topic) {
+        let input = { foo: "3"};
+        assert.equal(util.setPath(topic, 'some.path', input), input);
+      }
     },
   })
   .addBatch({
@@ -481,38 +486,6 @@ vows.describe('Tests for util functions')
         ]);
       }
     },
-    'LoadInfo.setModuleDefaults()': {
-      topic: function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo.addConfig("first", { foo: { field1: 'set'}});
-        return loadInfo;
-      },
-      'The function exists': function (loadInfo) {
-        assert.isFunction(loadInfo.setModuleDefaults);
-      },
-      'adds new defaults': function (loadInfo) {
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
-      },
-      'can be called multiple times for the same key': function (loadInfo) {
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-        loadInfo.setModuleDefaults("foo", { field3: 'additional'});
-
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'additional' } });
-      },
-      'tracks the sources': function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-
-        assert.deepEqual(loadInfo.getSources(), [
-          {
-            name: 'Module Defaults',
-            parsed: { foo: { field2: 'another' } }
-          }
-        ]);
-      }
-    },
     'LoadInfo.loadFile()': {
       topic: function () {
         return new LoadInfo({configDir: './config'});
@@ -548,6 +521,189 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
+    'LoadInfo.loadCustomEnvVars()': {
+      'should override from the environment variables': function () {
+        // Test Environment Variable Substitution
+        let expected = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+        process.env.CUSTOM_JSON_ENVIRONMENT_VAR = expected;
+
+        let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
+        loadInfo.loadCustomEnvVars();
+        assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables, { "mappedBy": { "json": expected } });
+      },
+      'should override from the environment variables': function () {
+        // Test Environment Variable Substitution
+        let expected = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+        process.env.CUSTOM_JSON_ENVIRONMENT_VAR = expected;
+
+        try {
+          let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
+          loadInfo.loadCustomEnvVars();
+          assert.isObject(loadInfo.config.customEnvironmentVariables);
+          assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
+          assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy, {"json": expected});
+        } finally {
+          delete process.env.CUSTOM_JSON_ENVIRONMENT_VAR;
+        }
+      },
+      'can handle boolean values': function () {
+        process.env.CUSTOM_BOOLEAN_TRUE_ENVIRONMENT_VAR = 'true';
+        process.env.CUSTOM_BOOLEAN_FALSE_ENVIRONMENT_VAR = 'false';
+        process.env.CUSTOM_BOOLEAN_ERROR_ENVIRONMENT_VAR = 'notProperBoolean';
+
+        try {
+          let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
+          loadInfo.loadCustomEnvVars();
+          assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
+          assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy.formats,
+            { "booleanTrue": true, "booleanFalse": false, "notProperBoolean": false });
+        } finally {
+          delete process.env.CUSTOM_BOOLEAN_TRUE_ENVIRONMENT_VAR;
+          delete process.env.CUSTOM_BOOLEAN_FALSE_ENVIRONMENT_VAR;
+          delete process.env.CUSTOM_BOOLEAN_ERROR_ENVIRONMENT_VAR;
+        }
+      },
+      'can handle numeric values': function () {
+        // Test Environment variable substitution of numeric values
+        let numberInteger = 1001;
+        let numberFloat = 3.14
+        process.env.CUSTOM_NUMBER_INTEGER_ENVIRONMENT_VAR = numberInteger;
+        process.env.CUSTOM_NUMBER_FLOAT_ENVIRONMENT_VAR = numberFloat;
+        process.env.CUSTOM_NUMBER_EMPTY_ENVIRONMENT_VAR = '';
+        process.env.CUSTOM_NUMBER_STRING_ENVIRONMENT_VAR = 'String';
+
+        let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
+        loadInfo.loadCustomEnvVars();
+        assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
+        assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy.formats,
+          { "numberInteger": 1001, "numberFloat": 3.14, "numberString": undefined });
+      }
+    },
+  })
+  .addBatch({
+    'Util.resolveDeferredConfigs()': {
+      'The function exists': function () {
+        assert.isFunction(util.resolveDeferredConfigs);
+      },
+      'expands values': function() {
+        let data = {
+          deferreds: {
+            foo: '3',
+            bar: deferConfig(() => {
+              return 4;
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: '3', bar: 4});
+      },
+      'works for arrays': function() {
+        let data = {
+          deferreds: {
+            foo: 2,
+            bar: [deferConfig(() => {
+              return 4;
+            })]
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 2, bar: [4]});
+      },
+      'handles recursive expansion': function() {
+        let data = {
+          deferreds: {
+            foo: deferConfig(() => {
+              return 4;
+            }),
+            bar: deferConfig((config) => {
+              return `${config.deferreds.foo} interpolated`
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
+      }
+    },
+  })
+  .addBatch({
+    'LoadInfo.setModuleDefaults()': {
+      topic: function () {
+        let loadInfo = new LoadInfo({});
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
+        return loadInfo;
+      },
+      'The function exists': function (loadInfo) {
+        assert.isFunction(loadInfo.setModuleDefaults);
+      },
+      'adds new defaults': function (loadInfo) {
+        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
+      },
+      'does not overwrite existing values': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
+        loadInfo.setModuleDefaults("foo", { field1: 'override', field2: 'another'});
+
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
+      },
+      'can be called multiple times for the same key': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("first", { foo: { field1: 'set'}});
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field3: 'one'});
+        loadInfo.setModuleDefaults("foo", { field3: 'two'});
+
+        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'two' } });
+      },
+      'tracks the sources': function () {
+        let loadInfo = new LoadInfo({});
+        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+
+        assert.deepEqual(loadInfo.getSources(), [
+          {
+            name: 'Module Defaults',
+            parsed: { foo: { field2: 'another' } }
+          }
+        ]);
+      },
+      'getSources() and LoadInfo.config are consistent with each other': function () {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field4: "1"});
+        loadInfo.setModuleDefaults("foo", { field3: 'additional', field4: "2"});
+
+        const expected = { foo: { field2: 'another', field3: 'additional', field4: '2' }};
+        assert.deepEqual(loadInfo.getSources(), [
+          {
+            name: 'Module Defaults',
+            parsed: expected
+          }
+        ]);
+
+        assert.deepEqual(loadInfo.config, expected);
+      },
+      'handles deferred values': function() {
+        let loadInfo = new LoadInfo({});
+
+        loadInfo.addConfig("settings", { foo: { key: 'baz' }});
+        loadInfo.setModuleDefaults("foo", { namespace: 'a.b', key: "baz", name: deferConfig(function (config) {
+            return `${this.foo.namespace}.${config.foo.key}`;
+          })
+         });
+
+        assert.equal(loadInfo.config.foo.name, "a.b.baz");
+      }
+    },
+  })
+  .addBatch({
     'Util.loadFileConfigs()': {
       'The function exists': function () {
         assert.isFunction(util.loadFileConfigs);
@@ -576,5 +732,25 @@ vows.describe('Tests for util functions')
       },
     },
   })
-  .export(module);
+  .addBatch({
+    'LoadInfo.load()': {
+      'The function exists': function () {
+        const loadInfo = new LoadInfo();
+        assert.isFunction(loadInfo.load);
+      },
+      'It can load data from a given directory': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load();
+
+        assert.isObject(loadInfo.config.Customers);
+      },
+      'It merges in the provided data': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load([{ name: 'a', config: {foo: 'bar'} }]);
+
+        assert.equal(loadInfo.config.foo, 'bar');
+      },
+    },
+  })
+.export(module);
 
