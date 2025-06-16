@@ -574,6 +574,39 @@ vows.describe('Tests for util functions')
 
         assert.strictEqual(result.config.Customers.altDbPort, 4400);
       },
+      'it loads CSON files': function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config')
+        });
+
+        assert.isObject(result.config.Customers);
+        assert.isArray(result.config.Customers.lang);
+        assert.equal(result.config.Customers.other, 'from_default_cson');
+        assert.isObject(result.config.AnotherModule);
+        assert.equal(result.config.AnotherModule.parm4, "value4");
+      },
+      ' .properties files': {
+        topic: function() {
+          return util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'config')
+          }).config;
+        },
+        'values are loaded': function(config) {
+          assert.isObject(config.AnotherModule);
+          assert.equal(config.AnotherModule.parm5, "value5");
+          assert.isObject(config['key with spaces']);
+          assert.isTrue(config['key with spaces'].another_key == 'hello');
+          assert.isUndefined(config.ignore_this_please);
+          assert.isUndefined(config.i_am_a_comment);
+        },
+        'handles variable expansion': function(config) {
+          assert.isTrue(config.replacement.param == "foobar")
+        },
+        'Sections are supported': function(config) {
+          assert.isDefined(config.section.param);
+          assert.isUndefined(config.param);
+        },
+      }
     },
   })
   .export(module);
