@@ -326,7 +326,7 @@ vows.describe('Tests for util functions')
         assert.notStrictEqual(util.toObject(input), input);
       },
     },
-    'getPath() tests:': {
+    'Util.getPath() tests:': {
       topic: function () {
         return {
           TestModule: {
@@ -358,7 +358,7 @@ vows.describe('Tests for util functions')
         assert.equal(result, 22);
       },
     },
-    'setPath() tests:': {
+    'Util.setPath() tests:': {
       topic: function () {
         return {
           TestModule: {
@@ -555,6 +555,134 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
+    'LoadInfo.fromEnvironment()': {
+      'nodeEnv values': {
+        'defaults env to development when NODE_CONFIG_ENV and NODE_ENV are undefined': function () {
+          try {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'development');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'development');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'development');
+          } finally {
+          }
+        },
+        'defaults to NODE_ENV if NODE_CONFIG_ENV is not set': function () {
+          try {
+            process.env.NODE_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+          }
+        },
+        'uses NODE_CONFIG_ENV when NODE_ENV is unset': function () {
+          try {
+            process.env.NODE_CONFIG_ENV = 'mercury';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), undefined);
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'mercury');
+          } finally {
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+        'prefers NODE_CONFIG_ENV': function () {
+          try {
+            process.env.NODE_ENV = 'mercury';
+            process.env.NODE_CONFIG_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+        'prefers NODE_CONFIG_ENV': function () {
+          try {
+            process.env.NODE_ENV = 'mercury';
+            process.env.NODE_CONFIG_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+        'can be overridden from argument': function() {
+          try {
+            process.env.NODE_ENV = 'mercury';
+            process.env.NODE_CONFIG_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment('foo');
+
+            assert.equal(loadInfo.options.nodeEnv, 'foo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), undefined);
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), undefined);
+          } finally {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+      },
+      'host calculations': {
+        'uses OS when neither HOST nor HOSTNAME are set': function() {
+          try {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.isString(loadInfo.getEnv('HOSTNAME'));
+            assert.isString(loadInfo.options.hostName);
+          } finally {
+          }
+        },
+        'uses HOSTNAME if it is set': function() {
+          try {
+            delete process.env.HOST;
+            process.env.HOSTNAME = 'foo.example.com';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.getEnv('HOSTNAME'), 'foo.example.com');
+          } finally {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+          }
+        },
+        'prefers HOST if is set': function() {
+          try {
+            process.env.HOST = 'correct.example.com';
+            process.env.HOSTNAME = 'foo.example.com';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.getEnv('HOSTNAME'), 'correct.example.com');
+          } finally {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+          }
+        }
+      }
+    },
     'LoadInfo.substituteDeep()': {
       topic: function () {
         var topic = {
