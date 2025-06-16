@@ -558,6 +558,57 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
+    'Util.resolveDeferredConfigs()': {
+      'The function exists': function () {
+        assert.isFunction(util.resolveDeferredConfigs);
+      },
+      'expands values': function() {
+        let data = {
+          deferreds: {
+            foo: '3',
+            bar: deferConfig(() => {
+              return 4;
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: '3', bar: 4});
+      },
+      'works for arrays': function() {
+        let data = {
+          deferreds: {
+            foo: 2,
+            bar: [deferConfig(() => {
+              return 4;
+            })]
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 2, bar: [4]});
+      },
+      'handles recursive expansion': function() {
+        let data = {
+          deferreds: {
+            foo: deferConfig(() => {
+              return 4;
+            }),
+            bar: deferConfig((config) => {
+              return `${config.deferreds.foo} interpolated`
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
+      }
+    },
+  })
+  .addBatch({
     'LoadInfo.getCmdLineArg()': {
       'The function exists': function () {
         assert.isFunction(new LoadInfo().getCmdLineArg);
@@ -1122,6 +1173,22 @@ vows.describe('Tests for util functions')
 
         assert.strictEqual(result.config.Customers.altDbPort, 4400);
       },
+      'it handles hostName': function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          hostName: 'other'
+        });
+
+        assert.strictEqual(result.config.hostname, "other");
+      },
+      'it handles qualified domain names': function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          hostName: 'other.example.com'
+        });
+
+        assert.strictEqual(result.config.hostname, "other");
+      },
       'it loads CSON files': function () {
         var result = util.loadFileConfigs({
           configDir: Path.join(__dirname, 'config')
@@ -1181,6 +1248,26 @@ vows.describe('Tests for util functions')
 
         assert.isEmpty(loadInfo.getSources());
       }
+    },
+  })
+  .addBatch({
+    'LoadInfo.load()': {
+      'The function exists': function () {
+        const loadInfo = new LoadInfo();
+        assert.isFunction(loadInfo.load);
+      },
+      'It can load data from a given directory': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load();
+
+        assert.isObject(loadInfo.config.Customers);
+      },
+      'It merges in the provided data': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load([{ name: 'a', config: {foo: 'bar'} }]);
+
+        assert.equal(loadInfo.config.foo, 'bar');
+      },
     },
   })
 .export(module);
