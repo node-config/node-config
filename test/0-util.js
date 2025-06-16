@@ -9,6 +9,10 @@ const assert = require('assert');
 const Path = require('path');
 const util = require('../lib/util.js').Util;
 const LoadInfo = require('../lib/util.js').LoadInfo;
+const deferConfig = require('../defer').deferConfig;
+
+// Make a copy of the command line args
+const argvOrg = process.argv;
 
 vows.describe('Tests for util functions')
   .addBatch({
@@ -325,7 +329,7 @@ vows.describe('Tests for util functions')
         assert.notStrictEqual(util.toObject(input), input);
       },
     },
-    'getPath() tests:': {
+    'Util.getPath() tests:': {
       topic: function () {
         return {
           TestModule: {
@@ -357,7 +361,7 @@ vows.describe('Tests for util functions')
         assert.equal(result, 22);
       },
     },
-    'setPath() tests:': {
+    'Util.setPath() tests:': {
       topic: function () {
         return {
           TestModule: {
@@ -511,6 +515,12 @@ vows.describe('Tests for util functions')
             parsed: { foo: { field2: 'another' } }
           }
         ]);
+      },
+      'can disable tracking sources': function () {
+        let loadInfo = new LoadInfo({skipConfigSources: true});
+        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+
+        assert.isEmpty(loadInfo.getSources());
       }
     },
     'LoadInfo.loadFile()': {
@@ -548,6 +558,595 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
+    'Util.resolveDeferredConfigs()': {
+      'The function exists': function () {
+        assert.isFunction(util.resolveDeferredConfigs);
+      },
+      'expands values': function() {
+        let data = {
+          deferreds: {
+            foo: '3',
+            bar: deferConfig(() => {
+              return 4;
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: '3', bar: 4});
+      },
+      'works for arrays': function() {
+        let data = {
+          deferreds: {
+            foo: 2,
+            bar: [deferConfig(() => {
+              return 4;
+            })]
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 2, bar: [4]});
+      },
+      'handles recursive expansion': function() {
+        let data = {
+          deferreds: {
+            foo: deferConfig(() => {
+              return 4;
+            }),
+            bar: deferConfig((config) => {
+              return `${config.deferreds.foo} interpolated`
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
+      }
+    },
+  })
+  .addBatch({
+    'LoadInfo.getCmdLineArg()': {
+      'The function exists': function () {
+        assert.isFunction(new LoadInfo().getCmdLineArg);
+      },
+      'returns false on missing arguments': function() {
+        let loadInfo = new LoadInfo();
+
+        assert.equal(loadInfo.getCmdLineArg('CONFIG_NODE_ENV'), false);
+      },
+      'returns a value': function () {
+        try {
+          process.argv = [process.argv[0], process.argv[1], '--NODE_ENV=staging'];
+
+          let loadInfo = new LoadInfo();
+
+          assert.equal(loadInfo.getCmdLineArg('NODE_ENV'), 'staging');
+        } finally {
+          process.argv = argvOrg;
+        }
+      },
+      'returns the first match': function() {
+        try {
+          process.argv = [process.argv[0], process.argv[1], '--NODE_ENV=staging', '--NODE_ENV=test'];
+
+          let loadInfo = new LoadInfo();
+
+          assert.equal(loadInfo.getCmdLineArg('NODE_ENV'), 'staging');
+        } finally {
+          process.argv = argvOrg;
+        }
+      },
+    },
+    'LoadInfo.fromEnvironment()': {
+      'nodeEnv values': {
+        'defaults env to development when NODE_CONFIG_ENV and NODE_ENV are undefined': function () {
+          try {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'development');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'development');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'development');
+          } finally {
+          }
+        },
+        'defaults to NODE_ENV if NODE_CONFIG_ENV is not set': function () {
+          try {
+            process.env.NODE_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+          }
+        },
+        'uses NODE_CONFIG_ENV when NODE_ENV is unset': function () {
+          try {
+            process.env.NODE_CONFIG_ENV = 'mercury';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), undefined);
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'mercury');
+          } finally {
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+        'prefers NODE_CONFIG_ENV': function () {
+          try {
+            process.env.NODE_ENV = 'mercury';
+            process.env.NODE_CONFIG_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+        'prefers NODE_CONFIG_ENV': function () {
+          try {
+            process.env.NODE_ENV = 'mercury';
+            process.env.NODE_CONFIG_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+        'can be overridden from argument': function() {
+          try {
+            process.env.NODE_ENV = 'mercury';
+            process.env.NODE_CONFIG_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment('foo');
+
+            assert.equal(loadInfo.options.nodeEnv, 'foo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), undefined);
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), undefined);
+          } finally {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+      },
+      'host calculations': {
+        'uses OS when neither HOST nor HOSTNAME are set': function() {
+          try {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.isString(loadInfo.getEnv('HOSTNAME'));
+            assert.isString(loadInfo.options.hostName);
+          } finally {
+          }
+        },
+        'uses HOSTNAME if it is set': function() {
+          try {
+            delete process.env.HOST;
+            process.env.HOSTNAME = 'foo.example.com';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.getEnv('HOSTNAME'), 'foo.example.com');
+          } finally {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+          }
+        },
+        'prefers HOST if is set': function() {
+          try {
+            process.env.HOST = 'correct.example.com';
+            process.env.HOSTNAME = 'foo.example.com';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.getEnv('HOSTNAME'), 'correct.example.com');
+          } finally {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+          }
+        }
+      }
+    },
+    'LoadInfo.substituteDeep()': {
+      topic: function () {
+        var topic = {
+          TopLevel: 'SOME_TOP_LEVEL',
+          TestModule: {
+            parm1: "SINGLE_SECOND_LEVEL"
+          },
+          Customers: {
+            dbHost: 'DB_HOST',
+            dbName: 'DB_NAME',
+            oauth: {
+              key: 'OAUTH_KEY',
+              secret: 'OAUTH_SECRET'
+            }
+          }
+        };
+        return topic;
+      },
+      'returns an empty object if the variables mapping is empty': function (topic) {
+        let loadInfo = new LoadInfo();
+        let substituted = loadInfo.substituteDeep(topic, {});
+
+        assert.deepEqual(substituted, {});
+      },
+      'returns an empty object if none of the variables map to leaf strings': function (topic) {
+        let loadInfo = new LoadInfo();
+        let substituted = loadInfo.substituteDeep(topic, {NON_EXISTENT_VAR: 'ignore_this'});
+
+        assert.deepEqual(substituted, {});
+      },
+      'returns an object with keys matching down to mapped existing variables': function (topic) {
+        let loadInfo = new LoadInfo();
+        let substituted = loadInfo.substituteDeep(topic, {
+          'SOME_TOP_LEVEL': 5,
+          'DB_NAME': 'production_db',
+          'OAUTH_SECRET': '123456',
+          'PATH': 'ignore other environment variables'
+        });
+
+        assert.deepEqual(substituted, {
+          TopLevel: 5,
+          Customers: {
+            dbName: 'production_db',
+            oauth: {
+              secret: '123456'
+            }
+          }
+        });
+      },
+      'returns an object with keys matching down to mapped existing and defined variables': function (topic) {
+        let loadInfo = new LoadInfo();
+        let substituted = loadInfo.substituteDeep(topic, {
+          'SOME_TOP_LEVEL': 0,
+          'DB_HOST': undefined,
+          'DB_NAME': '',
+          'OAUTH_SECRET': 'false',
+          'OAUTH_KEY': 'null',
+          'PATH': ''
+        });
+
+        assert.deepEqual(substituted, {
+          TopLevel: 0,
+          Customers: {
+            oauth: {
+              key: 'null',
+              secret: 'false'
+            }
+          }
+        });
+      },
+      'returns an object with keys matching down to mapped existing variables with JSON content': function (topic) {
+        let loadInfo = new LoadInfo();
+        let substituted = loadInfo.substituteDeep(topic, {
+          'DB_HOST': '{"port":"3306","host":"example.com"}'
+        });
+
+        assert.deepEqual(substituted, {
+          Customers: {
+            dbHost: '{"port":"3306","host":"example.com"}'
+          }
+        });
+      },
+      'returns an object with keys matching down to mapped existing and defined variables with JSON content': function (topic) {
+        let dbHostObject = {
+          param1WithZero: 0,
+          param2WithFalse: false,
+          param3WithNull: null,
+          param4WithEmptyObject: {},
+          param5WithEmptyArray: [],
+          param6WithEmptyString: ''
+        };
+        let dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, {param7WithUndefined: undefined});
+
+        let loadInfo = new LoadInfo();
+        let substituted = loadInfo.substituteDeep(topic, {
+          'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
+        });
+
+        assert.deepEqual(substituted, {
+          Customers: {
+            dbHost: JSON.stringify(dbHostObject)
+          }
+        });
+      },
+      'returns an object with keys matching down to mapped and JSON-parsed existing variables': function (topic) {
+        topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+
+        let loadInfo = new LoadInfo();
+        let substituted = loadInfo.substituteDeep(topic, {
+          'DB_HOST': '{"port":"3306","host":"example.com"}'
+        });
+
+        assert.deepEqual(substituted, {
+          Customers: {
+            dbHost: {
+              port: '3306',
+              host: 'example.com'
+            }
+          }
+        });
+      },
+      'returns an object with keys matching down to mapped and JSON-parsed existing and defined variables': function (topic) {
+        let dbHostObject = {
+          param1WithZero: 0,
+          param2WithFalse: false,
+          param3WithNull: null,
+          param4WithEmptyObject: {},
+          param5WithEmptyArray: [],
+          param6WithEmptyString: ''
+        };
+        let dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, {param7WithUndefined: undefined});
+        let loadInfo = new LoadInfo();
+
+        topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+
+        let substituted = loadInfo.substituteDeep(topic, {
+          'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
+        });
+
+        assert.deepEqual(substituted, {
+          Customers: {
+            dbHost: dbHostObject
+          }
+        });
+      },
+      'throws an error for leaf Array values': function (topic) {
+        // Testing all the things in variable maps that don't make sense because ENV vars are always
+        // strings.
+        topic.Customers.dbHost = ['a', 'b', 'c'];
+
+        let loadInfo = new LoadInfo();
+
+        assert.throws(function () {
+          loadInfo.substituteDeep(topic, {
+            NON_EXISTENT_VAR: 'ignore_this'
+          });
+        });
+      },
+      'throws an error for leaf Boolean values': function (topic) {
+        topic.Customers.dbHost = false;
+
+        let loadInfo = new LoadInfo();
+
+        assert.throws(function () {
+          loadInfo.substituteDeep(topic, {
+            NON_EXISTENT_VAR: 'ignore_this'
+          });
+        });
+      },
+      'throws an error for leaf Numeric values': function (topic) {
+        topic.Customers.dbHost = 443;
+
+        let loadInfo = new LoadInfo();
+
+        assert.throws(function () {
+          loadInfo.substituteDeep(topic, {
+            NON_EXISTENT_VAR: 'ignore_this'
+          });
+        });
+      },
+      'throws an error for leaf null values': function (topic) {
+        topic.Customers.dbHost = null;
+
+        let loadInfo = new LoadInfo();
+
+        assert.throws(function () {
+          loadInfo.substituteDeep(topic, {
+            NON_EXISTENT_VAR: 'ignore_this'
+          });
+        });
+      },
+      'throws an error for leaf Undefined values': function (topic) {
+        topic.Customers.dbHost = undefined;
+
+        let loadInfo = new LoadInfo();
+
+        assert.throws(function () {
+          loadInfo.substituteDeep(topic, {
+            NON_EXISTENT_VAR: 'ignore_this'
+          });
+        });
+      },
+      'throws an error for leaf NaN values': function (topic) {
+        topic.Customers.dbHost = NaN;
+
+        let loadInfo = new LoadInfo();
+
+        assert.throws(function () {
+          loadInfo.substituteDeep(topic, {
+            NON_EXISTENT_VAR: 'ignore_this'
+          });
+        });
+      },
+      'throws an error with message describing variables name that throw a parser error': function(topic) {
+        var JSON_WITH_SYNTAX_ERROR = '{"port":"3306","host" "example.com"}'
+
+        topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+
+        let loadInfo = new LoadInfo();
+
+        assert.throws(function () {
+          loadInfo.substituteDeep(topic, {
+            'DB_HOST': JSON_WITH_SYNTAX_ERROR
+          });
+        },  /__format parser error in DB_HOST: /);
+      },
+    },
+    'LoadInfo.loadCustomEnvVars()': {
+      'should override from the environment variables': function () {
+        // Test Environment Variable Substitution
+        let expected = 'CUSTOM VALUE FROM JSON ENV MAPPING';
+        process.env.CUSTOM_JSON_ENVIRONMENT_VAR = expected;
+
+        try {
+          let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
+          loadInfo.loadCustomEnvVars();
+          assert.isObject(loadInfo.config.customEnvironmentVariables);
+          assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
+          assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy, {"json": expected});
+        } finally {
+          delete process.env.CUSTOM_JSON_ENVIRONMENT_VAR;
+        }
+      },
+      'can handle boolean values': function () {
+        process.env.CUSTOM_BOOLEAN_TRUE_ENVIRONMENT_VAR = 'true';
+        process.env.CUSTOM_BOOLEAN_FALSE_ENVIRONMENT_VAR = 'false';
+        process.env.CUSTOM_BOOLEAN_ERROR_ENVIRONMENT_VAR = 'notProperBoolean';
+
+        try {
+          let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
+          loadInfo.loadCustomEnvVars();
+          assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
+          assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy.formats,
+            { "booleanTrue": true, "booleanFalse": false, "notProperBoolean": false });
+        } finally {
+          delete process.env.CUSTOM_BOOLEAN_TRUE_ENVIRONMENT_VAR;
+          delete process.env.CUSTOM_BOOLEAN_FALSE_ENVIRONMENT_VAR;
+          delete process.env.CUSTOM_BOOLEAN_ERROR_ENVIRONMENT_VAR;
+        }
+      },
+      'can handle numeric values': function () {
+        // Test Environment variable substitution of numeric values
+        let numberInteger = 1001;
+        let numberFloat = 3.14
+        process.env.CUSTOM_NUMBER_INTEGER_ENVIRONMENT_VAR = numberInteger;
+        process.env.CUSTOM_NUMBER_FLOAT_ENVIRONMENT_VAR = numberFloat;
+        process.env.CUSTOM_NUMBER_EMPTY_ENVIRONMENT_VAR = '';
+        process.env.CUSTOM_NUMBER_STRING_ENVIRONMENT_VAR = 'String';
+
+        let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
+        loadInfo.loadCustomEnvVars();
+        assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
+        assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy.formats,
+          { "numberInteger": 1001, "numberFloat": 3.14, "numberString": undefined });
+      }
+    },
+  })
+  .addBatch({
+    'Util.resolveDeferredConfigs()': {
+      'The function exists': function () {
+        assert.isFunction(util.resolveDeferredConfigs);
+      },
+      'expands values': function() {
+        let data = {
+          deferreds: {
+            foo: '3',
+            bar: deferConfig(() => {
+              return 4;
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: '3', bar: 4});
+      },
+      'works for arrays': function() {
+        let data = {
+          deferreds: {
+            foo: 2,
+            bar: [deferConfig(() => {
+              return 4;
+            })]
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 2, bar: [4]});
+      },
+      'handles recursive expansion': function() {
+        let data = {
+          deferreds: {
+            foo: deferConfig(() => {
+              return 4;
+            }),
+            bar: deferConfig((config) => {
+              return `${config.deferreds.foo} interpolated`
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
+      }
+    },
+  })
+  .addBatch({
+    'Util.resolveDeferredConfigs()': {
+      'The function exists': function () {
+        assert.isFunction(util.resolveDeferredConfigs);
+      },
+      'expands values': function() {
+        let data = {
+          deferreds: {
+            foo: '3',
+            bar: deferConfig(() => {
+              return 4;
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: '3', bar: 4});
+      },
+      'works for arrays': function() {
+        let data = {
+          deferreds: {
+            foo: 2,
+            bar: [deferConfig(() => {
+              return 4;
+            })]
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 2, bar: [4]});
+      },
+      'handles recursive expansion': function() {
+        let data = {
+          deferreds: {
+            foo: deferConfig(() => {
+              return 4;
+            }),
+            bar: deferConfig((config) => {
+              return `${config.deferreds.foo} interpolated`
+            })
+          }
+        };
+
+        util.resolveDeferredConfigs(data);
+
+        assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
+      }
+    },
     'Util.loadFileConfigs()': {
       'The function exists': function () {
         assert.isFunction(util.loadFileConfigs);
@@ -574,7 +1173,102 @@ vows.describe('Tests for util functions')
 
         assert.strictEqual(result.config.Customers.altDbPort, 4400);
       },
+      'it handles hostName': function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          hostName: 'other'
+        });
+
+        assert.strictEqual(result.config.hostname, "other");
+      },
+      'it handles qualified domain names': function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          hostName: 'other.example.com'
+        });
+
+        assert.strictEqual(result.config.hostname, "other");
+      },
+      'it loads CSON files': function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config')
+        });
+
+        assert.isObject(result.config.Customers);
+        assert.isArray(result.config.Customers.lang);
+        assert.equal(result.config.Customers.other, 'from_default_cson');
+        assert.isObject(result.config.AnotherModule);
+        assert.equal(result.config.AnotherModule.parm4, "value4");
+      },
+      ' .properties files': {
+        topic: function() {
+          return util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'config')
+          }).config;
+        },
+        'values are loaded': function(config) {
+          assert.isObject(config.AnotherModule);
+          assert.equal(config.AnotherModule.parm5, "value5");
+          assert.isObject(config['key with spaces']);
+          assert.isTrue(config['key with spaces'].another_key == 'hello');
+          assert.isUndefined(config.ignore_this_please);
+          assert.isUndefined(config.i_am_a_comment);
+        },
+        'handles variable expansion': function(config) {
+          assert.isTrue(config.replacement.param == "foobar")
+        },
+        'Sections are supported': function(config) {
+          assert.isDefined(config.section.param);
+          assert.isUndefined(config.param);
+        },
+      }
     },
   })
-  .export(module);
+  .addBatch({
+    'LoadInfo.load()': {
+      'The function exists': function () {
+        const loadInfo = new LoadInfo();
+        assert.isFunction(loadInfo.load);
+      },
+      'It can load data from a given directory': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load();
+
+        assert.isObject(loadInfo.config.Customers);
+      },
+      'It merges in the provided data': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load([{ name: 'a', config: {foo: 'bar'} }]);
+
+        assert.equal(loadInfo.config.foo, 'bar');
+      },
+      'can disable source accumulation': function() {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config', skipConfigSources: true});
+        loadInfo.load();
+
+        assert.isEmpty(loadInfo.getSources());
+      }
+    },
+  })
+  .addBatch({
+    'LoadInfo.load()': {
+      'The function exists': function () {
+        const loadInfo = new LoadInfo();
+        assert.isFunction(loadInfo.load);
+      },
+      'It can load data from a given directory': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load();
+
+        assert.isObject(loadInfo.config.Customers);
+      },
+      'It merges in the provided data': function () {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
+        loadInfo.load([{ name: 'a', config: {foo: 'bar'} }]);
+
+        assert.equal(loadInfo.config.foo, 'bar');
+      },
+    },
+  })
+.export(module);
 
