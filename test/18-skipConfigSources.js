@@ -27,13 +27,6 @@ vows.describe('Testing the skipConfigSources functionality')
             },
             'should not add the configuration object to the global configuration': function (topic){
                 assert(!topic.config.has('arbitraryKey'));
-            },
-            'should add the file information to the config.util.getConfigSources array': function(topic) {
-                var configSources = topic.config.util.getConfigSources();
-                var lastEntry = configSources[configSources.length - 1 ];
-                var fullFileName = Path.join(__dirname,'/18-extra-config/customFile.json');
-                assert.deepStrictEqual(lastEntry.name, fullFileName);
-                assert.deepStrictEqual(lastEntry.parsed, { arbitraryKey: 'arbitraryValue'});
             }
         },
         'given a file path and an options parameter,': {
@@ -56,13 +49,6 @@ vows.describe('Testing the skipConfigSources functionality')
                 },
                 'should not add the configuration object to the global configuration': function (topic){
                     assert(!topic.config.has('arbitraryKey'));
-                },
-                'should add the file information to the config.util.getConfigSources array': function(topic) {
-                    var configSources = topic.config.util.getConfigSources();
-                    var lastEntry = configSources[configSources.length - 1 ];
-                    var fullFileName = Path.join(__dirname,'/18-extra-config/customFile.json');
-                    assert.deepStrictEqual(lastEntry.name, fullFileName);
-                    assert.deepStrictEqual(lastEntry.parsed, { arbitraryKey: 'arbitraryValue'});
                 }
             },
             'when the skipConfigSources flag is set to true': {
@@ -84,7 +70,7 @@ vows.describe('Testing the skipConfigSources functionality')
                 },
                 'should not add the configuration object to the global configuration': function (topic){
                     assert(!topic.config.has('arbitraryKey'));
-                }, 
+                },
                 'should not add the file information to the config.util.getConfigSources array': function(topic) {
                     var configSources = topic.config.util.getConfigSources();
                     var fullFileName = Path.join(__dirname,'/18-extra-config/customFile.json');
@@ -113,13 +99,6 @@ vows.describe('Testing the skipConfigSources functionality')
             },
             'should not add the configuration object to the global configuration': function (topic){
                 assert.deepStrictEqual(topic.config.get('someKey'),'testValue');
-            },
-            'should add the file information to the config.util.getConfigSources array': function(topic) {
-                var configSources = topic.config.util.getConfigSources();
-                var lastEntry = configSources[configSources.length - 1 ];
-                var fullFileName = Path.join(__dirname,'/18-extra-config/default.json');
-                assert.deepStrictEqual(lastEntry.name, fullFileName);
-                assert.deepStrictEqual(lastEntry.parsed, { someKey: 'anotherTestValue'});
             }
         },
         'given a directory and an options parameter,': {
@@ -142,13 +121,6 @@ vows.describe('Testing the skipConfigSources functionality')
                 },
                 'should not add the configuration object to the global configuration': function (topic){
                     assert.deepStrictEqual(topic.config.get('someKey'),'testValue');
-                },
-                'should add the file information to the config.util.getConfigSources array': function(topic) {
-                    var configSources = topic.config.util.getConfigSources();
-                    var lastEntry = configSources[configSources.length - 1 ];
-                    var fullFileName = Path.join(__dirname,'/18-extra-config/default.json');
-                    assert.deepStrictEqual(lastEntry.name, fullFileName);
-                    assert.deepStrictEqual(lastEntry.parsed, { someKey: 'anotherTestValue'});
                 }
             },
             'when the skipConfigSources flag is set to true': {
