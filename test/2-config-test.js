@@ -54,7 +54,7 @@ describe('Test suite for node-config', function() {
     });
 
     it('Config extensions are included with the library', function() {
-      assert.strictEqual(typeof config.util.cloneDeep, 'function');
+      assert.strictEqual(typeof config.util.makeImmutable, 'function');
     });
   });
 
@@ -257,39 +257,6 @@ describe('Test suite for node-config', function() {
       )
     });
   });
-
-  describe('Assuring a configuration property can be hidden', function() {
-    let config, object;
-
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
-      object = {
-          item1: 23,
-          subObject: {
-            item2: "hello"
-          }
-        };
-      });
-
-      it('The makeHidden() method is available', function() {
-        assert.strictEqual(typeof config.util.makeHidden, 'function');
-      });
-
-      it('The test object (before hiding) is correct', function() {
-        assert.strictEqual(JSON.stringify(object), '{"item1":23,"subObject":{"item2":"hello"}}');
-      });
-
-      it('The test object (after hiding) is correct', function() {
-        config.util.makeHidden(object, 'item1');
-        assert.strictEqual(JSON.stringify(object), '{"subObject":{"item2":"hello"}}');
-      });
-
-      it('The hidden property is readable, and has not changed', function() {
-        config.util.makeHidden(object, 'item1');
-        assert.strictEqual(JSON.stringify(object), '{"subObject":{"item2":"hello"}}');
-        assert.strictEqual(object.item1, 23);
-      });
-    });
 
   describe('Assuring a configuration property can be made immutable', function() {
     let config;
@@ -590,7 +557,7 @@ describe('Test suite for node-config', function() {
     });
 
     it('Config extensions are included with the library', function() {
-      assert.strictEqual(typeof config.util.cloneDeep, 'function');
+      assert.strictEqual(typeof config.util.makeImmutable, 'function');
     });
 
     describe('Multiple config directories', function() {

@@ -4,6 +4,9 @@ const Path = require('path');
 const requireUncached = require('./_utils/requireUncached');
 const { describe, it, beforeEach } = require('node:test');
 const assert = require('assert');
+const { Load } = require(__dirname + '/../lib/util');
+
+const LOAD = new Load({});
 
 describe('Testing custom environment variable overrides', function() {
   describe('with unset environment variables', function() {
@@ -17,7 +20,7 @@ describe('Testing custom environment variable overrides', function() {
       process.env.NODE_CONFIG_DIR = [__dirname + '/19-config'].join(Path.delimiter);
 
       config = requireUncached(__dirname + '/../lib/config');
-      configObject = config.util.parseFile(Path.join(__dirname,'/19-config/default.js'))
+      configObject = LOAD.loadFile(Path.join(__dirname,'/19-config/default.js'));
     });
 
     it('should not override from the environment variables', function() {
@@ -37,7 +40,7 @@ describe('Testing custom environment variable overrides', function() {
       process.env.NODE_CONFIG_DIR = [__dirname + '/19-config'].join(Path.delimiter);
 
       config = requireUncached(__dirname + '/../lib/config');
-      configObject = config.util.parseFile(Path.join(__dirname, '/19-config/default.js'))
+      configObject = LOAD.loadFile(Path.join(__dirname,'/19-config/default.js'));
     });
 
     it('should not override from the environment variables', function () {
@@ -67,32 +70,6 @@ describe('Testing custom environment variable overrides', function() {
     it('should override from the environment variables', function() {
       assert.strictEqual(config.testValue, testValue);
       assert.deepStrictEqual(config.testJSONValue, jsonValue);
-    });
-  });
-
-  describe('getCustomEnvVars()', function() {
-    let testValue, jsonValue, config;
-
-    beforeEach(function () {
-      testValue = 'from env1';
-      jsonValue = {
-          fromJS: false,
-          type: 'stringified JSON'
-      }
-
-      process.env.TEST_VALUE = testValue;
-      process.env.TEST_JSON_VALUE = JSON.stringify(jsonValue);
-
-      // Change the configuration directory for testing
-      process.env.NODE_CONFIG_DIR = __dirname + '/config';
-
-      config = requireUncached(__dirname + '/../lib/config');
-    });
-
-    it('should override from the environment variables', function() {
-      let results = config.util.getCustomEnvVars(__dirname + '/19-config')
-      assert.strictEqual(results.testValue, testValue);
-      assert.deepStrictEqual(results.testJSONValue, jsonValue);
     });
   });
 });
