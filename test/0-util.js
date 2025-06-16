@@ -512,6 +512,12 @@ vows.describe('Tests for util functions')
             parsed: { foo: { field2: 'another' } }
           }
         ]);
+      },
+      'can disable tracking sources': function () {
+        let loadInfo = new LoadInfo({skipConfigSources: true});
+        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+
+        assert.isEmpty(loadInfo.getSources());
       }
     },
     'LoadInfo.loadFile()': {
@@ -1062,6 +1068,12 @@ vows.describe('Tests for util functions')
 
         assert.equal(loadInfo.config.foo, 'bar');
       },
+      'can disable source accumulation': function() {
+        let loadInfo = new LoadInfo({configDir: __dirname + '/config', skipConfigSources: true});
+        loadInfo.load();
+
+        assert.isEmpty(loadInfo.getSources());
+      }
     },
   })
 .export(module);
