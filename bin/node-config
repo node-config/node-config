@@ -3,11 +3,31 @@ const path = require('path');
 const fs = require('fs');
 const {LoadInfo } = require(path.join(__dirname, '..', 'lib/util.js'));
 
+/**
+ * Command line for triage and analysis of config files.
+ *
+ * These commands perform the same operations what require('config') does without the singleton.
+ * These honor the same environment variables that lib/config.js does
+ *
+ * Example:
+ *
+ * NODE_APP_INSTANCE=3 NODE_CONFIG_DIR=./test/config node-config dump
+ *
+ * `check` is useful for CI/CD workflows, to avoid issues in production or in integration tests.
+ *
+ * 'dump' is useful for triage situations. If you have an image or container that is misbehaving,
+ * verifying that the canonical configuration is as expected is a useful triage tool.
+ *
+ *
+ */
+
 function usage () {
   console.log(`
+    Command line for interrogating node-config config files
+    
     usage:
       node-config check [environments...]
-      node-config dump [target] 
+      node-config dump [environment] [target] 
       
       commands can be:
       
@@ -41,15 +61,19 @@ function check(...environments) {
 function dump(target) {
   const env = process.env.CONFIG_NODE_ENV || process.env.NODE_ENV || 'default';
 
-  if (target === undefined) {
-    target = `${env}.json`;
+  if (target) {
+    console.warn(`${env} -> ${target}`);
+
+    let config = load();
+
+    fs.writeFileSync(target, JSON.stringify(config, null, 2));
+  } else {
+    console.warn(`${env} -> stdout`);
+
+    let config = load();
+
+    console.log(JSON.stringify(config, null, 2));
   }
-
-  console.log(`${env} -> ${target}`);
-
-  let config = load();
-
-  fs.writeFileSync(target, JSON.stringify(config, null, 2));
 }
 
 const args = process.argv.slice(2);
