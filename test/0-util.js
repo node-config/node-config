@@ -11,6 +11,9 @@ const util = require('../lib/util.js').Util;
 const LoadInfo = require('../lib/util.js').LoadInfo;
 const deferConfig = require('../defer').deferConfig;
 
+// Make a copy of the command line args
+const argvOrg = process.argv;
+
 vows.describe('Tests for util functions')
   .addBatch({
     'Util.isObject()': {
@@ -555,6 +558,38 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
+    'LoadInfo.getCmdLineArg()': {
+      'The function exists': function () {
+        assert.isFunction(new LoadInfo().getCmdLineArg);
+      },
+      'returns false on missing arguments': function() {
+        let loadInfo = new LoadInfo();
+
+        assert.equal(loadInfo.getCmdLineArg('CONFIG_NODE_ENV'), false);
+      },
+      'returns a value': function () {
+        try {
+          process.argv = [process.argv[0], process.argv[1], '--NODE_ENV=staging'];
+
+          let loadInfo = new LoadInfo();
+
+          assert.equal(loadInfo.getCmdLineArg('NODE_ENV'), 'staging');
+        } finally {
+          process.argv = argvOrg;
+        }
+      },
+      'returns the first match': function() {
+        try {
+          process.argv = [process.argv[0], process.argv[1], '--NODE_ENV=staging', '--NODE_ENV=test'];
+
+          let loadInfo = new LoadInfo();
+
+          assert.equal(loadInfo.getCmdLineArg('NODE_ENV'), 'staging');
+        } finally {
+          process.argv = argvOrg;
+        }
+      },
+    },
     'LoadInfo.fromEnvironment()': {
       'nodeEnv values': {
         'defaults env to development when NODE_CONFIG_ENV and NODE_ENV are undefined': function () {
