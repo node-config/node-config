@@ -8,7 +8,7 @@ const vows = require('vows');
 const assert = require('assert');
 const Path = require('path');
 const util = require('../lib/util.js').Util;
-const LoadInfo = require('../lib/util.js').LoadInfo;
+const Load = require('../lib/util.js').Load;
 const deferConfig = require('../defer').deferConfig;
 
 vows.describe('Tests for util functions')
@@ -408,69 +408,69 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
-    'LoadInfo.initParam()': {
+    'Load.initParam()': {
       topic: function () {
-        return new LoadInfo({});
+        return new Load({});
       },
-      'The function exists': function (loadInfo) {
-        assert.isFunction(loadInfo.initParam);
+      'The function exists': function (load) {
+        assert.isFunction(load.initParam);
       },
-      'looks up values': function (loadInfo) {
+      'looks up values': function (load) {
         process.env.NODE_CONFIG = '{"EnvOverride":{"parm4":100}}';
 
-        let result = loadInfo.initParam('NODE_CONFIG');
+        let result = load.initParam('NODE_CONFIG');
 
         assert.equal(result, '{"EnvOverride":{"parm4":100}}');
 
         delete process.env.NODE_CONFIG;
       },
-      'defaults on missing value up values': function (loadInfo) {
+      'defaults on missing value up values': function (load) {
         delete process.env.NODE_CONFIG;
 
-        let result = loadInfo.initParam('NODE_CONFIG', '{}');
+        let result = load.initParam('NODE_CONFIG', '{}');
 
         assert.equal(result, '{}');
       },
-      'tracks lookups': function (loadInfo) {
+      'tracks lookups': function (load) {
         delete process.env.NODE_CONFIG;
         delete process.env.NODE_CONFIG_FOO;
 
-        loadInfo.initParam('NODE_CONFIG', true);
-        loadInfo.initParam('NODE_CONFIG_FOO', "small");
+        load.initParam('NODE_CONFIG', true);
+        load.initParam('NODE_CONFIG_FOO', "small");
 
-        assert.equal(loadInfo.getEnv('NODE_CONFIG'), true);
-        assert.equal(loadInfo.getEnv('NODE_CONFIG_FOO'), "small");
+        assert.equal(load.getEnv('NODE_CONFIG'), true);
+        assert.equal(load.getEnv('NODE_CONFIG_FOO'), "small");
       },
     },
-    'LoadInfo.addConfig()': {
+    'Load.addConfig()': {
       topic: function () {
-        return new LoadInfo({});
+        return new Load({});
       },
-      'The function exists': function (loadInfo) {
-        assert.isFunction(loadInfo.addConfig);
+      'The function exists': function (load) {
+        assert.isFunction(load.addConfig);
       },
-      'adds new fields': function (loadInfo) {
-        loadInfo.addConfig("first", { foo: { field1: 'new'}});
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'new' } });
+      'adds new fields': function (load) {
+        load.addConfig("first", { foo: { field1: 'new'}});
+        assert.deepEqual(load.config, { foo: { field1: 'new' } });
       },
-      'composes values': function (loadInfo) {
-        loadInfo.addConfig("second", { foo: { field2: 'another' } });
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'new', field2: 'another' } });
+      'composes values': function (load) {
+        load.addConfig("second", { foo: { field2: 'another' } });
+        assert.deepEqual(load.config, { foo: { field1: 'new', field2: 'another' } });
       },
       'chains on itself': function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo
+        let load = new Load({});
+        load
           .addConfig("first", {foo: {field1: 'blue'}})
           .addConfig("second", {foo: {field2: 'green'}});
 
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'blue', field2: 'green' } });
+        assert.deepEqual(load.config, { foo: { field1: 'blue', field2: 'green' } });
       },
       'tracks the sources': function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo.addConfig("first", { foo: { field1: 'new' }});
-        loadInfo.addConfig("second", { foo: { field2: 'another' }});
+        let load = new Load({});
+        load.addConfig("first", { foo: { field1: 'new' }});
+        load.addConfig("second", { foo: { field2: 'another' }});
 
-        assert.deepEqual(loadInfo.getSources(), [
+        assert.deepEqual(load.getSources(), [
           {
             name: 'first',
             parsed: { foo: { field1: 'new' } }
@@ -482,31 +482,31 @@ vows.describe('Tests for util functions')
         ]);
       }
     },
-    'LoadInfo.setModuleDefaults()': {
+    'Load.setModuleDefaults()': {
       topic: function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo.addConfig("first", { foo: { field1: 'set'}});
-        return loadInfo;
+        let load = new Load({});
+        load.addConfig("first", { foo: { field1: 'set'}});
+        return load;
       },
-      'The function exists': function (loadInfo) {
-        assert.isFunction(loadInfo.setModuleDefaults);
+      'The function exists': function (load) {
+        assert.isFunction(load.setModuleDefaults);
       },
-      'adds new defaults': function (loadInfo) {
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+      'adds new defaults': function (load) {
+        load.setModuleDefaults("foo", { field2: 'another'});
 
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another' } });
+        assert.deepEqual(load.config, { foo: { field1: 'set', field2: 'another' } });
       },
-      'can be called multiple times for the same key': function (loadInfo) {
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
-        loadInfo.setModuleDefaults("foo", { field3: 'additional'});
+      'can be called multiple times for the same key': function (load) {
+        load.setModuleDefaults("foo", { field2: 'another'});
+        load.setModuleDefaults("foo", { field3: 'additional'});
 
-        assert.deepEqual(loadInfo.config, { foo: { field1: 'set', field2: 'another', field3: 'additional' } });
+        assert.deepEqual(load.config, { foo: { field1: 'set', field2: 'another', field3: 'additional' } });
       },
       'tracks the sources': function () {
-        let loadInfo = new LoadInfo({});
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+        let load = new Load({});
+        load.setModuleDefaults("foo", { field2: 'another'});
 
-        assert.deepEqual(loadInfo.getSources(), [
+        assert.deepEqual(load.getSources(), [
           {
             name: 'Module Defaults',
             parsed: { foo: { field2: 'another' } }
@@ -514,40 +514,40 @@ vows.describe('Tests for util functions')
         ]);
       },
       'can disable tracking sources': function () {
-        let loadInfo = new LoadInfo({skipConfigSources: true});
-        loadInfo.setModuleDefaults("foo", { field2: 'another'});
+        let load = new Load({skipConfigSources: true});
+        load.setModuleDefaults("foo", { field2: 'another'});
 
-        assert.isEmpty(loadInfo.getSources());
+        assert.isEmpty(load.getSources());
       }
     },
-    'LoadInfo.loadFile()': {
+    'Load.loadFile()': {
       topic: function () {
-        return new LoadInfo({configDir: './config'});
+        return new Load({configDir: './config'});
       },
-      'The function exists': function(loadInfo) {
-        assert.isFunction(loadInfo.loadFile);
+      'The function exists': function(load) {
+        assert.isFunction(load.loadFile);
       },
-      'throws no error on missing file': function (loadInfo) {
-        assert.doesNotThrow(() => loadInfo.loadFile(Path.join(__dirname, './config/missing.json')));
+      'throws no error on missing file': function (load) {
+        assert.doesNotThrow(() => load.loadFile(Path.join(__dirname, './config/missing.json')));
       },
-      'throws error on other file issues': function (loadInfo) {
-        assert.throws(() => loadInfo.loadFile(Path.join(__dirname, './config/')));
+      'throws error on other file issues': function (load) {
+        assert.throws(() => load.loadFile(Path.join(__dirname, './config/')));
       },
-      'adds new values': function(loadInfo) {
-        loadInfo.loadFile(Path.join(__dirname, './config/default.json'));
+      'adds new values': function(load) {
+        load.loadFile(Path.join(__dirname, './config/default.json'));
 
-        assert.deepEqual(loadInfo.config.staticArray, [2,1,3]);
+        assert.deepEqual(load.config.staticArray, [2,1,3]);
       },
-      'uses an optional transform on the data': function(loadInfo) {
-        loadInfo.loadFile(Path.join(__dirname, './config/default-3.json'), () => { return { foo: "bar" } });
+      'uses an optional transform on the data': function(load) {
+        load.loadFile(Path.join(__dirname, './config/default-3.json'), () => { return { foo: "bar" } });
 
-        assert.equal(loadInfo.config.foo, "bar");
+        assert.equal(load.config.foo, "bar");
       },
       'tracks the sources': function () {
-        let loadInfo = new LoadInfo({configDir: './config'});
-        loadInfo.loadFile(Path.join(__dirname, './config/default.json'));
+        let load = new Load({configDir: './config'});
+        load.loadFile(Path.join(__dirname, './config/default.json'));
 
-        let sources = loadInfo.getSources();
+        let sources = load.getSources();
 
         assert.equal(sources.length, 1);
         assert.isTrue(sources[0].name.endsWith("/config/default.json"));
@@ -653,7 +653,7 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
-    'LoadInfo.substituteDeep()': {
+    'Load.substituteDeep()': {
       topic: function () {
         var topic = {
           TopLevel: 'SOME_TOP_LEVEL',
@@ -672,20 +672,20 @@ vows.describe('Tests for util functions')
         return topic;
       },
       'returns an empty object if the variables mapping is empty': function (topic) {
-        let loadInfo = new LoadInfo();
-        let substituted = loadInfo.substituteDeep(topic, {});
+        let load = new Load();
+        let substituted = load.substituteDeep(topic, {});
 
         assert.deepEqual(substituted, {});
       },
       'returns an empty object if none of the variables map to leaf strings': function (topic) {
-        let loadInfo = new LoadInfo();
-        let substituted = loadInfo.substituteDeep(topic, {NON_EXISTENT_VAR: 'ignore_this'});
+        let load = new Load();
+        let substituted = load.substituteDeep(topic, {NON_EXISTENT_VAR: 'ignore_this'});
 
         assert.deepEqual(substituted, {});
       },
       'returns an object with keys matching down to mapped existing variables': function (topic) {
-        let loadInfo = new LoadInfo();
-        let substituted = loadInfo.substituteDeep(topic, {
+        let load = new Load();
+        let substituted = load.substituteDeep(topic, {
           'SOME_TOP_LEVEL': 5,
           'DB_NAME': 'production_db',
           'OAUTH_SECRET': '123456',
@@ -703,8 +703,8 @@ vows.describe('Tests for util functions')
         });
       },
       'returns an object with keys matching down to mapped existing and defined variables': function (topic) {
-        let loadInfo = new LoadInfo();
-        let substituted = loadInfo.substituteDeep(topic, {
+        let load = new Load();
+        let substituted = load.substituteDeep(topic, {
           'SOME_TOP_LEVEL': 0,
           'DB_HOST': undefined,
           'DB_NAME': '',
@@ -724,8 +724,8 @@ vows.describe('Tests for util functions')
         });
       },
       'returns an object with keys matching down to mapped existing variables with JSON content': function (topic) {
-        let loadInfo = new LoadInfo();
-        let substituted = loadInfo.substituteDeep(topic, {
+        let load = new Load();
+        let substituted = load.substituteDeep(topic, {
           'DB_HOST': '{"port":"3306","host":"example.com"}'
         });
 
@@ -746,8 +746,8 @@ vows.describe('Tests for util functions')
         };
         let dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, {param7WithUndefined: undefined});
 
-        let loadInfo = new LoadInfo();
-        let substituted = loadInfo.substituteDeep(topic, {
+        let load = new Load();
+        let substituted = load.substituteDeep(topic, {
           'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
         });
 
@@ -760,8 +760,8 @@ vows.describe('Tests for util functions')
       'returns an object with keys matching down to mapped and JSON-parsed existing variables': function (topic) {
         topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
 
-        let loadInfo = new LoadInfo();
-        let substituted = loadInfo.substituteDeep(topic, {
+        let load = new Load();
+        let substituted = load.substituteDeep(topic, {
           'DB_HOST': '{"port":"3306","host":"example.com"}'
         });
 
@@ -784,11 +784,11 @@ vows.describe('Tests for util functions')
           param6WithEmptyString: ''
         };
         let dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, {param7WithUndefined: undefined});
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
 
-        let substituted = loadInfo.substituteDeep(topic, {
+        let substituted = load.substituteDeep(topic, {
           'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
         });
 
@@ -803,10 +803,10 @@ vows.describe('Tests for util functions')
         // strings.
         topic.Customers.dbHost = ['a', 'b', 'c'];
 
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         assert.throws(function () {
-          loadInfo.substituteDeep(topic, {
+          load.substituteDeep(topic, {
             NON_EXISTENT_VAR: 'ignore_this'
           });
         });
@@ -814,10 +814,10 @@ vows.describe('Tests for util functions')
       'throws an error for leaf Boolean values': function (topic) {
         topic.Customers.dbHost = false;
 
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         assert.throws(function () {
-          loadInfo.substituteDeep(topic, {
+          load.substituteDeep(topic, {
             NON_EXISTENT_VAR: 'ignore_this'
           });
         });
@@ -825,10 +825,10 @@ vows.describe('Tests for util functions')
       'throws an error for leaf Numeric values': function (topic) {
         topic.Customers.dbHost = 443;
 
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         assert.throws(function () {
-          loadInfo.substituteDeep(topic, {
+          load.substituteDeep(topic, {
             NON_EXISTENT_VAR: 'ignore_this'
           });
         });
@@ -836,10 +836,10 @@ vows.describe('Tests for util functions')
       'throws an error for leaf null values': function (topic) {
         topic.Customers.dbHost = null;
 
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         assert.throws(function () {
-          loadInfo.substituteDeep(topic, {
+          load.substituteDeep(topic, {
             NON_EXISTENT_VAR: 'ignore_this'
           });
         });
@@ -847,10 +847,10 @@ vows.describe('Tests for util functions')
       'throws an error for leaf Undefined values': function (topic) {
         topic.Customers.dbHost = undefined;
 
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         assert.throws(function () {
-          loadInfo.substituteDeep(topic, {
+          load.substituteDeep(topic, {
             NON_EXISTENT_VAR: 'ignore_this'
           });
         });
@@ -858,10 +858,10 @@ vows.describe('Tests for util functions')
       'throws an error for leaf NaN values': function (topic) {
         topic.Customers.dbHost = NaN;
 
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         assert.throws(function () {
-          loadInfo.substituteDeep(topic, {
+          load.substituteDeep(topic, {
             NON_EXISTENT_VAR: 'ignore_this'
           });
         });
@@ -871,24 +871,24 @@ vows.describe('Tests for util functions')
 
         topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
 
-        let loadInfo = new LoadInfo();
+        let load = new Load();
 
         assert.throws(function () {
-          loadInfo.substituteDeep(topic, {
+          load.substituteDeep(topic, {
             'DB_HOST': JSON_WITH_SYNTAX_ERROR
           });
         },  /__format parser error in DB_HOST: /);
       },
     },
-    'LoadInfo.loadCustomEnvVars()': {
+    'Load.loadCustomEnvVars()': {
       'should override from the environment variables': function () {
         // Test Environment Variable Substitution
         let expected = 'CUSTOM VALUE FROM JSON ENV MAPPING';
         process.env.CUSTOM_JSON_ENVIRONMENT_VAR = expected;
 
-        let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
-        loadInfo.loadCustomEnvVars();
-        assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables, { "mappedBy": { "json": expected } });
+        let load = new Load({nodeEnv: 'production', configDir: __dirname + '/config'})
+        load.loadCustomEnvVars();
+        assert.deepStrictEqual(load.config.customEnvironmentVariables, { "mappedBy": { "json": expected } });
       },
       'should override from the environment variables': function () {
         // Test Environment Variable Substitution
@@ -896,11 +896,11 @@ vows.describe('Tests for util functions')
         process.env.CUSTOM_JSON_ENVIRONMENT_VAR = expected;
 
         try {
-          let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
-          loadInfo.loadCustomEnvVars();
-          assert.isObject(loadInfo.config.customEnvironmentVariables);
-          assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
-          assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy, {"json": expected});
+          let load = new Load({nodeEnv: 'production', configDir: __dirname + '/config'})
+          load.loadCustomEnvVars();
+          assert.isObject(load.config.customEnvironmentVariables);
+          assert.isObject(load.config.customEnvironmentVariables.mappedBy);
+          assert.deepStrictEqual(load.config.customEnvironmentVariables.mappedBy, {"json": expected});
         } finally {
           delete process.env.CUSTOM_JSON_ENVIRONMENT_VAR;
         }
@@ -911,10 +911,10 @@ vows.describe('Tests for util functions')
         process.env.CUSTOM_BOOLEAN_ERROR_ENVIRONMENT_VAR = 'notProperBoolean';
 
         try {
-          let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
-          loadInfo.loadCustomEnvVars();
-          assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
-          assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy.formats,
+          let load = new Load({nodeEnv: 'production', configDir: __dirname + '/config'})
+          load.loadCustomEnvVars();
+          assert.isObject(load.config.customEnvironmentVariables.mappedBy);
+          assert.deepStrictEqual(load.config.customEnvironmentVariables.mappedBy.formats,
             { "booleanTrue": true, "booleanFalse": false, "notProperBoolean": false });
         } finally {
           delete process.env.CUSTOM_BOOLEAN_TRUE_ENVIRONMENT_VAR;
@@ -931,10 +931,10 @@ vows.describe('Tests for util functions')
         process.env.CUSTOM_NUMBER_EMPTY_ENVIRONMENT_VAR = '';
         process.env.CUSTOM_NUMBER_STRING_ENVIRONMENT_VAR = 'String';
 
-        let loadInfo = new LoadInfo({nodeEnv: 'production', configDir: __dirname + '/config'})
-        loadInfo.loadCustomEnvVars();
-        assert.isObject(loadInfo.config.customEnvironmentVariables.mappedBy);
-        assert.deepStrictEqual(loadInfo.config.customEnvironmentVariables.mappedBy.formats,
+        let load = new Load({nodeEnv: 'production', configDir: __dirname + '/config'})
+        load.loadCustomEnvVars();
+        assert.isObject(load.config.customEnvironmentVariables.mappedBy);
+        assert.deepStrictEqual(load.config.customEnvironmentVariables.mappedBy.formats,
           { "numberInteger": 1001, "numberFloat": 3.14, "numberString": undefined });
       }
     },
@@ -1051,28 +1051,28 @@ vows.describe('Tests for util functions')
     },
   })
   .addBatch({
-    'LoadInfo.load()': {
+    'Load.scan()': {
       'The function exists': function () {
-        const loadInfo = new LoadInfo();
-        assert.isFunction(loadInfo.load);
+        const load = new Load();
+        assert.isFunction(load.scan);
       },
       'It can load data from a given directory': function () {
-        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
-        loadInfo.load();
+        let load = new Load({configDir: __dirname + '/config'})
+        load.scan();
 
-        assert.isObject(loadInfo.config.Customers);
+        assert.isObject(load.config.Customers);
       },
       'It merges in the provided data': function () {
-        let loadInfo = new LoadInfo({configDir: __dirname + '/config'})
-        loadInfo.load([{ name: 'a', config: {foo: 'bar'} }]);
+        let load = new Load({configDir: __dirname + '/config'})
+        load.scan([{ name: 'a', config: {foo: 'bar'} }]);
 
-        assert.equal(loadInfo.config.foo, 'bar');
+        assert.equal(load.config.foo, 'bar');
       },
       'can disable source accumulation': function() {
-        let loadInfo = new LoadInfo({configDir: __dirname + '/config', skipConfigSources: true});
-        loadInfo.load();
+        let load = new Load({configDir: __dirname + '/config', skipConfigSources: true});
+        load.scan();
 
-        assert.isEmpty(loadInfo.getSources());
+        assert.isEmpty(load.getSources());
       }
     },
   })
