@@ -546,6 +546,104 @@ vows.describe('Tests for util functions')
         assert.isTrue(sources[0].name.endsWith("/config/default.json"));
       }
     },
+    'LoadInfo.fromEnvironment()': {
+      'nodeEnv values': {
+        'defaults env to development when NODE_CONFIG_ENV and NODE_ENV are undefined': function () {
+          try {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'development');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'development');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'development');
+          } finally {
+          }
+        },
+        'defaults to NODE_ENV if NODE_CONFIG_ENV is not set': function () {
+          try {
+            process.env.NODE_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+          }
+        },
+        'uses NODE_CONFIG_ENV when NODE_ENV is unset': function () {
+          try {
+            process.env.NODE_CONFIG_ENV = 'mercury';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), undefined);
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'mercury');
+          } finally {
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+        'prefers NODE_CONFIG_ENV': function () {
+          try {
+            process.env.NODE_ENV = 'mercury';
+            process.env.NODE_CONFIG_ENV = 'apollo';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.options.nodeEnv, 'apollo');
+            assert.equal(loadInfo.getEnv('NODE_ENV'), 'mercury');
+            assert.equal(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          } finally {
+            delete process.env.NODE_ENV;
+            delete process.env.NODE_CONFIG_ENV;
+          }
+        },
+      },
+      'host calculations': {
+        'uses OS when neither HOST nor HOSTNAME are set': function() {
+          try {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.isString(loadInfo.getEnv('HOSTNAME'));
+            assert.isString(loadInfo.options.hostName);
+          } finally {
+          }
+        },
+        'uses HOSTNAME if it is set': function() {
+          try {
+            delete process.env.HOST;
+            process.env.HOSTNAME = 'foo.example.com';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.getEnv('HOSTNAME'), 'foo.example.com');
+          } finally {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+          }
+        },
+        'prefers HOST if is set': function() {
+          try {
+            process.env.HOST = 'correct.example.com';
+            process.env.HOSTNAME = 'foo.example.com';
+
+            let loadInfo = LoadInfo.fromEnvironment();
+
+            assert.equal(loadInfo.getEnv('HOSTNAME'), 'correct.example.com');
+          } finally {
+            delete process.env.HOST;
+            delete process.env.HOSTNAME;
+          }
+        }
+      },
+    },
   })
   .addBatch({
     'Util.loadFileConfigs()': {
@@ -574,6 +672,39 @@ vows.describe('Tests for util functions')
 
         assert.strictEqual(result.config.Customers.altDbPort, 4400);
       },
+      'it loads CSON files': function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config')
+        });
+
+        assert.isObject(result.config.Customers);
+        assert.isArray(result.config.Customers.lang);
+        assert.equal(result.config.Customers.other, 'from_default_cson');
+        assert.isObject(result.config.AnotherModule);
+        assert.equal(result.config.AnotherModule.parm4, "value4");
+      },
+      ' .properties files': {
+        topic: function() {
+          return util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'config')
+          }).config;
+        },
+        'values are loaded': function(config) {
+          assert.isObject(config.AnotherModule);
+          assert.equal(config.AnotherModule.parm5, "value5");
+          assert.isObject(config['key with spaces']);
+          assert.isTrue(config['key with spaces'].another_key == 'hello');
+          assert.isUndefined(config.ignore_this_please);
+          assert.isUndefined(config.i_am_a_comment);
+        },
+        'handles variable expansion': function(config) {
+          assert.isTrue(config.replacement.param == "foobar")
+        },
+        'Sections are supported': function(config) {
+          assert.isDefined(config.section.param);
+          assert.isUndefined(config.param);
+        },
+      }
     },
   })
   .export(module);

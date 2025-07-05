@@ -3,7 +3,8 @@ var requireUncached = require('./_utils/requireUncached');
 // Dependencies
 var vows = require('vows'),
     assert = require('assert'),
-        path = require('path');
+    path = require('path'),
+    { Util } = require(__dirname + '/../lib/util');
 
 // Change the configuration directory for testing
 process.env.NODE_CONFIG_DIR = __dirname + '/8-config';
@@ -29,7 +30,7 @@ vows.describe('Tests for config extending')
             CONFIG.util.attachProtoDeep(base_config);
 
             assert.doesNotThrow(function () {
-                let result = CONFIG.util.extendDeep(base_config, CONFIG);
+                let result = Util.extendDeep(base_config, CONFIG);
             }, 'Extending a configuration with another configuration has an error');
 
         }
