@@ -1,0 +1,90 @@
+#! /usr/bin/env node
+const path = require('path');
+const fs = require('fs');
+const {LoadInfo } = require(path.join(__dirname, '..', 'lib/util.js'));
+
+/**
+ * Command line for triage and analysis of config files.
+ *
+ * These commands perform the same operations what require('config') does without the singleton.
+ * These honor the same environment variables that lib/config.js does
+ *
+ * Example:
+ *
+ * NODE_APP_INSTANCE=3 NODE_CONFIG_DIR=./test/config node-config dump
+ *
+ * `check` is useful for CI/CD workflows, to avoid issues in production or in integration tests.
+ *
+ * 'dump' is useful for triage situations. If you have an image or container that is misbehaving,
+ * verifying that the canonical configuration is as expected is a useful triage tool.
+ *
+ *
+ */
+
+function usage () {
+  console.log(`
+    Command line for interrogating node-config config files
+    
+    usage:
+      node-config check [environments...]
+      node-config dump [environment] [target] 
+      
+      commands can be:
+      
+      check:        used to verify config files
+      dump:         output the NODE_ENV/NODE_CONFIG_ENV config to a json file
+  `);
+}
+
+function load(environment) {
+  let loadInfo = LoadInfo.fromEnvironment(environment);
+
+  loadInfo.load();
+
+  return loadInfo.config;
+}
+
+function check(...environments) {
+  if (environments.length === 0) {
+    environments = ['production'];
+  }
+
+  for (let environment of environments) {
+    console.log(`Verifying ${environment}`);
+
+    load(environment);
+
+    console.log(`No errors for ${environment}`);
+  }
+}
+
+function dump(target) {
+  const env = process.env.CONFIG_NODE_ENV || process.env.NODE_ENV || 'default';
+
+  if (target) {
+    console.warn(`${env} -> ${target}`);
+
+    let config = load();
+
+    fs.writeFileSync(target, JSON.stringify(config, null, 2));
+  } else {
+    console.warn(`${env} -> stdout`);
+
+    let config = load();
+
+    console.log(JSON.stringify(config, null, 2));
+  }
+}
+
+const args = process.argv.slice(2);
+const command = args.shift();
+
+if (command === 'check') {
+  check(...args);
+} else if (command === 'dump') {
+  dump(...args);
+} else {
+  usage();
+  process.exit(1);
+}
+
