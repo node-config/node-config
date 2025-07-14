@@ -553,14 +553,14 @@ vows.describe('Tests for util functions')
         assert.isTrue(sources[0].name.endsWith("/config/default.json"));
       }
     },
-    'LoadInfo.fromEnvironment()': {
+    'Load.fromEnvironment()': {
       'nodeEnv values': {
         'defaults env to development when NODE_CONFIG_ENV and NODE_ENV are undefined': function () {
           try {
             delete process.env.NODE_ENV;
             delete process.env.NODE_CONFIG_ENV;
 
-            let loadInfo = LoadInfo.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
             assert.equal(loadInfo.options.nodeEnv, 'development');
             assert.equal(loadInfo.getEnv('NODE_ENV'), 'development');
@@ -572,7 +572,7 @@ vows.describe('Tests for util functions')
           try {
             process.env.NODE_ENV = 'apollo';
 
-            let loadInfo = LoadInfo.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
             assert.equal(loadInfo.options.nodeEnv, 'apollo');
             assert.equal(loadInfo.getEnv('NODE_ENV'), 'apollo');
@@ -585,7 +585,7 @@ vows.describe('Tests for util functions')
           try {
             process.env.NODE_CONFIG_ENV = 'mercury';
 
-            let loadInfo = LoadInfo.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
             assert.equal(loadInfo.options.nodeEnv, 'mercury');
             assert.equal(loadInfo.getEnv('NODE_ENV'), undefined);
@@ -599,7 +599,7 @@ vows.describe('Tests for util functions')
             process.env.NODE_ENV = 'mercury';
             process.env.NODE_CONFIG_ENV = 'apollo';
 
-            let loadInfo = LoadInfo.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
             assert.equal(loadInfo.options.nodeEnv, 'apollo');
             assert.equal(loadInfo.getEnv('NODE_ENV'), 'mercury');
@@ -616,7 +616,7 @@ vows.describe('Tests for util functions')
             delete process.env.HOST;
             delete process.env.HOSTNAME;
 
-            let loadInfo = LoadInfo.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
             assert.isString(loadInfo.getEnv('HOSTNAME'));
             assert.isString(loadInfo.options.hostName);
@@ -628,7 +628,7 @@ vows.describe('Tests for util functions')
             delete process.env.HOST;
             process.env.HOSTNAME = 'foo.example.com';
 
-            let loadInfo = LoadInfo.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
             assert.equal(loadInfo.getEnv('HOSTNAME'), 'foo.example.com');
           } finally {
@@ -641,7 +641,7 @@ vows.describe('Tests for util functions')
             process.env.HOST = 'correct.example.com';
             process.env.HOSTNAME = 'foo.example.com';
 
-            let loadInfo = LoadInfo.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
             assert.equal(loadInfo.getEnv('HOSTNAME'), 'correct.example.com');
           } finally {
