@@ -405,6 +405,10 @@ vows.describe('Tests for util functions')
         util.setPath(topic, 'EnvOverride.oauth.secret', 'ANOTHER');
         assert.equal(topic.EnvOverride.oauth.secret, 'ANOTHER');
       },
+      'returns the given value': function (topic) {
+        let input = { foo: "3"};
+        assert.equal(util.setPath(topic, 'some.path', input), input);
+      }
     },
   })
   .addBatch({
@@ -989,6 +993,8 @@ vows.describe('Tests for util functions')
         assert.deepStrictEqual(data.deferreds, { foo: 4, bar: '4 interpolated'});
       }
     },
+  })
+  .addBatch({
     'Util.loadFileConfigs()': {
       'The function exists': function () {
         assert.isFunction(util.loadFileConfigs);
