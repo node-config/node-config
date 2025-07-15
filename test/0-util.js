@@ -533,6 +533,14 @@ vows.describe('Tests for util functions')
 
         assert.deepEqual(load.config, { foo: { field1: 'set', field2: 'nevermind'} });
       },
+      'handles deferred values': function() {
+        let load = new Load({skipConfigSources: true});
+
+        load.addConfig("first", { foo: { field1: 'set' }});
+        load.setModuleDefaults("foo", { field2: 'another', deferredField: deferConfig((cfg) => `${cfg.foo.field1}3`) });
+
+        assert.deepEqual(load.config, { foo: { field1: 'set', field2: 'another', deferredField: 'set3' } });
+      },
       'tracks the sources': function () {
         let load = new Load({});
         load.setModuleDefaults("foo", { field2: 'another'});
@@ -549,7 +557,7 @@ vows.describe('Tests for util functions')
         load.setModuleDefaults("foo", { field2: 'another'});
 
         assert.isEmpty(load.getSources());
-      }
+      },
     },
     'Load.loadFile()': {
       topic: function () {
