@@ -487,24 +487,51 @@ vows.describe('Tests for util functions')
       }
     },
     'Load.setModuleDefaults()': {
-      topic: function () {
-        let load = new Load({});
-        load.addConfig("first", { foo: { field1: 'set'}});
-        return load;
-      },
-      'The function exists': function (load) {
+      'The function exists': function () {
+        let load = new Load();
         assert.isFunction(load.setModuleDefaults);
       },
-      'adds new defaults': function (load) {
+      'adds new defaults': function () {
+        let load = new Load({});
+        load.addConfig("first", { foo: { field1: 'set'}});
+
         load.setModuleDefaults("foo", { field2: 'another'});
 
         assert.deepEqual(load.config, { foo: { field1: 'set', field2: 'another' } });
       },
-      'can be called multiple times for the same key': function (load) {
+      'getSources() and Config.get() are consistent with each other': function () {
+        let loadInfo = new Load({});
+
+        loadInfo.setModuleDefaults("foo", { field2: 'another', field4: "1"});
+        loadInfo.setModuleDefaults("foo", { field3: 'additional', field4: "2"});
+
+        // this is probably a bug (#822) but at least the sources and the config now agree with each other.
+        assert.deepEqual(loadInfo.config, { foo: { field2: 'another', field3: 'additional', field4: '2'}});
+
+        assert.deepEqual(loadInfo.getSources(), [
+          {
+            name: 'Module Defaults',
+            parsed: { foo: { field2: 'another', field3: 'additional', field4: '2' } }
+          }
+        ]);
+      },
+      'can be called multiple times for the same key': function () {
+        let load = new Load({});
+        load.addConfig("first", { foo: { field1: 'set'}});
+
         load.setModuleDefaults("foo", { field2: 'another'});
         load.setModuleDefaults("foo", { field3: 'additional'});
 
         assert.deepEqual(load.config, { foo: { field1: 'set', field2: 'another', field3: 'additional' } });
+      },
+      'applies sequential calls in the correct order': function () {
+        let load = new Load({});
+        load.addConfig("first", { foo: { field1: 'set'}});
+
+        load.setModuleDefaults("foo", { field2: 'another'});
+        load.setModuleDefaults("foo", { field2: 'nevermind'});
+
+        assert.deepEqual(load.config, { foo: { field1: 'set', field2: 'nevermind'} });
       },
       'tracks the sources': function () {
         let load = new Load({});
