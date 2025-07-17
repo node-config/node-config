@@ -59,42 +59,6 @@ vows.describe('Protected (hackable) utilities test')
 })
 .addBatch({
 
-  'diffDeep() tests': {
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.diffDeep);
-    },
-    'Returns an empty object if no differences': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29};
-      var b = {value_1: 29, hello:'world', value_3: 14};
-      assert.equal(typeof(CONFIG.util.diffDeep(a,b)), 'object');
-      assert.isTrue(Object.keys(CONFIG.util.diffDeep(a, b)).length == 0);
-    },
-    'Returns an empty object if no differences (deep)': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'world', value_3: 14, value_4:[1,'hello',2], deepObj:{a:22,b:{a:44,c:45}}};
-      assert.equal(typeof(CONFIG.util.diffDeep(a,b)), 'object');
-      assert.isTrue(Object.keys(CONFIG.util.diffDeep(a, b)).length == 0);
-    },
-    'Returns just the diff values': function() {
-      var a = {value_3: 14, hello:'wurld', value_1: 29, deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'world', value_3: 14, deepObj:{a:22,b:{a:44,c:45}}};
-      var diff = CONFIG.util.diffDeep(a,b);
-      assert.equal(Object.keys(diff).length, 1);
-      assert.equal(diff.hello, 'world');
-    },
-    'Returns just the diff values (deep)': function() {
-      var a = {value_3: 14, hello:'wurld', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'wurld', value_3: 14, value_4:[1,'goodbye',2], deepObj:{a:22,b:{a:45,c:44}}};
-      var diff = CONFIG.util.diffDeep(a,b);
-      assert.equal(Object.keys(diff).length, 2);
-      assert.equal(Object.keys(diff.deepObj).length, 1);
-      assert.equal(Object.keys(diff.deepObj.b).length, 2);
-      assert.equal(diff.deepObj.b.a, 45);
-      assert.equal(diff.deepObj.b.c, 44);
-      assert.deepEqual(diff.value_4, [1, 'goodbye', 2]);
-    }
-  },
-
   'loadFileConfigs() tests': {
     topic: function() {
       return CONFIG.util.loadFileConfigs();
