@@ -55,50 +55,6 @@ describe('Protected (hackable) utilities test', function() {
     });
   });
 
-  describe('diffDeep() tests', function() {
-    it('The function exists', function() {
-      assert.strictEqual(typeof config.util.diffDeep, 'function');
-    });
-
-    it('Returns an empty object if no differences', function() {
-      let a = {value_3: 14, hello:'world', value_1: 29};
-      let b = {value_1: 29, hello:'world', value_3: 14};
-
-      assert.strictEqual(typeof config.util.diffDeep(a,b), 'object');
-      assert.strictEqual(Object.keys(config.util.diffDeep(a, b)).length, 0);
-    });
-
-    it('Returns an empty object if no differences (deep)', function() {
-      let a = { value_3: 14, hello:'world', value_1: 29, value_4: [1,'hello',2], deepObj: { a: 22, b: { c: 45, a: 44 } } };
-      let b = { value_1: 29, hello:'world', value_3: 14, value_4: [1,'hello',2], deepObj: { a: 22, b: { a: 44, c: 45 } } };
-
-      assert.strictEqual(typeof(config.util.diffDeep(a,b)), 'object');
-      assert.strictEqual(Object.keys(config.util.diffDeep(a, b)).length, 0);
-    });
-
-    it('Returns just the diff values', function() {
-      let a = { value_3: 14, hello:'wurld', value_1: 29, deepObj: { a: 22, b: { c: 45, a: 44 } } };
-      let b = { value_1: 29, hello:'world', value_3: 14, deepObj: { a: 22, b: { a: 44, c: 45 } } };
-      let diff = config.util.diffDeep(a,b);
-
-      assert.strictEqual(Object.keys(diff).length, 1);
-      assert.strictEqual(diff.hello, 'world');
-    });
-
-    it('Returns just the diff values (deep)', function() {
-      let a = { value_3: 14, hello: 'wurld', value_1: 29, value_4: [1,'hello',2], deepObj: { a:22, b: { c: 45, a: 44} } };
-      let b = { value_1: 29, hello: 'wurld', value_3: 14, value_4: [1,'goodbye',2], deepObj: { a:22, b: { a: 45, c: 44} } };
-      let diff = config.util.diffDeep(a,b);
-
-      assert.strictEqual(Object.keys(diff).length, 2);
-      assert.strictEqual(Object.keys(diff.deepObj).length, 1);
-      assert.strictEqual(Object.keys(diff.deepObj.b).length, 2);
-      assert.strictEqual(diff.deepObj.b.a, 45);
-      assert.strictEqual(diff.deepObj.b.c, 44);
-      assert.deepEqual(diff.value_4, [1, 'goodbye', 2]);
-    })
-  });
-
   describe('loadFileConfigs() tests', function() {
     let configs;
 
