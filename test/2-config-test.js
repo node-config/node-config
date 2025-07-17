@@ -58,7 +58,7 @@ vows.describe('Test suite for node-config')
       assert.isObject(CONFIG);
     },
     'Config extensions are included with the library': function() {
-      assert.isFunction(CONFIG.util.cloneDeep);
+      assert.isFunction(CONFIG.util.makeImmutable);
     }
   },
 })
@@ -213,37 +213,6 @@ vows.describe('Test suite for node-config')
         /Configuration property "customEnvironmentVariables.mappedBy.formats.numberString" is not defined/
       )
     },
-  },
-
- 'Assuring a configuration property can be hidden': {
-    topic: function() {
-      var object = {
-        item1: 23,
-        subObject: {
-      	  item2: "hello"
-        }
-      };
-      return object;
-    },
-
-    'The makeHidden() method is available': function() {
-      assert.isFunction(CONFIG.util.makeHidden);
-    },
-
-    'The test object (before hiding) is correct': function(object) {
-      assert.isTrue(JSON.stringify(object) == '{"item1":23,"subObject":{"item2":"hello"}}');
-    },
-
-    'The test object (after hiding) is correct': function(object) {
-      CONFIG.util.makeHidden(object, 'item1');
-      assert.isTrue(JSON.stringify(object) == '{"subObject":{"item2":"hello"}}');
-    },
-
-    'The hidden property is readable, and has not changed': function(object) {
-      assert.isTrue(JSON.stringify(object) == '{"subObject":{"item2":"hello"}}');
-      assert.isTrue(object.item1 == 23);
-    }
-
   },
 
   'Assuring a configuration property can be made immutable': {
@@ -493,7 +462,7 @@ vows.describe('Test suite for node-config')
         assert.isObject(CONFIG);
       },
       'Config extensions are included with the library': function() {
-        assert.isFunction(CONFIG.util.cloneDeep);
+        assert.isFunction(CONFIG.util.makeImmutable);
       }
     },
     'Multiple config directories': {
