@@ -1,7 +1,6 @@
 {
   "name": "config",
   "version": "4.1.0",
-  "main": "./lib/config.js",
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
   "homepage": "http://github.com/node-config/node-config.git",
@@ -25,6 +24,9 @@
     "json5": "^2.2.3"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^7.0.8",
     "c8": "^10.1.3",
     "coffeescript": "2.2.4",
@@ -33,6 +35,7 @@
     "js-yaml": "^3.2.2",
     "properties": "~1.2.1",
     "request": "^2.88.2",
+    "rollup": "^4.46.1",
     "semver": "5.3.0",
     "toml": "^2.0.6",
     "ts-node": "^3.3.0",
@@ -58,6 +61,12 @@
   },
   "scripts": {
     "test": "c8 vows test/*.js --spec",
-    "vows": "c8 vows"
+    "vows": "c8 vows",
+    "build": "rollup -c ./rollup.config.js --bundleConfigAsCjs"
+  },
+  "type": "commonjs",
+  "exports": {
+    "import": "./lib/config.js",
+    "require": "./lib/config.cjs"
   }
 }
