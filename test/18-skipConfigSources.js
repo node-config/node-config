@@ -1,155 +1,174 @@
-var requireUncached = require('./_utils/requireUncached');
+'use strict';
 
-// Dependencies
-var vows   = require('vows'),
-    assert = require('assert'),
-    Path   = require('path');
+const Path   = require('path');
+const requireUncached = require('./_utils/requireUncached');
+const { describe, it, beforeEach } = require('node:test');
+const assert = require('assert');
 
-vows.describe('Testing the skipConfigSources functionality')
-.addBatch({
-    'The config.util.parseFile function,': {
-        'given a file path and no options parameter': {
-            topic: function () {
-                // Change the configuration directory for testing
-                process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
-                delete process.env.NODE_ENV;
-                process.env.NODE_CONFIG = '{}';
-                delete process.env.NODE_APP_INSTANCE;
-                process.env.NODE_CONFIG_STRICT_MODE=0;
-                var config = requireUncached(__dirname + '/../lib/config');
-                return {
-                     config,
-                     configObject: config.util.parseFile(Path.join(__dirname,'/18-extra-config/customFile.json'))
-                 };
-            },
-            'should return the configuration object': function(topic) {
-                assert.deepStrictEqual(topic.configObject,{ arbitraryKey: 'arbitraryValue'});
-            },
-            'should not add the configuration object to the global configuration': function (topic){
-                assert(!topic.config.has('arbitraryKey'));
-            }
-        },
-        'given a file path and an options parameter,': {
-            'when the skipConfigSources flag is set to false': {
-                topic: function () {
-                    // Change the configuration directory for testing
-                    process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
-                    delete process.env.NODE_ENV;
-                    process.env.NODE_CONFIG = '{}';
-                    delete process.env.NODE_APP_INSTANCE;
-                    process.env.NODE_CONFIG_STRICT_MODE=0;
-                    var config = requireUncached(__dirname + '/../lib/config');
-                    return {
-                         config,
-                         configObject: config.util.parseFile(Path.join(__dirname,'/18-extra-config/customFile.json'), { skipConfigSources: false })
-                     };
-                },
-                'should return the configuration object': function(topic) {
-                    assert.deepStrictEqual(topic.configObject,{ arbitraryKey: 'arbitraryValue'});
-                },
-                'should not add the configuration object to the global configuration': function (topic){
-                    assert(!topic.config.has('arbitraryKey'));
-                }
-            },
-            'when the skipConfigSources flag is set to true': {
-                topic: function () {
-                    // Change the configuration directory for testing
-                    process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
-                    delete process.env.NODE_ENV;
-                    process.env.NODE_CONFIG = '{}';
-                    delete process.env.NODE_APP_INSTANCE;
-                    process.env.NODE_CONFIG_STRICT_MODE=0;
-                    var config = requireUncached(__dirname + '/../lib/config');
-                    return {
-                         config,
-                         configObject: config.util.parseFile(Path.join(__dirname,'/18-extra-config/customFile.json'), { skipConfigSources: true })
-                     };
-                },
-                'should return the configuration object': function(topic) {
-                    assert.deepStrictEqual(topic.configObject,{ arbitraryKey: 'arbitraryValue'});
-                },
-                'should not add the configuration object to the global configuration': function (topic){
-                    assert(!topic.config.has('arbitraryKey'));
-                },
-                'should not add the file information to the config.util.getConfigSources array': function(topic) {
-                    var configSources = topic.config.util.getConfigSources();
-                    var fullFileName = Path.join(__dirname,'/18-extra-config/customFile.json');
-                    assert.strictEqual(configSources.findIndex( (value, index) => { return value.name === fullFileName}), -1)
-                }
-            }
-        }
-    },
-    'The config.util.loadFileConfigs function,': {
-        'given a directory and no options parameter': {
-            topic: function () {
-                // Change the configuration directory for testing
-                process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
-                delete process.env.NODE_ENV;
-                process.env.NODE_CONFIG = '{}';
-                delete process.env.NODE_APP_INSTANCE;
-                process.env.NODE_CONFIG_STRICT_MODE=0;
-                var config = requireUncached(__dirname + '/../lib/config');
-                return {
-                    config,
-                    configObject: config.util.loadFileConfigs(Path.join(__dirname,'/18-extra-config'))
-                };
-            },
-            'should return the configuration object': function(topic) {
-                assert.deepStrictEqual(topic.configObject,{ someKey: 'anotherTestValue'});
-            },
-            'should not add the configuration object to the global configuration': function (topic){
-                assert.deepStrictEqual(topic.config.get('someKey'),'testValue');
-            }
-        },
-        'given a directory and an options parameter,': {
-            'when the skipConfigSources flag is set to false': {
-                topic: function () {
-                    // Change the configuration directory for testing
-                    process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
-                    delete process.env.NODE_ENV;
-                    process.env.NODE_CONFIG = '{}';
-                    delete process.env.NODE_APP_INSTANCE;
-                    process.env.NODE_CONFIG_STRICT_MODE=0;
-                    var config = requireUncached(__dirname + '/../lib/config');
-                    return {
-                        config,
-                        configObject: config.util.loadFileConfigs(Path.join(__dirname,'/18-extra-config'), { skipConfigSources: false })
-                    };
-                },
-                'should return the configuration object': function(topic) {
-                    assert.deepStrictEqual(topic.configObject,{ someKey: 'anotherTestValue'});
-                },
-                'should not add the configuration object to the global configuration': function (topic){
-                    assert.deepStrictEqual(topic.config.get('someKey'),'testValue');
-                }
-            },
-            'when the skipConfigSources flag is set to true': {
-                topic: function () {
-                    // Change the configuration directory for testing
-                    process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
-                    delete process.env.NODE_ENV;
-                    process.env.NODE_CONFIG = '{}';
-                    delete process.env.NODE_APP_INSTANCE;
-                    process.env.NODE_CONFIG_STRICT_MODE=0;
-                    var config = requireUncached(__dirname + '/../lib/config');
-                    return {
-                        config,
-                        configObject: config.util.loadFileConfigs(Path.join(__dirname,'/18-extra-config'), { skipConfigSources: true })
-                    };
-                },
-                'should return the configuration object': function(topic) {
-                    assert.deepStrictEqual(topic.configObject,{ someKey: 'anotherTestValue'});
-                },
-                'should not add the configuration object to the global configuration': function (topic){
-                    assert.deepStrictEqual(topic.config.get('someKey'),'testValue');
-                },
-                'should not add the file information to the config.util.getConfigSources array': function(topic) {
-                    var configSources = topic.config.util.getConfigSources();
-                    var fullFileName = Path.join(__dirname,'/18-extra-config/default.json');
-                    assert.strictEqual(configSources.findIndex( (value, index) => { return value.name === fullFileName}), -1)
-                }
-            }
-        }
-    }
-})
-.export(module);
+describe('Testing the skipConfigSources functionality', function() {
+  describe('The config.util.parseFile function,', function () {
+    describe('given a file path and no options parameter', function () {
+      let config, configObject;
+
+      beforeEach(function () {
+        // Change the configuration directory for testing
+        process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
+        delete process.env.NODE_ENV;
+        process.env.NODE_CONFIG = '{}';
+        delete process.env.NODE_APP_INSTANCE;
+        process.env.NODE_CONFIG_STRICT_MODE=0;
+
+        config = requireUncached(__dirname + '/../lib/config');
+        configObject = config.util.parseFile(Path.join(__dirname,'/18-extra-config/customFile.json'))
+      });
+
+      it('should return the configuration object', function() {
+          assert.deepStrictEqual(configObject, { arbitraryKey: 'arbitraryValue'});
+      });
+
+      it('should not add the configuration object to the global configuration', function (){
+          assert.strictEqual(config.has('arbitraryKey'), false);
+      });
+    });
+
+    describe('given a file path and an options parameter', function () {
+      describe('when the skipConfigSources flag is set to false', function () {
+        let config, configObject;
+
+        beforeEach(function () {
+          // Change the configuration directory for testing
+          process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
+          delete process.env.NODE_ENV;
+          process.env.NODE_CONFIG = '{}';
+          delete process.env.NODE_APP_INSTANCE;
+          process.env.NODE_CONFIG_STRICT_MODE=0;
+
+          config = requireUncached(__dirname + '/../lib/config');
+          configObject = config.util.parseFile(Path.join(__dirname,'/18-extra-config/customFile.json'), { skipConfigSources: false })
+        });
+
+        it('should return the configuration object', function() {
+            assert.deepStrictEqual(configObject, { arbitraryKey: 'arbitraryValue'});
+        });
+
+        it('should not add the configuration object to the global configuration', function (){
+            assert.strictEqual(config.has('arbitraryKey'), false);
+        });
+      });
+
+      describe('when the skipConfigSources flag is set to true', function () {
+        let config, configObject;
+
+        beforeEach(function () {
+          // Change the configuration directory for testing
+          process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
+          delete process.env.NODE_ENV;
+          process.env.NODE_CONFIG = '{}';
+          delete process.env.NODE_APP_INSTANCE;
+          process.env.NODE_CONFIG_STRICT_MODE=0;
+
+          config = requireUncached(__dirname + '/../lib/config');
+          configObject = config.util.parseFile(Path.join(__dirname,'/18-extra-config/customFile.json'), { skipConfigSources: true })
+        });
+
+        it('should return the configuration object', function() {
+          assert.deepStrictEqual(configObject, { arbitraryKey: 'arbitraryValue' });
+        });
+
+        it('should not add the configuration object to the global configuration', function (){
+          assert.strictEqual(config.has('arbitraryKey'), false);
+        });
+
+        it('should not add the file information to the config.util.getConfigSources array', function() {
+          let configSources = config.util.getConfigSources();
+          let fullFileName = Path.join(__dirname,'/18-extra-config/customFile.json');
+
+          assert.strictEqual(configSources.findIndex( (value, index) => { return value.name === fullFileName}), -1)
+        });
+      });
+    });
+  });
+
+  describe('The config.util.loadFileConfigs function,', function () {
+    describe('given a directory and no options parameter', function () {
+      let config, configObject;
+
+      beforeEach(function () {
+        // Change the configuration directory for testing
+        process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
+        delete process.env.NODE_ENV;
+        process.env.NODE_CONFIG = '{}';
+        delete process.env.NODE_APP_INSTANCE;
+        process.env.NODE_CONFIG_STRICT_MODE=0;
+
+        config = requireUncached(__dirname + '/../lib/config');
+        configObject = config.util.loadFileConfigs(Path.join(__dirname,'/18-extra-config'))
+      });
+
+      it('should return the configuration object', function() {
+        assert.deepStrictEqual(configObject, { someKey: 'anotherTestValue' });
+      });
+
+      it('should not add the configuration object to the global configuration', function (){
+        assert.deepStrictEqual(config.get('someKey'), 'testValue');
+      });
+    });
+
+    describe('given a directory and an options parameter,', function() {
+      describe('when the skipConfigSources flag is set to false', function () {
+        let config, configObject;
+
+        beforeEach(function () {
+          // Change the configuration directory for testing
+          process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
+          delete process.env.NODE_ENV;
+          process.env.NODE_CONFIG = '{}';
+          delete process.env.NODE_APP_INSTANCE;
+          process.env.NODE_CONFIG_STRICT_MODE = 0;
+
+          config = requireUncached(__dirname + '/../lib/config');
+          configObject = config.util.loadFileConfigs(Path.join(__dirname, '/18-extra-config'), {skipConfigSources: false})
+        });
+
+        it('should return the configuration object', function () {
+          assert.deepStrictEqual(configObject, {someKey: 'anotherTestValue'});
+        });
+
+        it('should not add the configuration object to the global configuration', function () {
+          assert.deepStrictEqual(config.get('someKey'), 'testValue');
+        });
+      });
+    });
+
+    describe('when the skipConfigSources flag is set to true', function() {
+      let config, configObject;
+
+      beforeEach(function () {
+        // Change the configuration directory for testing
+        process.env.NODE_CONFIG_DIR = [__dirname + '/18-config'].join(Path.delimiter);
+        delete process.env.NODE_ENV;
+        process.env.NODE_CONFIG = '{}';
+        delete process.env.NODE_APP_INSTANCE;
+        process.env.NODE_CONFIG_STRICT_MODE = 0;
+
+        config = requireUncached(__dirname + '/../lib/config');
+        configObject = config.util.loadFileConfigs(Path.join(__dirname,'/18-extra-config'), { skipConfigSources: true })
+      });
+
+      it('should return the configuration object', function() {
+        assert.deepStrictEqual(configObject, { someKey: 'anotherTestValue' });
+      });
+
+      it('should not add the configuration object to the global configuration', function (){
+        assert.deepStrictEqual(config.get('someKey'), 'testValue');
+      });
+
+      it('should not add the file information to the config.util.getConfigSources array', function() {
+        let configSources = config.util.getConfigSources();
+        let fullFileName = Path.join(__dirname,'/18-extra-config/default.json');
+
+        assert.strictEqual(configSources.findIndex( (value, index) => { return value.name === fullFileName}), -1)
+      });
+    });
+  });
+});
