@@ -1,74 +1,86 @@
-var requireUncached = require('./_utils/requireUncached');
-var Parser = require('../parser');
-
 'use strict';
 
-var vows = require('vows'),
-  assert = require('assert');
+const requireUncached = require('./_utils/requireUncached');
+const { describe, it, beforeEach, after } = require('node:test');
+const assert = require('assert');
 
-vows.describe('Tests for a custom parser provided by NODE_CONFIG_PARSER')
-  .addBatch({
-    'Using the default parser - Sanity check': {
-      topic: function() {
-        process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
-        return requireUncached(__dirname + '/../lib/config');
-      },
-      'validate default parser order': function(CONFIG) {
-        assert.equal(CONFIG.get('file.type'), 'yaml');
-        assert.equal(CONFIG.get('file.name'), 'local.yml');
-        assert.equal(CONFIG.get('parser'), 'js-yaml');
-        assert.equal(CONFIG.has('custom.key'), false);
-      },
-    }
-  })
-  .addBatch({
-    'Using setParserOrder to change parsing order': {
-      topic: function() {
-        process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
-        process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-1';
-        return requireUncached(__dirname + '/../lib/config');
-      },
-      'validate changes to parser order': function(CONFIG) {
-        assert.equal(CONFIG.get('file.type'), 'custom');
-        assert.equal(CONFIG.get('file.name'), 'local.yml');
-        // assert.equal(CONFIG.get('file.name'), 'my-custom-awesome-dsl');
-        assert.equal(CONFIG.get('parser'), 'custom-awesomeness');
-        assert.equal(CONFIG.get('custom.key'), 'wow!');
-      },
-    }
-  })
-  .addBatch({
-    'Using setParserOrder to replace parsing order': {
-      topic: function() {
-        process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
-        process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-2';
-        return requireUncached(__dirname + '/../lib/config');
-      },
-      'validate changes to parser order': function(CONFIG) {
-        assert.equal(CONFIG.get('file.type'), 'json');
-        assert.equal(CONFIG.get('file.name'), 'local.yml');
-        assert.equal(CONFIG.get('parser'), 'json');
-        assert.equal(CONFIG.get('custom.key'), 'wow!');
-      },
-    }
-  })
-  .addBatch({
-    'Using setParser to replace a parser': {
-      topic: function() {
-        process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
-        process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-3';
-        return requireUncached(__dirname + '/../lib/config');
-      },
-      'validate changes to parser logic': function(CONFIG) {
-        assert.equal(CONFIG.get('file.type'), 'yaml');
-        assert.equal(CONFIG.get('file.name'), 'local.yml');
-        assert.equal(CONFIG.get('parser'), 'json5');
-        assert.equal(CONFIG.get('custom.key'), 'json5 rules!');
-      },
-    },
-    teardown : function (topic) {
-      delete process.env.NODE_CONFIG_PARSER;
-      requireUncached(__dirname + '/../parser');
-    }
-  })
-  .export(module);
+const Parser = require('../parser');
+
+describe('Tests for a custom parser provided by NODE_CONFIG_PARSER', function() {
+  describe('Using the default parser - Sanity check', function() {
+    let config;
+
+    beforeEach(function() {
+      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
+
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('validate default parser order', function() {
+      assert.strictEqual(config.get('file.type'), 'yaml');
+      assert.strictEqual(config.get('file.name'), 'local.yml');
+      assert.strictEqual(config.get('parser'), 'js-yaml');
+      assert.strictEqual(config.has('custom.key'), false);
+    });
+  });
+
+  describe('Using setParserOrder to change parsing order', function() {
+    let config;
+
+    beforeEach(function() {
+      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
+      process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-1';
+
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('validate changes to parser order', function() {
+      assert.strictEqual(config.get('file.type'), 'custom');
+      assert.strictEqual(config.get('file.name'), 'local.yml');
+      // assert.strictEqual(config.get('file.name'), 'my-custom-awesome-dsl');
+      assert.strictEqual(config.get('parser'), 'custom-awesomeness');
+      assert.strictEqual(config.get('custom.key'), 'wow!');
+    })
+  });
+
+  describe('Using setParserOrder to replace parsing order', function() {
+    let config;
+
+    beforeEach(function() {
+      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
+      process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-2';
+
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('validate changes to parser order', function() {
+      assert.strictEqual(config.get('file.type'), 'json');
+      assert.strictEqual(config.get('file.name'), 'local.yml');
+      assert.strictEqual(config.get('parser'), 'json');
+      assert.strictEqual(config.get('custom.key'), 'wow!');
+    });
+  });
+
+  describe('Using setParser to replace a parser', function() {
+    let config;
+
+    beforeEach(function() {
+      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
+      process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-3';
+
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('validate changes to parser logic', function() {
+      assert.strictEqual(config.get('file.type'), 'yaml');
+      assert.strictEqual(config.get('file.name'), 'local.yml');
+      assert.strictEqual(config.get('parser'), 'json5');
+      assert.strictEqual(config.get('custom.key'), 'json5 rules!');
+    });
+  });
+
+  after(function () {
+    delete process.env.NODE_CONFIG_PARSER;
+    requireUncached(__dirname + '/../parser');
+  });
+});

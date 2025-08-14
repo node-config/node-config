@@ -1,14 +1,14 @@
-var requireUncached = require('./_utils/requireUncached');
+'use strict';
 
-var vows = require('vows'),
-    assert = require('assert')
+const requireUncached = require('./_utils/requireUncached');
+const { describe, it, before } = require('node:test');
+const assert = require('assert');
 
 var CONFIG;
-vows.describe('Test suite for node-config transpiled JS files')
-.addBatch({
-  'Library initialization with transpiled JavaScript ES6 config files': {
-    topic : function () {
 
+describe('Test suite for node-config transpiled JS files', function() {
+  describe('Library initialization with transpiled JavaScript ES6 config files', function() {
+    before(function () {
       // Clear after previous tests
       process.env.NODE_APP_INSTANCE = '';
       process.env.NODE_ENV = '';
@@ -21,23 +21,19 @@ vows.describe('Test suite for node-config transpiled JS files')
       process.env.NODE_CONFIG_STRICT_MODE = false;
 
       CONFIG = requireUncached(__dirname + '/../lib/config');
+    });
 
-      return CONFIG;
+    it('Config library is available', function() {
+      assert.strictEqual(typeof CONFIG, 'object');
+    });
+  });
 
-    },
-    'Config library is available': function() {
-      assert.isObject(CONFIG);
-    }
-  },
-})
-.addBatch({
-  'Configuration file Tests': {
-    'Loading configurations from a transpiled JS file is correct': function() {
-      assert.equal(CONFIG.title, 'Hello config!');
-    }
-  },
-})
-.export(module);
+  describe('Configuration file Tests', function() {
+    it('Loading configurations from a transpiled JS file is correct', function() {
+      assert.strictEqual(CONFIG.title, 'Hello config!');
+    });
+  });
+});
 
 
 

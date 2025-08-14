@@ -1,54 +1,55 @@
-var requireUncached = require('./_utils/requireUncached');
-
 'use strict';
 
-var NODE_CONFIG_DIR = __dirname + '/12-config'
+const requireUncached = require('./_utils/requireUncached');
+const { describe, it, before, beforeEach } = require('node:test');
+const assert = require('assert');
 
-// Dependencies
-var vows = require('vows'),
-    assert = require('assert');
+describe('Tests for HOSTNAME and HOST environment variables', function() {
+  describe('When there is no HOSTNAME neither HOST env', function() {
+    let config;
 
-vows.describe('Tests for HOSTNAME and HOST environment variables')
-.addBatch({
-    'When there is no HOSTNAME neither HOST env': {
-      topic: function() {
-        // Test HOST and HOSTNAME
-        delete process.env.HOST;
-        delete process.env.HOSTNAME;
+    before(function() {
+      // Test HOST and HOSTNAME
+      delete process.env.HOST;
+      delete process.env.HOSTNAME;
 
-        return requireUncached(__dirname + '/../lib/config');
-      },
-      'OS.hostname() is the winner': function(CONFIG) {
-        assert.equal(typeof CONFIG.util.getEnv('HOSTNAME'), 'string');
-      }
-    }
-})
-.addBatch({
-  'When HOSTNAME env is set': {
-    topic: function() {
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('OS.hostname() is the winner', function() {
+      assert.strictEqual(typeof config.util.getEnv('HOSTNAME'), 'string');
+    });
+  });
+
+  describe('When HOSTNAME env is set', function() {
+    let config;
+
+    beforeEach(function() {
       // Test HOST and HOSTNAME
       delete process.env.HOST;
       process.env.HOSTNAME = 'some.machine';
 
-      return requireUncached(__dirname + '/../lib/config');
-    },
-    'HOSTNAME env variable is the winner': function(CONFIG) {
-      assert.equal(CONFIG.util.getEnv('HOSTNAME'), 'some.machine');
-    }
-  }
-})
-.addBatch({
-  'When HOST env is set': {
-    topic: function() {
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('HOSTNAME env variable is the winner', function() {
+      assert.strictEqual(config.util.getEnv('HOSTNAME'), 'some.machine');
+    });
+  });
+
+  describe('When HOST env is set', function() {
+    let config;
+
+    beforeEach(function() {
       // Test HOST and HOSTNAME
       delete process.env.HOSTNAME;
       process.env.HOST = 'other.machine';
 
-      return requireUncached(__dirname + '/../lib/config');
-    },
-    'HOST env variable is the winner': function(CONFIG) {
-      assert.equal(CONFIG.util.getEnv('HOSTNAME'), 'other.machine');
-    }
-  }
-})
-.export(module);
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('HOST env variable is the winner', function() {
+      assert.strictEqual(config.util.getEnv('HOSTNAME'), 'other.machine');
+    });
+  });
+});
