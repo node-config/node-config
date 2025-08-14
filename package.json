@@ -57,7 +57,6 @@
     "reporter": "lcov"
   },
   "scripts": {
-    "test": "c8 vows test/*.js --spec",
-    "vows": "c8 vows"
+    "test": "NODE_OPTIONS='--no-experimental-strip-types' c8 node --test"
   }
 }
