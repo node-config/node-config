@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * <p>Unit tests</p>
  *
@@ -225,11 +227,6 @@ vows.describe('Protected (hackable) utilities test')
       assert.isFalse(CONFIG.util.equalsDeep({}));
       assert.isFalse(CONFIG.util.equalsDeep(a['noElement'], {}));
     },
-    'Fails if either object is undefined': function() {
-      var a = {};
-      assert.isFalse(CONFIG.util.equalsDeep({}));
-      assert.isFalse(CONFIG.util.equalsDeep(a['noElement'], {}));
-    },
     'Fails if object1 has more elements': function() {
       var a = {value_3: 14, hello:'world', value_1: 29, otherElem: 40};
       var b = {value_1: 29, hello:'world', value_3: 14};
@@ -305,19 +302,19 @@ vows.describe('Protected (hackable) utilities test')
       return topic;
     },
     'returns an empty object if the variables mapping is empty': function (topic) {
-      vars = {};
+      var vars = {};
       var substituted = CONFIG.util.substituteDeep(topic, vars);
       assert.deepEqual(substituted, {});
     },
     'returns an empty object if none of the variables map to leaf strings': function (topic) {
-      vars = {
+      var vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
       var substituted = CONFIG.util.substituteDeep(topic, vars);
       assert.deepEqual(substituted, {});
     },
     'returns an object with keys matching down to mapped existing variables': function (topic) {
-      vars = {
+      var vars = {
         'SOME_TOP_LEVEL': 5,
         'DB_NAME': 'production_db',
         'OAUTH_SECRET': '123456',
@@ -335,7 +332,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'Returns an object with keys matching down to mapped existing and defined variables': function (topic) {
-      vars = {
+      var vars = {
         'SOME_TOP_LEVEL': 0,
         'DB_HOST': undefined,
         'DB_NAME': '',
@@ -355,7 +352,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'returns an object with keys matching down to mapped existing variables with JSON content': function (topic) {
-      vars = {
+      var vars = {
         'DB_HOST': '{"port":"3306","host":"example.com"}'
       };
       var substituted = CONFIG.util.substituteDeep(topic, vars);
@@ -375,7 +372,7 @@ vows.describe('Protected (hackable) utilities test')
         param6WithEmptyString: ''
       };
       var dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
-      vars = {
+      var vars = {
         'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
       };
       var substituted = CONFIG.util.substituteDeep(topic, vars);
@@ -386,7 +383,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'returns an object with keys matching down to mapped and JSON-parsed existing variables': function (topic) {
-      vars = {
+      var vars = {
         'DB_HOST': '{"port":"3306","host":"example.com"}'
       };
       topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
@@ -410,7 +407,7 @@ vows.describe('Protected (hackable) utilities test')
         param6WithEmptyString: ''
       };
       var dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
-      vars = {
+      var vars = {
         'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
       };
       topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
@@ -424,7 +421,7 @@ vows.describe('Protected (hackable) utilities test')
     // Testing all the things in variable maps that don't make sense because ENV vars are always
     // strings.
     'Throws an error for leaf Array values': function (topic) {
-      vars = {
+      var vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
       topic.Customers.dbHost = ['a', 'b', 'c'];
@@ -433,7 +430,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'Throws an error for leaf Boolean values': function (topic) {
-      vars = {
+      var vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
       topic.Customers.dbHost = false;
@@ -442,7 +439,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'Throws an error for leaf Numeric values': function (topic) {
-      vars = {
+      var vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
       topic.Customers.dbHost = 443;
@@ -451,7 +448,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'Throws an error for leaf null values': function (topic) {
-      vars = {
+      var vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
       topic.Customers.dbHost = null;
@@ -460,7 +457,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'Throws an error for leaf Undefined values': function (topic) {
-      vars = {
+      var vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
       topic.Customers.dbHost = undefined;
@@ -469,7 +466,7 @@ vows.describe('Protected (hackable) utilities test')
       });
     },
     'Throws an error for leaf NaN values': function (topic) {
-      vars = {
+      var vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
       topic.Customers.dbHost = NaN;
@@ -479,7 +476,7 @@ vows.describe('Protected (hackable) utilities test')
     },
     'Throws an error with message describing variables name that throw a parser error': function(topic) {
       var JSON_WITH_SYNTAX_ERROR = '{"port":"3306","host" "example.com"}'
-      vars = {
+      var vars = {
         'DB_HOST': JSON_WITH_SYNTAX_ERROR
       };
       topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
