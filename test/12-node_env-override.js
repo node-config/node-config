@@ -38,8 +38,8 @@ describe('Tests for NODE_*_ENV load order', function() {
     });
 
     it('default \'development\' deployment should be used', function () {
-      assert.equal(config.util.getEnv('NODE_ENV'), 'development');
-      assert.equal(config.get('deploymentUsed'), 'default');
+      assert.strictEqual(config.util.getEnv('NODE_ENV'), 'development');
+      assert.strictEqual(config.get('deploymentUsed'), 'default');
     });
   });
 
@@ -53,8 +53,8 @@ describe('Tests for NODE_*_ENV load order', function() {
     });
 
     it('NODE_CONFIG_ENV by itself should be used', function () {
-      assert.equal(config.util.getEnv('NODE_CONFIG_ENV'), 'apollo');
-      assert.equal(config.get('deploymentUsed'), 'node-config-env-provided');
+      assert.strictEqual(config.util.getEnv('NODE_CONFIG_ENV'), 'apollo');
+      assert.strictEqual(config.get('deploymentUsed'), 'node-config-env-provided');
     });
 
     after(function () {
@@ -72,8 +72,8 @@ describe('Tests for NODE_*_ENV load order', function() {
     });
 
     it('NODE_ENV by itself should be used', function () {
-      assert.equal(config.util.getEnv('NODE_CONFIG_ENV'), 'mercury');
-      assert.equal(config.get('deploymentUsed'), 'node-env-provided');
+      assert.strictEqual(config.util.getEnv('NODE_CONFIG_ENV'), 'mercury');
+      assert.strictEqual(config.get('deploymentUsed'), 'node-env-provided');
     });
 
     after(function () {
@@ -93,7 +93,7 @@ describe('Tests for NODE_*_ENV load order', function() {
     });
 
     it('NODE_CONFIG_ENV value should be used', function () {
-      assert.equal(config.get('deploymentUsed'), 'node-config-env-provided');
+      assert.strictEqual(config.get('deploymentUsed'), 'node-config-env-provided');
     });
 
     after(function () {
