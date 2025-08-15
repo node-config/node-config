@@ -20,7 +20,7 @@ describe('Testing custom environment variable overrides', function() {
       process.env.NODE_CONFIG_DIR = [__dirname + '/19-config'].join(Path.delimiter);
 
       config = requireUncached(__dirname + '/../lib/config');
-      configObject = LOAD.loadFile(Path.join(__dirname,'/19-config/default.js'));
+      configObject = LOAD.loadFile(Path.join(__dirname, '19-config/default.js'));
     });
 
     it('should not override from the environment variables', function() {
@@ -40,7 +40,7 @@ describe('Testing custom environment variable overrides', function() {
       process.env.NODE_CONFIG_DIR = [__dirname + '/19-config'].join(Path.delimiter);
 
       config = requireUncached(__dirname + '/../lib/config');
-      configObject = LOAD.loadFile(Path.join(__dirname,'/19-config/default.js'));
+      configObject = LOAD.loadFile(Path.join(__dirname, '19-config/default.js'));
     });
 
     it('should not override from the environment variables', function () {
