@@ -38,7 +38,6 @@
     "ts-node": "^3.3.0",
     "typescript": "^2.4.2",
     "underscore": "^1.8.3",
-    "vows": ">=0.8.1",
     "x2js": "^2.0.1"
   },
   "repository": {
@@ -57,7 +56,6 @@
     "reporter": "lcov"
   },
   "scripts": {
-    "test": "c8 vows test/*.js --spec",
-    "vows": "c8 vows"
+    "test": "NODE_OPTIONS='--no-experimental-strip-types' c8 node --test"
   }
 }

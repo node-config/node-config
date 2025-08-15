@@ -1,20 +1,20 @@
-var requireUncached = require('./_utils/requireUncached');
-var Parser = require('../parser');
-
 'use strict';
 
-var vows = require('vows'),
-  assert = require('assert');
+const requireUncached = require('./_utils/requireUncached');
+const { describe, it, beforeEach } = require('node:test');
+const assert = require('assert');
+const Parser = require('../parser');
 
-vows.describe('Tests for parsing TOML files')
-  .addBatch({
-    'Using the default parser - Array of Tables': {
-      topic: function() {
-        process.env.NODE_CONFIG_DIR = __dirname + '/17-config';
-        return requireUncached(__dirname + '/../lib/config');
-      },
-      'validate array of tables is supported': function(CONFIG) {
-        assert.deepStrictEqual(CONFIG.get('messages'), [
+describe('Tests for parsing TOML files', function() {
+  describe('Using the default parser - Array of Tables', function() {
+    let config;
+    beforeEach(function() {
+      process.env.NODE_CONFIG_DIR = __dirname + '/17-config';
+      config = requireUncached(__dirname + '/../lib/config');
+    });
+
+    it('validate array of tables is supported', function() {
+        assert.deepStrictEqual(config.get('messages'), [
           {
             field1: '1',
             field2: '2'
@@ -24,7 +24,6 @@ vows.describe('Tests for parsing TOML files')
             field3: '3'
           }
         ]);
-      },
-    }
-  })
-  .export(module);
+      });
+    });
+  });

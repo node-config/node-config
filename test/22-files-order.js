@@ -1,8 +1,8 @@
-const requireUncached = require("./_utils/requireUncached");
+'use strict';
 
-// Dependencies
-const vows = require("vows");
-const assert = require("assert");
+const requireUncached = require("./_utils/requireUncached");
+const { describe, it, beforeEach } = require('node:test');
+const assert = require('assert');
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
@@ -13,9 +13,11 @@ const assert = require("assert");
  * @class ConfigTest
  */
 
-vows.describe("Test suite for node-config").addBatch({
-  "Library initialization": {
-    topic: function () {
+describe("Test suite for node-config", function() {
+  describe("Library initialization", function() {
+    let config;
+
+    beforeEach(function () {
       // Change the configuration directory for testing
       process.env.NODE_CONFIG_DIR = __dirname + "/22-config";
 
@@ -25,14 +27,13 @@ vows.describe("Test suite for node-config").addBatch({
       // Test for multi-instance applications
       process.env.NODE_APP_INSTANCE = "instance";
 
-      CONFIG = requireUncached(__dirname + "/../lib/config");
+      config = requireUncached(__dirname + "/../lib/config");
+    });
 
-      return CONFIG;
-    },
-    "Config files have been loaded in right order": function (CONFIG) {
-      assert.equal(CONFIG.get("prop1"), "prop1FromDefault");
-      assert.equal(CONFIG.get("prop2"), "prop2FromJsonInstance");
-      assert.equal(CONFIG.get("prop3"), "prop3FromYmlInstance");
-    },
-  },
-}).export(module);
+    it("Config files have been loaded in right order", function () {
+      assert.strictEqual(config.get("prop1"), "prop1FromDefault");
+      assert.strictEqual(config.get("prop2"), "prop2FromJsonInstance");
+      assert.strictEqual(config.get("prop3"), "prop3FromYmlInstance");
+    });
+  });
+});
