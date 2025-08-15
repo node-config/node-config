@@ -1,18 +1,17 @@
 'use strict';
 
+const requireUncached = require('./_utils/requireUncached');
+const { describe, it, beforeEach } = require('node:test');
+const assert = require('assert');
+
 /**
  * <p>Unit tests</p>
  *
  * @module test
  */
 
-var requireUncached = require('./_utils/requireUncached');
-
-var vows = require('vows');
-var assert = require('assert');
-
 // Make a copy of the command line args
-var argvOrg = process.argv;
+const argvOrg = process.argv.slice();
 
 /**
  * <p>Tests for underlying node-config utilities.  To run type:</p>
@@ -23,269 +22,328 @@ var argvOrg = process.argv;
  * @class ProtectedTest
  */
 
-var CONFIG;
-vows.describe('Protected (hackable) utilities test')
-.addBatch({
+describe('Protected (hackable) utilities test', function() {
   // We initialize the object in a batch so that the globals get changed at /run-time/ not /require-time/,
   // avoiding conflicts with other tests.
   // We initialize in our own /batch/ because batches are run in serial, while individual contexts run in parallel.
-  'Library initialization': {
-    topic : function () {
-      // Change the configuration directory for testing
-      process.env.NODE_CONFIG_DIR = __dirname + '/config';
 
-      // Hard-code $NODE_ENV=test for testing
-      process.env.NODE_ENV='test';
+  let config;
 
-      // Test for multi-instance applications
-      process.env.NODE_APP_INSTANCE='3';
+  beforeEach(function () {
+    // Change the configuration directory for testing
+    process.env.NODE_CONFIG_DIR = __dirname + '/config';
 
-      // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
-      process.env.NODE_CONFIG='{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
-      process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
+    // Hard-code $NODE_ENV=test for testing
+    process.env.NODE_ENV = 'test';
 
-      // Test Environment Variable Substitution
-      var override = 'CUSTOM VALUE FROM JSON ENV MAPPING';
-      process.env['CUSTOM_JSON_ENVIRONMENT_VAR'] = override;
+    // Test for multi-instance applications
+    process.env.NODE_APP_INSTANCE = '3';
 
-      // Dependencies
-      CONFIG = requireUncached(__dirname + '/../lib/config');
+    // Test $NODE_CONFIG environment and --NODE_CONFIG command line parameter
+    process.env.NODE_CONFIG = '{"EnvOverride":{"parm3":"overridden from $NODE_CONFIG","parm4":100}}';
+    process.argv.push('--NODE_CONFIG={"EnvOverride":{"parm5":"overridden from --NODE_CONFIG","parm6":101}}');
 
-      return CONFIG;
+    // Test Environment Variable Substitution
+    process.env['CUSTOM_JSON_ENVIRONMENT_VAR'] = 'CUSTOM VALUE FROM JSON ENV MAPPING';
 
-    },
-    'Library is available': function(config) {
-      assert.isObject(config);
-    }
-  }
-})
-.addBatch({
-  'isObject() tests': {
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.isObject);
-    },
-    'Correctly identifies objects': function() {
-   	  assert.isTrue(CONFIG.util.isObject({A:"b"}));
-    },
-    'Correctly excludes non-objects': function() {
-   	  assert.isFalse(CONFIG.util.isObject("some string"));
-   	  assert.isFalse(CONFIG.util.isObject(45));
-   	  assert.isFalse(CONFIG.util.isObject([2, 3]));
-   	  assert.isFalse(CONFIG.util.isObject(["a", "b"]));
-   	  assert.isFalse(CONFIG.util.isObject(null));
-   	  assert.isFalse(CONFIG.util.isObject(undefined));
-    }
-  },
+    config = requireUncached(__dirname + '/../lib/config');
+  });
 
-  '_cloneDeep() tests': {
-    topic: function() {
+  describe('Library initialization', function () {
+    it('Library is available', function () {
+      assert.strictEqual(typeof config, 'object');
+    });
+  });
+
+  describe('isObject() tests', function () {
+    it('The function exists', function () {
+      assert.strictEqual(typeof config.util.isObject, 'function');
+    });
+
+    it('Correctly identifies objects', function () {
+      assert.strictEqual(config.util.isObject({A: "b"}), true);
+    });
+
+    it('Correctly excludes non-objects', function () {
+      assert.strictEqual(config.util.isObject("some string"), false);
+      assert.strictEqual(config.util.isObject(45), false);
+      assert.strictEqual(config.util.isObject([2, 3]), false);
+      assert.strictEqual(config.util.isObject(["a", "b"]), false);
+      assert.strictEqual(config.util.isObject(null), false);
+      assert.strictEqual(config.util.isObject(undefined), false);
+    });
+  });
+
+  describe('_cloneDeep() tests', function () {
+    let orig;
+
+    beforeEach(function () {
       // Return an object for copy tests
-      return {
-        elem0:true,
-        elem1:"Element 1",
-        elem2:2,
-        elem3:[1,2,3],
-        elem4:function(){return "hello";},
-        elem5:{sub1:"sub 1",sub2:2,sub3:[1,2,3]},
+      orig = {
+        elem0: true,
+        elem1: "Element 1",
+        elem2: 2,
+        elem3: [1, 2, 3],
+        elem4: function () {
+          return "hello";
+        },
+        elem5: {sub1: "sub 1", sub2: 2, sub3: [1, 2, 3]},
         elem6: {date: new Date, regexp: /test/i}
       };
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.cloneDeep);
-    },
-    'Original and copy should test equivalent (deep)': function(orig) {
-      var copy = CONFIG.util.cloneDeep(orig);
+    });
+
+    it('The function exists', function () {
+      assert.strictEqual(typeof config.util.cloneDeep, 'function');
+    });
+
+    it('Original and copy should test equivalent (deep)', function () {
+      let copy = config.util.cloneDeep(orig);
       assert.deepEqual(copy, orig);
-    },
-    'The objects should be different': function(orig) {
-      var copy = CONFIG.util.cloneDeep(orig);
+    });
+
+    it('The objects should be different', function () {
+      let copy = config.util.cloneDeep(orig);
       copy.elem1 = false;
       assert.notDeepEqual(copy, orig);
-    },
-    'Object clones should be objects': function(orig) {
-      assert.isObject(CONFIG.util.cloneDeep({a:1, b:2}));
-    },
-    'Array clones should be arrays': function(orig) {
-      assert.isArray(CONFIG.util.cloneDeep(["a", "b", 3]));
-    },
-    'Arrays should be copied by value, not by reference': function(orig) {
-      var copy = CONFIG.util.cloneDeep(orig);
+    });
+
+    it('Object clones should be objects', function () {
+      assert.strictEqual(typeof config.util.cloneDeep({a: 1, b: 2}), 'object');
+    });
+
+    it('Array clones should be arrays', function () {
+      assert.ok(Array.isArray(config.util.cloneDeep(["a", "b", 3])));
+    });
+
+    it('Arrays should be copied by value, not by reference', function () {
+      let copy = config.util.cloneDeep(orig);
+
       assert.deepEqual(copy, orig);
+
       copy.elem3[0] = 2;
       // If the copy wasn't deep, elem3 would be the same object
       assert.notDeepEqual(copy, orig);
-    },
-    'Objects should be copied by value, not by reference': function(orig) {
-      var copy = CONFIG.util.cloneDeep(orig);
+    });
+
+    it('Objects should be copied by value, not by reference', function () {
+      let copy = config.util.cloneDeep(orig);
       copy.elem5.sub2 = 3;
       assert.notDeepEqual(copy, orig);
-      copy = CONFIG.util.cloneDeep(orig);
+
+      copy = config.util.cloneDeep(orig);
       copy.elem5.sub3[1] = 3;
       assert.notDeepEqual(copy, orig);
-    },
-    'Regexps and dates are preserved': function (orig) {
-      var copy = CONFIG.util.cloneDeep(orig);
-      assert.equal(copy.elem6.date.constructor.name, 'Date');
-      assert.equal(copy.elem6.regexp.toString(), '/test/i');
-    }
-  },
+    });
 
-  'extendDeep() tests': {
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.extendDeep);
-    },
-    'Performs normal extend': function() {
-      var orig = {elem1:"val1", elem2:"val2"};
-      var extWith = {elem3:"val3"};
-      var shouldBe = {elem1:"val1", elem2:"val2", elem3:"val3"};
-      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
-    },
-    'Replaces non-objects': function() {
-      var orig = {elem1:"val1", elem2:["val2","val3"],elem3:{sub1:"val4"}};
-      var extWith = {elem1:1,elem2:["val4"],elem3:"val3"};
-      var shouldBe = {elem1:1, elem2:["val4"],elem3:"val3"};
-      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
-    },
-    'Merges objects': function() {
-      var orig = {e1:"val1", elem2:{sub1:"val4",sub2:"val5"}};
-      var extWith = {elem2:{sub2:"val6",sub3:"val7"}};
-      var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:"val6",sub3:"val7"}};
-      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
-    },
-    'Merges dates': function() {
-      var orig = {e1:"val1", elem2:{sub1:"val4",sub2:new Date(2015, 0, 1)}};
-      var extWith = {elem2:{sub2:new Date(2015, 0, 2),sub3:"val7"}};
-      var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:new Date(2015, 0, 2),sub3:"val7"}};
-      assert.deepEqual(CONFIG.util.extendDeep(orig, extWith), shouldBe);
-    },
-    'Creates partial objects when mixing objects and non-objects': function () {
-      var orig = {elem1: {sub1: 5}};
-      var ext1 = {elem1: {sub2: 7}};
-      var ext2 = {elem1: 7};
-      var ext3 = {elem1: {sub3: 13}};
+    it('Regexps and dates are preserved', function () {
+      let copy = config.util.cloneDeep(orig);
+
+      assert.strictEqual(copy.elem6.date.constructor.name, 'Date');
+      assert.strictEqual(copy.elem6.regexp.toString(), '/test/i');
+    });
+  });
+
+  describe('extendDeep() tests', function () {
+    it('The function exists', function () {
+      assert.strictEqual(typeof config.util.extendDeep, 'function');
+    });
+
+    it('Performs normal extend', function () {
+      let orig = {elem1: "val1", elem2: "val2"};
+      let extWith = {elem3: "val3"};
+      let shouldBe = {elem1: "val1", elem2: "val2", elem3: "val3"};
+
+      assert.deepEqual(config.util.extendDeep(orig, extWith), shouldBe);
+    });
+
+    it('Replaces non-objects', function () {
+      let orig = {elem1: "val1", elem2: ["val2", "val3"], elem3: {sub1: "val4"}};
+      let extWith = {elem1: 1, elem2: ["val4"], elem3: "val3"};
+      let shouldBe = {elem1: 1, elem2: ["val4"], elem3: "val3"};
+
+      assert.deepEqual(config.util.extendDeep(orig, extWith), shouldBe);
+    });
+
+    it('Merges objects', function () {
+      let orig = {e1: "val1", elem2: {sub1: "val4", sub2: "val5"}};
+      let extWith = {elem2: {sub2: "val6", sub3: "val7"}};
+      let shouldBe = {e1: "val1", elem2: {sub1: "val4", sub2: "val6", sub3: "val7"}};
+
+      assert.deepEqual(config.util.extendDeep(orig, extWith), shouldBe);
+    });
+
+    it('Merges dates', function () {
+      let orig = {e1: "val1", elem2: {sub1: "val4", sub2: new Date(2015, 0, 1)}};
+      let extWith = {elem2: {sub2: new Date(2015, 0, 2), sub3: "val7"}};
+      let shouldBe = {e1: "val1", elem2: {sub1: "val4", sub2: new Date(2015, 0, 2), sub3: "val7"}};
+
+      assert.deepEqual(config.util.extendDeep(orig, extWith), shouldBe);
+    });
+
+    it('Creates partial objects when mixing objects and non-objects', function () {
+      let orig = {elem1: {sub1: 5}};
+      let ext1 = {elem1: {sub2: 7}};
+      let ext2 = {elem1: 7};
+      let ext3 = {elem1: {sub3: 13}};
       // When we get to ext2, the 7 clears all memories of sub1 and sub3. Then, when
       // we merge with ext3, the 7 is replaced by the new object.
-      var expected = {elem1: {sub3: 13}};
-      assert.deepEqual(CONFIG.util.extendDeep(orig, ext1, ext2, ext3), expected);
-    },
-    'Correctly types new objects and arrays': function() {
-      var orig = {e1:"val1", e3:["val5"]};
-      var extWith = {e2:{elem1:"val1"}, e3:["val6","val7"]};
-      var shouldBe = {e1:"val1", e2:{elem1:"val1"}, e3:["val6","val7"]};
-      var ext = CONFIG.util.extendDeep({}, orig, extWith);
-      assert.isObject(ext.e2);
-      assert.isArray(ext.e3);
+      let expected = {elem1: {sub3: 13}};
+
+      assert.deepEqual(config.util.extendDeep(orig, ext1, ext2, ext3), expected);
+    });
+
+    it('Correctly types new objects and arrays', function () {
+      let orig = {e1: "val1", e3: ["val5"]};
+      let extWith = {e2: {elem1: "val1"}, e3: ["val6", "val7"]};
+      let shouldBe = {e1: "val1", e2: {elem1: "val1"}, e3: ["val6", "val7"]};
+      let ext = config.util.extendDeep({}, orig, extWith);
+
+      assert.strictEqual(typeof ext.e2, 'object');
+      assert.ok(Array.isArray(ext.e3));
       assert.deepEqual(ext, shouldBe);
-    },
-    'Keeps non-merged objects intact': function() {
-      var orig     = {e1:"val1", elem2:{sub1:"val4",sub2:"val5"}};
-      var shouldBe = {e1:"val1", elem2:{sub1:"val4",sub2:"val5"}};
-      var extWith = {elem3:{sub2:"val6",sub3:"val7"}};
-      CONFIG.util.extendDeep({}, orig, extWith);
+    });
+
+    it('Keeps non-merged objects intact', function () {
+      let orig = {e1: "val1", elem2: {sub1: "val4", sub2: "val5"}};
+      let shouldBe = {e1: "val1", elem2: {sub1: "val4", sub2: "val5"}};
+      let extWith = {elem3: {sub2: "val6", sub3: "val7"}};
+
+      config.util.extendDeep({}, orig, extWith);
       assert.deepEqual(orig, shouldBe);
-    },
-    'Keeps prototype methods intact': function() {
-      var orig = Object.create({has: function() {}});
-      var result = CONFIG.util.extendDeep({}, orig, {});
-      assert.isFunction(result.has);
-    }
-  },
+    });
 
-  'equalsDeep() tests': {
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.equalsDeep);
-    },
-    'Succeeds on two empty objects': function() {
-      assert.isTrue(CONFIG.util.equalsDeep({}, {}));
-    },
-    'Succeeds on array comparisons': function() {
-      assert.isTrue(CONFIG.util.equalsDeep([1,'hello',2], [1,'hello',2]));
-    },
-    'Succeeds on the same object': function() {
-      var a = {hello:'world'};
-      assert.isTrue(CONFIG.util.equalsDeep(a, a));
-    },
-    'Succeeds on a regular object': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29};
-      var b = {value_1: 29, hello:'world', value_3: 14};
-      assert.isTrue(CONFIG.util.equalsDeep(a, b));
-    },
-    'Succeeds on a deep object': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29, value_4:['now','is','the','time']};
-      var b = {value_1: 29, hello:'world', value_3: 14, value_4:['now','is','the','time']};
-      var c = {creditLimit: 10000, deepValue: a};
-      var d = {deepValue: b, creditLimit:10000};
-      assert.isTrue(CONFIG.util.equalsDeep(c, d));
-    },
-    'Fails if either object is null': function() {
-      assert.isFalse(CONFIG.util.equalsDeep({}, null));
-      assert.isFalse(CONFIG.util.equalsDeep(null, {}));
-      assert.isFalse(CONFIG.util.equalsDeep(null, null));
-    },
-    'Fails if either object is undefined': function() {
-      var a = {};
-      assert.isFalse(CONFIG.util.equalsDeep({}));
-      assert.isFalse(CONFIG.util.equalsDeep(a['noElement'], {}));
-    },
-    'Fails if object1 has more elements': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29, otherElem: 40};
-      var b = {value_1: 29, hello:'world', value_3: 14};
-      assert.isFalse(CONFIG.util.equalsDeep(a, b));
-    },
-    'Fails if object2 has more elements': function() {
-      var a = {value_1: 29, hello:'world', value_3: 14};
-      var b = {value_3: 14, hello:'world', value_1: 29, otherElem: 40};
-      assert.isFalse(CONFIG.util.equalsDeep(a, b));
-    },
-    'Fails if any value is different': function() {
-      var a = {value_1: 30, hello:'world', value_3: 14, value_4:['now','is','the','time']};
-      var b = {value_1: 29, hello:'world', value_3: 14, value_4:['now','is','the','time']};
-      assert.isFalse(CONFIG.util.equalsDeep(a, b));
-      var a = {value_1: 29, hello:'world', value_3: 14, value_4:['now','is','the','time']};
-      var b = {value_1: 29, hello:'world', value_3: 14, value_4:['now','isnt','the','time']};
-      assert.isFalse(CONFIG.util.equalsDeep(a, b));
-    }
-  },
+    it('Keeps prototype methods intact', function () {
+      let orig = Object.create({
+        has: function () {
+        }
+      });
+      let result = config.util.extendDeep({}, orig, {});
 
-  'diffDeep() tests': {
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.diffDeep);
-    },
-    'Returns an empty object if no differences': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29};
-      var b = {value_1: 29, hello:'world', value_3: 14};
-      assert.equal(typeof(CONFIG.util.diffDeep(a,b)), 'object');
-      assert.isTrue(Object.keys(CONFIG.util.diffDeep(a, b)).length == 0);
-    },
-    'Returns an empty object if no differences (deep)': function() {
-      var a = {value_3: 14, hello:'world', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'world', value_3: 14, value_4:[1,'hello',2], deepObj:{a:22,b:{a:44,c:45}}};
-      assert.equal(typeof(CONFIG.util.diffDeep(a,b)), 'object');
-      assert.isTrue(Object.keys(CONFIG.util.diffDeep(a, b)).length == 0);
-    },
-    'Returns just the diff values': function() {
-      var a = {value_3: 14, hello:'wurld', value_1: 29, deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'world', value_3: 14, deepObj:{a:22,b:{a:44,c:45}}};
-      var diff = CONFIG.util.diffDeep(a,b);
-      assert.equal(Object.keys(diff).length, 1);
-      assert.equal(diff.hello, 'world');
-    },
-    'Returns just the diff values (deep)': function() {
-      var a = {value_3: 14, hello:'wurld', value_1: 29, value_4:[1,'hello',2], deepObj:{a:22,b:{c:45,a:44}}};
-      var b = {value_1: 29, hello:'wurld', value_3: 14, value_4:[1,'goodbye',2], deepObj:{a:22,b:{a:45,c:44}}};
-      var diff = CONFIG.util.diffDeep(a,b);
-      assert.equal(Object.keys(diff).length, 2);
-      assert.equal(Object.keys(diff.deepObj).length, 1);
-      assert.equal(Object.keys(diff.deepObj.b).length, 2);
-      assert.equal(diff.deepObj.b.a, 45);
-      assert.equal(diff.deepObj.b.c, 44);
+      assert.strictEqual(typeof result.has, 'function');
+    });
+  });
+
+  describe('equalsDeep() tests', function() {
+    it('The function exists', function() {
+      assert.strictEqual(typeof config.util.equalsDeep, 'function');
+    });
+
+    it('Succeeds on two empty objects', function() {
+      assert.strictEqual(config.util.equalsDeep({}, {}), true);
+    });
+
+    it('Succeeds on array comparisons', function() {
+      assert.strictEqual(config.util.equalsDeep([1,'hello',2], [1,'hello',2]), true);
+    });
+
+    it('Succeeds on the same object', function() {
+      let a = { hello:'world' };
+      assert.strictEqual(config.util.equalsDeep(a, a), true);
+    });
+
+    it('Succeeds on differently ordered objects', function() {
+      let a = { value_3: 14, hello:'world', value_1: 29 };
+      let b = { value_1: 29, hello:'world', value_3: 14 };
+
+      assert.strictEqual(config.util.equalsDeep(a, b), true);
+    });
+
+    it('Succeeds on a deep object', function() {
+      let a = { value_3: 14, hello:'world', value_1: 29, value_4: ['now','is','the','time'] };
+      let b = { value_1: 29, hello:'world', value_3: 14, value_4: ['now','is','the','time'] };
+      let c = { creditLimit: 10000, deepValue: a };
+      let d = { deepValue: b, creditLimit:10000 };
+
+      assert.strictEqual(config.util.equalsDeep(c, d), true);
+    });
+
+    it('Fails if either object is null', function() {
+      assert.strictEqual(config.util.equalsDeep({}, null), false);
+      assert.strictEqual(config.util.equalsDeep(null, {}), false);
+      assert.strictEqual(config.util.equalsDeep(null, null), false);
+    });
+
+    it('Fails if either object is undefined', function() {
+      assert.strictEqual(config.util.equalsDeep({}), false);
+      assert.strictEqual(config.util.equalsDeep(undefined, {}), false);
+    });
+
+    it('Fails if object1 has more elements', function() {
+      let a = { value_3: 14, hello:'world', value_1: 29, otherElem: 40 };
+      let b = { value_1: 29, hello:'world', value_3: 14 };
+
+      assert.strictEqual(config.util.equalsDeep(a, b), false);
+    });
+
+    it('Fails if object2 has more elements', function() {
+      let a = { value_1: 29, hello:'world', value_3: 14 };
+      let b = { value_3: 14, hello:'world', value_1: 29, otherElem: 40 };
+
+      assert.strictEqual(config.util.equalsDeep(a, b), false);
+    });
+
+    it('Fails if any value is different', function() {
+      let a = { value_1: 30, hello:'world', value_3: 14, value_4: ['now','is','the','time'] };
+      let b = { value_1: 29, hello:'world', value_3: 14, value_4: ['now','is','the','time'] };
+
+      assert.strictEqual(config.util.equalsDeep(a, b), false);
+
+      a = { value_1: 29, hello:'world', value_3: 14, value_4: ['now','is','the','time'] };
+      b = { value_1: 29, hello:'world', value_3: 14, value_4: ['now','isnt','the','time'] };
+
+      assert.strictEqual(config.util.equalsDeep(a, b), false);
+    });
+  });
+
+  describe('diffDeep() tests', function() {
+    it('The function exists', function() {
+      assert.strictEqual(typeof config.util.diffDeep, 'function');
+    });
+
+    it('Returns an empty object if no differences', function() {
+      let a = {value_3: 14, hello:'world', value_1: 29};
+      let b = {value_1: 29, hello:'world', value_3: 14};
+
+      assert.strictEqual(typeof config.util.diffDeep(a,b), 'object');
+      assert.strictEqual(Object.keys(config.util.diffDeep(a, b)).length, 0);
+    });
+
+    it('Returns an empty object if no differences (deep)', function() {
+      let a = { value_3: 14, hello:'world', value_1: 29, value_4: [1,'hello',2], deepObj: { a: 22, b: { c: 45, a: 44 } } };
+      let b = { value_1: 29, hello:'world', value_3: 14, value_4: [1,'hello',2], deepObj: { a: 22, b: { a: 44, c: 45 } } };
+
+      assert.strictEqual(typeof(config.util.diffDeep(a,b)), 'object');
+      assert.strictEqual(Object.keys(config.util.diffDeep(a, b)).length, 0);
+    });
+
+    it('Returns just the diff values', function() {
+      let a = { value_3: 14, hello:'wurld', value_1: 29, deepObj: { a: 22, b: { c: 45, a: 44 } } };
+      let b = { value_1: 29, hello:'world', value_3: 14, deepObj: { a: 22, b: { a: 44, c: 45 } } };
+      let diff = config.util.diffDeep(a,b);
+
+      assert.strictEqual(Object.keys(diff).length, 1);
+      assert.strictEqual(diff.hello, 'world');
+    });
+
+    it('Returns just the diff values (deep)', function() {
+      let a = { value_3: 14, hello: 'wurld', value_1: 29, value_4: [1,'hello',2], deepObj: { a:22, b: { c: 45, a: 44} } };
+      let b = { value_1: 29, hello: 'wurld', value_3: 14, value_4: [1,'goodbye',2], deepObj: { a:22, b: { a: 45, c: 44} } };
+      let diff = config.util.diffDeep(a,b);
+
+      assert.strictEqual(Object.keys(diff).length, 2);
+      assert.strictEqual(Object.keys(diff.deepObj).length, 1);
+      assert.strictEqual(Object.keys(diff.deepObj.b).length, 2);
+      assert.strictEqual(diff.deepObj.b.a, 45);
+      assert.strictEqual(diff.deepObj.b.c, 44);
       assert.deepEqual(diff.value_4, [1, 'goodbye', 2]);
-    }
-  },
+    })
+  });
 
-  'substituteDeep() tests': {
-    topic: function () {
-      var topic = {
+  describe('substituteDeep() tests', function() {
+    let orig;
+
+    beforeEach(function() {
+      orig = {
         TopLevel: 'SOME_TOP_LEVEL',
         TestModule: {
           parm1: "SINGLE_SECOND_LEVEL"
@@ -299,28 +357,34 @@ vows.describe('Protected (hackable) utilities test')
           }
         }
       };
-      return topic;
-    },
-    'returns an empty object if the variables mapping is empty': function (topic) {
-      var vars = {};
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+    });
+
+    it('returns an empty object if the variables mapping is empty', function () {
+      let vars = {};
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {});
-    },
-    'returns an empty object if none of the variables map to leaf strings': function (topic) {
-      var vars = {
+    });
+
+    it('returns an empty object if none of the variables map to leaf strings', function () {
+      let vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {});
-    },
-    'returns an object with keys matching down to mapped existing variables': function (topic) {
-      var vars = {
+    });
+
+    it('returns an object with keys matching down to mapped existing variables', function () {
+      let vars = {
         'SOME_TOP_LEVEL': 5,
         'DB_NAME': 'production_db',
         'OAUTH_SECRET': '123456',
         'PATH': 'ignore other environment variables'
       };
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {
         TopLevel: 5,
         Customers: {
@@ -330,9 +394,10 @@ vows.describe('Protected (hackable) utilities test')
           }
         }
       });
-    },
-    'Returns an object with keys matching down to mapped existing and defined variables': function (topic) {
-      var vars = {
+    });
+
+    it('Returns an object with keys matching down to mapped existing and defined variables', function () {
+      let vars = {
         'SOME_TOP_LEVEL': 0,
         'DB_HOST': undefined,
         'DB_NAME': '',
@@ -340,7 +405,9 @@ vows.describe('Protected (hackable) utilities test')
         'OAUTH_KEY': 'null',
         'PATH': ''
       };
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {
         TopLevel: 0,
         Customers: {
@@ -350,20 +417,24 @@ vows.describe('Protected (hackable) utilities test')
           }
         }
       });
-    },
-    'returns an object with keys matching down to mapped existing variables with JSON content': function (topic) {
-      var vars = {
+    });
+
+    it('returns an object with keys matching down to mapped existing variables with JSON content', function () {
+      let vars = {
         'DB_HOST': '{"port":"3306","host":"example.com"}'
       };
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {
         Customers: {
           dbHost: '{"port":"3306","host":"example.com"}'
         }
       });
-    },
-    'Returns an object with keys matching down to mapped existing and defined variables with JSON content': function (topic) {
-      var dbHostObject = {
+    });
+
+    it('Returns an object with keys matching down to mapped existing and defined variables with JSON content', function () {
+      let dbHostObject = {
         param1WithZero: 0,
         param2WithFalse: false,
         param3WithNull: null,
@@ -371,23 +442,29 @@ vows.describe('Protected (hackable) utilities test')
         param5WithEmptyArray: [],
         param6WithEmptyString: ''
       };
-      var dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
-      var vars = {
+      let dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
+      let vars = {
         'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
       };
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {
         Customers: {
           dbHost: JSON.stringify(dbHostObject)
         }
       });
-    },
-    'returns an object with keys matching down to mapped and JSON-parsed existing variables': function (topic) {
-      var vars = {
+    });
+
+    it('returns an object with keys matching down to mapped and JSON-parsed existing variables', function () {
+      let vars = {
         'DB_HOST': '{"port":"3306","host":"example.com"}'
       };
-      topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+
+      orig.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {
         Customers: {
           dbHost: {
@@ -396,9 +473,10 @@ vows.describe('Protected (hackable) utilities test')
           }
         }
       });
-    },
-    'Returns an object with keys matching down to mapped and JSON-parsed existing and defined variables': function (topic) {
-      var dbHostObject = {
+    });
+
+    it('Returns an object with keys matching down to mapped and JSON-parsed existing and defined variables', function () {
+      let dbHostObject = {
         param1WithZero: 0,
         param2WithFalse: false,
         param3WithNull: null,
@@ -406,92 +484,118 @@ vows.describe('Protected (hackable) utilities test')
         param5WithEmptyArray: [],
         param6WithEmptyString: ''
       };
-      var dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
-      var vars = {
+      let dbHostObjectWithUndefinedProperty = Object.assign({}, dbHostObject, { param7WithUndefined: undefined });
+      let vars = {
         'DB_HOST': JSON.stringify(dbHostObjectWithUndefinedProperty)
       };
-      topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
-      var substituted = CONFIG.util.substituteDeep(topic, vars);
+
+      orig.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+
+      let substituted = config.util.substituteDeep(orig, vars);
+
       assert.deepEqual(substituted, {
         Customers: {
           dbHost: dbHostObject
         }
       });
-    },
+    });
+
     // Testing all the things in variable maps that don't make sense because ENV vars are always
     // strings.
-    'Throws an error for leaf Array values': function (topic) {
-      var vars = {
+    it('Throws an error for leaf Array values', function () {
+      let vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
-      topic.Customers.dbHost = ['a', 'b', 'c'];
+
+      orig.Customers.dbHost = ['a', 'b', 'c'];
+
       assert.throws(function () {
-        CONFIG.util.substituteDeep(topic, vars);
+        config.util.substituteDeep(orig, vars);
       });
-    },
-    'Throws an error for leaf Boolean values': function (topic) {
-      var vars = {
+    });
+
+    it('Throws an error for leaf Boolean values', function () {
+      let vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
-      topic.Customers.dbHost = false;
+
+      orig.Customers.dbHost = false;
+
       assert.throws(function () {
-        CONFIG.util.substituteDeep(topic, vars);
+        config.util.substituteDeep(orig, vars);
       });
-    },
-    'Throws an error for leaf Numeric values': function (topic) {
-      var vars = {
+    });
+
+    it('Throws an error for leaf Numeric values', function () {
+      let vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
-      topic.Customers.dbHost = 443;
+
+      orig.Customers.dbHost = 443;
+
       assert.throws(function () {
-        CONFIG.util.substituteDeep(topic, vars);
+        config.util.substituteDeep(orig, vars);
       });
-    },
-    'Throws an error for leaf null values': function (topic) {
-      var vars = {
+    });
+
+    it('Throws an error for leaf null values', function () {
+      let vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
-      topic.Customers.dbHost = null;
+
+      orig.Customers.dbHost = null;
+
       assert.throws(function () {
-        CONFIG.util.substituteDeep(topic, vars);
+        config.util.substituteDeep(orig, vars);
       });
-    },
-    'Throws an error for leaf Undefined values': function (topic) {
-      var vars = {
+    });
+
+    it('Throws an error for leaf Undefined values', function () {
+      let vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
-      topic.Customers.dbHost = undefined;
+
+      orig.Customers.dbHost = undefined;
+
       assert.throws(function () {
-        CONFIG.util.substituteDeep(topic, vars);
+        config.util.substituteDeep(orig, vars);
       });
-    },
-    'Throws an error for leaf NaN values': function (topic) {
-      var vars = {
+    });
+
+    it('Throws an error for leaf NaN values', function () {
+      let vars = {
         NON_EXISTENT_VAR: 'ignore_this'
       };
-      topic.Customers.dbHost = NaN;
+
+      orig.Customers.dbHost = NaN;
+
       assert.throws(function () {
-        CONFIG.util.substituteDeep(topic, vars);
+        config.util.substituteDeep(orig, vars);
       });
-    },
-    'Throws an error with message describing variables name that throw a parser error': function(topic) {
-      var JSON_WITH_SYNTAX_ERROR = '{"port":"3306","host" "example.com"}'
-      var vars = {
+    });
+
+    it('Throws an error with message describing variables name that throw a parser error', function() {
+      let JSON_WITH_SYNTAX_ERROR = '{"port":"3306","host" "example.com"}'
+      let vars = {
         'DB_HOST': JSON_WITH_SYNTAX_ERROR
       };
-      topic.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+
+      orig.Customers.dbHost = {__name: 'DB_HOST', __format: 'json'};
+
       try {
-        CONFIG.util.substituteDeep(topic, vars);
-        assert.isTrue(false);
-      } catch(err) {
+        config.util.substituteDeep(orig, vars);
+        assert.fail('no error thrown');
+      } catch (err) {
         assert.match(err.message, /__format parser error in DB_HOST: /);
       }
-    }
-  },
+    });
+  });
 
-  'setPath() tests:': {
-    topic: function () {
-      return {
+  describe('setPath() tests:', function () {
+    let orig;
+
+    beforeEach(function () {
+      orig = {
         TestModule: {
           parm1: "value1"
         },
@@ -508,117 +612,138 @@ vows.describe('Protected (hackable) utilities test')
           parm2: 22
         }
       };
-    },
-    'Ignores null values': function (topic) {
-      CONFIG.util.setPath(topic, ['Customers', 'oauth', 'secret'], null);
-      assert.equal(topic.Customers.oauth.secret, 'an_api_secret');
-    },
-    'Creates top-level keys to set new values': function (topic) {
-      CONFIG.util.setPath(topic, ['NewKey'], 'NEW_VALUE');
-      assert.equal(topic.NewKey, 'NEW_VALUE');
-    },
-    'Creates sub-keys to set new values': function (topic) {
-      CONFIG.util.setPath(topic, ['TestModule', 'oauth'], 'NEW_VALUE');
-      assert.equal(topic.TestModule.oauth, 'NEW_VALUE');
-    },
-    'Creates parents to set new values': function (topic) {
-      CONFIG.util.setPath(topic, ['EnvOverride', 'oauth', 'secret'], 'NEW_VALUE');
-      assert.equal(topic.EnvOverride.oauth.secret, 'NEW_VALUE');
-    },
-    'Overwrites existing values': function (topic) {
-      CONFIG.util.setPath(topic, ['Customers'], 'NEW_VALUE');
-      assert.equal(topic.Customers, 'NEW_VALUE');
-    }
-  },
+    });
 
-  'parseFile() tests': {
-    topic: function() {
-      return CONFIG.util.parseFile(__dirname + '/config/default.yaml');
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.parseFile);
-    },
-    'An object is returned': function(config) {
-      assert.isObject(config);
-    },
-    'The correct object is returned': function(config) {
-      assert.isObject(config.Customers);
-      assert.isTrue(config.Customers.dbName == 'from_default_yaml');
-      assert.isTrue(config.Customers.dbPort == 5984);
-      assert.isObject(config.AnotherModule);
-      assert.isTrue(config.AnotherModule.parm2 == "value2");
-    }
-  },
+    it('Ignores null values', function () {
+      config.util.setPath(orig, ['Customers', 'oauth', 'secret'], null);
+      assert.strictEqual(orig.Customers.oauth.secret, 'an_api_secret');
+    });
 
-  'CSON parse tests': {
-    topic: function() {
-      return CONFIG.util.parseFile(__dirname + '/config/default.cson');
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.parseFile);
-    },
-    'An object is returned': function(config) {
-      assert.isObject(config);
-    },
-    'The correct object is returned': function(config) {
-      assert.isObject(config.Customers);
-      assert.isTrue(config.Customers.dbName == 'from_default_cson');
-      assert.isTrue(config.Customers.dbPassword == 'password will be overwritten.');
-      assert.isObject(config.AnotherModule);
-      assert.isTrue(config.AnotherModule.parm4 == "value4");
-      assert.isArray(config.Customers.lang);
-    }
-  },
+    it('Creates top-level keys to set new values', function () {
+      config.util.setPath(orig, ['NewKey'], 'NEW_VALUE');
+      assert.strictEqual(orig.NewKey, 'NEW_VALUE');
+    });
 
-  '.properties parse tests': {
-    topic: function() {
-      return CONFIG.util.parseFile(__dirname + '/config/default.properties');
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.parseFile);
-    },
-    'An object is returned': function(config) {
-      assert.isObject(config);
-    },
-    'The correct object is returned': function(config) {
-      assert.isObject(config.AnotherModule);
-      assert.isTrue(config.AnotherModule.parm5 == "value5");
-      assert.isObject(config['key with spaces']);
-      assert.isTrue(config['key with spaces'].another_key == 'hello');
-      assert.isUndefined(config.ignore_this_please);
-      assert.isUndefined(config.i_am_a_comment);
-    },
-    'Variable replacements are working': function(config) {
-      assert.isTrue(config.replacement.param == "foobar")
-    },
-    'Sections are supported': function(config) {
-      assert.isDefined(config.section.param);
-      assert.isUndefined(config.param);
-    }
-  },
+    it('Creates sub-keys to set new values', function () {
+      config.util.setPath(orig, ['TestModule', 'oauth'], 'NEW_VALUE');
+      assert.strictEqual(orig.TestModule.oauth, 'NEW_VALUE');
+    });
 
-  'loadFileConfigs() tests': {
-    topic: function() {
-      return CONFIG.util.loadFileConfigs();
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.loadFileConfigs);
-    },
-    'An object is returned': function(configs) {
-      assert.isObject(configs);
-    },
-    'The correct object is returned': function(config) {
-      assert.isObject(config.Customers);
-      assert.isTrue(config.Customers.dbHost == 'base');
-      assert.isTrue(config.Customers.dbName == 'from_default_xml');
-    }
-  },
+    it('Creates parents to set new values', function () {
+      config.util.setPath(orig, ['EnvOverride', 'oauth', 'secret'], 'NEW_VALUE');
+      assert.strictEqual(orig.EnvOverride.oauth.secret, 'NEW_VALUE');
+    });
 
-  'attachProtoDeep() tests': {
-    topic: function() {
+    it('Overwrites existing values', function () {
+      config.util.setPath(orig, ['Customers'], 'NEW_VALUE');
+      assert.strictEqual(orig.Customers, 'NEW_VALUE');
+    });
+  });
+
+  describe('parseFile() tests', function () {
+    let content;
+
+    beforeEach(function () {
+      content = config.util.parseFile(__dirname + '/config/default.yaml');
+    });
+
+    it('The function exists', function () {
+      assert.strictEqual(typeof config.util.parseFile, 'function');
+    });
+
+    it('An object is returned', function () {
+      assert.strictEqual(typeof content, 'object');
+    });
+
+    it('The correct object is returned', function () {
+      assert.strictEqual(typeof content.Customers, 'object');
+      assert.strictEqual(content.Customers.dbName, 'from_default_yaml');
+      assert.strictEqual(content.Customers.dbPort, 5984);
+      assert.strictEqual(typeof content.AnotherModule, 'object');
+      assert.strictEqual(content.AnotherModule.parm2, "value2");
+    });
+
+    describe('CSON parse tests', function () {
+      let content;
+
+      beforeEach(function () {
+        content = config.util.parseFile(__dirname + '/config/default.cson');
+      });
+
+      it('An object is returned', function () {
+        assert.strictEqual(typeof content, 'object');
+      });
+
+      it('The correct object is returned', function () {
+        assert.strictEqual(typeof content.Customers, 'object');
+        assert.strictEqual(content.Customers.dbName, 'from_default_cson');
+        assert.strictEqual(content.Customers.dbPassword, 'password will be overwritten.');
+        assert.strictEqual(typeof content.AnotherModule, 'object');
+        assert.strictEqual(content.AnotherModule.parm4, "value4");
+        assert.ok(Array.isArray(content.Customers.lang));
+      });
+    });
+
+    describe('.properties parse tests', function () {
+      let content;
+
+      beforeEach(function () {
+        content = config.util.parseFile(__dirname + '/config/default.properties');
+      });
+
+      it('An object is returned', function () {
+        assert.strictEqual(typeof content, 'object');
+      });
+
+      it('The correct object is returned', function () {
+        assert.strictEqual(typeof content.AnotherModule, 'object');
+        assert.strictEqual(content.AnotherModule.parm5, "value5");
+        assert.strictEqual(typeof content['key with spaces'], 'object');
+        assert.strictEqual(content['key with spaces'].another_key, 'hello');
+        assert.strictEqual(content.ignore_this_please, undefined);
+        assert.strictEqual(content.i_am_a_comment, undefined);
+      });
+
+      it('Variable replacements are working', function () {
+        assert.strictEqual(content.replacement.param, "foobar")
+      });
+
+      it('Sections are supported', function () {
+        assert.notEqual(content.section.param, undefined);
+        assert.strictEqual(content.param, undefined);
+      });
+    });
+  });
+
+  describe('loadFileConfigs() tests', function() {
+    let configs;
+
+    beforeEach(function () {
+      configs = config.util.loadFileConfigs();
+    });
+
+    it('The function exists', function() {
+      assert.strictEqual(typeof config.util.loadFileConfigs, 'function');
+    });
+
+    it('An object is returned', function() {
+      assert.strictEqual(typeof configs, 'object');
+    });
+
+    it('The correct object is returned', function() {
+      assert.strictEqual(typeof config.Customers, 'object');
+      assert.strictEqual(config.Customers.dbHost, 'base');
+      assert.strictEqual(config.Customers.dbName, 'from_default_xml');
+    });
+  });
+
+  describe('attachProtoDeep() tests', function() {
+    let content;
+
+    beforeEach(function () {
       // Create an object that contains other objects to see
       // that the prototype is added to all objects.
-      var watchThis = {
+      let watchThis = {
         subObject: {
           item1: 23,
           subSubObject: {
@@ -626,81 +751,93 @@ vows.describe('Protected (hackable) utilities test')
           }
         }
       };
-      return CONFIG.util.attachProtoDeep(watchThis);
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.attachProtoDeep);
-    },
-    'The original object is returned': function(config) {
-      assert.isObject(config);
-      assert.isTrue(config.subObject.item1 === 23);
-      assert.isTrue(config.subObject.subSubObject.item2 === "hello");
-    },
-    'The cloneDeep method is attached to the object': function(config) {
-      assert.isTrue({a:27}.a == config.util.cloneDeep({a:27}).a);
-    },
-    'The cloneDeep method is also attached to sub-objects': function(config) {
-      assert.isTrue({a:27}.a == config.subObject.util.cloneDeep({a:27}).a);
-      assert.isTrue({a:27}.a == config.subObject.subSubObject.util.cloneDeep({a:27}).a);
-    },
-    'Prototype methods are not exposed in the object': function(config) {
+
+      content = config.util.attachProtoDeep(watchThis);
+    });
+
+    it('The function exists', function() {
+      assert.strictEqual(typeof config.util.attachProtoDeep, 'function');
+    });
+
+    it('The original object is returned', function() {
+      assert.strictEqual(typeof content, 'object');
+
+      assert.strictEqual(content.subObject.item1, 23);
+      assert.strictEqual(content.subObject.subSubObject.item2, "hello");
+    });
+
+    it('The cloneDeep method is attached to the object', function() {
+      assert.strictEqual( { a: 27 }.a, content.util.cloneDeep( { a: 27 }).a);
+    });
+
+    it('The cloneDeep method is also attached to sub-objects', function() {
+      assert.strictEqual( { a: 27 }.a, content.subObject.util.cloneDeep({ a: 27 }).a);
+      assert.strictEqual ( { a: 27 }.a, content.subObject.subSubObject.util.cloneDeep({ a: 27 }).a);
+    });
+
+    it('Prototype methods are not exposed in the object', function() {
       // This test is here because altering object.__proto__ places the method
       // directly onto the object. That caused problems when iterating over the
       // object.  This implementation does the same thing, but hides them.
-      assert.isTrue(JSON.stringify(config) == '{"subObject":{"item1":23,"subSubObject":{"item2":"hello"}}}');
-    }
-  },
+      assert.strictEqual(JSON.stringify(content), '{"subObject":{"item1":23,"subSubObject":{"item2":"hello"}}}');
+    });
+  });
 
-  'getCmdLineArg() tests': {
-    topic: function() {
+  describe('getCmdLineArg() tests', function() {
+    beforeEach(function () {
         // Set process.argv example object
-        var testArgv = [
+        let testArgv = [
             process.argv[0],
             process.argv[1],
             '--NODE_ENV=staging'
         ];
         process.argv = testArgv;
-        return CONFIG.util.getCmdLineArg('NODE_ENV');
-    },
-    'The function exists': function() {
-        assert.isFunction(CONFIG.util.getCmdLineArg);
-    },
-    'NODE_ENV should be staging': function(nodeEnv) {
-        assert.equal(nodeEnv, 'staging');
-    },
-    'Returns false if the argument did not match': function() {
-        assert.isFalse(CONFIG.util.getCmdLineArg('NODE_CONFIG_DIR'));
-    },
-    'Returns the argument (alternative syntax)': function() {
+    });
+
+    it('The function exists', function() {
+        assert.strictEqual(typeof config.util.getCmdLineArg, 'function');
+    });
+
+    it('NODE_ENV should be staging', function() {
+      assert.strictEqual(config.util.getCmdLineArg('NODE_ENV'), 'staging');
+    });
+
+    it('Returns false if the argument did not match', function() {
+        assert.strictEqual(config.util.getCmdLineArg('NODE_CONFIG_DIR'), false);
+    });
+
+    it('Returns the argument (alternative syntax)', function() {
         process.argv.push('--NODE_CONFIG_DIR=/etc/nodeConfig');
-        assert.equal(CONFIG.util.getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
-    },
-    'Returns always the first matching': function() {
+        assert.strictEqual(config.util.getCmdLineArg('NODE_CONFIG_DIR'), '/etc/nodeConfig');
+    });
+
+    it('Returns always the first matching', function() {
         process.argv.push('--NODE_ENV=test');
-        assert.equal(CONFIG.util.getCmdLineArg('NODE_ENV'), 'staging');
-    },
-    'Revert original process arguments': function() {
+        assert.strictEqual(config.util.getCmdLineArg('NODE_ENV'), 'staging');
+    });
+
+    it('Revert original process arguments', function() {
         assert.notEqual(process.argv, argvOrg);
         process.argv = argvOrg;
-        assert.equal(process.argv, argvOrg);
-    }
-  },
+        assert.strictEqual(process.argv, argvOrg);
+    });
+  });
 
-  'toObject() tests': {
-    topic: function() {
-      return CONFIG.util.loadFileConfigs();
-    },
-    'The function exists': function() {
-      assert.isFunction(CONFIG.util.toObject);
-    },
-    'Returns a serialized version of the current instance if no argument is provided': function() {
-      assert.notDeepStrictEqual(CONFIG.util.toObject(), CONFIG);
-    },
-    'Returns a POJO': function() {
-      assert.ok(!(CONFIG.util.toObject() instanceof CONFIG.constructor));
-    },
-    'Returns a serialized version of whatever argument is provided': function() {
-      assert.notDeepStrictEqual(CONFIG.get('Customers'), {
+  describe('toObject() tests', function() {
+    it('The function exists', function() {
+      assert.strictEqual(typeof config.util.toObject, 'function');
+    });
+
+    it('Returns a serialized version of the current instance if no argument is provided', function() {
+      assert.notDeepStrictEqual(config.util.toObject(), config);
+    });
+
+    it('Returns a POJO', function() {
+      assert.ok(!(config.util.toObject() instanceof config.constructor));
+    });
+
+    it('Returns a serialized version of whatever argument is provided', function() {
+      assert.notDeepStrictEqual(config.get('Customers'), {
         dbHost: 'base',
         dbName: 'from_default_json',
         dbPort: 5999,
@@ -713,7 +850,6 @@ vows.describe('Protected (hackable) utilities test')
         altDbPort1: 2209,
         emptySub: null
       });
-    }
-  }
-})
-.export(module);
+    });
+  });
+});
