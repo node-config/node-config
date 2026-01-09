@@ -739,20 +739,18 @@ describe('Tests for util functions', function () {
         }
       });
 
-      it('prefers NODE_CONFIG_ENV', function () {
-        try {
-          process.env.NODE_ENV = 'mercury';
-          process.env.NODE_CONFIG_ENV = 'apollo';
+      describe('with multiple values', function () {
+        it('enumerates the values', function () {
+          try {
+            process.env.NODE_ENV = 'mercury,apollo';
 
-          let loadInfo = Load.fromEnvironment();
+            let loadInfo = Load.fromEnvironment();
 
-          assert.deepEqual(loadInfo.options.nodeEnv, ['apollo']);
-          assert.strictEqual(loadInfo.getEnv('NODE_ENV'), 'mercury');
-          assert.strictEqual(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
-        } finally {
-          delete process.env.NODE_ENV;
-          delete process.env.NODE_CONFIG_ENV;
-        }
+            assert.deepEqual(loadInfo.options.nodeEnv, ['mercury', 'apollo']);
+          } finally {
+            delete process.env.NODE_ENV;
+          }
+        });
       });
     });
 
@@ -1226,6 +1224,49 @@ describe('Tests for util functions', function () {
       it('Sections are supported', function() {
         assert.notStrictEqual(config.section.param, undefined);
         assert.strictEqual(config.param, undefined);
+      });
+    });
+
+    describe('with multiple nodeEnv values', function() {
+      it('Values of the corresponding files are loaded', function() {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['development', 'cloud']
+        }).config;
+
+        assert.strictEqual(config.db.name, 'development-config-env-provided');
+        assert.strictEqual(config.db.port, 3000);
+      });
+
+      it('Values of the corresponding local files are loaded', function() {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['development', 'cloud']
+        }).config;
+
+        assert.strictEqual(config.app.context, 'local cloud');
+        assert.strictEqual(config.app.message, 'local development');
+      });
+
+      it('loads all corresponding env-hostname files', function() {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['development', 'bare-metal'],
+          hostName: 'test'
+        }).config;
+
+        assert.strictEqual(config.host.os, 'linux');
+        assert.strictEqual(config.host.arch, 'x86_64');
+      });
+
+      it('loads the values in left-right order', function(done) {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['cloud', 'bare-metal'],
+          hostName: 'test'
+        }).config;
+
+        assert.strictEqual(config.db.name, 'bare-metal-config-env-provided');
       });
     });
   });
