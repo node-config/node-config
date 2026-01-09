@@ -11,7 +11,7 @@ const JSON5Module = require('json5');
 const JSON5 = JSON5Module.default || JSON5Module;
 
 var Yaml = null,
-    VisionmediaYaml = null,
+    JSYaml = null,
     Coffee = null,
     Iced = null,
     CSON = null,
@@ -135,34 +135,23 @@ Parser.icedParser = function(filename, content) {
 };
 
 Parser.yamlParser = function(filename, content) {
-  if (!Yaml && !VisionmediaYaml) {
+  if (!Yaml && !JSYaml) {
     // Lazy loading
     try {
-      // Try to load the better js-yaml module
-      Yaml = require(JS_YAML_DEP);
-    }
-    catch (e) {
+      Yaml = require(YAML_DEP);
+    } catch (e) {
       try {
-        // If it doesn't exist, load the fallback visionmedia yaml module.
-        VisionmediaYaml = require(YAML_DEP);
-      }
-      catch (e) { }
+        JSYaml = require(JS_YAML_DEP);
+      } catch (e) {}
     }
   }
+
   if (Yaml) {
-    return Yaml.load(content);
-  }
-  else if (VisionmediaYaml) {
-    // The yaml library doesn't like strings that have newlines but don't
-    // end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13
-    content += '\n';
-    if (typeof VisionmediaYaml.eval === 'function') {
-      return VisionmediaYaml.eval(Parser.stripYamlComments(content));
-    }
-    return VisionmediaYaml.parse(Parser.stripYamlComments(content));
-  }
-  else {
-    console.error('No YAML parser loaded.  Suggest adding js-yaml dependency to your package.json file.')
+    return Yaml.parse(content);
+  } else if (JSYaml) {
+    return JSYaml.load(content);
+  } else {
+    console.error('No YAML parser loaded.  Suggest adding yaml dependency to your package.json file.')
   }
 };
 
