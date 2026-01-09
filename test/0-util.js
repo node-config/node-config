@@ -693,6 +693,31 @@ describe('Tests for util functions', function () {
       assert.strictEqual(sources.length, 1);
       assert.ok(sources[0].name.endsWith("/config/default.json"));
     });
+
+    describe('with encrypted values', function () {
+      it('can decrypt the file', function () {
+        let load = new Load({
+          configDir: './config',
+          gitCrypt: false
+        });
+
+        let contents = load.loadFile(Path.join(__dirname, './config/encrypted.json'));
+
+        assert.strictEqual(contents, null);
+      });
+
+      it('throws an exception if gitCrypt is not set', function () {
+        let load = new Load({
+          configDir: './config'
+        });
+
+        assert.throws(() => {
+            load.loadFile(Path.join(__dirname, './config/encrypted.json'));
+          },
+          /Cannot parse config file/
+        );
+      });
+    });
   });
 
   describe('Load.fromEnvironment()', function () {
