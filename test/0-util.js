@@ -764,6 +764,18 @@ describe('Tests for util functions', function () {
         }
       });
 
+      it('ignores process.env if argument is given', function() {
+        try {
+          process.env.NODE_ENV = 'mercury';
+
+          let loadInfo = Load.fromEnvironment('foo,bar');
+
+          assert.deepEqual(loadInfo.options.nodeEnv, ['foo', 'bar']);
+        } finally {
+          delete process.env.NODE_ENV;
+        }
+      });
+
       describe('with multiple values', function () {
         it('enumerates the values', function () {
           try {
