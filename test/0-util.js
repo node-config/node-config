@@ -369,6 +369,28 @@ describe('Tests for util functions', function () {
       var result = util.extendDeep({}, orig, {baz: undefined});
       assert.strictEqual(Object.keys(result).length, 3);
     });
+
+    describe('arrays', function () {
+      it('An empty array replaced by a full array should be replaced', function() {
+        var orig = {e1: "val1", e3: []};
+        var extWith = {e2: {elem1: "val1"}, e3: ["val6", "val7"]};
+        var shouldBe = {e1: "val1", e2: {elem1: "val1"}, e3: ["val6", "val7"]};
+        var ext = util.extendDeep({}, orig, extWith);
+
+        assert.deepEqual(ext, shouldBe);
+        assert.deepEqual(orig.e3, []);
+      });
+
+      it("An array replaced by an empty array should be replaced wholesale", function () {
+        var orig = {e1: "val1", e3: ["val6", "val7"]};
+        var extWith = {e2: {elem1: "val1"}, e3: []};
+        var shouldBe = {e1: "val1", e2: {elem1: "val1"}, e3: []};
+        var ext = util.extendDeep({}, orig, extWith);
+
+        assert.deepEqual(ext, shouldBe);
+        assert.deepEqual(orig.e3, ["val6", "val7"]);
+      });
+    });
   });
 
   describe('Util.toObject() tests', function() {
@@ -676,6 +698,12 @@ describe('Tests for util functions', function () {
       load.loadFile(Path.join(__dirname, './config/default.json'));
 
       assert.deepEqual(load.config.staticArray, [2,1,3]);
+    });
+
+    it('can handle files with BOM Unicode characters', function () {
+      assert.doesNotThrow(function () {
+        load.loadFile(Path.join(__dirname, './7-config/defaultWithUnicodeBOM.json'));
+      }, 'config file with BOM has a parse error');
     });
 
     it('uses an optional transform on the data', function() {
@@ -1311,6 +1339,14 @@ describe('Tests for util functions', function () {
         assert.strictEqual(config.AnotherModule.parm3, 'value3');
       });
 
+      it('loading from transpiled ESM files is correct', function() {
+        let actual = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'x-config-js-transpiled')
+        }).config;
+
+        assert.strictEqual(actual.title, 'Hello config!');
+      });
+
       it('loading from a Hjson file is correct', function() {
         assert.strictEqual(config.AnotherModule.parm8, 'value8');
       });
@@ -1321,6 +1357,36 @@ describe('Tests for util functions', function () {
 
       it('loading from an MJS file is correct', function() {
         assert.strictEqual(config.AnotherModule.parm10, 'value10');
+      });
+
+      describe('for .ts files', function() {
+        it('loading from a TS file is correct', function() {
+          let actual = util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'x-config-ts')
+          }).config;
+
+          assert.strictEqual(actual.siteTitle, 'New Instance!');
+        });
+
+        it('reuses existing .ts file handler', function() {
+          let existingHandler = require.extensions['.ts'];
+
+          assert.ok(existingHandler, 'Existing handler is defined by the environment');
+
+          let actual = util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'x-config-ts')
+          }).config;
+
+          assert.strictEqual(require.extensions['.ts'], existingHandler, 'Should not overwrite existing handler');
+        });
+
+        describe('can process module exports', function() {
+          let actual = util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'x-config-ts-module-exports')
+          }).config;
+
+          assert.strictEqual(actual.siteTitle, 'New Instance!');
+        });
       });
 
       describe('for .toml files', function () {
