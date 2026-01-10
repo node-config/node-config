@@ -1224,6 +1224,23 @@ describe('Tests for util functions', function () {
       assert.strictEqual(result.config.AnotherModule.parm4, "value4");
     });
 
+    describe('for .toml files', function () {
+      it('parses arrays of tables', function () {
+        var result = util.loadFileConfigs({configDir: Path.join(__dirname, '17-config')});
+
+        assert.deepStrictEqual(result.config.messages, [
+          {
+            field1: '1',
+            field2: '2'
+          },
+          {
+            field1: 'a',
+            field3: '3'
+          }
+        ]);
+      });
+    });
+
     describe('for .properties files', function() {
       let config;
 
