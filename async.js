@@ -5,6 +5,7 @@ var deferConfig = require('./defer').deferConfig;
  * @param promiseOrFunc   the promise will determine a property's value once resolved
  *                        can also be a function to defer which resolves to a promise
  * @returns {Promise}     a marked promise to be resolve later using `resolveAsyncConfigs`
+ * @deprecated please use async functions with defer
  */
 function asyncConfig(promiseOrFunc) {
   if (typeof promiseOrFunc === 'function') {  // also acts as deferConfig
@@ -36,6 +37,7 @@ function asyncConfig(promiseOrFunc) {
  * Do not use `config.get` before executing this method, it will freeze the config object
  * @param config    the main config object, returned from require('config')
  * @returns {Promise<config>}   once all promises are resolved, return the original config object
+ * @deprecated please use async functions with defer and Util.resolveAsyncConfigs
  */
 function resolveAsyncConfigs(config) {
   var promises = [];

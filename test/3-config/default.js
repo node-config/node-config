@@ -1,3 +1,5 @@
+const { setTimeout } = require('node:timers/promises');
+
 module.exports = ({defer, util}) => {
   return {
     value: 'value',

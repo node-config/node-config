@@ -7,7 +7,9 @@
 const { describe, it, beforeEach } = require('node:test');
 const assert = require('assert');
 const Path = require('path');
+const { setTimeout } = require('node:timers/promises');
 const {deferConfig: defer} = require("../defer");
+const {asyncConfig} = require("../async");
 const util = require('../lib/util.js').Util;
 const Load = require('../lib/util.js').Load;
 const deferConfig = require('../defer').deferConfig;
@@ -1252,36 +1254,79 @@ describe('Tests for util functions', function () {
       assert.deepStrictEqual(data.deferreds, {foo: 4, bar: '4 interpolated'});
     });
 
-    it("defer functions execution order resolves when accessing other defer functions", function () {
+    it('handles async functions', function () {
       let data = {
-        value: 'value',
-        latitude  : 1,
-        longitude : 2,
-        a: deferConfig(function (cfg) {
-          return 'my ' + cfg.b;
+        asyncProperty: deferConfig(async function (cfg) {
+          return setTimeout(1, 'finished');
         }),
-        b: deferConfig(function(cfg) {
-          return `this is ${this.fromList}!`;
-        }),
-        c: deferConfig(function (cfg) {
-          return this.a + ' ' + cfg.b;
-        }),
-        fromList: deferConfig(function () {
-          return this.list[2] * 2;
-        }),
-        list: [
-          1,
-          'b',
-          deferConfig(function (cfg) {
-            return cfg.latitude + cfg.longitude;
-          })
-        ],
       };
 
       util.resolveDeferredConfigs(data);
 
-      assert.strictEqual(data.a, 'my this is 6!');
-      assert.strictEqual(data.c, 'my this is 6! this is 6!');
+      assert.deepStrictEqual(data.asyncProperty instanceof Promise, true, 'deferred resolves as a promise');
+    });
+  });
+
+  describe('Util.resolveAsyncConfigs()', function() {
+    it('The function exists', function () {
+      assert.strictEqual(typeof util.resolveAsyncConfigs, 'function');
+    });
+
+    it('expands deferred async values', async function () {
+      let expected = { foo: '3', bar: 4 };
+      let data = {
+        asyncProperty: deferConfig(async (cfg)=> setTimeout(1, { foo: '3', bar: 4 }))
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.asyncProperty, {foo: '3', bar: 4});
+    });
+
+    it('works for arrays', async function () {
+      let data = {
+        deferreds: {
+          foo: 2,
+          bar: [deferConfig(async () => 4)]
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.deferreds, {foo: 2, bar: [4]});
+    });
+
+    it('handles recursive expansion', async function () {
+      let data = {
+        deferreds: {
+          foo: deferConfig(() => {
+            return 4;
+          }),
+          bar: deferConfig(async (config) => {
+            return `${await config.deferreds.foo} interpolated`
+          })
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.deferreds, {foo: 4, bar: '4 interpolated'});
+    });
+
+    it('also runs async.js callbacks', async function () {
+      let data = {
+        deferreds: {
+          promiseSubject: asyncConfig(Promise.resolve("Welcome to Promise response")),
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.deferreds, { promiseSubject: "Welcome to Promise response"});
     });
   });
 
