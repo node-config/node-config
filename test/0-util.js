@@ -7,6 +7,7 @@
 const { describe, it, beforeEach } = require('node:test');
 const assert = require('assert');
 const Path = require('path');
+const {deferConfig: defer} = require("../defer");
 const util = require('../lib/util.js').Util;
 const Load = require('../lib/util.js').Load;
 const deferConfig = require('../defer').deferConfig;
@@ -1204,6 +1205,36 @@ describe('Tests for util functions', function () {
       assert.deepStrictEqual(data.deferreds, {foo: 2, bar: [4]});
     });
 
+    it('does not touch functions unless they are instance of DeferredConfig', function() {
+      let data = {
+        // A plain function should be not disturbed.
+        aFunc: function () {
+          return "Still just a function.";
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+
+      // If this had been treated as a deferred config value it would blow-up.
+      assert.strictEqual(data.aFunc(), 'Still just a function.');
+    });
+
+    // This defer function didn't use args, but relied 'this' being bound to the main config object
+    it ("can resolve values via 'this'", function () {
+      let data = {
+        siteTitle : 'New Instance',
+        welcomeEmail: {
+          justThis: deferConfig(function () {
+            return `Welcome to this ${this.siteTitle}!`;
+          }),
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+
+      assert.strictEqual(data.welcomeEmail.justThis, 'Welcome to this New Instance!');
+    });
+
     it('handles recursive expansion', function () {
       let data = {
         deferreds: {
@@ -1219,6 +1250,38 @@ describe('Tests for util functions', function () {
       util.resolveDeferredConfigs(data);
 
       assert.deepStrictEqual(data.deferreds, {foo: 4, bar: '4 interpolated'});
+    });
+
+    it("defer functions execution order resolves when accessing other defer functions", function () {
+      let data = {
+        value: 'value',
+        latitude  : 1,
+        longitude : 2,
+        a: deferConfig(function (cfg) {
+          return 'my ' + cfg.b;
+        }),
+        b: deferConfig(function(cfg) {
+          return `this is ${this.fromList}!`;
+        }),
+        c: deferConfig(function (cfg) {
+          return this.a + ' ' + cfg.b;
+        }),
+        fromList: deferConfig(function () {
+          return this.list[2] * 2;
+        }),
+        list: [
+          1,
+          'b',
+          deferConfig(function (cfg) {
+            return cfg.latitude + cfg.longitude;
+          })
+        ],
+      };
+
+      util.resolveDeferredConfigs(data);
+
+      assert.strictEqual(data.a, 'my this is 6!');
+      assert.strictEqual(data.c, 'my this is 6! this is 6!');
     });
   });
 
