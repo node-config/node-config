@@ -369,6 +369,28 @@ describe('Tests for util functions', function () {
       var result = util.extendDeep({}, orig, {baz: undefined});
       assert.strictEqual(Object.keys(result).length, 3);
     });
+
+    describe('arrays', function () {
+      it('An empty array replaced by a full array should be replaced', function() {
+        var orig = {e1: "val1", e3: []};
+        var extWith = {e2: {elem1: "val1"}, e3: ["val6", "val7"]};
+        var shouldBe = {e1: "val1", e2: {elem1: "val1"}, e3: ["val6", "val7"]};
+        var ext = util.extendDeep({}, orig, extWith);
+
+        assert.deepEqual(ext, shouldBe);
+        assert.deepEqual(orig.e3, []);
+      });
+
+      it("An array replaced by an empty array should be replaced wholesale", function () {
+        var orig = {e1: "val1", e3: ["val6", "val7"]};
+        var extWith = {e2: {elem1: "val1"}, e3: []};
+        var shouldBe = {e1: "val1", e2: {elem1: "val1"}, e3: []};
+        var ext = util.extendDeep({}, orig, extWith);
+
+        assert.deepEqual(ext, shouldBe);
+        assert.deepEqual(orig.e3, ["val6", "val7"]);
+      });
+    });
   });
 
   describe('Util.toObject() tests', function() {
@@ -678,6 +700,12 @@ describe('Tests for util functions', function () {
       assert.deepEqual(load.config.staticArray, [2,1,3]);
     });
 
+    it('can handle files with BOM Unicode characters', function () {
+      assert.doesNotThrow(function () {
+        load.loadFile(Path.join(__dirname, './7-config/defaultWithUnicodeBOM.json'));
+      }, 'config file with BOM has a parse error');
+    });
+
     it('uses an optional transform on the data', function() {
       load.loadFile(Path.join(__dirname, './config/default-3.json'), () => { return { foo: "bar" } });
 
@@ -692,6 +720,31 @@ describe('Tests for util functions', function () {
 
       assert.strictEqual(sources.length, 1);
       assert.ok(sources[0].name.endsWith("/config/default.json"));
+    });
+
+    describe('with encrypted values', function () {
+      it('can decrypt the file', function () {
+        let load = new Load({
+          configDir: './config',
+          gitCrypt: false
+        });
+
+        let contents = load.loadFile(Path.join(__dirname, './config/encrypted.json'));
+
+        assert.strictEqual(contents, null);
+      });
+
+      it('throws an exception if gitCrypt is not set', function () {
+        let load = new Load({
+          configDir: './config'
+        });
+
+        assert.throws(() => {
+            load.loadFile(Path.join(__dirname, './config/encrypted.json'));
+          },
+          /Cannot parse config file/
+        );
+      });
     });
   });
 
@@ -739,20 +792,30 @@ describe('Tests for util functions', function () {
         }
       });
 
-      it('prefers NODE_CONFIG_ENV', function () {
+      it('ignores process.env if argument is given', function() {
         try {
           process.env.NODE_ENV = 'mercury';
-          process.env.NODE_CONFIG_ENV = 'apollo';
 
-          let loadInfo = Load.fromEnvironment();
+          let loadInfo = Load.fromEnvironment('foo,bar');
 
-          assert.deepEqual(loadInfo.options.nodeEnv, ['apollo']);
-          assert.strictEqual(loadInfo.getEnv('NODE_ENV'), 'mercury');
-          assert.strictEqual(loadInfo.getEnv('NODE_CONFIG_ENV'), 'apollo');
+          assert.deepEqual(loadInfo.options.nodeEnv, ['foo', 'bar']);
         } finally {
           delete process.env.NODE_ENV;
-          delete process.env.NODE_CONFIG_ENV;
         }
+      });
+
+      describe('with multiple values', function () {
+        it('enumerates the values', function () {
+          try {
+            process.env.NODE_ENV = 'mercury,apollo';
+
+            let loadInfo = Load.fromEnvironment();
+
+            assert.deepEqual(loadInfo.options.nodeEnv, ['mercury', 'apollo']);
+          } finally {
+            delete process.env.NODE_ENV;
+          }
+        });
       });
     });
 
@@ -1180,52 +1243,282 @@ describe('Tests for util functions', function () {
       process.env.NODE_CONFIG = prev;
     });
 
-    it('handles appInstance', function () {
-      var result = util.loadFileConfigs({
+    describe('with appInstance', function() {
+      it('handles appInstance', function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          appInstance: 3
+        });
+
+        assert.strictEqual(result.config.Customers.altDbPort, 4400);
+      });
+
+      it("honors the extension precedence", function () {
+        var config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, '22-config'),
+          appInstance: 'instance'
+        }).config;
+
+        assert.strictEqual(config.prop1, "prop1FromDefault");
+        assert.strictEqual(config.prop2, "prop2FromJsonInstance");
+        assert.strictEqual(config.prop3, "prop3FromYmlInstance");
+      });
+    });
+
+    it('loads from an environment file', function() {
+      var config = util.loadFileConfigs({
         configDir: Path.join(__dirname, 'config'),
-        appInstance: 3
-      });
+        nodeEnv: ['test']
+      }).config;
 
-      assert.strictEqual(result.config.Customers.altDbPort, 4400);
+      assert.strictEqual(config.Customers.dbPort, 5999);
     });
 
-    it('loads CSON files', function () {
-      var result = util.loadFileConfigs({
-        configDir: Path.join(__dirname, 'config')
-      });
+    it('loads from the local file', function() {
+      var config = util.loadFileConfigs({
+        configDir: Path.join(__dirname, 'config'),
+      }).config;
 
-      assert.strictEqual(typeof result.config.Customers, 'object');
-      assert.ok(Array.isArray(result.config.Customers.lang));
-      assert.strictEqual(result.config.Customers.other, 'from_default_cson');
-      assert.strictEqual(typeof result.config.AnotherModule, 'object');
-      assert.strictEqual(result.config.AnotherModule.parm4, "value4");
+      assert.strictEqual(config.Customers.dbPassword, 'real password');
     });
 
-    describe('for .properties files', function() {
+    it('loads from local-environment files', function() {
+      var config = util.loadFileConfigs({
+        configDir: Path.join(__dirname, 'config'),
+        nodeEnv: ['test']
+      }).config;
+
+      assert.strictEqual(config.Customers.dbPassword2, 'another password');
+      assert.deepEqual(config.Customers.lang, ['en','de','es']);
+    });
+
+    describe("filetypes", function () {
+      var config = util.loadFileConfigs({configDir: Path.join(__dirname, 'config')}).config;
+
+      it('loading from a JS module is correct', function() {
+        assert.strictEqual(config.Customers.dbHost, 'base');
+        assert.strictEqual(config.TestModule.parm1, 'value1');
+      });
+
+      it('loading a JSON file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm1, 'value1');
+        assert.strictEqual(config.Inline.a, '');
+        assert.strictEqual(config.Inline.b, '1');
+        assert.strictEqual(config.ContainsQuote, '"this has a quote"');
+      });
+
+      it('loading from a JSONC file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm1jsonc, 'value1-jsonc');
+      });
+
+      it('loading from a JSON5 file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm6, 'value6');
+      });
+
+      it('loading from a CSON file is correct', function () {
+        var result = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config')
+        });
+
+        assert.strictEqual(typeof result.config.Customers, 'object');
+        assert.ok(Array.isArray(result.config.Customers.lang));
+        assert.strictEqual(result.config.Customers.other, 'from_default_cson');
+        assert.strictEqual(typeof result.config.AnotherModule, 'object');
+        assert.strictEqual(result.config.AnotherModule.parm4, "value4");
+      });
+
+      it('loading from a .yaml YAML file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm2, 'value2');
+      });
+
+      it('loading from a .yml YAML file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm2yml, 'value2yml');
+      });
+
+      it('loading from a Coffee-Script file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm3, 'value3');
+      });
+
+      it('loading from transpiled ESM files is correct', function() {
+        let actual = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'x-config-js-transpiled')
+        }).config;
+
+        assert.strictEqual(actual.title, 'Hello config!');
+      });
+
+      it('loading from a Hjson file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm8, 'value8');
+      });
+
+      it('loading from a XML file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm9, 'value9');
+      });
+
+      it('loading from an MJS file is correct', function() {
+        assert.strictEqual(config.AnotherModule.parm10, 'value10');
+      });
+
+      describe('for .ts files', function() {
+        it('loading from a TS file is correct', function() {
+          let actual = util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'x-config-ts')
+          }).config;
+
+          assert.strictEqual(actual.siteTitle, 'New Instance!');
+        });
+
+        it('reuses existing .ts file handler', function() {
+          let existingHandler = require.extensions['.ts'];
+
+          assert.ok(existingHandler, 'Existing handler is defined by the environment');
+
+          let actual = util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'x-config-ts')
+          }).config;
+
+          assert.strictEqual(require.extensions['.ts'], existingHandler, 'Should not overwrite existing handler');
+        });
+
+        describe('can process module exports', function() {
+          let actual = util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'x-config-ts-module-exports')
+          }).config;
+
+          assert.strictEqual(actual.siteTitle, 'New Instance!');
+        });
+      });
+
+      describe('for .toml files', function () {
+        it('loading from a TOML file is correct', function() {
+          assert.strictEqual(config.AnotherModule.parm7, 'value7');
+        });
+
+        it('parses arrays of tables', function () {
+          var result = util.loadFileConfigs({configDir: Path.join(__dirname, '17-config')});
+
+          assert.deepStrictEqual(result.config.messages, [
+            {
+              field1: '1',
+              field2: '2'
+            },
+            {
+              field1: 'a',
+              field3: '3'
+            }
+          ]);
+        });
+      });
+
+      describe('for .properties files', function () {
+        let config;
+
+        beforeEach(function () {
+          config = util.loadFileConfigs({
+            configDir: Path.join(__dirname, 'config')
+          }).config;
+        });
+
+        it('values are loaded', function () {
+          assert.strictEqual(typeof config.AnotherModule, 'object');
+          assert.strictEqual(config.AnotherModule.parm5, "value5");
+          assert.strictEqual(typeof config['key with spaces'], 'object');
+          assert.strictEqual(config['key with spaces'].another_key, 'hello');
+          assert.strictEqual(config.ignore_this_please, undefined);
+          assert.strictEqual(config.i_am_a_comment, undefined);
+        });
+
+        it('handles variable expansion', function () {
+          assert.strictEqual(config.replacement.param, "foobar")
+        });
+
+        it('Sections are supported', function () {
+          assert.notStrictEqual(config.section.param, undefined);
+          assert.strictEqual(config.param, undefined);
+        });
+      });
+    });
+
+    describe('with multiple nodeEnv values', function() {
+      it('Values of the corresponding files are loaded', function() {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['development', 'cloud']
+        }).config;
+
+        assert.strictEqual(config.db.name, 'development-config-env-provided');
+        assert.strictEqual(config.db.port, 3000);
+      });
+
+      it('Values of the corresponding local files are loaded', function() {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['development', 'cloud']
+        }).config;
+
+        assert.strictEqual(config.app.context, 'local cloud');
+        assert.strictEqual(config.app.message, 'local development');
+      });
+
+      it('loads all corresponding env-hostname files', function() {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['development', 'bare-metal'],
+          hostName: 'test'
+        }).config;
+
+        assert.strictEqual(config.host.os, 'linux');
+        assert.strictEqual(config.host.arch, 'x86_64');
+      });
+
+      it('loads the values in left-right order', function(done) {
+        const config = util.loadFileConfigs({
+          configDir: Path.join(__dirname, 'config'),
+          nodeEnv: ['cloud', 'bare-metal'],
+          hostName: 'test'
+        }).config;
+
+        assert.strictEqual(config.db.name, 'bare-metal-config-env-provided');
+      });
+    });
+
+    describe('with multiple config directories', function() {
       let config;
 
-      beforeEach(function () {
+      beforeEach(function() {
         config = util.loadFileConfigs({
-          configDir: Path.join(__dirname, 'config')
+          configDir: [Path.join(__dirname, 'config'), Path.join(__dirname, 'x-config')].join(Path.delimiter),
+          nodeEnv: ['test'],
+          appInstance: 3
         }).config;
       });
 
-      it('values are loaded', function() {
-        assert.strictEqual(typeof config.AnotherModule, 'object');
-        assert.strictEqual(config.AnotherModule.parm5, "value5");
-        assert.strictEqual(typeof config['key with spaces'], 'object');
-        assert.strictEqual(config['key with spaces'].another_key, 'hello');
-        assert.strictEqual(config.ignore_this_please, undefined);
-        assert.strictEqual(config.i_am_a_comment, undefined);
+      it('Verify first directory loaded', function() {
+        assert.strictEqual(config.Customers.dbName, 'from_default_xml');
       });
 
-      it('handles variable expansion', function() {
-        assert.strictEqual(config.replacement.param, "foobar")
+      it('Verify second directory loaded', function() {
+        assert.strictEqual(config.different.dir, true);
       });
 
-      it('Sections are supported', function() {
-        assert.notStrictEqual(config.section.param, undefined);
-        assert.strictEqual(config.param, undefined);
+      it('Verify correct resolution order', function() {
+        assert.strictEqual(config.AnotherModule.parm4, 'x_config_4_win');
+      });
+
+      it('can handle a mix of absolute and relative paths', function () {
+        assert.doesNotThrow(() => {
+          util.loadFileConfigs({
+            configDir: [Path.join(__dirname, '20-config'), './test/20-extra-config'].join(Path.delimiter),
+          });
+        }, 'Adding one absolute and one relative configuration paths has an error');
+      });
+
+      describe('Empty entries should not blow up', function () {
+        assert.doesNotThrow(() => {
+          util.loadFileConfigs({
+            configDir: ['./test/20-extra-config', ''].join(Path.delimiter),
+          });
+        }, 'Adding an empty string does not result in an error');
       });
     });
   });
