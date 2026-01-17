@@ -326,33 +326,20 @@ describe('Test suite for node-config', function() {
   });
 
   describe('Configuration for module developers', function() {
-    let config;
+    describe('setModuleDefaults()', function() {
+      let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
-    });
-
-    it('The setModuleDefaults() method is available', function() {
-      assert.strictEqual(typeof config.util.setModuleDefaults, 'function');
-    });
-
-    it('The module config is in the CONFIG object', function() {
-      // Set some parameters for the test module
-      let moduleConfig = config.util.setModuleDefaults("TestModule", {
-        parm1: 1000, parm2: 2000, parm3: 3000,
-        nested: {
-          param4: 4000,
-          param5: 5000
-        }
+      beforeEach(function() {
+        config = requireUncached(__dirname + '/../lib/config');
       });
 
-      assert.strictEqual(typeof config.TestModule, 'object');
-      assert.deepEqual(config.TestModule, moduleConfig);
-    });
+      it('is available', function() {
+        assert.strictEqual(typeof config.util.setModuleDefaults, 'function');
+      });
 
-    // Regression test for https://github.com/node-config/node-config/issues/518
-    it('The module config did not extend itself with its own name', function() {
-      let moduleConfig = config.util.setModuleDefaults("TestModule", {
+      it('The module config is in the CONFIG object', function() {
+        // Set some parameters for the test module
+        let moduleConfig = config.util.setModuleDefaults("TestModule", {
           parm1: 1000, parm2: 2000, parm3: 3000,
           nested: {
             param4: 4000,
@@ -360,66 +347,204 @@ describe('Test suite for node-config', function() {
           }
         });
 
-      assert.strictEqual('TestModule' in moduleConfig, false);
-      assert.strictEqual('TestModule' in config.TestModule, false);
-    });
+        assert.strictEqual(typeof config.TestModule, 'object');
+        assert.deepEqual(config.TestModule, moduleConfig);
+      });
 
-    it('Local configurations are mixed in', function() {
-      config.util.setModuleDefaults("TestModule", { parm1: 1000 });
+      // Regression test for https://github.com/node-config/node-config/issues/518
+      it('The module config did not extend itself with its own name', function() {
+        let moduleConfig = config.util.setModuleDefaults("TestModule", {
+            parm1: 1000, parm2: 2000, parm3: 3000,
+            nested: {
+              param4: 4000,
+              param5: 5000
+            }
+          });
 
-      assert.strictEqual(config.TestModule.parm1, "value1");
-    });
+        assert.strictEqual('TestModule' in moduleConfig, false);
+        assert.strictEqual('TestModule' in config.TestModule, false);
+      });
 
-    it('Defaults remain intact unless overridden', function() {
-      config.util.setModuleDefaults("TestModule", { parm1: 1000, parm2: 2000, parm3: 3000 });
+      it('Local configurations are mixed in', function() {
+        config.util.setModuleDefaults("TestModule", { parm1: 1000 });
 
-      assert.strictEqual(config.TestModule.parm2, 2000);
-    });
+        assert.strictEqual(config.TestModule.parm1, "value1");
+      });
 
-    it('Config.get() before setModuleDefaults() can see updates', function() {
-      process.env.ALLOW_CONFIG_MUTATIONS = true;
+      it('Defaults remain intact unless overridden', function() {
+        config.util.setModuleDefaults("TestModule", { parm2: 2000, parm3: 3000 });
 
-      const mutableConfig = requireUncached(__dirname + '/../lib/config');
+        assert.strictEqual(config.TestModule.parm1, 'value1');
+      });
 
-      let defaults = {
-        someValue: "default"
-      };
+      it('Config.get() before setModuleDefaults() can see updates', function() {
+        process.env.ALLOW_CONFIG_MUTATIONS = true;
 
-      try {
-        let customers = mutableConfig.get('Customers');
+        const mutableConfig = requireUncached(__dirname + '/../lib/config');
 
-        mutableConfig.util.setModuleDefaults('Customers', defaults);
+        let defaults = {
+          someValue: "default"
+        };
 
-        assert.strictEqual(customers.get("someValue"), "default");
-      } finally {
-        delete process.env.ALLOW_CONFIG_MUTATIONS;
-      }
-    });
+        try {
+          let customers = mutableConfig.get('Customers');
 
-    it('Prototypes are applied by setModuleDefaults even if no previous config exists for the module', function() {
-      let BKTestModuleDefaults = {
-        parm1: 1000, parm2: 2000, parm3: 3000,
-        nested: {
-          param4: 4000,
-          param5: 5000
+          mutableConfig.util.setModuleDefaults('Customers', defaults);
+
+          assert.strictEqual(customers.get("someValue"), "default");
+        } finally {
+          delete process.env.ALLOW_CONFIG_MUTATIONS;
         }
-      };
-      let OtherTestModuleDefaults = {
-        parm6: 6000, parm7: 7000,
-        other: {
-          param8: 8000,
-          param9: 9000
+      });
+
+      it('Prototypes are applied by setModuleDefaults even if no previous config exists for the module', function() {
+        let BKTestModuleDefaults = {
+          parm1: 1000, parm2: 2000, parm3: 3000,
+          nested: {
+            param4: 4000,
+            param5: 5000
+          }
+        };
+        let OtherTestModuleDefaults = {
+          parm6: 6000, parm7: 7000,
+          other: {
+            param8: 8000,
+            param9: 9000
+          }
+        };
+
+        config.util.setModuleDefaults('BKTestModule', BKTestModuleDefaults);
+        config.util.setModuleDefaults('services.OtherTestModule', OtherTestModuleDefaults);
+
+        let testModuleConfig = config.get('BKTestModule');
+        var testSubModuleConfig = config.get('services');
+
+        assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'));
+        assert.deepEqual(OtherTestModuleDefaults.other, testSubModuleConfig.OtherTestModule.other);
+      });
+    });
+
+    describe('withModuleDefaults()', function() {
+      let config;
+
+      beforeEach(function() {
+        config = requireUncached(__dirname + '/../lib/config');
+      });
+
+      it('is available', function() {
+        assert.strictEqual(typeof config.util.withModuleDefaults, 'function');
+      });
+
+      it('The module config is in the CONFIG object', function() {
+        // Set some parameters for the test module
+        let newConfig = config.util.withModuleDefaults("TestModule", {
+          parm1: 1000, parm2: 2000, parm3: 3000,
+          nested: {
+            param4: 4000,
+            param5: 5000
+          }
+        });
+
+        let moduleConfig = newConfig.TestModule;
+
+        assert.strictEqual(typeof newConfig.TestModule, 'object');
+        assert.deepEqual(newConfig.TestModule, moduleConfig);
+      });
+
+      it('does not modify the original config', function() {
+        // Set some parameters for the test module
+        let newConfig = config.util.withModuleDefaults("TestModule", {
+          parm1: 1000, parm2: 2000, parm3: 3000,
+          nested: {
+            param4: 4000,
+            param5: 5000
+          }
+        });
+
+        assert.deepEqual(config.TestModule, {
+          parm1: "value1",
+          arr1: [ "arrValue1" ],
+          buffer: Buffer.from([1,2,3,4,5]),
+        });
+
+        assert.notEqual(config.util.getConfigSources()[0].name, "Module Defaults");
+        assert.equal(newConfig.util.getConfigSources()[0].name, "Module Defaults");
+      });
+
+      // Regression test for https://github.com/node-config/node-config/issues/518
+      it('The module config did not extend itself with its own name', function() {
+        let newConfig = config.util.withModuleDefaults("TestModule", {
+          parm1: 1000, parm2: 2000, parm3: 3000,
+          nested: {
+            param4: 4000,
+            param5: 5000
+          }
+        });
+
+        let moduleConfig = newConfig.TestModule;
+
+        assert.strictEqual('TestModule' in moduleConfig, false);
+        assert.strictEqual('TestModule' in newConfig.TestModule, false);
+      });
+
+      it('Local configurations are mixed in', function() {
+        const newConfig = config.util.withModuleDefaults("TestModule", { parm1: 1000 });
+
+        assert.strictEqual(newConfig.TestModule.parm1, "value1");
+      });
+
+      it('Defaults remain intact unless overridden', function() {
+        const newConfig = config.util.withModuleDefaults("TestModule", { parm2: 2000, parm3: 3000 });
+
+        assert.strictEqual(newConfig.TestModule.parm1, 'value1');
+      });
+
+      it('Config.get() before withModuleDefaults() can see updates', function() {
+        process.env.ALLOW_CONFIG_MUTATIONS = true;
+
+        const mutableConfig = requireUncached(__dirname + '/../lib/config');
+
+        let defaults = {
+          someValue: "default"
+        };
+
+        try {
+          let customers = mutableConfig.get('Customers');
+
+          let newConfig = mutableConfig.util.withModuleDefaults('Customers', defaults);
+
+          assert.strictEqual(newConfig.get("Customers.someValue"), "default");
+        } finally {
+          delete process.env.ALLOW_CONFIG_MUTATIONS;
         }
-      };
+      });
 
-      config.util.setModuleDefaults('BKTestModule', BKTestModuleDefaults);
-      config.util.setModuleDefaults('services.OtherTestModule', OtherTestModuleDefaults);
+      it('Prototypes are applied by withModuleDefaults even if no previous config exists for the module', function() {
+        let BKTestModuleDefaults = {
+          parm1: 1000, parm2: 2000, parm3: 3000,
+          nested: {
+            param4: 4000,
+            param5: 5000
+          }
+        };
+        let OtherTestModuleDefaults = {
+          parm6: 6000, parm7: 7000,
+          other: {
+            param8: 8000,
+            param9: 9000
+          }
+        };
 
-      let testModuleConfig = config.get('BKTestModule');
-      var testSubModuleConfig = config.get('services');
+        const newConfig = config
+          .util.withModuleDefaults('BKTestModule', BKTestModuleDefaults)
+          .util.withModuleDefaults('services.OtherTestModule', OtherTestModuleDefaults);
 
-      assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'));
-      assert.deepEqual(OtherTestModuleDefaults.other, testSubModuleConfig.OtherTestModule.other);
+        let testModuleConfig = newConfig.get('BKTestModule');
+        var testSubModuleConfig = newConfig.get('services');
+
+        assert.deepEqual(BKTestModuleDefaults.nested, testModuleConfig.get('nested'));
+        assert.deepEqual(OtherTestModuleDefaults.other, testSubModuleConfig.OtherTestModule.other);
+      });
     });
   });
 });

@@ -1638,14 +1638,14 @@ describe('Tests for util functions', function () {
     });
 
     it('can load data from a given directory', function () {
-      let load = new Load({configDir: __dirname + '/config'})
+      let load = new Load({configDir: __dirname + '/config'});
       load.scan();
 
       assert.strictEqual(typeof load.config.Customers, 'object');
     });
 
     it('merges in the provided data', function () {
-      let load = new Load({configDir: __dirname + '/config'})
+      let load = new Load({configDir: __dirname + '/config'});
       load.scan([{ name: 'a', config: {foo: 'bar'} }]);
 
       assert.strictEqual(load.config.foo, 'bar');
@@ -1657,5 +1657,39 @@ describe('Tests for util functions', function () {
 
       assert.deepEqual(load.getSources(), []);
     });
+  });
+
+  describe('Load.clone()', function() {
+    it('The function exists', function () {
+      const load = new Load();
+      assert.strictEqual(typeof load.clone, 'function');
+    });
+
+    it('copies data', function () {
+      let load = new Load({configDir: __dirname + '/config'});
+      load.scan();
+
+      let newLoad = load.clone();
+
+      assert.strictEqual(typeof newLoad.config.Customers, 'object');
+    });
+
+    it('does not clobber the old instance', function () {
+      let load = new Load({ configDir: __dirname + '/config' });
+      let newLoad = load.clone();
+      newLoad.scan([{ name: 'a', config: {foo: 'bar'} }]);
+
+      assert.strictEqual(load.config.foo, undefined);
+      assert.strictEqual(newLoad.config.foo, 'bar');
+    });
+
+    it('retains options from the original', function() {
+      let load = new Load({ configDir: __dirname + '/config', skipConfigSources: true });
+      let newLoad = load.clone();
+      newLoad.scan();
+
+      assert.deepEqual(newLoad.getSources(), []);
+    });
   })
+
 });
