@@ -1,4 +1,4 @@
-var Parser = require('../../_utils/requireUncached')(__dirname + '/../../../parser');
+var Parser = require('../../../parser');
 
 // change parser order
 Parser.setFilesOrder('yaml', 0);
