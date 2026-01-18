@@ -1,4 +1,4 @@
-var Parser = require('../../_utils/requireUncached')(__dirname + '/../../../parser');
+var Parser = require('../../../parser');
 
 Parser.setParser('json5', function(filename, content) {
   var json = Parser.json5Parser(filename, content);

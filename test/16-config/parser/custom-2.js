@@ -1,4 +1,4 @@
-var Parser = require('../../_utils/requireUncached')(__dirname + '/../../../parser');
+var Parser = require('../../../parser');
 
 Parser.setParser('custom', function(filename, content) {
   return content.split(/\n/g).reduce(function(res, line) {
