@@ -1,21 +1,18 @@
-'use strict';
-
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
-process.env.NODE_ENV = 'test';
-process.env.NODE_APP_INSTANCE = '3';
-
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, beforeEach } = require('node:test');
-const assert = require('assert');
-
-const { Buffer } = require('buffer')
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'assert';
+import { Buffer } from 'buffer';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 describe('Tests for binary', function() {
   describe('Binary tests', function() {
     let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/config';
+      process.env.NODE_ENV = 'test';
+      process.env.NODE_APP_INSTANCE = '3';
+
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('A binary value should be immutable', function() {

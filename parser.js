@@ -1,16 +1,12 @@
 // External libraries are lazy-loaded only if these file types exist.
+import Path from 'path';
+import { createRequire } from 'node:module';
+import JSON5 from 'json5';
 
-// webpack can't solve dynamic module
-// @see https://github.com/node-config/node-config/issues/755
-// @see https://webpack.js.org/guides/dependency-management/#require-with-expression
-const JSON5Module = require('json5');
+const moduleRequire = createRequire(Path.join(process.cwd(), 'node_modules'));
+const require = createRequire(process.cwd());
 
-// webpack resolves json5 with module field out of the box which lead to this usage
-// @see https://github.com/node-config/node-config/issues/755
-// @see https://github.com/json5/json5/issues/240
-const JSON5 = JSON5Module.default || JSON5Module;
-
-var Yaml = null,
+let Yaml = null,
     JSYaml = null,
     Coffee = null,
     Iced = null,
@@ -18,10 +14,11 @@ var Yaml = null,
     PPARSER = null,
     TOML = null,
     HJSON = null,
-    XML = null;
+    XML = null,
+    TS = null;
 
 // Define soft dependencies so transpilers don't include everything
-var COFFEE_2_DEP = 'coffeescript',
+let COFFEE_2_DEP = 'coffeescript',
     COFFEE_DEP = 'coffee-script',
     ICED_DEP = 'iced-coffee-script',
     JS_YAML_DEP = 'js-yaml',
@@ -38,7 +35,7 @@ var COFFEE_2_DEP = 'coffeescript',
  * @template [T=any]
  * @typedef {(filename: string, content: string) => T | undefined} ParserFn<T>
  */
-var Parser = module.exports;
+let Parser = {};
 
 /**
  * @param {string} filename
@@ -60,7 +57,7 @@ Parser.parse = function(filename, content) {
  */
 Parser.xmlParser = function(filename, content) {
   if (!XML) {
-    XML = require(XML_DEP);
+    XML = moduleRequire(XML_DEP);
   }
   var x2js = new XML();
   var configObject = x2js.xml2js(content);
@@ -91,15 +88,18 @@ Parser.jsParser = function(filename, content) {
  * @returns {object}
  */
 Parser.tsParser = function(filename, content) {
-  if (!require.extensions['.ts']) {
-    require(TS_DEP).register({
-      lazy: true,
-      ignore: ['(?:^|/)node_modules/', '.*(?<!\.ts)$'],
-      transpileOnly: true,
-      compilerOptions: {
-        allowJs: true,
-      }
-    });
+  if (require?.extensions['.ts'] === undefined) {
+    if (TS === null) {
+      TS = moduleRequire(TS_DEP);
+      TS.register({
+        lazy: true,
+        ignore: ['(?:^|/)node_modules/', '.*(?<!\.ts)$'],
+        transpileOnly: true,
+        compilerOptions: {
+          allowJs: true,
+        }
+      });
+    }
   }
 
   // Imports config if it is exported via module.exports = ...
@@ -126,21 +126,13 @@ Parser.coffeeParser = function(filename, content) {
   if (!Coffee) {
     Coffee = {};
 
-    // The following enables iced-coffee-script on .coffee files, if iced-coffee-script is available.
-    // This is commented as per a decision on a pull request.
-    //try {
-    //  Coffee = require('iced-coffee-script');
-    //}
-    //catch (e) {
-    //  Coffee = require('coffee-script');
-    //}
     try {
       // Try to load coffeescript
-      Coffee = require(COFFEE_2_DEP);
+      Coffee = moduleRequire(COFFEE_2_DEP);
     }
     catch (e) {
       // If it doesn't exist, try to load it using the deprecated module name
-      Coffee = require(COFFEE_DEP);
+      Coffee = moduleRequire(COFFEE_DEP);
     }
     // coffee-script >= 1.7.0 requires explicit registration for require() to work
     if (Coffee.register) {
@@ -157,7 +149,7 @@ Parser.coffeeParser = function(filename, content) {
  * @returns {object | undefined}
  */
 Parser.icedParser = function(filename, content) {
-  Iced = require(ICED_DEP);
+  Iced = moduleRequire(ICED_DEP);
 
   // coffee-script >= 1.7.0 requires explicit registration for require() to work
   if (Iced.register) {
@@ -174,10 +166,10 @@ Parser.yamlParser = function(filename, content) {
   if (!Yaml && !JSYaml) {
     // Lazy loading
     try {
-      Yaml = require(YAML_DEP);
+      Yaml = moduleRequire(YAML_DEP);
     } catch (e) {
       try {
-        JSYaml = require(JS_YAML_DEP);
+        JSYaml = moduleRequire(JS_YAML_DEP);
       } catch (e) {}
     }
   }
@@ -221,7 +213,7 @@ Parser.json5Parser = function(filename, content) {
  */
 Parser.hjsonParser = function(filename, content) {
   if (!HJSON) {
-    HJSON = require(HJSON_DEP);
+    HJSON = moduleRequire(HJSON_DEP);
   }
   return HJSON.parse(content);
 };
@@ -233,7 +225,7 @@ Parser.hjsonParser = function(filename, content) {
  */
 Parser.tomlParser = function(filename, content) {
   if(!TOML) {
-    TOML = require(TOML_DEP);
+    TOML = moduleRequire(TOML_DEP);
   }
   return TOML.parse(content);
 };
@@ -245,7 +237,7 @@ Parser.tomlParser = function(filename, content) {
  */
 Parser.csonParser = function(filename, content) {
   if (!CSON) {
-    CSON = require(CSON_DEP);
+    CSON = moduleRequire(CSON_DEP);
   }
   // Allow comments in CSON files
   if (typeof CSON.parseSync === 'function') {
@@ -261,7 +253,7 @@ Parser.csonParser = function(filename, content) {
  */
 Parser.propertiesParser = function(filename, content) {
   if (!PPARSER) {
-    PPARSER = require(PPARSER_DEP);
+    PPARSER = moduleRequire(PPARSER_DEP);
   }
   return PPARSER.parse(content, { namespaces: true, variables: true, sections: true });
 };
@@ -382,3 +374,5 @@ Parser.setFilesOrder = function(name, newIndex) {
 function isObject(arg) {
   return (arg !== null) && (typeof arg === 'object');
 }
+
+export default Parser;

@@ -1,15 +1,17 @@
-'use strict';
-
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, beforeEach } = require('node:test');
-const assert = require('assert');
-
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
-process.env.NODE_ENV = 'test';
-
-var CONFIG = requireUncached(__dirname + '/../lib/config');
+import { describe, it, before } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 describe('Tests for date', function() {
+  let CONFIG;
+
+  before(async function() {
+    process.env.NODE_CONFIG_DIR = import.meta.dirname + '/config';
+    process.env.NODE_ENV = 'test';
+
+    CONFIG = await requireUncached('./lib/config.mjs');
+  });
+
   describe('Date tests Tests', function() {
     it('A date should be immutable', function() {
       assert.throws(() => {

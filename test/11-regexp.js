@@ -1,19 +1,19 @@
-'use strict';
-
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, before, beforeEach } = require('node:test');
-const assert = require('assert');
-
-process.env.NODE_CONFIG_DIR = __dirname + '/config';
-process.env.NODE_ENV = 'test';
-process.env.NODE_APP_INSTANCE = 'regexp';
-
-var CONFIG = requireUncached(__dirname + '/../lib/config');
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 describe('Tests for regexp', function() {
-  describe('Regexp tests Tests', function() {
-    let config = CONFIG;
+  let config;
 
+  beforeEach(async function() {
+    process.env.NODE_CONFIG_DIR = import.meta.dirname + '/config';
+    process.env.NODE_ENV = 'test';
+    process.env.NODE_APP_INSTANCE = 'regexp';
+
+    config = await requireUncached('./lib/config.mjs');
+  });
+
+  describe('Regexp tests Tests', function() {
     it('A regexp should be immutable', function() {
       assert.throws(() => {
         const SomeMore = config.get('SomeMore');

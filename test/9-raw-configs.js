@@ -1,16 +1,18 @@
-'use strict';
-
-process.env.NODE_CONFIG_DIR = __dirname + '/9-config';
-process.env.NODE_ENV='test';
-process.env.NODE_APP_INSTANCE='raw';
-
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, before, beforeEach } = require('node:test');
-const assert = require('assert');
-
-const CONFIG = requireUncached(__dirname + '/../lib/config');
+import { describe, it, before } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 describe('Tests for raw config values', function() {
+  let CONFIG;
+
+  before(async() => {
+    process.env.NODE_CONFIG_DIR = import.meta.dirname + '/9-config';
+    process.env.NODE_ENV='test';
+    process.env.NODE_APP_INSTANCE='raw';
+
+    CONFIG = await requireUncached('./lib/config.mjs');
+  });
+
   describe('Configuration file Tests', function() {
     it('Objects wrapped with raw should be unmodified', function() {
       assert.strictEqual(CONFIG.get('circularReference'), process.stdout);

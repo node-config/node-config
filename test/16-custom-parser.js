@@ -1,19 +1,15 @@
-'use strict';
-
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, beforeEach, after } = require('node:test');
-const assert = require('assert');
-
-const Parser = require('../parser');
+import { describe, it, beforeEach, after } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 describe('Tests for a custom parser provided by NODE_CONFIG_PARSER', function() {
   describe('Using the default parser - Sanity check', function() {
     let config;
 
-    beforeEach(function() {
-      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
+    beforeEach(async function() {
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/16-config';
 
-      config = requireUncached(__dirname + '/../lib/config');
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('validate default parser order', function() {
@@ -27,11 +23,11 @@ describe('Tests for a custom parser provided by NODE_CONFIG_PARSER', function() 
   describe('Using setParserOrder to change parsing order', function() {
     let config;
 
-    beforeEach(function() {
-      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
-      process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-1';
+    beforeEach(async function() {
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/16-config';
+      process.env.NODE_CONFIG_PARSER = import.meta.dirname + '/16-config/parser/custom-1.js';
 
-      config = requireUncached(__dirname + '/../lib/config');
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('validate changes to parser order', function() {
@@ -46,11 +42,11 @@ describe('Tests for a custom parser provided by NODE_CONFIG_PARSER', function() 
   describe('Using setParserOrder to replace parsing order', function() {
     let config;
 
-    beforeEach(function() {
-      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
-      process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-2';
+    beforeEach(async function() {
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/16-config';
+      process.env.NODE_CONFIG_PARSER = import.meta.dirname + '/16-config/parser/custom-2';
 
-      config = requireUncached(__dirname + '/../lib/config');
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('validate changes to parser order', function() {
@@ -64,11 +60,11 @@ describe('Tests for a custom parser provided by NODE_CONFIG_PARSER', function() 
   describe('Using setParser to replace a parser', function() {
     let config;
 
-    beforeEach(function() {
-      process.env.NODE_CONFIG_DIR = __dirname + '/16-config';
-      process.env.NODE_CONFIG_PARSER = __dirname + '/16-config/parser/custom-3';
+    beforeEach(async function() {
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/16-config';
+      process.env.NODE_CONFIG_PARSER = import.meta.dirname + '/16-config/parser/custom-3';
 
-      config = requireUncached(__dirname + '/../lib/config');
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('validate changes to parser logic', function() {
@@ -79,8 +75,7 @@ describe('Tests for a custom parser provided by NODE_CONFIG_PARSER', function() 
     });
   });
 
-  after(function () {
+  after(async function () {
     delete process.env.NODE_CONFIG_PARSER;
-    requireUncached(__dirname + '/../parser');
   });
 });
