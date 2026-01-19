@@ -1,9 +1,6 @@
-'use strict';
-
-const Path = require('path');
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, beforeEach } = require('node:test');
-const assert = require('assert');
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 /**
  * <p>Unit tests for the node-config library.  To run type:</p>
@@ -18,9 +15,9 @@ describe('Test suite for node-config', function() {
   describe('Library initialization', function() {
     let config;
 
-    beforeEach(function () {
+    beforeEach(async function () {
       // Change the configuration directory for testing
-      process.env.NODE_CONFIG_DIR = __dirname + '/config';
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/config';
 
       // Hard-code $NODE_ENV=test for testing
       process.env.NODE_ENV='test';
@@ -46,7 +43,7 @@ describe('Test suite for node-config', function() {
       process.env.CUSTOM_NUMBER_EMPTY_ENVIRONMENT_VAR = '';
       process.env.CUSTOM_NUMBER_STRING_ENVIRONMENT_VAR = 'String';
 
-      config = requireUncached(__dirname + '/../lib/config');
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('Config library is available', function() {
@@ -65,8 +62,8 @@ describe('Test suite for node-config', function() {
   describe('Immutability', function() {
     let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('Correct mute setup var', function () {
@@ -120,8 +117,8 @@ describe('Test suite for node-config', function() {
   describe('Configurations from the $NODE_CONFIG environment variable', function() {
     let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('Configuration can come from the $NODE_CONFIG environment', function() {
@@ -136,8 +133,8 @@ describe('Test suite for node-config', function() {
   describe('Configurations from the --NODE_CONFIG command line', function() {
     let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('Configuration can come from the --NODE_CONFIG command line argument', function() {
@@ -154,8 +151,8 @@ describe('Test suite for node-config', function() {
 
     // Support old two and three argument pattern;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      config = await requireUncached('./lib/config.mjs');
 
       config.util.makeImmutable(config.TestModule, 'parm1');
     });
@@ -181,8 +178,8 @@ describe('Test suite for node-config', function() {
   describe('Assuring a configuration array property can be made immutable', function() {
     let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('Correctly unable to change an immutable property', function() {
@@ -209,8 +206,8 @@ describe('Test suite for node-config', function() {
   describe('get() tests', function() {
     let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('The function exists', function() {
@@ -283,8 +280,8 @@ describe('Test suite for node-config', function() {
   describe('has() tests', function() {
     let config;
 
-    beforeEach(function() {
-      config = requireUncached(__dirname + '/../lib/config');
+    beforeEach(async function() {
+      config = await requireUncached('./lib/config.mjs');
     });
 
     it('The function exists', function() {
@@ -333,8 +330,8 @@ describe('Test suite for node-config', function() {
     describe('setModuleDefaults()', function() {
       let config;
 
-      beforeEach(function() {
-        config = requireUncached(__dirname + '/../lib/config');
+      beforeEach(async function() {
+        config = await requireUncached('./lib/config.mjs');
       });
 
       it('is available', function() {
@@ -381,10 +378,10 @@ describe('Test suite for node-config', function() {
         assert.strictEqual(config.TestModule.parm1, 'value1');
       });
 
-      it('Config.get() before setModuleDefaults() can see updates', function() {
+      it('Config.get() before setModuleDefaults() can see updates', async function() {
         process.env.ALLOW_CONFIG_MUTATIONS = true;
 
-        const mutableConfig = requireUncached(__dirname + '/../lib/config');
+        const mutableConfig = await requireUncached('./lib/config.mjs');
 
         let defaults = {
           someValue: "default"
@@ -431,8 +428,8 @@ describe('Test suite for node-config', function() {
     describe('withModuleDefaults()', function() {
       let config;
 
-      beforeEach(function() {
-        config = requireUncached(__dirname + '/../lib/config');
+      beforeEach(async function() {
+        config = await requireUncached('./lib/config.mjs');
       });
 
       it('is available', function() {
@@ -503,10 +500,10 @@ describe('Test suite for node-config', function() {
         assert.strictEqual(newConfig.TestModule.parm1, 'value1');
       });
 
-      it('Config.get() before withModuleDefaults() can see updates', function() {
+      it('Config.get() before withModuleDefaults() can see updates', async function() {
         process.env.ALLOW_CONFIG_MUTATIONS = true;
 
-        const mutableConfig = requireUncached(__dirname + '/../lib/config');
+        const mutableConfig = await requireUncached('./lib/config.mjs');
 
         let defaults = {
           someValue: "default"

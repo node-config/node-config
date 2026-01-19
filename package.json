@@ -2,6 +2,7 @@
   "name": "config",
   "version": "4.3.0",
   "main": "./lib/config.js",
+  "module": "./lib/config.mjs",
   "types": "types/lib/config.d.ts",
   "typesVersions": {
     "*": {
@@ -69,7 +70,7 @@
     "url": "http://github.com/node-config/node-config.git"
   },
   "engines": {
-    "node": ">= 20.0.0"
+    "node": ">= 20.11.0"
   },
   "c8": {
     "include": [

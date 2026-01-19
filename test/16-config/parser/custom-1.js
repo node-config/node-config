@@ -1,4 +1,4 @@
-var Parser = require('../../../parser');
+import Parser from '../../../parser.js';
 
 // change parser order
 Parser.setFilesOrder('yaml', 0);
@@ -19,4 +19,4 @@ Parser.setParser('custom', function(filename, content) {
   }, {});
 });
 
-module.exports = Parser;
+export default Parser;

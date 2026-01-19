@@ -1,24 +1,24 @@
-import * as parser from 'config/parser';
+import Parser from '../../types/parser';
 
-const parsedMaybe: object | undefined = parser.parse('test.json', '{}');
-const yamlParsed: object | undefined = parser.yamlParser('test.yaml', 'a: 1');
-const tsParsed: object = parser.tsParser('test.ts', 'module.exports = {}');
+const parsedMaybe: object | undefined = Parser.parse('test.json', '{}');
+const yamlParsed: object | undefined = Parser.yamlParser('test.yaml', 'a: 1');
+const tsParsed: object = Parser.tsParser('test.ts', 'module.exports = {}');
 
-const parserFn = parser.getParser('json');
+const parserFn = Parser.getParser('json');
 if (parserFn) {
   const value = parserFn('test.json', '{}');
 }
 
-parser.setParser('custom', (filename, content) => ({ filename, content }));
+Parser.setParser('custom', (filename, content) => ({ filename, content }));
 
-const defaultOrder = parser.getFilesOrder();
-const jsonOrder = parser.getFilesOrder('json');
-const newOrder = parser.setFilesOrder(['json', 'yaml']);
+const defaultOrder = Parser.getFilesOrder();
+const jsonOrder = Parser.getFilesOrder('json');
+const newOrder = Parser.setFilesOrder(['json', 'yaml']);
 
-const boolVal: boolean = parser.booleanParser('BOOL', 'true');
-const numVal: number = parser.numberParser('NUM', '1');
+const boolVal: boolean = Parser.booleanParser('BOOL', 'true');
+const numVal: number = Parser.numberParser('NUM', '1');
 
 // @ts-expect-error - name must be a string
-parser.getParser(123);
+Parser.getParser(123);
 // @ts-expect-error - name must be a string or string[]
-parser.setFilesOrder(123);
+Parser.setFilesOrder(123);
