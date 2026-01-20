@@ -1,0 +1,12 @@
+{
+
+  // Comment to test comment ignoring
+
+  "Customers": {
+    "dbName":"from_default_json5",
+  },
+  "AnotherModule": {
+    "parm6":"value6"
+  }
+  
+}
