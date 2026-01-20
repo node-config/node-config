@@ -56,6 +56,10 @@ describe('Test suite for node-config', function() {
     it('Config extensions are included with the library', function() {
       assert.strictEqual(typeof config.util.makeImmutable, 'function');
     });
+
+    it('config util is not an enumerable property', function() {
+      assert.strictEqual(Object.keys(config).includes('util'), false, 'util in Object.keys()');
+    });
   });
 
   describe('Immutability', function() {
