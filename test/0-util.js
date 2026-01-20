@@ -1690,6 +1690,5 @@ describe('Tests for util functions', function () {
 
       assert.deepEqual(newLoad.getSources(), []);
     });
-  })
-
+  });
 });
