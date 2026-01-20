@@ -99,6 +99,18 @@ describe('Test suite for node-config', function() {
         /Can not update runtime configuration property: "arr1"\. Configuration objects are immutable unless ALLOW_CONFIG_MUTATIONS is set\./
       )
     });
+
+    it('reverse tree walk also prevents mutation after second get()', function() {
+      config.TestModule.get('parm1');
+      config.get('Customers')
+
+      assert.throws(
+        function() {
+          config.Customers.dbHost = [ 'bad value' ];
+        },
+        /Can not update runtime configuration property: "dbHost"\. Configuration objects are immutable unless ALLOW_CONFIG_MUTATIONS is set\./
+      )
+    });
   });
 
   describe('Configurations from the $NODE_CONFIG environment variable', function() {
@@ -152,6 +164,13 @@ describe('Test suite for node-config', function() {
       assert.throws(() => config.TestModule.parm1 = "setToThis",
         /Cannot assign to read only property/);
       assert.strictEqual(config.TestModule.parm1, "value1");
+    });
+
+    it('Correctly unable to add new fields to an immutable configuration', function() {
+      config.util.makeImmutable(config.TestModule);
+
+      assert.throws(() => config.TestModule.newField = "setToThis",
+        /Cannot add property newField, object is not extensible/);
     });
   });
 
