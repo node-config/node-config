@@ -57,7 +57,7 @@
     "reporter": "lcov"
   },
   "scripts": {
-    "build": "npm run test && npm run benchmarks",
+    "ci": "npm run test && npm run benchmarks",
     "test": "NODE_OPTIONS='--no-experimental-strip-types' c8 node --test",
     "benchmarks": "node --allow-natives-syntax benchmarks/index.js"
   }
