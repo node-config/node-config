@@ -27,19 +27,15 @@ const benchmarks = new Benchmark({
 
 benchmarks.suite('access functions', function(suite) {
   suite.add('get', (config, keys) => {
-    for (const key of keys) {
-      let val = config[key];
-    }
+    keys.map((key) => config[key]);
   });
 
   suite.add('get()', (config, keys) => {
-    for (const key of keys) {
-      let val = config.get(key);
-    }
+    keys.map((key) => config.get(key));
   });
 }, {
-  minSamples: 20,
-  minTime: 0.4,
+  minSamples: 50,
+  minTime: 0.2,
   setup: (client) => {
     let keys = Object.keys(client);
     return keys;
@@ -55,7 +51,6 @@ benchmarks.suite('Util functions', function(suite) {
     let clone = Util.cloneDeep(SAMPLE_DATA);
   });
 }, {
-  minSamples: 20,
   minTime: 0.4,
   setup: async (client, location) => {
     const { Util } = require(path.join(location, "lib/util.js"));
@@ -70,7 +65,6 @@ benchmarks.suite('config.util functions', function(suite) {
     util.makeImmutable(obj);
   });
 }, {
-  minSamples: 20,
   minTime: 0.4,
   setup: async (client) => {
     return { util: client.util };
