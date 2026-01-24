@@ -35,9 +35,9 @@ benchmarks.suite('access functions', function(suite) {
   });
 }, {
   minSamples: 50,
-  minTime: 0.2,
   setup: (client) => {
     let keys = Object.keys(client);
+    global.gc();
     return keys;
   }
 });
