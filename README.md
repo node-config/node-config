@@ -105,6 +105,11 @@ Running in this configuration, the `port` and `dbName` elements of `dbConfig`
 will come from the `default.json` file, and the `host` element will
 come from the `production.json` override file.
 
+TypeScript
+----------
+
+Type declarations are published under `types/` and resolved via `typesVersions`. Subpath typings are included for `config/async`, `config/defer`, `config/parser`, `config/raw`, and `config/lib/util` in addition to the main `config` entrypoint.
+
 Articles
 --------
 
@@ -173,4 +178,3 @@ May be freely distributed under the [MIT license](https://raw.githubusercontent.
 
 Copyright (c) 2010-2025 Loren West 
 [and other contributors](https://github.com/node-config/node-config/graphs/contributors)
-

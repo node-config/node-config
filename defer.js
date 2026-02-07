@@ -1,9 +1,29 @@
 // Create a deferredConfig prototype so that we can check for it when reviewing the configs later.
+/** @typedef {import('./lib/config').Config} Config */
+/**
+ * Deferred config placeholder.
+ * @constructor
+ */
 function DeferredConfig() {}
-DeferredConfig.prototype.prepare = function() {};
+/**
+ * @param {Config} config
+ * @param {any} prop
+ * @param {string} property
+ * @returns {void}
+ */
+DeferredConfig.prototype.prepare = function(config, prop, property) {};
+/**
+ * @returns {any}
+ */
 DeferredConfig.prototype.resolve = function() {};
 
+
 // Accept a function that we'll use to resolve this value later and return a 'deferred' configuration value to resolve it later.
+/**
+ * @template T
+ * @param {(config: Config, original: T) => T} func
+ * @returns {DeferredConfig}
+ */
 function deferConfig(func) {
   var obj = Object.create(DeferredConfig.prototype);
   obj.prepare = function(config, prop, property) {

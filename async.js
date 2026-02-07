@@ -1,10 +1,25 @@
 var asyncSymbol = Symbol('asyncSymbol');
 var deferConfig = require('./defer').deferConfig;
 
+/** @typedef {import('./lib/config').Config} Config */
+/** @typedef {import('./defer').DeferredConfig} DeferredConfig */
+
 /**
- * @param promiseOrFunc   the promise will determine a property's value once resolved
- *                        can also be a function to defer which resolves to a promise
- * @returns {Promise}     a marked promise to be resolve later using `resolveAsyncConfigs`
+ * @template T
+ * @overload
+ * @param {Promise<T>} promiseOrFunc
+ * @returns {Promise<T>}
+ */
+/**
+ * @template T
+ * @overload
+ * @param {(config: Config, original: any) => Promise<T>} promiseOrFunc
+ * @returns {DeferredConfig}
+ */
+/**
+ * @template T
+ * @param {Promise<T> | ((config: Config, original: any) => Promise<T>)} promiseOrFunc
+ * @returns {Promise<T> | DeferredConfig} a marked promise or deferred config
  */
 function asyncConfig(promiseOrFunc) {
   if (typeof promiseOrFunc === 'function') {  // also acts as deferConfig
@@ -33,9 +48,9 @@ function asyncConfig(promiseOrFunc) {
 }
 
 /**
- * Do not use `config.get` before executing this method, it will freeze the config object
- * @param config    the main config object, returned from require('config')
- * @returns {Promise<config>}   once all promises are resolved, return the original config object
+ * Do not use `config.get` before executing this method, it will freeze the config object.
+ * @param {Config} config the main config object, returned from require('config')
+ * @returns {Promise<Config>} once all promises are resolved, return the original config object
  */
 function resolveAsyncConfigs(config) {
   var promises = [];
