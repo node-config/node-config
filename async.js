@@ -1,5 +1,5 @@
-var asyncSymbol = Symbol('asyncSymbol');
-var deferConfig = require('./defer').deferConfig;
+const asyncSymbol = Symbol('asyncSymbol');
+const { deferConfig } = require('./defer');
 
 /**
  * @param promiseOrFunc   the promise will determine a property's value once resolved
@@ -8,6 +8,9 @@ var deferConfig = require('./defer').deferConfig;
  * @deprecated please use async functions with defer
  */
 function asyncConfig(promiseOrFunc) {
+  const { Util } = require('./lib/util.js');
+  Util.errorOnce("ASYNC_CONFIG", 'config/async.js is deprecated. Please use async functions with the new defer functionality');
+
   if (typeof promiseOrFunc === 'function') {  // also acts as deferConfig
     return deferConfig(function (config, original) {
       var release;
