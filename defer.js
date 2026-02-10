@@ -9,7 +9,7 @@ function DeferredConfig() {}
  * @param {Config} config
  * @param {any} prop
  * @param {string} property
- * @returns {void}
+ * @returns {DeferredConfig}
  */
 DeferredConfig.prototype.prepare = function(config, prop, property) {};
 /**
