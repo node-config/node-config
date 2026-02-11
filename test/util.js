@@ -4,10 +4,27 @@ const path = require('path');
 const requireUncached = require('./_utils/requireUncached');
 const { describe, it, beforeEach } = require('node:test');
 const assert = require('assert');
-const config = require('../lib/config');
-const initParam = config.util.initParam;
 
 describe('Tests for config util functions', function() {
+  describe('Tests for util.getEnv()', function() {
+    let util;
+
+    beforeEach(function () {
+      // Change the configuration directory for testing
+      process.env.NODE_CONFIG_DIR = __dirname + '/config';
+
+      // Hard-code $NODE_CONFIG_ENV=test for testing
+      delete process.env.NODE_APP_INSTANCE;
+      process.env.NODE_CONFIG_ENV = 'test';
+
+      util = requireUncached(__dirname + '/../lib/config').util;
+    });
+
+    it('values used in initialization are reflected in getEnv()', function () {
+      assert.strictEqual(util.getEnv('NODE_CONFIG_ENV'), 'test');
+    });
+  });
+
   describe('Tests for util.loadFileConfigs', function () {
     let util;
 
