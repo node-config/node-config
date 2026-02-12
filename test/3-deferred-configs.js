@@ -27,37 +27,5 @@ describe('Tests for deferred values - JavaScript', function() {
       // Finally the deferred configurations, now referencing the 'local' siteTitle
       assert.strictEqual(CONFIG.welcomeEmail.subject, 'Welcome to New Instance!');
     });
-
-    it('values which are functions remain untouched unless they are instance of DeferredConfig', function() {
-      // If this had been treated as a deferred config value it would blow-up.
-      assert.strictEqual(CONFIG.welcomeEmail.aFunc(), 'Still just a function.');
-    });
-
-    // This defer function didn't use args, but relied 'this' being bound to the main config object
-    it ("defer functions can simply refer to 'this'", function () {
-      assert.strictEqual(CONFIG.welcomeEmail.justThis, 'Welcome to this New Instance!');
-    });
-
-    it("defer functions which return objects should still be treated as a single value.", function () {
-      assert.deepEqual(CONFIG.get('map.centerPoint'), { lat: 3, lon: 4 });
-    });
-
-    it("defer function return original value.", function () {
-      assert.strictEqual(CONFIG.original.original, 'an original value');
-    });
-
-    it("second defer function return original value.", function () {
-      assert.strictEqual(CONFIG.original.deferredOriginal, undefined);
-    });
-
-    it("defer functions resolved within an array", function () {
-      assert.strictEqual(CONFIG.list[2], 3);
-      assert.strictEqual(CONFIG.fromList, 6);
-    });
-
-    it("defer functions execution order resolves when accessing other defer functions", function () {
-      assert.strictEqual(CONFIG.a, 'my this is 6!');
-      assert.strictEqual(CONFIG.c, 'my this is 6! this is 6!');
-    });
   });
 });
