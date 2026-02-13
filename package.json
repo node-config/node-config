@@ -29,6 +29,12 @@
       "raw.js": [
         "types/raw.d.ts"
       ],
+      "lib/defer": [
+        "types/lib/defer.d.ts"
+      ],
+      "lib/defer.js": [
+        "types/lib/defer.d.ts"
+      ],
       "lib/util": [
         "types/lib/util.d.ts"
       ],
@@ -93,6 +99,7 @@
   },
   "scripts": {
     "build:types": "tsc -p tsconfig.json",
+    "checkTypes": "npx -y @arethetypeswrong/cli --pack .",
     "prepublishOnly": "npm run build:types",
     "ci": "npm run test && npm run benchmarks",
     "test": "NODE_OPTIONS='--no-experimental-strip-types' c8 node --test",
