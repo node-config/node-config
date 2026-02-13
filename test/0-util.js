@@ -7,6 +7,9 @@
 const { describe, it, beforeEach } = require('node:test');
 const assert = require('assert');
 const Path = require('path');
+const { setTimeout } = require('node:timers/promises');
+const {deferConfig: defer} = require("../defer");
+const {asyncConfig} = require("../async");
 const util = require('../lib/util.js').Util;
 const Load = require('../lib/util.js').Load;
 const deferConfig = require('../defer').deferConfig;
@@ -1204,6 +1207,36 @@ describe('Tests for util functions', function () {
       assert.deepStrictEqual(data.deferreds, {foo: 2, bar: [4]});
     });
 
+    it('does not touch functions unless they are instance of DeferredConfig', function() {
+      let data = {
+        // A plain function should be not disturbed.
+        aFunc: function () {
+          return "Still just a function.";
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+
+      // If this had been treated as a deferred config value it would blow-up.
+      assert.strictEqual(data.aFunc(), 'Still just a function.');
+    });
+
+    // This defer function didn't use args, but relied 'this' being bound to the main config object
+    it ("can resolve values via 'this'", function () {
+      let data = {
+        siteTitle : 'New Instance',
+        welcomeEmail: {
+          justThis: deferConfig(function () {
+            return `Welcome to this ${this.siteTitle}!`;
+          }),
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+
+      assert.strictEqual(data.welcomeEmail.justThis, 'Welcome to this New Instance!');
+    });
+
     it('handles recursive expansion', function () {
       let data = {
         deferreds: {
@@ -1219,6 +1252,81 @@ describe('Tests for util functions', function () {
       util.resolveDeferredConfigs(data);
 
       assert.deepStrictEqual(data.deferreds, {foo: 4, bar: '4 interpolated'});
+    });
+
+    it('handles async functions', function () {
+      let data = {
+        asyncProperty: deferConfig(async function (cfg) {
+          return setTimeout(1, 'finished');
+        }),
+      };
+
+      util.resolveDeferredConfigs(data);
+
+      assert.deepStrictEqual(data.asyncProperty instanceof Promise, true, 'deferred resolves as a promise');
+    });
+  });
+
+  describe('Util.resolveAsyncConfigs()', function() {
+    it('The function exists', function () {
+      assert.strictEqual(typeof util.resolveAsyncConfigs, 'function');
+    });
+
+    it('expands deferred async values', async function () {
+      let expected = { foo: '3', bar: 4 };
+      let data = {
+        asyncProperty: deferConfig(async (cfg)=> setTimeout(1, { foo: '3', bar: 4 }))
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.asyncProperty, {foo: '3', bar: 4});
+    });
+
+    it('works for arrays', async function () {
+      let data = {
+        deferreds: {
+          foo: 2,
+          bar: [deferConfig(async () => 4)]
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.deferreds, {foo: 2, bar: [4]});
+    });
+
+    it('handles recursive expansion', async function () {
+      let data = {
+        deferreds: {
+          foo: deferConfig(() => {
+            return 4;
+          }),
+          bar: deferConfig(async (config) => {
+            return `${await config.deferreds.foo} interpolated`
+          })
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.deferreds, {foo: 4, bar: '4 interpolated'});
+    });
+
+    it('also runs async.js callbacks', async function () {
+      let data = {
+        deferreds: {
+          promiseSubject: asyncConfig(Promise.resolve("Welcome to Promise response")),
+        }
+      };
+
+      util.resolveDeferredConfigs(data);
+      await util.resolveAsyncConfigs(data);
+
+      assert.deepStrictEqual(data.deferreds, { promiseSubject: "Welcome to Promise response"});
     });
   });
 
