@@ -35,10 +35,16 @@ var COFFEE_2_DEP = 'coffeescript',
     TS_DEP = 'ts-node';
 
 /**
- * @typedef Parser {Object}
+ * @template [T=any]
+ * @typedef {(filename: string, content: string) => T | undefined} ParserFn<T>
  */
 var Parser = module.exports;
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object | undefined}
+ */
 Parser.parse = function(filename, content) {
   var parserName = filename.substr(filename.lastIndexOf('.') +1);  // file extension
   if (typeof definitions[parserName] === 'function') {
@@ -47,6 +53,11 @@ Parser.parse = function(filename, content) {
   // TODO: decide what to do in case of a missing parser
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.xmlParser = function(filename, content) {
   if (!XML) {
     XML = require(XML_DEP);
@@ -60,6 +71,11 @@ Parser.xmlParser = function(filename, content) {
   return configObject;
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.jsParser = function(filename, content) {
   var configObject = require(filename);
 
@@ -69,6 +85,11 @@ Parser.jsParser = function(filename, content) {
   return configObject;
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.tsParser = function(filename, content) {
   if (!require.extensions['.ts']) {
     require(TS_DEP).register({
@@ -93,6 +114,11 @@ Parser.tsParser = function(filename, content) {
   return configObject;
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.coffeeParser = function(filename, content) {
   // .coffee files can be loaded with either coffee-script or iced-coffee-script.
   // Prefer iced-coffee-script, if it exists.
@@ -125,6 +151,11 @@ Parser.coffeeParser = function(filename, content) {
   return require(filename);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object | undefined}
+ */
 Parser.icedParser = function(filename, content) {
   Iced = require(ICED_DEP);
 
@@ -134,6 +165,11 @@ Parser.icedParser = function(filename, content) {
   }
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object | undefined}
+ */
 Parser.yamlParser = function(filename, content) {
   if (!Yaml && !JSYaml) {
     // Lazy loading
@@ -155,6 +191,11 @@ Parser.yamlParser = function(filename, content) {
   }
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.jsonParser = function(filename, content) {
   /**
    * Default JSON parsing to JSON5 parser.
@@ -164,10 +205,20 @@ Parser.jsonParser = function(filename, content) {
   return JSON5.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.json5Parser = function(filename, content) {
   return JSON5.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.hjsonParser = function(filename, content) {
   if (!HJSON) {
     HJSON = require(HJSON_DEP);
@@ -175,6 +226,11 @@ Parser.hjsonParser = function(filename, content) {
   return HJSON.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.tomlParser = function(filename, content) {
   if(!TOML) {
     TOML = require(TOML_DEP);
@@ -182,6 +238,11 @@ Parser.tomlParser = function(filename, content) {
   return TOML.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.csonParser = function(filename, content) {
   if (!CSON) {
     CSON = require(CSON_DEP);
@@ -193,6 +254,11 @@ Parser.csonParser = function(filename, content) {
   return CSON.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.propertiesParser = function(filename, content) {
   if (!PPARSER) {
     PPARSER = require(PPARSER_DEP);
@@ -207,7 +273,7 @@ Parser.propertiesParser = function(filename, content) {
  *
  * @protected
  * @method stripYamlComments
- * @param fileStr {string} The string to strip comments from
+ * @param {string} fileStr The string to strip comments from
  * @return {string} The string with comments stripped.
  */
 Parser.stripYamlComments = function(fileStr) {
@@ -220,7 +286,8 @@ Parser.stripYamlComments = function(fileStr) {
  * Parses the environment variable to the boolean equivalent.
  * Defaults to false
  *
- * @param {String} content - Environment variable value
+ * @param {string} filename - Filename of the env variable (not used)
+ * @param {string} content - Environment variable value
  * @return {boolean} - Boolean value fo the passed variable value
  */
 Parser.booleanParser = function(filename, content) {
@@ -231,8 +298,9 @@ Parser.booleanParser = function(filename, content) {
  * Parses the environment variable to the number equivalent.
  * Defaults to undefined
  *
- * @param {String} content - Environment variable value
- * @return {Number} - Number value fo the passed variable value
+ * @param {string} filename - Filename of the env variable (not used)
+ * @param {string} content - Environment variable value
+ * @return {number} - Number value fo the passed variable value
  */
 Parser.numberParser = function(filename, content) {
   const numberValue = Number(content);
@@ -262,10 +330,18 @@ var definitions = {
   number: Parser.numberParser
 };
 
+/**
+ * @param {string} name
+ * @returns {ParserFn | undefined}
+ */
 Parser.getParser = function(name) {
   return definitions[name];
 };
 
+/**
+ * @param {string} name
+ * @param {ParserFn} parser
+ */
 Parser.setParser = function(name, parser) {
   definitions[name] = parser;
   if (order.indexOf(name) === -1) {
@@ -273,6 +349,10 @@ Parser.setParser = function(name, parser) {
   }
 };
 
+/**
+ * @param {string=} name
+ * @returns {string[] | number}
+ */
 Parser.getFilesOrder = function(name) {
   if (name) {
     return order.indexOf(name);
@@ -280,6 +360,11 @@ Parser.getFilesOrder = function(name) {
   return order;
 };
 
+/**
+ * @param {string|string[]} name
+ * @param {number=} newIndex
+ * @returns {string[]}
+ */
 Parser.setFilesOrder = function(name, newIndex) {
   if (Array.isArray(name)) {
     return order = name;

@@ -3,6 +3,7 @@ const { deferConfig, DeferredConfig } = require('./lib/defer.js');
 /**
  * @deprecated please use the new callback mechanism
  * @see lib/defer.js
+ * @type {typeof import('./lib/defer').deferConfig}
  */
 module.exports.deferConfig = (...args) => {
   const { Util } = require('./lib/util.js');
@@ -13,5 +14,6 @@ module.exports.deferConfig = (...args) => {
 
 /**
  * @deprecated please use the new callback mechanism
+ * @type {typeof import('./lib/defer').DeferredConfig}
  */
 module.exports.DeferredConfig = DeferredConfig;
