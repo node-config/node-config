@@ -1,5 +1,10 @@
-node_modules
 test
 tools
+benchmarks
 ISSUE_TEMPLATE.md
 .*
+
+.idea
+
+.nyc_output
+coverage

@@ -11,7 +11,7 @@ const JSON5Module = require('json5');
 const JSON5 = JSON5Module.default || JSON5Module;
 
 var Yaml = null,
-    VisionmediaYaml = null,
+    JSYaml = null,
     Coffee = null,
     Iced = null,
     CSON = null,
@@ -34,8 +34,17 @@ var COFFEE_2_DEP = 'coffeescript',
     XML_DEP = 'x2js',
     TS_DEP = 'tsx/cjs/api';
 
+/**
+ * @template [T=any]
+ * @typedef {(filename: string, content: string) => T | undefined} ParserFn<T>
+ */
 var Parser = module.exports;
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object | undefined}
+ */
 Parser.parse = function(filename, content) {
   var parserName = filename.substr(filename.lastIndexOf('.') +1);  // file extension
   if (typeof definitions[parserName] === 'function') {
@@ -44,6 +53,11 @@ Parser.parse = function(filename, content) {
   // TODO: decide what to do in case of a missing parser
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.xmlParser = function(filename, content) {
   if (!XML) {
     XML = require(XML_DEP);
@@ -57,6 +71,11 @@ Parser.xmlParser = function(filename, content) {
   return configObject;
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.jsParser = function(filename, content) {
   var configObject = require(filename);
 
@@ -66,6 +85,11 @@ Parser.jsParser = function(filename, content) {
   return configObject;
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.tsParser = function(filename, content) {
   if (!require.extensions['.ts']) {
     require(TS_DEP).register({
@@ -90,6 +114,11 @@ Parser.tsParser = function(filename, content) {
   return configObject;
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.coffeeParser = function(filename, content) {
   // .coffee files can be loaded with either coffee-script or iced-coffee-script.
   // Prefer iced-coffee-script, if it exists.
@@ -122,6 +151,11 @@ Parser.coffeeParser = function(filename, content) {
   return require(filename);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object | undefined}
+ */
 Parser.icedParser = function(filename, content) {
   Iced = require(ICED_DEP);
 
@@ -131,38 +165,37 @@ Parser.icedParser = function(filename, content) {
   }
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object | undefined}
+ */
 Parser.yamlParser = function(filename, content) {
-  if (!Yaml && !VisionmediaYaml) {
+  if (!Yaml && !JSYaml) {
     // Lazy loading
     try {
-      // Try to load the better js-yaml module
-      Yaml = require(JS_YAML_DEP);
-    }
-    catch (e) {
+      Yaml = require(YAML_DEP);
+    } catch (e) {
       try {
-        // If it doesn't exist, load the fallback visionmedia yaml module.
-        VisionmediaYaml = require(YAML_DEP);
-      }
-      catch (e) { }
+        JSYaml = require(JS_YAML_DEP);
+      } catch (e) {}
     }
   }
+
   if (Yaml) {
-    return Yaml.load(content);
-  }
-  else if (VisionmediaYaml) {
-    // The yaml library doesn't like strings that have newlines but don't
-    // end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13
-    content += '\n';
-    if (typeof VisionmediaYaml.eval === 'function') {
-      return VisionmediaYaml.eval(Parser.stripYamlComments(content));
-    }
-    return VisionmediaYaml.parse(Parser.stripYamlComments(content));
-  }
-  else {
-    console.error('No YAML parser loaded.  Suggest adding js-yaml dependency to your package.json file.')
+    return Yaml.parse(content);
+  } else if (JSYaml) {
+    return JSYaml.load(content);
+  } else {
+    console.error('No YAML parser loaded.  Suggest adding yaml dependency to your package.json file.')
   }
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.jsonParser = function(filename, content) {
   /**
    * Default JSON parsing to JSON5 parser.
@@ -172,10 +205,20 @@ Parser.jsonParser = function(filename, content) {
   return JSON5.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.json5Parser = function(filename, content) {
   return JSON5.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.hjsonParser = function(filename, content) {
   if (!HJSON) {
     HJSON = require(HJSON_DEP);
@@ -183,6 +226,11 @@ Parser.hjsonParser = function(filename, content) {
   return HJSON.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.tomlParser = function(filename, content) {
   if(!TOML) {
     TOML = require(TOML_DEP);
@@ -190,6 +238,11 @@ Parser.tomlParser = function(filename, content) {
   return TOML.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.csonParser = function(filename, content) {
   if (!CSON) {
     CSON = require(CSON_DEP);
@@ -201,77 +254,16 @@ Parser.csonParser = function(filename, content) {
   return CSON.parse(content);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} content
+ * @returns {object}
+ */
 Parser.propertiesParser = function(filename, content) {
   if (!PPARSER) {
     PPARSER = require(PPARSER_DEP);
   }
   return PPARSER.parse(content, { namespaces: true, variables: true, sections: true });
-};
-
-/**
- * Strip all Javascript type comments from the string.
- *
- * The string is usually a file loaded from the O/S, containing
- * newlines and javascript type comments.
- *
- * Thanks to James Padolsey, and all who contributed to this implementation.
- * http://james.padolsey.com/javascript/javascript-comment-removal-revisted/
- *
- * @protected
- * @method stripComments
- * @param fileStr {string} The string to strip comments from
- * @param stringRegex {RegExp} Optional regular expression to match strings that
- *   make up the config file
- * @return {string} The string with comments stripped.
- */
-Parser.stripComments = function(fileStr, stringRegex) {
-  stringRegex = stringRegex || /"((?:[^"\\]|\\.)*)"/g;
-
-  var uid = '_' + +new Date(),
-    primitives = [],
-    primIndex = 0;
-
-  return (
-    fileStr
-
-    /* Remove strings */
-      .replace(stringRegex, function(match){
-        primitives[primIndex] = match;
-        return (uid + '') + primIndex++;
-      })
-
-      /* Remove Regexes */
-      .replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g, function(match, $1, $2){
-        primitives[primIndex] = $2;
-        return $1 + (uid + '') + primIndex++;
-      })
-
-      /*
-      - Remove single-line comments that contain would-be multi-line delimiters
-          E.g. // Comment /* <--
-      - Remove multi-line comments that contain would be single-line delimiters
-          E.g. /* // <--
-     */
-      .replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g, '')
-
-      /*
-      Remove single and multi-line comments,
-      no consideration of inner-contents
-     */
-      .replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g, '')
-
-      /*
-      Remove multi-line comments that have a replaced ending (string/regex)
-      Greedy, so no inner strings/regexes will stop it.
-     */
-      .replace(RegExp('\\/\\*[\\s\\S]+' + uid + '\\d+', 'g'), '')
-
-      /* Bring back strings & regexes */
-      .replace(RegExp(uid + '(\\d+)', 'g'), function(match, n){
-        return primitives[n];
-      })
-  );
-
 };
 
 /**
@@ -281,7 +273,7 @@ Parser.stripComments = function(fileStr, stringRegex) {
  *
  * @protected
  * @method stripYamlComments
- * @param fileStr {string} The string to strip comments from
+ * @param {string} fileStr The string to strip comments from
  * @return {string} The string with comments stripped.
  */
 Parser.stripYamlComments = function(fileStr) {
@@ -294,7 +286,8 @@ Parser.stripYamlComments = function(fileStr) {
  * Parses the environment variable to the boolean equivalent.
  * Defaults to false
  *
- * @param {String} content - Environment variable value
+ * @param {string} filename - Filename of the env variable (not used)
+ * @param {string} content - Environment variable value
  * @return {boolean} - Boolean value fo the passed variable value
  */
 Parser.booleanParser = function(filename, content) {
@@ -305,15 +298,16 @@ Parser.booleanParser = function(filename, content) {
  * Parses the environment variable to the number equivalent.
  * Defaults to undefined
  *
- * @param {String} content - Environment variable value
- * @return {Number} - Number value fo the passed variable value
+ * @param {string} filename - Filename of the env variable (not used)
+ * @param {string} content - Environment variable value
+ * @return {number} - Number value fo the passed variable value
  */
 Parser.numberParser = function(filename, content) {
   const numberValue = Number(content);
   return Number.isNaN(numberValue) ? undefined : numberValue;
 };
 
-var order = ['js', 'cjs', 'ts', 'json', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml',
+var order = ['js', 'cjs', 'mjs', 'ts', 'json', 'jsonc', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml',
   'boolean', 'number'];
 var definitions = {
   cjs: Parser.jsParser,
@@ -323,7 +317,9 @@ var definitions = {
   iced: Parser.icedParser,
   js: Parser.jsParser,
   json: Parser.jsonParser,
+  jsonc: Parser.jsonParser,
   json5: Parser.json5Parser,
+  mjs: Parser.jsParser,
   properties: Parser.propertiesParser,
   toml: Parser.tomlParser,
   ts: Parser.tsParser,
@@ -334,10 +330,18 @@ var definitions = {
   number: Parser.numberParser
 };
 
+/**
+ * @param {string} name
+ * @returns {ParserFn | undefined}
+ */
 Parser.getParser = function(name) {
   return definitions[name];
 };
 
+/**
+ * @param {string} name
+ * @param {ParserFn} parser
+ */
 Parser.setParser = function(name, parser) {
   definitions[name] = parser;
   if (order.indexOf(name) === -1) {
@@ -345,6 +349,10 @@ Parser.setParser = function(name, parser) {
   }
 };
 
+/**
+ * @param {string=} name
+ * @returns {string[] | number}
+ */
 Parser.getFilesOrder = function(name) {
   if (name) {
     return order.indexOf(name);
@@ -352,6 +360,11 @@ Parser.getFilesOrder = function(name) {
   return order;
 };
 
+/**
+ * @param {string|string[]} name
+ * @param {number=} newIndex
+ * @returns {string[]}
+ */
 Parser.setFilesOrder = function(name, newIndex) {
   if (Array.isArray(name)) {
     return order = name;

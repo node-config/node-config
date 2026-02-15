@@ -1,7 +1,48 @@
 {
   "name": "config",
-  "version": "3.3.12",
+  "version": "4.3.0",
   "main": "./lib/config.js",
+  "types": "types/lib/config.d.ts",
+  "typesVersions": {
+    "*": {
+      "async": [
+        "types/async.d.ts"
+      ],
+      "async.js": [
+        "types/async.d.ts"
+      ],
+      "defer": [
+        "types/defer.d.ts"
+      ],
+      "defer.js": [
+        "types/defer.d.ts"
+      ],
+      "parser": [
+        "types/parser.d.ts"
+      ],
+      "parser.js": [
+        "types/parser.d.ts"
+      ],
+      "raw": [
+        "types/raw.d.ts"
+      ],
+      "raw.js": [
+        "types/raw.d.ts"
+      ],
+      "lib/defer": [
+        "types/lib/defer.d.ts"
+      ],
+      "lib/defer.js": [
+        "types/lib/defer.d.ts"
+      ],
+      "lib/util": [
+        "types/lib/util.d.ts"
+      ],
+      "lib/util.js": [
+        "types/lib/util.d.ts"
+      ]
+    }
+  },
   "description": "Configuration control for production node deployments",
   "author": "Loren West <open_source@lorenwest.com>",
   "homepage": "http://github.com/node-config/node-config.git",
@@ -25,28 +66,43 @@
     "json5": "^2.2.3"
   },
   "devDependencies": {
-    "@types/node": "^7.0.8",
+    "@types/node": "^20.11.30",
+    "c8": "^10.1.3",
     "coffeescript": "2.2.4",
     "cson": "^3.0.1",
+    "faceoff": "^1.3.0",
     "hjson": "^1.2.0",
-    "js-yaml": "^3.2.2",
     "properties": "~1.2.1",
+    "request": "^2.88.2",
     "semver": "5.3.0",
     "toml": "^2.0.6",
     "tsx": "^4.17.0",
-    "typescript": "^2.4.2",
+    "typescript": "5.9.3",
     "underscore": "^1.8.3",
-    "vows": ">=0.8.1",
-    "x2js": "^2.0.1"
+    "x2js": "^2.0.1",
+    "yaml": "^2.8.2"
   },
   "repository": {
     "type": "git",
     "url": "http://github.com/node-config/node-config.git"
   },
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 20.0.0"
+  },
+  "c8": {
+    "include": [
+      "*.js",
+      "lib/**/*.js"
+    ],
+    "report-dir": "./coverage",
+    "reporter": "lcov"
   },
   "scripts": {
-    "test": "./node_modules/vows/bin/vows test/*.js --spec"
+    "build:types": "tsc -p tsconfig.json",
+    "checkTypes": "npx -y @arethetypeswrong/cli --pack .",
+    "prepublishOnly": "npm run build:types",
+    "ci": "npm run test && npm run benchmarks",
+    "test": "NODE_OPTIONS='--no-experimental-strip-types' c8 node --test",
+    "benchmarks": "node --allow-natives-syntax --expose-gc benchmarks/index.js"
   }
 }

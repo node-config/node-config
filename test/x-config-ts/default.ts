@@ -4,7 +4,8 @@ import { deferConfig as defer } from '../../defer.js';
 const defaultConfig: Config = {
   siteTitle : 'Site title',
   latitude  : 1,
-  longitude : 2
+  longitude : 2,
+  arrayWithNull: [null],
 };
 
 // Set up a default value which refers to another value.

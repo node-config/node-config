@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": "../..",
+    "paths": {
+      "config": ["types/lib/config.d.ts"],
+      "config/async": ["types/async.d.ts"],
+      "config/defer": ["types/defer.d.ts"],
+      "config/raw": ["types/raw.d.ts"],
+      "config/parser": ["types/parser.d.ts"],
+      "config/lib/util": ["types/lib/util.d.ts"]
+    }
+  },
+  "include": ["*.ts"]
+}

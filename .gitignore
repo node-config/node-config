@@ -1,4 +1,9 @@
 .project
 node_modules
 npm-debug.log
+
 .idea
+
+.nyc_output
+coverage
+types
