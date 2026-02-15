@@ -118,6 +118,75 @@ describe('Tests for util functions', function () {
     });
   });
 
+  describe('Util.makeImmutable()', function() {
+    let object;
+
+    beforeEach(function () {
+      object = {
+        item1: 23,
+        subObject: {
+          item2: "hello",
+          entries: [ { a: "b"}, { b: "c", c: { d: "e" } }],
+        }
+      };
+    });
+
+    it('method is available', function () {
+      assert.strictEqual(typeof util.makeImmutable, 'function');
+    });
+
+    // This not working is a bug #865
+    // it('prevents changes to configuration', function() {
+    //   util.makeImmutable(object);
+    //
+    //   assert.throws(() => object.item1 = 27,
+    //     /Cannot assign to read only property/);
+    //   assert.strictEqual(object.item1, 23);
+    // });
+
+    it('prevents changes to children', function() {
+      util.makeImmutable(object);
+
+      assert.throws(() => object.subObject.item2 = 'goodbye',
+        /Can not update runtime configuration property: "item2"/);
+      assert.strictEqual(object.subObject.item2, 'hello');
+    });
+
+    it('prevents addition of new fields', function() {
+      util.makeImmutable(object);
+
+      assert.throws(() => object.subObject.newField = "setToThis",
+        /Can not add runtime configuration property: "newField"/);
+    });
+
+    // This is the same bug #865
+    // it('objects in arrays should be immutable', function () {
+    //   util.makeImmutable(object);
+    //
+    //   const firstTask = object.subObject.entries[0];
+    //   assert.throws(function () {
+    //     firstTask.a = "a"; // We don't make the object itself immutable, only its children
+    //   }, /Can not update runtime configuration property/);
+    // });
+
+    it('objects in arrays should be immutable', function () {
+      util.makeImmutable(object);
+
+      const secondTask = object.subObject.entries[1];
+      assert.throws(function () {
+        secondTask.c.d = "a";
+      }, /Can not update runtime configuration property/);
+    });
+
+    it('Should not throw error when called twice on same object', function() {
+      // First call
+      util.makeImmutable(object);
+
+      util.makeImmutable(object);
+      util.makeImmutable({ a: object.subObject.entries });
+    });
+  });
+
   describe('Util.getOption()', function() {
     let options;
 
