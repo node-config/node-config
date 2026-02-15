@@ -1,20 +1,16 @@
-/**
- * This is meant to wrap configuration objects that should be left as is,
- * meaning that the object or its prototype will not be modified in any way
- * @constructor
- */
-function RawConfig () {
-}
+const { Util, RawConfig } = require('./lib/util')
 
 /**
  * @param {any} rawObj
  * @returns {RawConfig & { resolve: () => any }}
  */
 function raw(rawObj) {
-  var obj = Object.create(RawConfig.prototype);
-  obj.resolve = function () { return rawObj; }
-  return obj;
+  Util.errorOnce('RAW_CONFIG', 'node-config now supports config file callbacks in place of raw(), which is deprecated.');
+
+  return RawConfig.raw(rawObj);
 }
 
+/** @deprecated please use callback function */
 module.exports.RawConfig = RawConfig;
+/** @deprecated please use callback function */
 module.exports.raw = raw;
