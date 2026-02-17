@@ -1,9 +1,11 @@
 Configure your Node.js Applications
 ===================================
 
-[![NPM](https://nodei.co/npm/config.svg?downloads=true&downloadRank=true)](https://nodei.co/npm/config/)&nbsp;&nbsp;
-[![Build Status](https://secure.travis-ci.org/node-config/node-config.svg?branch=master)](https://travis-ci.org/lorenwest/node-config)&nbsp;&nbsp;
-[release notes](https://github.com/node-config/node-config/blob/master/History.md)
+[![npm package](https://img.shields.io/npm/v/config)](https://www.npmjs.com/package/config)
+[![Downloads](https://img.shields.io/npm/dt/config)](https://www.npmjs.com/package/config)
+[![Issues](https://img.shields.io/github/issues/node-config/node-config)](https://github.com/node-config/node-config/issues)
+
+[Release Notes](https://github.com/node-config/node-config/releases)
 
 Introduction
 ------------
