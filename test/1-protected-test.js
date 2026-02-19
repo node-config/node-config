@@ -1,17 +1,12 @@
-'use strict';
-
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, beforeEach } = require('node:test');
-const assert = require('assert');
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 /**
  * <p>Unit tests</p>
  *
  * @module test
  */
-
-// Make a copy of the command line args
-const argvOrg = process.argv.slice();
 
 /**
  * <p>Tests for underlying node-config utilities.  To run type:</p>
@@ -29,9 +24,9 @@ describe('Protected (hackable) utilities test', function() {
 
   let config;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     // Change the configuration directory for testing
-    process.env.NODE_CONFIG_DIR = __dirname + '/config';
+    process.env.NODE_CONFIG_DIR = import.meta.dirname + '/config';
 
     // Hard-code $NODE_ENV=test for testing
     process.env.NODE_ENV = 'test';
@@ -46,7 +41,7 @@ describe('Protected (hackable) utilities test', function() {
     // Test Environment Variable Substitution
     process.env['CUSTOM_JSON_ENVIRONMENT_VAR'] = 'CUSTOM VALUE FROM JSON ENV MAPPING';
 
-    config = requireUncached(__dirname + '/../lib/config');
+    config = await requireUncached('./lib/config.mjs');
   });
 
   describe('Library initialization', function () {

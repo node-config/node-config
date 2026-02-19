@@ -1,4 +1,4 @@
-import { Util, Load } from 'config/lib/util';
+import { Util, Load, RawConfig } from '../../types/lib/util';
 import * as parser from 'config/parser';
 
 const value1: number = Util.getOption({ value: 1 }, 'value', 0);
@@ -40,3 +40,11 @@ new Load({ nodeEnv: 'test' });
 Util.loadFileConfigs({ nodeEnv: 'test' });
 // @ts-expect-error - object must be an object
 Util.makeHidden('not-an-object', 'a');
+
+const raw = RawConfig.raw;
+const rawConfig = raw({ value: 1 });
+const resolved = rawConfig.resolve();
+const instance: RawConfig = rawConfig;
+
+// @ts-expect-error - raw requires an argument
+raw();

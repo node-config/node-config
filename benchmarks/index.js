@@ -19,8 +19,8 @@ function loadConfig() {
 
 const benchmarks = new Benchmark({
   '3.3.12': 'config@3.3.12',
-  '4.0.1': 'config@4.0.1',
   '4.2.0': 'config@4.2.0',
+  '4.3.0': 'config@4.3.0',
   'trunk': 'git@github.com:node-config/node-config.git',
   'branch': { location: __dirname + '/../' },
 });

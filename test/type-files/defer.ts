@@ -1,4 +1,4 @@
-import { deferConfig, DeferredConfig } from 'config/defer';
+import { deferConfig, DeferredConfig } from '../../types/lib/defer';
 import config = require('config');
 
 const deferred = deferConfig((cfg, original: number) => original + 1);

@@ -1,8 +1,8 @@
-'use strict';
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'assert';
+import Config from '../lib/config.mjs';
 
-const { describe, it, beforeEach } = require('node:test');
-const assert = require('assert');
-const util = require('../lib/config.js').util;
+const util = Config.util;
 
 /**
  * <p>Unit tests for makeImmutable shared reference cases</p>

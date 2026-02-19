@@ -1,8 +1,6 @@
-'use strict';
-
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, before, beforeEach } = require('node:test');
-const assert = require('assert');
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 describe('Tests for strict mode', function() {
   describe("Specifying an unused NODE_ENV value and valid NODE_APP_INSTANCE value throws an exception", _expectException({
@@ -76,9 +74,9 @@ function _expectException (opts) {
   let error;
 
   return () => {
-    beforeEach(function() {
+    beforeEach(async function() {
       // Change the configuration directory for testing
-      process.env.NODE_CONFIG_DIR         = __dirname + '/6-config';
+      process.env.NODE_CONFIG_DIR         = import.meta.dirname + '/6-config';
       process.env.NODE_CONFIG_STRICT_MODE = 1;
       process.env.NODE_APP_INSTANCE       = opts.APP_INSTANCE;
 
@@ -92,9 +90,8 @@ function _expectException (opts) {
 
       delete process.env.NODE_CONFIG;
       try {
-        let config = requireUncached(__dirname + '/../lib/config');
-      }
-      catch (e) {
+        await requireUncached('./lib/config.mjs');
+      } catch (e) {
         error = e;
       }
     });
@@ -107,12 +104,14 @@ function _expectException (opts) {
     });
 
     it('Exception contains expected string', function () {
+      let settings = { NODE_ENV: opts.NODE_ENV, NODE_CONFIG_ENV: opts.NODE_CONFIG_ENV, APP_INSTANCE: opts.APP_INSTANCE };
+      let message = JSON.stringify(settings);
+
       // This conditional allows to test for error===null
       if (error) {
-        assert.strictEqual(error.message, opts.exceptionMessage );
-      }
-      else {
-        assert.strictEqual(error, opts.exceptionMessage );
+        assert.strictEqual(error.message, opts.exceptionMessage, message );
+      } else {
+        assert.strictEqual(error, opts.exceptionMessage, message );
       }
     });
   };
