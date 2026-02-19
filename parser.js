@@ -3,7 +3,7 @@ import Path from 'path';
 import { createRequire } from 'node:module';
 import JSON5 from 'json5';
 
-const moduleRequire = createRequire(Path.join(process.cwd(), 'node_modules'));
+const moduleRequire = createRequire(Path.join(process.cwd(), 'package.json'));
 const require = createRequire(process.cwd());
 
 let Yaml = null,
@@ -88,7 +88,7 @@ Parser.jsParser = function(filename, content) {
  * @returns {object}
  */
 Parser.tsParser = function(filename, content) {
-  if (require?.extensions['.ts'] === undefined) {
+  if (require?.extensions?.['.ts'] === undefined) {
     if (TS === null) {
       TS = moduleRequire(TS_DEP);
       TS.register({
