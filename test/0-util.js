@@ -8,11 +8,9 @@ const { describe, it, beforeEach } = require('node:test');
 const assert = require('assert');
 const Path = require('path');
 const { setTimeout } = require('node:timers/promises');
-const {deferConfig: defer} = require("../defer");
-const {asyncConfig} = require("../async");
 const util = require('../lib/util.js').Util;
 const Load = require('../lib/util.js').Load;
-const deferConfig = require('../defer').deferConfig;
+const deferConfig = require('../lib/defer').deferConfig;
 
 describe('Tests for util functions', function () {
   describe('Util.isObject()', function() {
@@ -1383,19 +1381,6 @@ describe('Tests for util functions', function () {
       await util.resolveAsyncConfigs(data);
 
       assert.deepStrictEqual(data.deferreds, {foo: 4, bar: '4 interpolated'});
-    });
-
-    it('also runs async.js callbacks', async function () {
-      let data = {
-        deferreds: {
-          promiseSubject: asyncConfig(Promise.resolve("Welcome to Promise response")),
-        }
-      };
-
-      util.resolveDeferredConfigs(data);
-      await util.resolveAsyncConfigs(data);
-
-      assert.deepStrictEqual(data.deferreds, { promiseSubject: "Welcome to Promise response"});
     });
   });
 
