@@ -5,29 +5,11 @@
   "types": "types/lib/config.d.ts",
   "typesVersions": {
     "*": {
-      "async": [
-        "types/async.d.ts"
-      ],
-      "async.js": [
-        "types/async.d.ts"
-      ],
-      "defer": [
-        "types/defer.d.ts"
-      ],
-      "defer.js": [
-        "types/defer.d.ts"
-      ],
       "parser": [
         "types/parser.d.ts"
       ],
       "parser.js": [
         "types/parser.d.ts"
-      ],
-      "raw": [
-        "types/raw.d.ts"
-      ],
-      "raw.js": [
-        "types/raw.d.ts"
       ],
       "lib/defer": [
         "types/lib/defer.d.ts"
