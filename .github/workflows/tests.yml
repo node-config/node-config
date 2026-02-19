@@ -14,17 +14,41 @@ jobs:
   Unit-Tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
+    strategy:
+      matrix:
+        node-version: [ 22.x, 24.x ]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install
 
       - name: Run Tests
         run: npm run ci
+  Benchmarks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Benchmarks
+        run: npm run benchmarks
+

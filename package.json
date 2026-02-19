@@ -100,9 +100,10 @@
   "scripts": {
     "build:types": "tsc -p tsconfig.json",
     "checkTypes": "npx -y @arethetypeswrong/cli --pack .",
+    "types": "npm run build:types && npm run checkTypes",
     "prepublishOnly": "npm run build:types",
-    "ci": "npm run test && npm run benchmarks",
-    "test": "NODE_OPTIONS='--no-experimental-strip-types' c8 node --test",
+    "ci": "npm run types && npm run test",
+    "test": "c8 node --no-experimental-strip-types --test",
     "benchmarks": "node --allow-natives-syntax --expose-gc benchmarks/index.js"
   }
 }
