@@ -1,6 +1,6 @@
 {
   "name": "config",
-  "version": "4.4.0",
+  "version": "5.0.0-alpha.0",
   "main": "./lib/config.js",
   "module": "./lib/config.mjs",
   "types": "types/lib/config.d.ts",
