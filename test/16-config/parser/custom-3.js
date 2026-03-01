@@ -1,4 +1,4 @@
-var Parser = require('../../_utils/requireUncached')(__dirname + '/../../../parser');
+import Parser from '../../../parser.js';
 
 Parser.setParser('json5', function(filename, content) {
   var json = Parser.json5Parser(filename, content);
@@ -8,4 +8,4 @@ Parser.setParser('json5', function(filename, content) {
 
 Parser.setFilesOrder(['yaml', 'yml', 'json5']);
 
-module.exports = Parser;
+export default Parser;

@@ -1,6 +1,4 @@
-var raw = require('../../raw').raw;
-
-module.exports = {
+module.exports = ({raw}) => ({
   circularReference: raw(process.stdout),
   testObj: raw({ foo: 'bar' }),
   yell: raw(function(input) {
@@ -15,4 +13,4 @@ module.exports = {
       test: process.stdout
     }
   })
-}
+});

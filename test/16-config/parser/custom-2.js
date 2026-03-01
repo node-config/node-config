@@ -1,4 +1,4 @@
-var Parser = require('../../_utils/requireUncached')(__dirname + '/../../../parser');
+import Parser from '../../../parser.js';
 
 Parser.setParser('custom', function(filename, content) {
   return content.split(/\n/g).reduce(function(res, line) {
@@ -18,5 +18,4 @@ Parser.setParser('custom', function(filename, content) {
 // change parser order
 Parser.setFilesOrder(['custom', 'json5', 'json', 'yml']);
 
-
-module.exports = Parser;
+export default Parser;

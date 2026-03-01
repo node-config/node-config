@@ -1,17 +1,19 @@
-'use strict';
-
-const Path   = require('path');
-const requireUncached = require('./_utils/requireUncached');
-const { describe, it, before, beforeEach } = require('node:test');
-const assert = require('assert');
+import Path from 'path';
+import { describe, it, beforeEach } from 'node:test';
+import assert from 'assert';
+import { requireUncached } from './_utils/requireUncached.mjs';
 
 describe('Tests config.util.getConfigSources', function() {
   describe('tests with NODE_CONFIG env set, and --NODE_CONFIG command line flag', function() {
     let sources;
 
-    beforeEach(function () {
-     // Change the configuration directory for testing
-     process.env.NODE_CONFIG_DIR = [__dirname + '/5-config', __dirname + '/5-extra-config'].join(Path.delimiter);
+    beforeEach(async function () {
+
+      // Change the configuration directory for testing
+      process.env.NODE_CONFIG_DIR = [
+        import.meta.dirname + '/5-config',
+        import.meta.dirname + '/5-extra-config'
+      ].join(Path.delimiter);
 
       delete process.env.NODE_ENV;
       process.env.NODE_CONFIG = '{}';
@@ -19,8 +21,7 @@ describe('Tests config.util.getConfigSources', function() {
       process.env.NODE_CONFIG_STRICT_MODE=0;
       process.argv = ["node","path/to/some.js","--NODE_CONFIG={}"];
 
-      let config = requireUncached(__dirname + '/../lib/config');
-
+      let config = await requireUncached('./lib/config.mjs');
       sources =  config.util.getConfigSources();
     });
 
@@ -37,9 +38,9 @@ describe('Tests config.util.getConfigSources', function() {
   describe('tests without NODE_ENV set', function() {
     let sources;
 
-    beforeEach(function () {
+    beforeEach(async function () {
       // Change the configuration directory for testing
-      process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/5-config';
 
       delete process.env.NODE_ENV;
       delete process.env.NODE_CONFIG;
@@ -47,7 +48,7 @@ describe('Tests config.util.getConfigSources', function() {
       process.env.NODE_CONFIG_STRICT_MODE=0;
       process.argv = [];
 
-      var config = requireUncached(__dirname + '/../lib/config');
+      let config = await requireUncached('./lib/config.mjs');
 
       sources = config.util.getConfigSources();
     });
@@ -64,16 +65,16 @@ describe('Tests config.util.getConfigSources', function() {
   describe('tests with NODE_ENV set', function() {
     let sources;
 
-    beforeEach(function () {
+    beforeEach(async function () {
       // Change the configuration directory for testing
-      process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
+      process.env.NODE_CONFIG_DIR = import.meta.dirname + '/5-config';
 
       process.env.NODE_ENV='test';
       delete process.env.NODE_CONFIG;
       delete process.env.NODE_APP_INSTANCE;
       process.argv = [];
 
-      let config = requireUncached(__dirname + '/../lib/config');
+      let config = await requireUncached('./lib/config.mjs');
       sources = config.util.getConfigSources();
     });
 
@@ -89,16 +90,16 @@ describe('Tests config.util.getConfigSources', function() {
   describe('Files which return empty objects still end up in getConfigSources()', function() {
    let sources;
 
-   beforeEach(function () {
+   beforeEach(async function () {
     // Change the configuration directory for testing
-    process.env.NODE_CONFIG_DIR = __dirname + '/5-config';
+    process.env.NODE_CONFIG_DIR = import.meta.dirname + '/5-config';
 
     process.env.NODE_ENV='empty';
     delete process.env.NODE_CONFIG;
     delete process.env.NODE_APP_INSTANCE;
     process.argv = [];
 
-    let config = requireUncached(__dirname + '/../lib/config');
+    let config = await requireUncached('./lib/config.mjs');
     sources = config.util.getConfigSources();
   });
 
