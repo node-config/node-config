@@ -110,7 +110,7 @@ come from the `production.json` override file.
 TypeScript
 ----------
 
-Type declarations are published under `types/` and resolved via `typesVersions`. Subpath typings are included for `config/async`, `config/defer`, `config/parser`, `config/raw`, and `config/lib/util` in addition to the main `config` entrypoint.
+Type declarations are published under `types/` and resolved via `typesVersions`. Subpath typings are included for `config/parser`, 'config/util/defer', and `config/lib/util` in addition to the main `config` entrypoint.
 
 Articles
 --------
