@@ -1,4 +1,4 @@
-import { describe, it, before } from 'node:test';
+import { describe, it, before, after } from 'node:test';
 import assert from 'assert';
 import { requireUncached } from './_utils/requireUncached.mjs';
 
@@ -15,6 +15,10 @@ import { requireUncached } from './_utils/requireUncached.mjs';
  */
 describe('setEnv NODE_CONFIG merge regression', function () {
   let CONFIG;
+  const _origArgv = process.argv.slice();
+  const _origNodeConfigDir = process.env.NODE_CONFIG_DIR;
+  const _origNodeEnv = process.env.NODE_ENV;
+  const _origNodeConfig = process.env.NODE_CONFIG;
 
   before(async function () {
     process.env.NODE_CONFIG_DIR = import.meta.dirname + '/config';
@@ -33,6 +37,18 @@ describe('setEnv NODE_CONFIG merge regression', function () {
     ];
 
     CONFIG = await requireUncached('./lib/config.mjs');
+  });
+
+  after(function () {
+    process.argv = _origArgv;
+    if (_origNodeConfigDir === undefined) delete process.env.NODE_CONFIG_DIR;
+    else process.env.NODE_CONFIG_DIR = _origNodeConfigDir;
+
+    if (_origNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = _origNodeEnv;
+
+    if (_origNodeConfig === undefined) delete process.env.NODE_CONFIG;
+    else process.env.NODE_CONFIG = _origNodeConfig;
   });
 
   it('--NODE_CONFIG overrides $NODE_CONFIG for shared keys', function () {
