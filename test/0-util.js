@@ -1712,6 +1712,13 @@ describe('Tests for util functions', function () {
 
       assert.deepEqual(load.getSources(), []);
     });
+
+    it('returns the resolved data', function() {
+      let load = new Load({configDir: import.meta.dirname + '/config', skipConfigSources: true});
+      let actual = load.scan();
+
+      assert.strictEqual(actual, load.config);
+    });
   });
 
   describe('Load.clone()', function() {
