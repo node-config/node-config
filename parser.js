@@ -20,7 +20,6 @@ let Yaml = null,
 // Define soft dependencies so transpilers don't include everything
 let COFFEE_2_DEP = 'coffeescript',
     COFFEE_DEP = 'coffee-script',
-    ICED_DEP = 'iced-coffee-script',
     JS_YAML_DEP = 'js-yaml',
     YAML_DEP = 'yaml',
     JSON5_DEP = 'json5',
@@ -120,8 +119,6 @@ Parser.tsParser = function(filename, content) {
  * @returns {object}
  */
 Parser.coffeeParser = function(filename, content) {
-  // .coffee files can be loaded with either coffee-script or iced-coffee-script.
-  // Prefer iced-coffee-script, if it exists.
   // Lazy load the appropriate extension
   if (!Coffee) {
     Coffee = {};
@@ -141,20 +138,6 @@ Parser.coffeeParser = function(filename, content) {
   }
   // Use the built-in parser for .coffee files with coffee-script
   return require(filename);
-};
-
-/**
- * @param {string} filename
- * @param {string} content
- * @returns {object | undefined}
- */
-Parser.icedParser = function(filename, content) {
-  Iced = moduleRequire(ICED_DEP);
-
-  // coffee-script >= 1.7.0 requires explicit registration for require() to work
-  if (Iced.register) {
-    Iced.register();
-  }
 };
 
 /**
@@ -299,14 +282,13 @@ Parser.numberParser = function(filename, content) {
   return Number.isNaN(numberValue) ? undefined : numberValue;
 };
 
-var order = ['js', 'cjs', 'mjs', 'ts', 'json', 'jsonc', 'json5', 'hjson', 'toml', 'coffee', 'iced', 'yaml', 'yml', 'cson', 'properties', 'xml',
+var order = ['js', 'cjs', 'mjs', 'ts', 'json', 'jsonc', 'json5', 'hjson', 'toml', 'coffee', 'yaml', 'yml', 'cson', 'properties', 'xml',
   'boolean', 'number'];
 var definitions = {
   cjs: Parser.jsParser,
   coffee: Parser.coffeeParser,
   cson: Parser.csonParser,
   hjson: Parser.hjsonParser,
-  iced: Parser.icedParser,
   js: Parser.jsParser,
   json: Parser.jsonParser,
   jsonc: Parser.jsonParser,
