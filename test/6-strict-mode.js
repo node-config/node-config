@@ -59,6 +59,13 @@ describe('Tests for strict mode', function() {
                      +"See https://github.com/node-config/node-config/wiki/Strict-Mode",
   }));
 
+  describe("NODE_ENV=test throws exception when only 'contest.json' exists (inexact match regression)", _expectException({
+    NODE_ENV         : 'test',
+    APP_INSTANCE     : 'valid-instance',
+    exceptionMessage : "FATAL: NODE_ENV value of 'test' did not match any deployment config file names. "
+                     + "See https://github.com/node-config/node-config/wiki/Strict-Mode",
+  }));
+
   describe("Specifying NODE_CONFIG_ENV=production,cloud with no cloud file throws an exception with appropriate wording", _expectException({
     NODE_CONFIG_ENV  : 'cloud',
     APP_INSTANCE     : 'valid-instance',
@@ -86,6 +93,8 @@ function _expectException (opts) {
 
       if (!!opts.NODE_CONFIG_ENV) {
         process.env.NODE_CONFIG_ENV       = opts.NODE_CONFIG_ENV;
+      } else {
+        delete process.env.NODE_CONFIG_ENV;
       }
 
       delete process.env.NODE_CONFIG;
