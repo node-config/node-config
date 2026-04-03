@@ -21,6 +21,7 @@ const benchmarks = new Benchmark({
   '4.0.1': 'config@4.0.1',
   '4.2.0': 'config@4.2.0',
   '4.3.0': 'config@4.3.0',
+  '4.4.0': 'config@4.4.0',
   'trunk': 'git@github.com:node-config/node-config.git',
   'branch': { location: __dirname + '/../' },
 });
@@ -46,15 +47,20 @@ benchmarks.suite('access functions', function(suite) {
 });
 
 benchmarks.suite('Util functions', function(suite) {
-  suite.add('extendDeep', function(config, { Util }) {
+  suite.add('extendDeep', (config, { Util }) => {
     let ext = Util.extendDeep({}, SAMPLE_DATA, SAMPLE_DATA);
   });
 
-  suite.add('cloneDeep', function(config, { Util }) {
+  suite.add('cloneDeep', (config, { Util }) => {
     let clone = Util.cloneDeep(SAMPLE_DATA);
+  });
+
+  suite.add('loadFileConfigs', (config, { Util }) => {
+    let data = Util.loadFileConfigs({ configDir });
   });
 }, {
   minTime: 0.4,
+  minSamples: 50,
   setup: async (client, location) => {
     const { Util } = require(path.join(location, "lib/util.js"));
     return { Util };
@@ -62,7 +68,7 @@ benchmarks.suite('Util functions', function(suite) {
 });
 
 benchmarks.suite('config.util functions', function(suite) {
-  suite.add('makeImmutable', function(config, { util }) {
+  suite.add('makeImmutable', (config, { util }) => {
     let obj = structuredClone(SAMPLE_DATA);
     util.makeImmutable(obj);
   });
