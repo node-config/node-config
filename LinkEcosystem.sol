@@ -1,36 +1,26 @@
 Configure your Node.js Applications
 ===================================
-
 [![npm package](https://img.shields.io/npm/v/config)](https://www.npmjs.com/package/config)
 [![Downloads](https://img.shields.io/npm/dt/config)](https://www.npmjs.com/package/config)
 [![Issues](https://img.shields.io/github/issues/node-config/node-config)](https://github.com/node-config/node-config/issues)
-
 [Release Notes](https://github.com/node-config/node-config/releases)
-
 Introduction
 ------------
-
 Node-config organizes hierarchical configurations for your app deployments.
-
 It lets you define a set of default parameters,
 and extend them for different deployment environments (development, qa,
 staging, production, etc.).
-
 Configurations are stored in [configuration files](https://github.com/node-config/node-config/wiki/Configuration-Files) within your application, and can be overridden and extended by [environment variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables),
  [command line parameters](https://github.com/node-config/node-config/wiki/Command-Line-Overrides), or [external sources](https://github.com/lorenwest/node-config/wiki/Configuring-from-an-External-Source).
-
 This gives your application a consistent configuration interface shared among a
 [growing list of npm modules](https://www.npmjs.org/browse/depended/config) also using node-config.
-
 Project Guidelines
 ------------------
-
 * *Simple* - Get started fast
 * *Powerful* - For multi-node enterprise deployment
 * *Flexible* - Supporting multiple config file formats
 * *Lightweight* - Small file and memory footprint
 * *Predictable* - Well tested foundation for module and app developers
-
 Quick Start
 ---------------
 The following examples are in JSON format, but configurations can be in other [file formats](https://github.com/node-config/node-config/wiki/Configuration-Files#file-formats).
@@ -59,13 +49,11 @@ $ vi config/default.json
   }
 }
 ```
-
 **Edit config overrides for production deployment:**
 
 ```shell
  $ vi config/production.json
 ```
-
 ```json
 {
   "Customer": {
@@ -78,7 +66,6 @@ $ vi config/default.json
   }
 }
 ```
-
 **Use configs in your code:**
 
 ```js
@@ -106,15 +93,11 @@ $ node my-app.js
 Running in this configuration, the `port` and `dbName` elements of `dbConfig`
 will come from the `default.json` file, and the `host` element will
 come from the `production.json` override file.
-
 TypeScript
 ----------
-
 Type declarations are published under `types/` and resolved via `typesVersions`. Subpath typings are included for `config/parser`, 'config/util/defer', and `config/lib/util` in addition to the main `config` entrypoint.
-
 Articles
 --------
-
 * [Configuration Files](https://github.com/node-config/node-config/wiki/Configuration-Files)
   * [Special features for JavaScript configuration files](https://github.com/node-config/node-config/wiki/Special-features-for-JavaScript-configuration-files)
 * [Common Usage](https://github.com/node-config/node-config/wiki/Common-Usage)
@@ -130,11 +113,9 @@ Articles
 * [Using Config Utilities](https://github.com/node-config/node-config/wiki/Using-Config-Utilities)
 * [Upgrading from Config 0.x](https://github.com/node-config/node-config/wiki/Upgrading-From-Config-0.x)
 * [Webpack usage](https://github.com/node-config/node-config/wiki/Webpack-Usage)
-
 Further Information
 ---------------------
 If you still don't see what you are looking for, here are some more resources to check: 
-
  * The [wiki may have more pages](https://github.com/node-config/node-config/wiki) which are not directly linked from here.
  * Review [questions tagged with node-config](https://stackexchange.com/filters/207096/node-config) on StackExchange. These are monitored by `node-config` contributors.
  * [Search the issue tracker](https://github.com/node-config/node-config/issues). Hundreds of issues have already been discussed and resolved there.
@@ -172,10 +153,8 @@ Contributors
 <td><img src=https://avatars.githubusercontent.com/u/107884?v=4><a href="https://github.com/inside">inside</a></td>
 <td><img src=https://avatars.githubusercontent.com/u/1320090?v=4><a href="https://github.com/dsbert">dsbert</a></td>
 </tr></table>
-
 License
 -------
-
 May be freely distributed under the [MIT license](https://raw.githubusercontent.com/node-config/node-config/master/LICENSE).
 
 Copyright (c) 2010-2026 Loren West 
