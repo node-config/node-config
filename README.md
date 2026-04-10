@@ -180,3 +180,4 @@ May be freely distributed under the [MIT license](https://raw.githubusercontent.
 
 Copyright (c) 2010-2026 Loren West 
 [and other contributors](https://github.com/node-config/node-config/graphs/contributors)
+ 
