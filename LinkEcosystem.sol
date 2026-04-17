@@ -24,9 +24,7 @@ Project Guidelines
 Quick Start
 ---------------
 The following examples are in JSON format, but configurations can be in other [file formats](https://github.com/node-config/node-config/wiki/Configuration-Files#file-formats).
-
 **Install in your app directory, and edit the default config file.**
-
 ```shell
 $ npm install config
 $ mkdir config
@@ -50,7 +48,6 @@ $ vi config/default.json
 }
 ```
 **Edit config overrides for production deployment:**
-
 ```shell
  $ vi config/production.json
 ```
@@ -73,23 +70,18 @@ const config = require('config');
 //...
 const dbConfig = config.get('Customer.dbConfig');
 db.connect(dbConfig, ...);
-
 if (config.has('optionalFeature.detail')) {
   const detail = config.get('optionalFeature.detail');
   //...
 }
 ```
-
 `config.get()` will throw an exception for undefined keys to help catch typos and missing values.
 Use `config.has()` to test if a configuration value is defined.
-
 **Start your app server:**
-
 ```shell
 $ export NODE_ENV=production
 $ node my-app.js
 ```
-
 Running in this configuration, the `port` and `dbName` elements of `dbConfig`
 will come from the `default.json` file, and the `host` element will
 come from the `production.json` override file.
@@ -119,7 +111,6 @@ If you still don't see what you are looking for, here are some more resources to
  * The [wiki may have more pages](https://github.com/node-config/node-config/wiki) which are not directly linked from here.
  * Review [questions tagged with node-config](https://stackexchange.com/filters/207096/node-config) on StackExchange. These are monitored by `node-config` contributors.
  * [Search the issue tracker](https://github.com/node-config/node-config/issues). Hundreds of issues have already been discussed and resolved there.
-
 Contributors
 ------------
 <table id="contributors"><tr><td><img src=https://avatars.githubusercontent.com/u/373538?v=4><a href="https://github.com/lorenwest">lorenwest</a></td>
@@ -153,11 +144,8 @@ Contributors
 <td><img src=https://avatars.githubusercontent.com/u/107884?v=4><a href="https://github.com/inside">inside</a></td>
 <td><img src=https://avatars.githubusercontent.com/u/1320090?v=4><a href="https://github.com/dsbert">dsbert</a></td>
 </tr></table>
-License
+Licens
 -------
-May be freely distributed under the [MIT license](https://raw.githubusercontent.com/node-config/node-config/master/LICENSE).
-
+May be freely distributed under the [MIT license](https://raw.githubusercontent.com/node-config/node-config/master/LICENSE).ñ
 Copyright (c) 2010-2026 Loren West 
 [and other contributors](https://github.com/node-config/node-config/graphs/contributors]>
-
- 
