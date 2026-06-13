@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - master
-      - 4.4
+      - '4.4'
 
 concurrency:
   group: pr-checks-${{ github.head_ref }}
