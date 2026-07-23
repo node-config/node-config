@@ -46,6 +46,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "dot.paths": "^0.1.0",
     "json5": "^2.2.3"
   },
   "devDependencies": {

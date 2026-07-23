@@ -39,5 +39,6 @@ describe('TypeScript declaration checks', function () {
   it('builds declarations and typechecks public API fixtures', function () {
     runTsc(path.join(repoRoot, 'tsconfig.json'), 'build declarations');
     runTsc(path.join(repoRoot, 'test', 'type-files', 'tsconfig.json'), 'typecheck fixtures');
+    runTsc(path.join(repoRoot, 'test', 'type-files-augmented', 'tsconfig.json'), 'typecheck augmented fixtures');
   });
 });
