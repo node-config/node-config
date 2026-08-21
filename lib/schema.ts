@@ -36,5 +36,10 @@ type Augmented = keyof NodeConfig.Schema extends never ? false : true;
  * the schema is known, the classic untyped signature otherwise.
  */
 export type ConfigGet = Augmented extends true
-  ? <P extends Paths<NodeConfig.Schema>>(property: P) => Get<NodeConfig.Schema, P>
+  ? {
+      // 1: path inference — get('port') infers P = 'port', returns Get<Schema, 'port'>
+      <P extends Paths<NodeConfig.Schema>>(property: P): Get<NodeConfig.Schema, P>;
+      // 2: explicit-T compat — get<number>('port') lands here
+      <T>(property: Paths<NodeConfig.Schema>): T;
+    }
   : <T>(property: string) => T;
