@@ -1,3 +1,5 @@
+# <img src="media/logo.svg" alt="config"/>
+
 Configure your Node.js Applications
 ===================================
 

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="180">
+  <style>
+    text {
+      font-family: "Courier New", monospace;
+      font-size: 125px;
+      font-weight: 600;
+    }
+  </style>
+
+  <text x="20" y="120" stroke="#2C682C" stroke-width="3" fill="#84BA64" aria-label="config">c nfig</text>
+
+  <path
+      d="
+        m 162 104
+        l 0 -25
+        c 0 0 -0.7 -2.5 -1.35 -3.6
+        c 0 0 -1.6 -2.0 -2.7 -2.7
+        l -21.87 -12.5
+        c 0 0 -2.35 -1 -3.6 -1
+        c 0 0 -2.5 0.35 -3.6 1
+        l -21.87 12.5
+        c 0 0 -2.0 1.55 -2.7 2.7
+        c 0 0 -1 2.35 -1 3.6
+        l 0 25
+        c 0 0 0.35 2.5 1 3.6
+        c 0 0 1.6 2.0 2.7 2.7
+        l 21.87 12.5
+        c 0 00 2.35 1 3.6 1
+        c 0 0 2.5 -0.35 3.6 -1
+        l 21.87 -12.5
+        c 0 0 2.0 -1.55 2.7 -2.7
+        c 0 0 1 -2.35 1 -3.6
+      "
+      stroke="#2C682C" stroke-width="3" fill="#84BA64" stroke-linecap="round" stroke-linejoin="round"/>
+
+</svg>
