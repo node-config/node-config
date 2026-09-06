@@ -1176,6 +1176,21 @@ describe('Tests for util functions', function () {
         });
       },  /__format parser error in DB_HOST: /);
     });
+
+    it('throws an error for an unsupported __format parser', function() {
+      topic.Customers.dbHost = {
+        __name: 'DB_HOST',
+        __format: 'unsupported'
+      };
+    
+      let load = new Load();
+    
+      assert.throws(function () {
+        load.substituteDeep(topic, {
+          'DB_HOST': 'example.com'
+        });
+      }, /__format parser error in DB_HOST: No parser found for format: unsupported/);
+    });
   });
 
   describe('Load.loadCustomEnvVars()', function() {
