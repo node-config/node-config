@@ -1,4 +1,4 @@
-import Parser from '../../types/parser';
+import Parser from '../../types/parser.mjs';
 
 const parsedMaybe: object | undefined = Parser.parse('test.json', '{}');
 const yamlParsed: object | undefined = Parser.yamlParser('test.yaml', 'a: 1');

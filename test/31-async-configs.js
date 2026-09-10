@@ -1,6 +1,6 @@
 import { describe, it, before } from 'node:test';
 import assert from 'assert';
-import { Util } from '../lib/util.js';
+import { Util } from '../lib/util.mjs';
 import { requireUncached } from './_utils/requireUncached.mjs';
 
 // Test resolving async values on the exported config object.

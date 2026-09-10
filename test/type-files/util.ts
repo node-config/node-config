@@ -1,4 +1,4 @@
-import { Util, Load, RawConfig } from '../../types/lib/util';
+import { Util, Load, RawConfig } from '../../types/lib/util.mjs';
 import * as parser from 'config/parser';
 
 const value1: number = Util.getOption({ value: 1 }, 'value', 0);

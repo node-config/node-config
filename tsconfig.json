@@ -10,6 +10,6 @@
     "target": "es2020",
     "skipLibCheck": true
   },
-  "include": ["*.js", "lib/**/*.js"],
+  "include": ["*.js", "*.mjs", "lib/**/*.js", "lib/**/*.mjs"],
   "exclude": ["test/**", "tools/**", "coverage/**", "node_modules/**"]
 }

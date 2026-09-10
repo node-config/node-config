@@ -3,7 +3,7 @@ import FileSystem from 'node:fs';
 import { describe, it, before } from 'node:test';
 import assert from 'assert';
 import { requireUncached } from './_utils/requireUncached.mjs';
-import { Util } from '../lib/util.js';
+import { Util } from '../lib/util.mjs';
 
 describe('Tests for config extending', function() {
   let CONFIG;

@@ -1,4 +1,4 @@
-import Parser from '../../../parser.js';
+import Parser from '../../../parser.mjs';
 
 Parser.setParser('custom', function(filename, content) {
   return content.split(/\n/g).reduce(function(res, line) {

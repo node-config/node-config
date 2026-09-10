@@ -1,4 +1,4 @@
-import Parser from '../../../parser.js';
+import Parser from '../../../parser.mjs';
 
 // change parser order
 Parser.setFilesOrder('yaml', 0);

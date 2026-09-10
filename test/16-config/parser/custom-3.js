@@ -1,4 +1,4 @@
-import Parser from '../../../parser.js';
+import Parser from '../../../parser.mjs';
 
 Parser.setParser('json5', function(filename, content) {
   var json = Parser.json5Parser(filename, content);

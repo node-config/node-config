@@ -8,8 +8,8 @@ import { describe, it, beforeEach } from 'node:test';
 import assert from 'assert';
 import Path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
-import { deferConfig } from '../lib/defer.js';
-import { Util, Load } from '../lib/util.js';
+import { deferConfig } from '../lib/defer.mjs';
+import { Util, Load } from '../lib/util.mjs';
 
 const util = Util;
 

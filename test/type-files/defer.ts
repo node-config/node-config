@@ -1,4 +1,4 @@
-import { deferConfig, DeferredConfig } from '../../types/lib/defer';
+import { deferConfig, DeferredConfig } from '../../types/lib/defer.mjs';
 import config = require('config');
 
 const deferred = deferConfig((cfg, original: number) => original + 1);
