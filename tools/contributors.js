@@ -16,7 +16,7 @@ _.templateSettings = {
 };
 
 var TABLE_TEMPLATE = _.template('<table id="contributors">{{rows}}</table>');
-var ROW_TEMPLATE = _.template('<tr>{{people}}</tr>');
+var ROW_TEMPLATE = _.template('<tr>\n{{people}}</tr>');
 var PERSON_TEMPLATE = _.template('<td><img src={{avatar_url}}><a href="{{html_url}}">{{name}}</a></td>\n');
 var PEOPLE_PER_ROW = 6;
 
