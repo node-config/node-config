@@ -2,6 +2,7 @@ import config = require('config');
 
 const hasFeature: boolean = config.has('feature.enabled');
 const port: number = config.get<number>('port');
+const inferredPort: number = config.get('port');
 const title: string = config.get<string>('site.title');
 
 const defaults = config.util.setModuleDefaults('MyModule', { enabled: true });
