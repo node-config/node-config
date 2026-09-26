@@ -7,28 +7,28 @@ const moduleRequire = createRequire(Path.join(process.cwd(), 'package.json'));
 const require = createRequire(process.cwd());
 
 let Yaml = null,
-  JSYaml = null,
-  Coffee = null,
-  Iced = null,
-  CSON = null,
-  PPARSER = null,
-  TOML = null,
-  HJSON = null,
-  XML = null,
-  TS = null;
+    JSYaml = null,
+    Coffee = null,
+    Iced = null,
+    CSON = null,
+    PPARSER = null,
+    TOML = null,
+    HJSON = null,
+    XML = null,
+    TS = null;
 
 // Define soft dependencies so transpilers don't include everything
 let COFFEE_2_DEP = 'coffeescript',
-  COFFEE_DEP = 'coffee-script',
-  JS_YAML_DEP = 'js-yaml',
-  YAML_DEP = 'yaml',
-  JSON5_DEP = 'json5',
-  HJSON_DEP = 'hjson',
-  TOML_DEP = 'toml',
-  CSON_DEP = 'cson',
-  PPARSER_DEP = 'properties',
-  XML_DEP = 'x2js',
-  TS_DEP = 'ts-node';
+    COFFEE_DEP = 'coffee-script',
+    JS_YAML_DEP = 'js-yaml',
+    YAML_DEP = 'yaml',
+    JSON5_DEP = 'json5',
+    HJSON_DEP = 'hjson',
+    TOML_DEP = 'toml',
+    CSON_DEP = 'cson',
+    PPARSER_DEP = 'properties',
+    XML_DEP = 'x2js',
+    TS_DEP = 'ts-node';
 
 /**
  * @template [T=any]
@@ -41,8 +41,8 @@ let Parser = {};
  * @param {string} content
  * @returns {object | undefined}
  */
-Parser.parse = function (filename, content) {
-  var parserName = filename.substr(filename.lastIndexOf('.') + 1);  // file extension
+Parser.parse = function(filename, content) {
+  var parserName = filename.substr(filename.lastIndexOf('.') +1);  // file extension
   if (typeof definitions[parserName] === 'function') {
     return definitions[parserName](filename, content);
   }
@@ -54,14 +54,14 @@ Parser.parse = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.xmlParser = function (filename, content) {
+Parser.xmlParser = function(filename, content) {
   if (!XML) {
     XML = moduleRequire(XML_DEP);
   }
   var x2js = new XML();
   var configObject = x2js.xml2js(content);
   var rootKeys = Object.keys(configObject);
-  if (rootKeys.length === 1) {
+  if(rootKeys.length === 1) {
     return configObject[rootKeys[0]];
   }
   return configObject;
@@ -72,7 +72,7 @@ Parser.xmlParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.jsParser = function (filename, content) {
+Parser.jsParser = function(filename, content) {
   var configObject = require(filename);
 
   if (configObject.__esModule && isObject(configObject.default)) {
@@ -86,7 +86,7 @@ Parser.jsParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.tsParser = function (filename, content) {
+Parser.tsParser = function(filename, content) {
   if (require?.extensions?.['.ts'] === undefined && process?.features?.typescript !== 'strip') {
     if (TS === null) {
       TS = moduleRequire(TS_DEP);
@@ -118,7 +118,7 @@ Parser.tsParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.coffeeParser = function (filename, content) {
+Parser.coffeeParser = function(filename, content) {
   // Lazy load the appropriate extension
   if (!Coffee) {
     Coffee = {};
@@ -145,7 +145,7 @@ Parser.coffeeParser = function (filename, content) {
  * @param {string} content
  * @returns {object | undefined}
  */
-Parser.yamlParser = function (filename, content) {
+Parser.yamlParser = function(filename, content) {
   if (!Yaml && !JSYaml) {
     // Lazy loading
     try {
@@ -153,7 +153,7 @@ Parser.yamlParser = function (filename, content) {
     } catch (e) {
       try {
         JSYaml = moduleRequire(JS_YAML_DEP);
-      } catch (e) { }
+      } catch (e) {}
     }
   }
 
@@ -171,7 +171,7 @@ Parser.yamlParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.jsonParser = function (filename, content) {
+Parser.jsonParser = function(filename, content) {
   /**
    * Default JSON parsing to JSON5 parser.
    * This is due to issues with removing supported comments.
@@ -185,7 +185,7 @@ Parser.jsonParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.json5Parser = function (filename, content) {
+Parser.json5Parser = function(filename, content) {
   return JSON5.parse(content);
 };
 
@@ -194,7 +194,7 @@ Parser.json5Parser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.hjsonParser = function (filename, content) {
+Parser.hjsonParser = function(filename, content) {
   if (!HJSON) {
     HJSON = moduleRequire(HJSON_DEP);
   }
@@ -206,8 +206,8 @@ Parser.hjsonParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.tomlParser = function (filename, content) {
-  if (!TOML) {
+Parser.tomlParser = function(filename, content) {
+  if(!TOML) {
     TOML = moduleRequire(TOML_DEP);
   }
   return TOML.parse(content);
@@ -218,7 +218,7 @@ Parser.tomlParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.csonParser = function (filename, content) {
+Parser.csonParser = function(filename, content) {
   if (!CSON) {
     CSON = moduleRequire(CSON_DEP);
   }
@@ -234,7 +234,7 @@ Parser.csonParser = function (filename, content) {
  * @param {string} content
  * @returns {object}
  */
-Parser.propertiesParser = function (filename, content) {
+Parser.propertiesParser = function(filename, content) {
   if (!PPARSER) {
     PPARSER = moduleRequire(PPARSER_DEP);
   }
@@ -251,10 +251,10 @@ Parser.propertiesParser = function (filename, content) {
  * @param {string} fileStr The string to strip comments from
  * @return {string} The string with comments stripped.
  */
-Parser.stripYamlComments = function (fileStr) {
+Parser.stripYamlComments = function(fileStr) {
   // First replace removes comment-only lines
   // Second replace removes blank lines
-  return fileStr.replace(/^\s*#.*/mg, '').replace(/^\s*[\n|\r]+/mg, '');
+  return fileStr.replace(/^\s*#.*/mg,'').replace(/^\s*[\n|\r]+/mg,'');
 };
 
 /**
@@ -265,7 +265,7 @@ Parser.stripYamlComments = function (fileStr) {
  * @param {string} content - Environment variable value
  * @return {boolean} - Boolean value fo the passed variable value
  */
-Parser.booleanParser = function (filename, content) {
+Parser.booleanParser = function(filename, content) {
   return content === 'true';
 };
 
@@ -277,7 +277,7 @@ Parser.booleanParser = function (filename, content) {
  * @param {string} content - Environment variable value
  * @return {number} - Number value fo the passed variable value
  */
-Parser.numberParser = function (filename, content) {
+Parser.numberParser = function(filename, content) {
   const numberValue = Number(content);
   return Number.isNaN(numberValue) ? undefined : numberValue;
 };
@@ -308,7 +308,7 @@ var definitions = {
  * @param {string} name
  * @returns {ParserFn | undefined}
  */
-Parser.getParser = function (name) {
+Parser.getParser = function(name) {
   return definitions[name];
 };
 
@@ -316,7 +316,7 @@ Parser.getParser = function (name) {
  * @param {string} name
  * @param {ParserFn} parser
  */
-Parser.setParser = function (name, parser) {
+Parser.setParser = function(name, parser) {
   definitions[name] = parser;
   if (order.indexOf(name) === -1) {
     order.push(name);
@@ -327,7 +327,7 @@ Parser.setParser = function (name, parser) {
  * @param {string=} name
  * @returns {string[] | number}
  */
-Parser.getFilesOrder = function (name) {
+Parser.getFilesOrder = function(name) {
   if (name) {
     return order.indexOf(name);
   }
@@ -339,7 +339,7 @@ Parser.getFilesOrder = function (name) {
  * @param {number=} newIndex
  * @returns {string[]}
  */
-Parser.setFilesOrder = function (name, newIndex) {
+Parser.setFilesOrder = function(name, newIndex) {
   if (Array.isArray(name)) {
     return order = name;
   }
@@ -347,7 +347,7 @@ Parser.setFilesOrder = function (name, newIndex) {
     var index = order.indexOf(name);
     order.splice(newIndex, 0, name);
     if (index > -1) {
-      order.splice(index >= newIndex ? index + 1 : index, 1);
+      order.splice(index >= newIndex ? index +1 : index, 1);
     }
   }
   return order;
