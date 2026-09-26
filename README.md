@@ -159,7 +159,7 @@ Contributors
 <td><img src=https://avatars.githubusercontent.com/u/4307697?v=4><a href="https://github.com/leosuncin">leosuncin</a></td>
 </tr><tr>
 <td><img src=https://avatars.githubusercontent.com/u/8650543?v=4><a href="https://github.com/leonardovillela">leonardovillela</a></td>
-<td><img src=https://avatars.githubusercontent.com/u/77355440?v=4><a href="https://github.com/jeremy-daley-kr">jeremy-daley-kr</a></td>
+<td><img src=https://avatars.githubusercontent.com/u/1498514?v=4><a href="https://github.com/daleyjem">daleyjem</a></td>
 <td><img src=https://avatars.githubusercontent.com/u/2529835?v=4><a href="https://github.com/simon-scherzinger">simon-scherzinger</a></td>
 <td><img src=https://avatars.githubusercontent.com/u/5138570?v=4><a href="https://github.com/BadgerBadgerBadgerBadger">Badger&shy;Badger&shy;Badger&shy;Badger</a></td>
 <td><img src=https://avatars.githubusercontent.com/u/842998?v=4><a href="https://github.com/nsabovic">nsabovic</a></td>
