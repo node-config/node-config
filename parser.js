@@ -87,7 +87,7 @@ Parser.jsParser = function(filename, content) {
  * @returns {object}
  */
 Parser.tsParser = function(filename, content) {
-  if (require?.extensions?.['.ts'] === undefined) {
+  if (require?.extensions?.['.ts'] === undefined && process?.features?.typescript !== 'strip') {
     if (TS === null) {
       TS = moduleRequire(TS_DEP);
       TS.register({
