@@ -261,9 +261,9 @@ Parser.stripYamlComments = function(fileStr) {
  * Parses the environment variable to the boolean equivalent.
  * Defaults to false
  *
- * @param {string} filename - Filename of the env variable (not used)
- * @param {string} content - Environment variable value
- * @return {boolean} - Boolean value fo the passed variable value
+ * @param {string} filename Filename of the env variable (not used)
+ * @param {string} content Environment variable value
+ * @return {boolean} Boolean value fo the passed variable value
  */
 Parser.booleanParser = function(filename, content) {
   return content === 'true';
@@ -273,9 +273,9 @@ Parser.booleanParser = function(filename, content) {
  * Parses the environment variable to the number equivalent.
  * Defaults to undefined
  *
- * @param {string} filename - Filename of the env variable (not used)
- * @param {string} content - Environment variable value
- * @return {number} - Number value fo the passed variable value
+ * @param {string} filename Filename of the env variable (not used)
+ * @param {string} content Environment variable value
+ * @return {number} Number value fo the passed variable value
  */
 Parser.numberParser = function(filename, content) {
   const numberValue = Number(content);
@@ -324,7 +324,7 @@ Parser.setParser = function(name, parser) {
 };
 
 /**
- * @param {string=} name
+ * @param {string} [name]
  * @returns {string[] | number}
  */
 Parser.getFilesOrder = function(name) {
@@ -336,7 +336,7 @@ Parser.getFilesOrder = function(name) {
 
 /**
  * @param {string|string[]} name
- * @param {number=} newIndex
+ * @param {number} [newIndex]
  * @returns {string[]}
  */
 Parser.setFilesOrder = function(name, newIndex) {
