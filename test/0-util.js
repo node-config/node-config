@@ -7,6 +7,8 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'assert';
 import Path from 'node:path';
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { setTimeout } from 'node:timers/promises';
 import { deferConfig } from '../lib/defer.js';
 import { Util, Load } from '../lib/util.js';
@@ -1491,6 +1493,41 @@ describe('Tests for util functions', function () {
         assert.strictEqual(config.prop3, "prop3FromYmlInstance");
       });
     });
+
+    for (const hostName of ['', 'server', 'server.example.com']) {
+      for (const appInstance of [undefined, '1']) {
+        for (const nodeEnv of [['production'], ['production', 'eu']]) {
+          it(`keeps generic files before deployment files for ${hostName}, ${appInstance}, ${nodeEnv}`, function(t) {
+            const configDir = mkdtempSync(Path.join(tmpdir(), 'node-config-order-'));
+            t.after(() => rmSync(configDir, { recursive: true, force: true }));
+            const names = ['default', ...nodeEnv];
+            const groups = [];
+            if (hostName) {
+              groups.push('server');
+              if (hostName !== 'server') groups.push(hostName);
+            }
+            groups.push('local');
+            for (const group of groups) {
+              names.push(group, ...nodeEnv.map(env => `${group}-${env}`));
+            }
+            const files = [];
+            for (const name of names) {
+              for (const suffix of appInstance ? ['', `-${appInstance}`] : ['']) {
+                const filename = `${name}${suffix}.json`;
+                files.push(filename);
+                const group = groups.find(group => name === group || name.startsWith(`${group}-`)) || 'deployment';
+                writeFileSync(Path.join(configDir, filename), JSON.stringify({ [group]: filename }));
+              }
+            }
+            const result = util.loadFileConfigs({ configDir, hostName, appInstance, nodeEnv });
+            assert.deepStrictEqual(result.getSources().map(source => Path.basename(source.name)), files);
+            for (const group of groups) {
+              assert.strictEqual(result.config[group], `${group}-${nodeEnv.at(-1)}${appInstance ? `-${appInstance}` : ''}.json`);
+            }
+          });
+        }
+      }
+    }
 
     it('loads from an environment file', function() {
       var config = util.loadFileConfigs({
