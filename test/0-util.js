@@ -1698,6 +1698,47 @@ describe('Tests for util functions', function () {
         assert.strictEqual(config.host.arch, 'x86_64');
       });
 
+      it('loads generic host and local files before every deployment variant', function() {
+        const expected = [
+          'test.yaml',
+          'test-development.json',
+          'test-bare-metal.json',
+          'local.yaml',
+          'local-development.json'
+        ];
+        const sources = util.loadFileConfigs({
+          configDir: Path.join(import.meta.dirname, 'config'),
+          nodeEnv: ['development', 'bare-metal'],
+          hostName: 'test'
+        }).getSources()
+          .map(source => Path.basename(source.name))
+          .filter(name => expected.includes(name));
+
+        assert.deepStrictEqual(sources, expected);
+      });
+
+      it('loads the whole short hostname group before the full hostname group', function() {
+        const expected = [
+          'test.json',
+          'test-development.json',
+          'test.example.com.json',
+          'test.example.com-development.json',
+          'local.json',
+          'local-development.json'
+        ];
+        const load = util.loadFileConfigs({
+          configDir: Path.join(import.meta.dirname, 'config-multi-host'),
+          nodeEnv: ['development', 'bare-metal'],
+          hostName: 'test.example.com'
+        });
+        const sources = load.getSources()
+          .map(source => Path.basename(source.name))
+          .filter(name => expected.includes(name));
+
+        assert.deepStrictEqual(sources, expected);
+        assert.strictEqual(load.config.order, 'local-development');
+      });
+
       it('loads the values in left-right order', function(done) {
         const config = util.loadFileConfigs({
           configDir: Path.join(import.meta.dirname, 'config'),
